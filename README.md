@@ -79,6 +79,18 @@ skills/                                           # Specialized workflows
   ensure-atomic-pr/                               #   Assess and fix PR atomicity
     SKILL.md
     templates/atomic-pr-checklist.md
+  ado-pr-inspector/                               #   Inspect ADO PRs, CI, policies, and failures
+    SKILL.md
+    scripts/
+  create-ado-pr/                                  #   Create a normal ADO PR for the current branch
+    SKILL.md
+    templates/pr-description-template.md
+    references/az-cli-reference.md
+  fix-ado-pr-ci/                                  #   Stabilize CI on an existing ADO PR
+    SKILL.md
+  scan-image-vulnerabilities/                     #   Scan container images for vulnerabilities
+    SKILL.md
+    scripts/trivy_latest_scan.sh
 plans/                                            # Created per-task by agent (plans/{slug}/)
 ```
 
@@ -92,7 +104,7 @@ Splits a large feature into a sequence of small, mergeable PRs:
 Base PR (contracts/flags) → Implementation PR(s) → Integration PR(s) → Cleanup PR
 ```
 
-Use when: feature is too large for one PR, stacked PRs needed, staged rollout desired.
+Use when: feature is too large for one PR, stacked PRs needed, or staged rollout desired. This skill decides **what PRs should exist**. If you also need branch/worktree/path ownership for multiple agents, follow up with `plan-parallel-work`.
 
 ### plan-parallel-work
 
@@ -104,7 +116,7 @@ Base PR ─┼── Agent B (owns: frontend/)
         └── Agent C (owns: tests/)
 ```
 
-Use when: multiple agents need to work simultaneously, branch/path ownership must be explicit.
+Use when: multiple agents need to work simultaneously, branch/path ownership must be explicit, or the PR sequence already exists and now needs a safe execution topology. This skill decides **who works where and in what order**, not how to split the feature into PRs.
 
 ### ensure-atomic-pr
 
@@ -115,6 +127,46 @@ mechanical-only → preparatory refactor → behavioral change → tests → doc
 ```
 
 Use when: a PR is too large, mixes concerns, or needs post-hoc recovery.
+
+### ado-pr-inspector
+
+Inspects an Azure DevOps PR end to end:
+
+```
+PR metadata → comments → iterations → files → policies → builds → failure root cause
+```
+
+Use when: the user gives an ADO PR URL / ID or asks about PR status, CI, policies, or build failures.
+
+### create-ado-pr
+
+Creates a normal Azure DevOps PR from the current branch:
+
+```
+local acceptance passed → create normal PR → ADO CI/policies start → hand off to inspection or CI fixing
+```
+
+Use when: the current branch is ready for review and the user wants to open or create an ADO PR without using draft PRs or auto-complete. If a PR already exists for the same source branch, the skill updates only its metadata instead of creating a duplicate.
+
+### fix-ado-pr-ci
+
+Drives an existing Azure DevOps PR toward a reviewable green CI state:
+
+```
+existing PR → inspect CI/policies → apply narrow fix → push → re-check → repeat until green or blocked
+```
+
+Use when: an ADO PR already exists and the user wants the agent to fix CI, or keep making narrow PR-branch fixes until the PR is stable enough for human review. It is not the skill for creating the PR or editing PR metadata in the first place.
+
+### scan-image-vulnerabilities
+
+Scans container images with Trivy using the latest vulnerability database:
+
+```
+refresh DB → scan image(s) → summarize findings by severity
+```
+
+Use when: the user asks about image vulnerabilities, wants a CVE scan, mentions Trivy, or asks to check images running in a Kubernetes cluster.
 
 ## Key design principles
 
@@ -158,9 +210,40 @@ skills/
   your-new-skill/
     SKILL.md           # Must include: name, description, operating context, workflow
     templates/         # Optional templates
+    references/        # Optional detailed docs loaded on demand
+    scripts/           # Optional helper scripts
 ```
 
 Add routing rules to the "Skill routing" section of `AGENTS.md`.
+
+### Skill types worth considering
+
+This framework ships with governance and CI/CD skills. When adopting it for a real project, consider adding skills in these categories based on your team's needs:
+
+| Type | Purpose | Example |
+|---|---|---|
+| **Library & API reference** | Teach the agent how to correctly use an internal library or SDK, including edge cases and gotchas | `billing-lib` — your internal billing library with footguns documented |
+| **Product verification** | Describe how to test or verify that code works, often paired with browser automation or CLI drivers | `signup-flow-driver` — headless browser test of the full signup flow |
+| **Data fetching & analysis** | Connect to monitoring, analytics, or data stacks with credentials and common query patterns | `grafana` — datasource UIDs, cluster names, problem-to-dashboard lookup |
+| **Code scaffolding** | Generate framework boilerplate with your auth, logging, and config pre-wired | `new-migration` — your migration file template plus common gotchas |
+| **Runbooks** | Map symptoms to investigation steps and produce structured reports | `oncall-runner` — fetch alert, check usual suspects, format findings |
+
+### Skill authoring tips
+
+- **Gotchas section**: The highest-signal content in any skill. Build it up from real failure patterns over time.
+- **Progressive disclosure**: Keep `SKILL.md` focused on decision logic. Put detailed reference material (CLI commands, API signatures, examples) in `references/` files.
+- **Config persistence**: If a skill needs setup info (credentials, project IDs), store it in a `config.json` within the skill directory so the agent does not re-ask every session.
+- **Description field**: This is a trigger mechanism, not a summary. Be explicit about when the skill should activate, including edge cases and alternative phrasings.
+
+### On-demand safety hooks
+
+Some agent platforms support on-demand hooks — temporary guards that activate only when a specific skill is invoked and last for the duration of the session. These can add safety rails during execution without burdening normal development. Examples:
+
+- Block destructive commands (`rm -rf`, `DROP TABLE`, force-push) during production-adjacent work
+- Restrict file edits to a specific directory during focused debugging
+- Require confirmation before any `git push` during stabilization
+
+If your agent platform supports hooks, consider adding them to high-risk skills like `fix-ado-pr-ci` or infrastructure operations. Define hooks in the skill's `SKILL.md` frontmatter or a companion configuration file per your platform's conventions.
 
 ### Adjusting strictness
 

@@ -1,6 +1,6 @@
 ---
 name: ensure-atomic-pr
-description: Evaluate whether a diff, commit, or PR is atomic enough. Use when a change is too large, mixes concerns, or needs to be assessed, split, or recovered into smaller commits or PRs.
+description: Evaluate whether a diff, commit, or PR is atomic enough. Use when a change is too large, mixes concerns, or needs to be assessed, split, or recovered into smaller commits or PRs. Also trigger when a PR review reveals mixed concerns, when git diff shows changes across unrelated modules, or when a branch has grown beyond its original intent.
 ---
 
 # Operating context
@@ -82,6 +82,18 @@ For each proposed commit or PR:
 - whether to use interactive staging
 - whether to carve out a prep PR
 - whether to separate cleanup into a later PR
+
+# Gotchas
+
+These are failure patterns that come up when agents evaluate or split changes for atomicity.
+
+- **Splitting genuinely indivisible changes.** Some changes — like a rename that touches 50 files — are inherently atomic even though the diff is large. Splitting a rename into two PRs (half the files each) creates a broken intermediate state. If a change cannot be meaningfully paused midway, keep it in one PR and use commits to separate mechanical from semantic work.
+
+- **Separating tests from the code they test.** Tests exist to verify specific behavior. Moving tests into a separate PR means the implementation PR has no verification, and the test PR has no context. Keep tests with their implementation unless there is a strong structural reason to separate them (e.g., a large test infrastructure setup that is independently useful).
+
+- **Over-splitting into trivially small PRs.** A PR that changes one line of a config file and nothing else still costs a full review cycle. If several small related changes can be coherently grouped into one PR without mixing concerns, that is better than five one-line PRs.
+
+- **Proposing a split that no one asked for.** If the existing diff is already atomic and reviewable, do not invent a split just because this skill was triggered. Report that the change is atomic and move on.
 
 # Strong preferences
 
