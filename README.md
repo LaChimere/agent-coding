@@ -79,15 +79,6 @@ skills/                                           # Specialized workflows
   ensure-atomic-pr/                               #   Assess and fix PR atomicity
     SKILL.md
     templates/atomic-pr-checklist.md
-  ado-pr-inspector/                               #   Inspect ADO PRs, CI, policies, and failures
-    SKILL.md
-    scripts/
-  create-ado-pr/                                  #   Create a normal ADO PR for the current branch
-    SKILL.md
-    templates/pr-description-template.md
-    references/az-cli-reference.md
-  fix-ado-pr-ci/                                  #   Stabilize CI on an existing ADO PR
-    SKILL.md
   scan-image-vulnerabilities/                     #   Scan container images for vulnerabilities
     SKILL.md
     scripts/trivy_latest_scan.sh
@@ -127,36 +118,6 @@ mechanical-only → preparatory refactor → behavioral change → tests → doc
 ```
 
 Use when: a PR is too large, mixes concerns, or needs post-hoc recovery.
-
-### ado-pr-inspector
-
-Inspects an Azure DevOps PR end to end:
-
-```
-PR metadata → comments → iterations → files → policies → builds → failure root cause
-```
-
-Use when: the user gives an ADO PR URL / ID or asks about PR status, CI, policies, or build failures.
-
-### create-ado-pr
-
-Creates a normal Azure DevOps PR from the current branch:
-
-```
-local acceptance passed → create normal PR → ADO CI/policies start → hand off to inspection or CI fixing
-```
-
-Use when: the current branch is ready for review and the user wants to open or create an ADO PR without using draft PRs or auto-complete. If a PR already exists for the same source branch, the skill updates only its metadata instead of creating a duplicate.
-
-### fix-ado-pr-ci
-
-Drives an existing Azure DevOps PR toward a reviewable green CI state:
-
-```
-existing PR → inspect CI/policies → apply narrow fix → push → re-check → repeat until green or blocked
-```
-
-Use when: an ADO PR already exists and the user wants the agent to fix CI, or keep making narrow PR-branch fixes until the PR is stable enough for human review. It is not the skill for creating the PR or editing PR metadata in the first place.
 
 ### scan-image-vulnerabilities
 
@@ -243,7 +204,7 @@ Some agent platforms support on-demand hooks — temporary guards that activate 
 - Restrict file edits to a specific directory during focused debugging
 - Require confirmation before any `git push` during stabilization
 
-If your agent platform supports hooks, consider adding them to high-risk skills like `fix-ado-pr-ci` or infrastructure operations. Define hooks in the skill's `SKILL.md` frontmatter or a companion configuration file per your platform's conventions.
+If your agent platform supports hooks, consider adding them to high-risk skills or infrastructure operations. Define hooks in the skill's `SKILL.md` frontmatter or a companion configuration file per your platform's conventions.
 
 ### Adjusting strictness
 
