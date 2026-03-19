@@ -1,6 +1,6 @@
 ---
 name: decompose-feature
-description: Split a large feature into a sequence of small, mergeable, reviewable PRs. Use when a task is too broad for one PR, when stacked PRs or vertical slices are desired, or when a base PR plus parallel fan-out work is needed.
+description: Split a large feature into a sequence of small, mergeable, reviewable PRs. Use when a task is too broad for one PR, when stacked PRs or vertical slices are desired, or when a base PR plus parallel fan-out work is needed. Also trigger when the user describes a feature that touches multiple modules or layers, mentions phased delivery or incremental rollout, or when the estimated diff would exceed a comfortable review size.
 ---
 
 # Operating context
@@ -13,6 +13,8 @@ Then place the proposed PR decomposition in `plans/{slug}/design.md` (the split 
 
 After Gate 1 approval, translate the approved design into `plans/{slug}/plan.md` and `plans/{slug}/todo.md`, then stop again for Gate 2 before execution.
 
+This skill decides **what PRs should exist**. If the resulting PR sequence also needs explicit branch/worktree/path ownership for multiple agents, follow it with `plan-parallel-work`.
+
 # Purpose
 
 Convert a large feature request into a staged delivery plan made of small PRs.
@@ -22,7 +24,7 @@ Convert a large feature request into a staged delivery plan made of small PRs.
 - The requested feature spans multiple modules, layers, or services
 - The user asks for small PRs, stacked PRs, phased delivery, or incremental rollout
 - The task is too large for one reviewable PR
-- The task may later be parallelized, but shared contracts are not stable yet
+- The task may later be parallelized, but the PR sequence is not stable enough yet to assign agent ownership
 
 # Do not use this skill when
 
@@ -103,12 +105,27 @@ For each PR:
 ## Parallelization readiness
 - which PRs must be serial
 - which PRs can fan out after the base PR lands
+- note that this is only readiness guidance; use `plan-parallel-work` for explicit agent / branch / worktree ownership
 
 ## Risks
 - contract churn
 - migration hazards
 - conflict hotspots
 - rollback considerations
+
+# Gotchas
+
+These are failure patterns that come up repeatedly when agents use this skill. Knowing them upfront saves entire rework cycles.
+
+- **Lumping all tests into a "tests PR."** Tests should travel with the implementation they verify, not be batched into a separate PR. A standalone "add all tests" PR is hard to review because the reviewer has to mentally reconnect each test to its implementation. If a test belongs to PR 2's logic, it ships in PR 2.
+
+- **Over-splitting.** Not every conceptual boundary deserves its own PR. If splitting a feature into 8 tiny PRs makes the whole sequence harder to follow than 3 well-scoped ones, the split is hurting, not helping. Optimize for reviewability, not for PR count.
+
+- **Base PR scope creep.** The base PR should contain only contracts, types, flags, and wiring stubs — things that other PRs depend on. When implementation logic starts leaking into the base PR "for convenience," the entire staged delivery plan weakens because the base PR becomes a large, hard-to-review change itself.
+
+- **Ignoring data migration order.** When a feature involves schema changes, the decomposition must respect the migration order: schema first, then code that reads/writes the new schema, then cleanup of the old schema. Splitting these out of order creates broken intermediate states.
+
+- **Forgetting that each PR must be independently mergeable.** A proposed split that leaves the repository broken after PR 2 merges but before PR 3 lands is not a valid decomposition. Every intermediate state must be trunk-safe.
 
 # Quality bar
 

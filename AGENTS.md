@@ -80,6 +80,17 @@ Research → Design → [Gate 1: Human Approve] → Plan + Todo → [Gate 2: Hum
 Fast path (urgent):  Execute → Verify → Lessons (backfill)
 ```
 
+**What counts as explicit approval**:
+
+- The user says `approved`, `proceed`, `LGTM`, `可以开始`, or other clearly affirmative approval language.
+- The approval section in the relevant document is filled in with reviewer name and date.
+
+These do **not** count as approval:
+
+- silence
+- acknowledgement without clear approval language
+- requests for clarification, edits, or additional investigation
+
 **Gate 1 — Design approval (human-in-the-loop)**:
 
 1. After completing `research.md` and `design.md`, stop and present them for review.
@@ -92,6 +103,7 @@ Fast path (urgent):  Execute → Verify → Lessons (backfill)
 1. After completing `plan.md`, extract `todo.md` from it, then stop and present both for review.
 2. If the reviewer annotates or edits, incorporate changes.
 3. Do **not** proceed to execution until the plan is explicitly approved.
+4. After the plan is explicitly approved, proceed to implement the approved `plan.md` and use `todo.md` as the execution tracker.
 
 **Skipping gates**: For trivial, low-risk tasks that do not trigger plan mode, both gates may be skipped. When plan mode is triggered but design is not required (see the trigger table above), Gate 1 may be skipped. The user may always request Gate 1 regardless of the trigger table.
 
@@ -219,6 +231,7 @@ Use the appropriate skill automatically when the request matches:
   - when a feature is too large for one PR
   - when a user asks how to split a large feature
   - when a staged rollout or stacked PR plan is needed
+  - use this skill to decide **what PRs should exist**
 
 - `plan-parallel-work`
   - automatically enters plan mode
@@ -227,6 +240,7 @@ Use the appropriate skill automatically when the request matches:
   - when multiple agents need to work in parallel
   - when branch/worktree ownership and merge order need to be defined
   - when a base PR must be established before fan-out work
+  - use this skill to decide **who works where, on which branch/worktree, and in what order**
 
 - `ensure-atomic-pr`
   - may be used in any mode
@@ -236,6 +250,12 @@ Use the appropriate skill automatically when the request matches:
   - when a diff, commit, or PR is too large
   - when concerns are mixed
   - when recovery or splitting guidance is needed
+
+- `scan-image-vulnerabilities`
+  - read-only inspection, does not enter plan mode or require gates
+  - when the user asks about image vulnerabilities, CVEs, or container security
+  - when the user mentions Trivy or wants to scan container images
+  - when the user asks about images running in a Kubernetes cluster or workload
 
 ## Output style
 
