@@ -127,6 +127,7 @@ Never mark done without evidence.
 1. All acceptance criteria defined in the plan for this PR are met, with evidence.
 2. The diff is consistent with the approved plan — no scope creep, no missing pieces.
 3. The applicable verification level has been executed.
+4. Invoke `refresh-related-docs` to check whether the change has made existing documentation stale and update if needed.
 
 If any acceptance criterion is not met, do not propose the PR. Follow this recovery flow:
 
@@ -250,6 +251,13 @@ Use the appropriate skill automatically when the request matches:
   - when a diff, commit, or PR is too large
   - when concerns are mixed
   - when recovery or splitting guidance is needed
+
+- `refresh-related-docs`
+  - does not enter plan mode or require approval gates; uses its own lightweight approval step (asks user before editing)
+  - when a milestone or feature is completed and existing docs may be stale
+  - when behavior, configuration, or API surface changes that should be reflected in Markdown docs
+  - when the user asks to update related documentation after a code change
+  - always asks the user for explicit approval before editing any doc, including `AGENTS.md`
 
 - `scan-image-vulnerabilities`
   - read-only inspection, does not enter plan mode or require gates
