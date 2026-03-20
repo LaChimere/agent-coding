@@ -48,7 +48,7 @@ If any check fails, follow the recovery flow defined in `AGENTS.md` (Verificatio
 ### Review / Packaging
 - [ ] Summarize changes (what/why)
 - [ ] Confirm no scope creep / unrelated cleanup
-- [ ] Update docs/comments if needed
+- [ ] Check whether related docs need updating (use `refresh-related-docs` if behavior, config, or API changed)
 - [ ] Prepare PR description / changelog notes (if applicable)
 
 ## Evidence Log

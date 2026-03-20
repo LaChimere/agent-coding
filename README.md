@@ -79,6 +79,8 @@ skills/                                           # Specialized workflows
   ensure-atomic-pr/                               #   Assess and fix PR atomicity
     SKILL.md
     templates/atomic-pr-checklist.md
+  refresh-related-docs/                            #   Refresh stale docs after code changes
+    SKILL.md
   scan-image-vulnerabilities/                     #   Scan container images for vulnerabilities
     SKILL.md
     scripts/trivy_latest_scan.sh
@@ -118,6 +120,16 @@ mechanical-only → preparatory refactor → behavioral change → tests → doc
 ```
 
 Use when: a PR is too large, mixes concerns, or needs post-hoc recovery.
+
+### refresh-related-docs
+
+Refreshes documentation that has become stale after code changes:
+
+```
+detect doc-worthy changes → find related docs → ask user approval → update with style preservation → report
+```
+
+Use when: a milestone or feature is completed, behavior or configuration changes, or API surface changes. Always asks for explicit user approval before editing any doc.
 
 ### scan-image-vulnerabilities
 
