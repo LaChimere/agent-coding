@@ -127,7 +127,7 @@ Never mark done without evidence.
 1. All acceptance criteria defined in the plan for this PR are met, with evidence.
 2. The diff is consistent with the approved plan — no scope creep, no missing pieces.
 3. The applicable verification level has been executed.
-4. Invoke `refresh-related-docs` to check whether the change has made existing documentation stale and update if needed.
+4. Confirm that documentation is not stale. Directly coupled docs/status files already updated inline during execution count toward this check. If broader Markdown docs may still be stale, invoke `refresh-related-docs` before proposing the PR and follow its approval flow for any additional edits.
 
 If any acceptance criterion is not met, do not propose the PR. Follow this recovery flow:
 
@@ -251,6 +251,14 @@ Use the appropriate skill automatically when the request matches:
   - when a diff, commit, or PR is too large
   - when concerns are mixed
   - when recovery or splitting guidance is needed
+
+- `execute-plan-loop`
+  - execution-focused skill; does not bypass existing gates
+  - use after scope is approved or clearly trivial
+  - when the user asks the agent to implement a feature end-to-end with multiple atomic commits
+  - when the user asks to execute part or all of an approved `plans/{slug}` plan
+  - when the user asks to finish a phase/step and wants per-commit verification, status refreshes, and periodic deeper review
+  - use this skill to decide **how execution proceeds commit by commit until the approved slice is complete**
 
 - `refresh-related-docs`
   - does not enter plan mode or require approval gates; uses its own lightweight approval step (asks user before editing)

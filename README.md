@@ -79,6 +79,8 @@ skills/                                           # Specialized workflows
   ensure-atomic-pr/                               #   Assess and fix PR atomicity
     SKILL.md
     templates/atomic-pr-checklist.md
+  execute-plan-loop/                              #   Execute approved work in atomic long-loop increments
+    SKILL.md
   refresh-related-docs/                            #   Refresh stale docs after code changes
     SKILL.md
   scan-image-vulnerabilities/                     #   Scan container images for vulnerabilities
@@ -120,6 +122,16 @@ mechanical-only → preparatory refactor → behavioral change → tests → doc
 ```
 
 Use when: a PR is too large, mixes concerns, or needs post-hoc recovery.
+
+### execute-plan-loop
+
+Executes approved implementation work in a disciplined long-running loop:
+
+```
+pick next atomic slice → implement → update status → run checks → check docs → commit → deep review every 3-5 commits
+```
+
+Use when: the user wants the agent to carry out part or all of an approved feature or `plans/{slug}` scope with atomic commits, per-commit validation, progress updates, and periodic deeper review.
 
 ### refresh-related-docs
 
