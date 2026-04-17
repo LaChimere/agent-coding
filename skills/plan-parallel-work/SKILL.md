@@ -5,7 +5,9 @@ description: Plan safe parallel work for multiple agents on one repository by de
 
 # Operating context
 
-This skill operates within the workflow defined in `AGENTS.md`.
+This skill operates within the workflow coordinated by `workflow-orchestrator` and its bundled framework contract.
+
+If `skills/workflow-orchestrator/references/workflow-contract.md` exists in the current repository, read it before planning ownership boundaries. If the shared contract is not present, use this skill only when an equivalent workflow contract is already active or route through `workflow-orchestrator` first.
 
 Before producing a parallelization design, create or update `plans/{slug}/research.md` with the evidence, dependency analysis, and conflict hotspots that justify the split.
 

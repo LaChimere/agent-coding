@@ -5,7 +5,9 @@ description: Execute an approved feature request or approved `plans/{slug}` scop
 
 # Operating context
 
-This skill operates within the workflow defined in `AGENTS.md`.
+This skill operates within the workflow coordinated by `workflow-orchestrator` and its bundled framework contract.
+
+If `skills/workflow-orchestrator/references/workflow-contract.md` exists in the current repository, read it before execution. If the shared contract is not present, use this skill only when an equivalent workflow contract is already active or route through `workflow-orchestrator` first.
 
 It is an **execution skill**, not a planning shortcut. If the task triggers plan mode and the necessary approvals are missing, do not start coding. Create or update the required plan artifacts, stop at the correct gate, and wait for approval.
 
@@ -57,7 +59,7 @@ Carry approved implementation work forward in small, reviewable, verified increm
   - `plans/{slug}/design.md` when correctness depends on design constraints
   - `plans/{slug}/plan.md` for the approved steps and acceptance criteria
   - `plans/{slug}/todo.md` for current execution status
-- If approvals required by `AGENTS.md` are missing, stop and request the missing gate approval instead of coding ahead.
+- If approvals required by the active workflow contract are missing, stop and request the missing gate approval instead of coding ahead.
 
 ## 2) Re-state the concrete objective
 
@@ -123,18 +125,18 @@ Before every commit, ask whether this slice changed:
 
 If yes, decide which class of documentation change you are making:
 
-- **Directly coupled docs/status updates**: treat the user's request to run this long loop as standing approval for small documentation updates that are inseparable from the slice you are landing. Examples:
-  - updating `README.md` when a new command, flag, or user-visible behavior ships
+- **Directly coupled docs/status updates**: treat the user's request to run this long loop as standing approval for narrow slug-local status updates that are inseparable from the slice you are landing. Examples:
   - updating `plans/{slug}/todo.md` evidence and completion state
   - updating slug-local status notes that future execution depends on
 - **Broader or high-impact doc refreshes**: use `refresh-related-docs` and follow its approval rule before editing. Examples:
+  - `README.md`
   - `AGENTS.md`
   - broad doc sweeps across multiple Markdown files
   - canonical design docs or runbooks that extend beyond the current atomic slice
 
 Do not stop the long loop for trivial docs that are tightly coupled to the implementation and clearly within the approved scope. Do stop for broader doc work that changes shared guidance or exceeds the slice's natural boundary.
 
-Before proposing the final PR or completion message, do one last doc-staleness sweep consistent with `AGENTS.md`: count the inline slice-coupled updates you already made, then invoke `refresh-related-docs` only if broader Markdown docs may still be stale.
+Before proposing the final PR or completion message, do one last doc-staleness sweep consistent with the active workflow contract: count the inline slice-coupled updates you already made, then invoke `refresh-related-docs` only if broader Markdown docs may still be stale.
 
 ## 6) Create one atomic commit
 
