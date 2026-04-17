@@ -1,6 +1,6 @@
 # Agent Coding Skills
 
-An engineering governance framework for AI coding agents. It defines rules, workflows, and document templates that constrain agents to deliver code through small, reviewable, evidence-backed PRs — instead of uncontrolled end-to-end changes.
+A repository of reusable workflow skills for disciplined AI coding. The portable coordination layer now lives inside `skills/framework-orchestrator/`; the repo-root `AGENTS.md` is only for maintaining this repository.
 
 ## Problem
 
@@ -13,28 +13,29 @@ AI coding agents commonly fail in predictable ways:
 - Claim "done" without verification evidence
 - Repeat the same mistakes across tasks
 
-This framework turns each of those failure modes into an enforceable rule.
+This repository turns those failure modes into reusable skills and a portable orchestration layer.
 
 ## How it works
 
-### Two layers
+### Three layers
 
 | Layer | Role | Analogy |
 |---|---|---|
-| `AGENTS.md` | Universal operating rules for the agent | Constitution |
-| `skills/` | Specialized workflows for specific scenarios | Playbooks |
+| `AGENTS.md` | Repo-specific contributor guidance for this repository | Maintainer guide |
+| `skills/framework-orchestrator/` | Portable workflow coordination contract + planning templates | Conductor |
+| Other `skills/` | Specialized worker workflows for specific scenarios | Specialists |
 
 ### Core workflow
 
 ```
-Research → Design → [Gate 1: Human Approve] → Plan + Todo → [Gate 2: Human Approve] → Execute → Verify → [Gate 3: Post-exec Review (high-risk only)] → Lessons
+Research → Design → [Gate 1: Human Approve] → Plan + Todo → [Gate 2: Human Approve] → Execute → Verify → [Gate 3: Post-exec Review] → Lessons
 ```
 
 ```
 Fast path (urgent):  Execute → Verify → Lessons (backfill)
 ```
 
-Every non-trivial task flows through structured phases with human approval gates. Trivial tasks skip directly to execution.
+The portable workflow still uses these structured phases; `framework-orchestrator` is the front door that decides when each phase applies and which worker skill should take over.
 
 ### Approval gates
 
@@ -42,12 +43,12 @@ Every non-trivial task flows through structured phases with human approval gates
 |---|---|---|
 | **Gate 1** | After research + design | Is the direction right? Is the approach sound? |
 | **Gate 2** | After plan + todo | Are the execution steps reasonable? |
-| **Gate 3** | After execution (high-risk only) | Does the actual diff match the plan? |
+| **Gate 3** | After execution for high-risk changes, plan deviations, or explicit reviewer request | Does the actual diff match the plan? |
 | **Fast path** | Production down / urgent | Skip gates, still verify, backfill lessons |
 
 ### Acceptance criteria
 
-Every plan defines concrete acceptance criteria per step/PR. Before proposing a PR, the agent must demonstrate all criteria are met with evidence. If they're not met, a 4-level recovery flow kicks in: fix → update plan → update design → escalate to human.
+Every plan defines concrete acceptance criteria per step/PR. Before proposing a PR, the agent must demonstrate all criteria are met with evidence. If they're not met, the workflow recovers through fix → update plan → update design → escalate.
 
 ### Verification levels
 
@@ -62,14 +63,12 @@ No evidence = not done.
 ## Project structure
 
 ```
-AGENTS.md                                         # Universal agent operating rules
-templates/                                        # Document templates
-  RESEARCH.md                                     #   Evidence collection
-  DESIGN.md                                       #   Solution design + trade-offs
-  PLAN.md                                         #   Execution plan + acceptance criteria
-  TODO.md                                         #   Checklist + acceptance gate
-  LESSONS.md                                      #   Post-incident learnings
+AGENTS.md                                         # Repo-specific maintainer guidance for this repository
 skills/                                           # Specialized workflows
+  framework-orchestrator/                         #   Portable coordination layer + bundled planning templates
+    SKILL.md
+    references/framework-contract.md
+    templates/
   decompose-feature/                              #   Split large features into small PRs
     SKILL.md
     templates/feature-plan-template.md
@@ -86,7 +85,7 @@ skills/                                           # Specialized workflows
   scan-image-vulnerabilities/                     #   Scan container images for vulnerabilities
     SKILL.md
     scripts/trivy_latest_scan.sh
-plans/                                            # Created per-task by agent (plans/{slug}/)
+plans/                                            # Planning/execution artifacts for changes to this repo
 ```
 
 ## Skills
@@ -122,6 +121,16 @@ mechanical-only → preparatory refactor → behavioral change → tests → doc
 ```
 
 Use when: a PR is too large, mixes concerns, or needs post-hoc recovery.
+
+### framework-orchestrator
+
+Acts as the framework front door and coordinates the worker skills:
+
+```
+classify request → derive slug → create/update plans/{slug} → choose next worker skill → keep state aligned
+```
+
+Use when: the user wants one skill to decide how work should proceed end-to-end, wants the right slug docs created before execution, or wants the existing workflow skills to cooperate as one system. This skill decides **which phase applies next and which worker skill should take over**.
 
 ### execute-plan-loop
 
@@ -163,26 +172,28 @@ Use when: the user asks about image vulnerabilities, wants a CVE scan, mentions 
 
 ## Usage
 
-### For a new project
+### Using the workflow in another repo
 
-1. Copy `AGENTS.md`, `templates/`, and `skills/` into your repository.
-2. Customize `AGENTS.md`:
-   - Update preferred validation commands (`make lint`, `make test`, etc.) to match your project.
-   - Adjust the mode switching trigger table if needed.
-3. The agent will read `AGENTS.md` at the start of each task and follow the rules.
+1. Start with `skills/framework-orchestrator/`.
+2. Keep its bundled `references/` and `templates/` with it; that is the portable coordination bundle.
+3. Add whichever worker skills you want alongside it (`decompose-feature`, `plan-parallel-work`, `execute-plan-loop`, and so on).
+4. Use the target repo's own `AGENTS.md` or equivalent only for project-specific rules, not as the shared skill-coordination layer.
+5. If you invoke a worker skill directly, make sure the `framework-orchestrator` contract is present and active; otherwise route through `framework-orchestrator` first.
 
-### For an existing project
+### Working on this repo
 
-Same as above. The framework is additive — it doesn't require changes to your existing code, CI, or tooling.
+1. Repo-root `AGENTS.md` applies only to this repository.
+2. If you change cross-skill workflow behavior, update `framework-orchestrator` first.
+3. If you change a worker skill, keep it aligned with the `framework-orchestrator` contract.
+4. Put repo-change planning artifacts under `plans/{slug}/`.
 
 ### What the agent does at runtime
 
-1. Reads `AGENTS.md` to understand the operating rules.
-2. Evaluates the task against the mode switching trigger table.
-3. If plan mode: creates `plans/{slug}/` and produces artifacts using `templates/`.
-4. Stops at approval gates for human review.
-5. Executes only after approval, verifies against acceptance criteria.
-6. Proposes a PR only when all criteria are met with evidence.
+1. Uses `framework-orchestrator` as the front door when the next workflow phase is not already obvious.
+2. Lets `framework-orchestrator` classify the task, derive the slug, and create/update the needed `plans/{slug}` artifacts from its bundled templates.
+3. Hands off to a narrower worker skill when the phase is clear (`decompose-feature`, `plan-parallel-work`, `execute-plan-loop`, and so on).
+4. When a worker skill is invoked directly, it should first load `skills/framework-orchestrator/references/framework-contract.md` if available, or require an equivalent active workflow contract.
+5. Verifies the resulting work at the appropriate level before proposing completion.
 
 ## Customization
 
@@ -194,12 +205,12 @@ Create a directory under `skills/` with a `SKILL.md`:
 skills/
   your-new-skill/
     SKILL.md           # Must include: name, description, operating context, workflow
-    templates/         # Optional templates
+    templates/         # Optional templates owned by this skill
     references/        # Optional detailed docs loaded on demand
     scripts/           # Optional helper scripts
 ```
 
-Add routing rules to the "Skill routing" section of `AGENTS.md`.
+If the new skill should participate in the shared workflow, document that relationship in `framework-orchestrator` and update this README.
 
 ### Skill types worth considering
 
@@ -234,7 +245,7 @@ If your agent platform supports hooks, consider adding them to high-risk skills 
 
 - **More strict**: Require Gate 1 for all plan-mode tasks (remove "Design required?" conditional).
 - **Less strict**: Use the fast path more broadly, or skip Gate 2 for low-risk planned changes.
-- **Per-project**: Override validation commands and trigger tables in `AGENTS.md`.
+- **Per-project**: Put project-specific contributor rules in that repo's own `AGENTS.md` / `CLAUDE.md`, while keeping shared workflow coordination in `framework-orchestrator`.
 
 ## Status
 

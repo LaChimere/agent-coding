@@ -5,7 +5,9 @@ description: Execute an approved feature request or approved `plans/{slug}` scop
 
 # Operating context
 
-This skill operates within the workflow defined in `AGENTS.md`.
+This skill operates within the workflow coordinated by `framework-orchestrator` and its bundled framework contract.
+
+If `skills/framework-orchestrator/references/framework-contract.md` exists in the current repository, read it before execution. If the shared contract is not present, use this skill only when an equivalent workflow contract is already active or route through `framework-orchestrator` first.
 
 It is an **execution skill**, not a planning shortcut. If the task triggers plan mode and the necessary approvals are missing, do not start coding. Create or update the required plan artifacts, stop at the correct gate, and wait for approval.
 
@@ -57,7 +59,7 @@ Carry approved implementation work forward in small, reviewable, verified increm
   - `plans/{slug}/design.md` when correctness depends on design constraints
   - `plans/{slug}/plan.md` for the approved steps and acceptance criteria
   - `plans/{slug}/todo.md` for current execution status
-- If approvals required by `AGENTS.md` are missing, stop and request the missing gate approval instead of coding ahead.
+- If approvals required by the active workflow contract are missing, stop and request the missing gate approval instead of coding ahead.
 
 ## 2) Re-state the concrete objective
 
@@ -134,7 +136,7 @@ If yes, decide which class of documentation change you are making:
 
 Do not stop the long loop for trivial docs that are tightly coupled to the implementation and clearly within the approved scope. Do stop for broader doc work that changes shared guidance or exceeds the slice's natural boundary.
 
-Before proposing the final PR or completion message, do one last doc-staleness sweep consistent with `AGENTS.md`: count the inline slice-coupled updates you already made, then invoke `refresh-related-docs` only if broader Markdown docs may still be stale.
+Before proposing the final PR or completion message, do one last doc-staleness sweep consistent with the active workflow contract: count the inline slice-coupled updates you already made, then invoke `refresh-related-docs` only if broader Markdown docs may still be stale.
 
 ## 6) Create one atomic commit
 

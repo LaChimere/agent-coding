@@ -33,7 +33,7 @@
 - [ ] Diff is consistent with approved plan (no scope creep, no missing pieces)
 - [ ] Applicable verification level executed
 
-If any check fails, follow the recovery flow defined in `AGENTS.md` (Verification rules → Acceptance criteria):
+If any check fails, follow the recovery flow defined in the active framework contract:
 1. Can fix directly → fix and re-verify
 2. Plan is infeasible → update `plan.md`, re-submit for Gate 2
 3. Design is invalid → update `design.md`, re-submit for Gate 1 → Gate 2

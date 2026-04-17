@@ -9,7 +9,7 @@ description: Refresh documentation that has become stale after code changes, wit
 
 This skill may be invoked at any point in the workflow — typically after execution or verification, when the agent notices that completed work has made existing documentation stale. It does not enter plan mode or require approval gates by itself; instead, it uses its own lightweight approval step (ask the user before editing any doc).
 
-Because changes to `AGENTS.md` affect all future agent sessions, treat `AGENTS.md` edits with the same care as a code change to a shared module — always get explicit user approval even if the user gave blanket "update docs" permission.
+Because changes to `AGENTS.md` affect how this repository is maintained in future sessions, treat `AGENTS.md` edits with the same care as a code change to a shared module — always get explicit user approval even if the user gave blanket "update docs" permission.
 
 ## Overview
 
@@ -29,7 +29,7 @@ Adopting projects typically have a layered documentation layout; know which laye
 
 - `docs/` (if present) — canonical design documents and API specs. These are the source of truth for product semantics.
 - `plans/{slug}/` — planning slugs (`research.md`, `design.md`, `plan.md`, `todo.md`). These carry execution constraints derived from the canonical design, not the design itself.
-- `AGENTS.md` — the repo-local operating contract for agents. Changes here affect how all future agent work is performed.
+- `AGENTS.md` — the repo-local contributor guidance for agents working on this repository. Changes here affect how future maintenance work is performed.
 - `README.md`, runbooks, and feature-specific guides.
 
 When a change touches product semantics and `docs/` exists, update `docs/` first. When a change only affects execution constraints or decomposition, update `plans/` only. Do not let planning slug edits silently diverge from the canonical design.
@@ -74,4 +74,4 @@ When a change touches product semantics and `docs/` exists, update `docs/` first
 - **Don't let `plans/` and `docs/` drift.** A common failure is updating a planning slug without checking whether the canonical design doc still says the same thing, or vice versa. Always cross-check after editing either layer.
 - **Don't rewrite tone.** It is easy to accidentally homogenize a doc's voice when making targeted edits. Read a few paragraphs around your edit site before writing so you match the existing style.
 - **Don't expand scope.** When detecting doc-worthy changes, resist the urge to also fix unrelated stale sections you notice. Only touch what the current change requires; file the rest as follow-up.
-- **`AGENTS.md` is high-impact.** Changes to `AGENTS.md` affect all future agent sessions in this repo. Treat it with the same care as a code change to a shared module.
+- **`AGENTS.md` is high-impact.** Changes to `AGENTS.md` affect how future agent sessions maintain this repo. Treat it with the same care as a code change to a shared module.
