@@ -1,6 +1,6 @@
 # Agent Coding Skills
 
-A repository of reusable workflow skills for disciplined AI coding. The portable coordination layer now lives inside `skills/framework-orchestrator/`; the repo-root `AGENTS.md` is only for maintaining this repository.
+A repository of reusable workflow skills for disciplined AI coding. The portable coordination layer now lives inside `skills/workflow-orchestrator/`; the repo-root `AGENTS.md` is only for maintaining this repository.
 
 ## Problem
 
@@ -22,7 +22,7 @@ This repository turns those failure modes into reusable skills and a portable or
 | Layer | Role | Analogy |
 |---|---|---|
 | `AGENTS.md` | Repo-specific contributor guidance for this repository | Maintainer guide |
-| `skills/framework-orchestrator/` | Portable workflow coordination contract + planning templates | Conductor |
+| `skills/workflow-orchestrator/` | Portable workflow coordination contract + planning templates | Conductor |
 | Other `skills/` | Specialized worker workflows for specific scenarios | Specialists |
 
 ### Core workflow
@@ -35,7 +35,7 @@ Research → Design → [Gate 1: Human Approve] → Plan + Todo → [Gate 2: Hum
 Fast path (urgent):  Execute → Verify → Lessons (backfill)
 ```
 
-The portable workflow still uses these structured phases; `framework-orchestrator` is the front door that decides when each phase applies and which worker skill should take over.
+The portable workflow still uses these structured phases; `workflow-orchestrator` is the front door for workflow-managed skills and decides when each phase applies and which worker skill should take over. Read-only inspection skills may explicitly operate outside that contract.
 
 ### Approval gates
 
@@ -65,9 +65,9 @@ No evidence = not done.
 ```
 AGENTS.md                                         # Repo-specific maintainer guidance for this repository
 skills/                                           # Specialized workflows
-  framework-orchestrator/                         #   Portable coordination layer + bundled planning templates
+  workflow-orchestrator/                         #   Portable coordination layer + bundled planning templates
     SKILL.md
-    references/framework-contract.md
+    references/workflow-contract.md
     templates/
   decompose-feature/                              #   Split large features into small PRs
     SKILL.md
@@ -122,9 +122,9 @@ mechanical-only → preparatory refactor → behavioral change → tests → doc
 
 Use when: a PR is too large, mixes concerns, or needs post-hoc recovery.
 
-### framework-orchestrator
+### workflow-orchestrator
 
-Acts as the framework front door and coordinates the worker skills:
+Acts as the workflow front door and coordinates the worker skills:
 
 ```
 classify request → derive slug → create/update plans/{slug} → choose next worker skill → keep state aligned
@@ -174,25 +174,25 @@ Use when: the user asks about image vulnerabilities, wants a CVE scan, mentions 
 
 ### Using the workflow in another repo
 
-1. Start with `skills/framework-orchestrator/`.
+1. Start with `skills/workflow-orchestrator/`.
 2. Keep its bundled `references/` and `templates/` with it; that is the portable coordination bundle.
 3. Add whichever worker skills you want alongside it (`decompose-feature`, `plan-parallel-work`, `execute-plan-loop`, and so on).
 4. Use the target repo's own `AGENTS.md` or equivalent only for project-specific rules, not as the shared skill-coordination layer.
-5. If you invoke a worker skill directly, make sure the `framework-orchestrator` contract is present and active; otherwise route through `framework-orchestrator` first.
+5. If you invoke a workflow-managed worker skill directly, make sure the `workflow-orchestrator` contract is present and active; otherwise route through `workflow-orchestrator` first. Read-only inspection skills may document that they operate outside this contract.
 
 ### Working on this repo
 
 1. Repo-root `AGENTS.md` applies only to this repository.
-2. If you change cross-skill workflow behavior, update `framework-orchestrator` first.
-3. If you change a worker skill, keep it aligned with the `framework-orchestrator` contract.
+2. If you change cross-skill workflow behavior, update `workflow-orchestrator` first.
+3. If you change a worker skill, keep it aligned with the `workflow-orchestrator` contract.
 4. Put repo-change planning artifacts under `plans/{slug}/`.
 
 ### What the agent does at runtime
 
-1. Uses `framework-orchestrator` as the front door when the next workflow phase is not already obvious.
-2. Lets `framework-orchestrator` classify the task, derive the slug, and create/update the needed `plans/{slug}` artifacts from its bundled templates.
+1. Uses `workflow-orchestrator` as the front door for workflow-managed skills when the next workflow phase is not already obvious.
+2. Lets `workflow-orchestrator` classify the task, derive the slug, and create/update the needed `plans/{slug}` artifacts from its bundled templates.
 3. Hands off to a narrower worker skill when the phase is clear (`decompose-feature`, `plan-parallel-work`, `execute-plan-loop`, and so on).
-4. When a worker skill is invoked directly, it should first load `skills/framework-orchestrator/references/framework-contract.md` if available, or require an equivalent active workflow contract.
+4. When a workflow-managed worker skill is invoked directly, it should first load `skills/workflow-orchestrator/references/workflow-contract.md` if available, or require an equivalent active workflow contract. Read-only inspection skills can remain outside this contract when their own operating context says so.
 5. Verifies the resulting work at the appropriate level before proposing completion.
 
 ## Customization
@@ -210,7 +210,7 @@ skills/
     scripts/           # Optional helper scripts
 ```
 
-If the new skill should participate in the shared workflow, document that relationship in `framework-orchestrator` and update this README.
+If the new skill should participate in the shared workflow, document that relationship in `workflow-orchestrator` and update this README.
 
 ### Skill types worth considering
 
@@ -245,7 +245,7 @@ If your agent platform supports hooks, consider adding them to high-risk skills 
 
 - **More strict**: Require Gate 1 for all plan-mode tasks (remove "Design required?" conditional).
 - **Less strict**: Use the fast path more broadly, or skip Gate 2 for low-risk planned changes.
-- **Per-project**: Put project-specific contributor rules in that repo's own `AGENTS.md` / `CLAUDE.md`, while keeping shared workflow coordination in `framework-orchestrator`.
+- **Per-project**: Put project-specific contributor rules in that repo's own `AGENTS.md` / `CLAUDE.md`, while keeping shared workflow coordination in `workflow-orchestrator`.
 
 ## Status
 

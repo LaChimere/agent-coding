@@ -1,11 +1,11 @@
 ---
-name: framework-orchestrator
+name: workflow-orchestrator
 description: Orchestrate the full framework workflow from request to research/design/plan/execution/review by creating or updating `plans/{slug}` artifacts, applying the framework contract, and choosing the right worker skill next. Use whenever the user wants one skill to decide how work should proceed end-to-end, asks to turn a request into the right slug docs plus next action, or wants multiple workflow skills to cooperate as one system.
 ---
 
 # Purpose
 
-Act as the **front door** for this framework.
+Act as the **front door** for this workflow.
 
 This skill does not replace the worker skills. It decides:
 - which workflow phase applies now
@@ -30,7 +30,7 @@ This skill does not replace the worker skills. It decides:
 
 ## 1) Load the bundled contract first
 
-Read `references/framework-contract.md` before making orchestration decisions.
+Read `references/workflow-contract.md` before making orchestration decisions.
 
 That file is the portable summary of the framework rules this skill needs:
 - discovery expectations
@@ -49,7 +49,7 @@ If the repository also has `AGENTS.md`, treat it as the source for **project-loc
 - repo maintenance conventions
 - documentation expectations for that specific repository
 
-Do **not** treat repo-root `AGENTS.md` as the orchestration contract for the skill graph. That coordination logic lives in this skill and `references/framework-contract.md`.
+Do **not** treat repo-root `AGENTS.md` as the orchestration contract for the skill graph. That coordination logic lives in this skill and `references/workflow-contract.md`.
 
 ## 3) Use skill-local templates to create runtime artifacts
 
@@ -90,7 +90,7 @@ Choose a short kebab-case slug that matches the task's one logical purpose.
 Prefer:
 - `add-auth-middleware`
 - `parallelize-report-import`
-- `framework-orchestrator-skill`
+- `workflow-orchestrator-skill`
 
 Avoid broad or mixed slugs like:
 - `misc-fixes`

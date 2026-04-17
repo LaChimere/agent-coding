@@ -7,17 +7,21 @@ description: Refresh documentation that has become stale after code changes, wit
 
 ## Operating context
 
+This skill operates within the workflow coordinated by `workflow-orchestrator` and its bundled framework contract.
+
+If `skills/workflow-orchestrator/references/workflow-contract.md` exists in the current repository, read it before refreshing broader workflow or planning docs. If the shared contract is not present, use this skill only when an equivalent workflow contract is already active or route through `workflow-orchestrator` first.
+
 This skill may be invoked at any point in the workflow — typically after execution or verification, when the agent notices that completed work has made existing documentation stale. It does not enter plan mode or require approval gates by itself; instead, it uses its own lightweight approval step (ask the user before editing any doc).
 
 Because changes to `AGENTS.md` affect how this repository is maintained in future sessions, treat `AGENTS.md` edits with the same care as a code change to a shared module — always get explicit user approval even if the user gave blanket "update docs" permission.
 
 ## Overview
 
-Keep documentation aligned with completed work while requiring explicit user approval before any doc edits. Treat all Markdown docs as potentially outdated and update only the ones related to the change, preserving each file's style.
+Keep documentation aligned with completed work while requiring explicit user approval before broader doc edits. Treat all Markdown docs as potentially outdated and update only the ones related to the change, preserving each file's style. Narrow slug-local status updates may already be covered by standing approval from an active execution workflow.
 
 ## Non-negotiables
 
-- Ask for user approval before editing any documentation.
+- Ask for user approval before editing documentation, unless an active execution workflow already grants standing approval for a narrow slug-local status update such as `plans/{slug}/todo.md` evidence.
 - If the user declines or does not respond, skip doc edits and proceed with the task result.
 - Treat all `.md` files (including `AGENTS.md`) as potentially outdated; prioritize only those related to the change.
 - Preserve each document's tone, headings, formatting, and organization; make minimal, targeted edits.

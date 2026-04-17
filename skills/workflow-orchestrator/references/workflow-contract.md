@@ -1,6 +1,6 @@
-# Framework Contract Reference
+# Workflow Contract Reference
 
-This file is the orchestration-focused summary of the framework rules that matter for `framework-orchestrator`.
+This file is the orchestration-focused summary of the workflow rules that matter for `workflow-orchestrator`.
 
 Use it to decide:
 - whether discovery is still needed

@@ -10,7 +10,7 @@ compatibility:
 
 ## Operating context
 
-This skill is a **read-only inspection tool** — it scans images and reports findings but does not modify code, create PRs, or produce plan artifacts. It operates outside the plan mode / approval gate workflow coordinated by `framework-orchestrator`. Its output may feed into research or security triage but does not require gates.
+This skill is a **read-only inspection tool** — it scans images and reports findings but does not modify code, create PRs, or produce plan artifacts. It operates outside the plan mode / approval gate workflow coordinated by `workflow-orchestrator`, so it can be invoked directly without routing through that contract. Its output may feed into research or security triage but does not require gates.
 
 ## Purpose
 

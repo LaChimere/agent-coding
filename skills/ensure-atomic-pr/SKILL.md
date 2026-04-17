@@ -5,9 +5,9 @@ description: Evaluate whether a diff, commit, or PR is atomic enough. Use when a
 
 # Operating context
 
-This skill operates within the workflow coordinated by `framework-orchestrator` and its bundled framework contract. It can be invoked at any point — during design, during execution, or after the fact as a recovery tool.
+This skill operates within the workflow coordinated by `workflow-orchestrator` and its bundled framework contract. It can be invoked at any point — during design, during execution, or after the fact as a recovery tool.
 
-If `skills/framework-orchestrator/references/framework-contract.md` exists in the current repository, read it before changing execution strategy. If the shared contract is not present, use this skill only when an equivalent workflow contract is already active or route through `framework-orchestrator` first.
+If `skills/workflow-orchestrator/references/workflow-contract.md` exists in the current repository, read it before changing execution strategy. If the shared contract is not present, use this skill only when an equivalent workflow contract is already active or route through `workflow-orchestrator` first.
 
 When used as a quick assessment on an existing diff, it does not by itself force plan mode. The assessment can be delivered directly.
 

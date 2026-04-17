@@ -5,9 +5,9 @@ description: Execute an approved feature request or approved `plans/{slug}` scop
 
 # Operating context
 
-This skill operates within the workflow coordinated by `framework-orchestrator` and its bundled framework contract.
+This skill operates within the workflow coordinated by `workflow-orchestrator` and its bundled framework contract.
 
-If `skills/framework-orchestrator/references/framework-contract.md` exists in the current repository, read it before execution. If the shared contract is not present, use this skill only when an equivalent workflow contract is already active or route through `framework-orchestrator` first.
+If `skills/workflow-orchestrator/references/workflow-contract.md` exists in the current repository, read it before execution. If the shared contract is not present, use this skill only when an equivalent workflow contract is already active or route through `workflow-orchestrator` first.
 
 It is an **execution skill**, not a planning shortcut. If the task triggers plan mode and the necessary approvals are missing, do not start coding. Create or update the required plan artifacts, stop at the correct gate, and wait for approval.
 
@@ -125,11 +125,11 @@ Before every commit, ask whether this slice changed:
 
 If yes, decide which class of documentation change you are making:
 
-- **Directly coupled docs/status updates**: treat the user's request to run this long loop as standing approval for small documentation updates that are inseparable from the slice you are landing. Examples:
-  - updating `README.md` when a new command, flag, or user-visible behavior ships
+- **Directly coupled docs/status updates**: treat the user's request to run this long loop as standing approval for narrow slug-local status updates that are inseparable from the slice you are landing. Examples:
   - updating `plans/{slug}/todo.md` evidence and completion state
   - updating slug-local status notes that future execution depends on
 - **Broader or high-impact doc refreshes**: use `refresh-related-docs` and follow its approval rule before editing. Examples:
+  - `README.md`
   - `AGENTS.md`
   - broad doc sweeps across multiple Markdown files
   - canonical design docs or runbooks that extend beyond the current atomic slice

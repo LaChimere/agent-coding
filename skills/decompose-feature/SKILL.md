@@ -5,9 +5,9 @@ description: Split a large feature into a sequence of small, mergeable, reviewab
 
 # Operating context
 
-This skill operates within the workflow coordinated by `framework-orchestrator` and its bundled framework contract.
+This skill operates within the workflow coordinated by `workflow-orchestrator` and its bundled framework contract.
 
-If `skills/framework-orchestrator/references/framework-contract.md` exists in the current repository, read it before producing the split. If the shared contract is not present, use this skill only when an equivalent workflow contract is already active or route through `framework-orchestrator` first.
+If `skills/workflow-orchestrator/references/workflow-contract.md` exists in the current repository, read it before producing the split. If the shared contract is not present, use this skill only when an equivalent workflow contract is already active or route through `workflow-orchestrator` first.
 
 Before producing a split plan, create or update `plans/{slug}/research.md` with the evidence, constraints, and unknowns that justify the decomposition.
 
