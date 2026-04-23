@@ -1,0 +1,38 @@
+{
+  "skill_name": "scp-so-live-debug",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Start local SCP for profile c-1, make sure it uses the real AKS pools rather than the fake DevAks pool path, then prove that a `skillsAgentOnly` single-pod execution lease only starts the expected containers.",
+      "expected_output": "The run starts local SCP with the right env vars, disables warm-pool checkout for the single-pod path, acquires an execution lease, and reports the acquired pod's container list as evidence.",
+      "files": [],
+      "expectations": [
+        "The workflow clears or avoids the DevAks fake-pool env vars when validating real pools.",
+        "The workflow disables warm-pool checkout for the single-pod acquire path.",
+        "The final evidence is based on the acquired sandbox pod, not the warm-pool pod."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "I changed a Sandbox Orchestrator image and the partner chart locally. Build and push the image, publish any required partner or image-puller artifacts, then use local SCP plus the remote SO to roll the tenant and validate that the deployment is healthy.",
+      "expected_output": "The run uses the existing build and push flow, publishes artifacts only when needed, reconciles the deployment path through SCP and SO, and validates the tenant namespace with concrete release or pod evidence.",
+      "files": [],
+      "expectations": [
+        "The workflow distinguishes image tags from artifact versions.",
+        "The workflow includes artifact publication when chart or artifact inputs changed.",
+        "The final validation checks the live tenant namespace or release state."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Local SCP pool create returned 403 on a per-user Service Bus queue, but I still need to continue the c-1 debug loop. Recover from that and finish the pool-side workflow without recreating everything from scratch.",
+      "expected_output": "The run recognizes the local Service Bus Send permission issue, checks whether the pool operation persisted, manually reconciles it when appropriate, and continues with live validation.",
+      "files": [],
+      "expectations": [
+        "The workflow recognizes the 403 as a queue-send issue rather than assuming the whole pool create failed.",
+        "The workflow uses the persisted pool operation with `?reconcile=true` when applicable.",
+        "The result summarizes the recovered operation and the final live state."
+      ]
+    }
+  ]
+}
