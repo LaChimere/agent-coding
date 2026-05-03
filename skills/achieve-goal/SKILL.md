@@ -14,7 +14,7 @@ This skill uses skill-layer mechanics to make long-running goals explicit and re
 - a re-anchored execution loop
 - explicit pause, resume, clear, budget-limited, and complete states
 
-It persists enough state for a future turn to resume the goal, but continuation still depends on the active agent run or a later user/orchestrator invocation.
+It persists enough state for a future turn to resume the goal, but continuation still depends on the active agent run or a later user/orchestrator invocation. The skill is an outer lifecycle layer: it keeps the durable objective, stop conditions, and completion audit visible while narrower skills do specialized research, planning, implementation, documentation, or review work when appropriate.
 
 # Use this skill when
 
@@ -33,9 +33,28 @@ It persists enough state for a future turn to resume the goal, but continuation 
 
 When discovery, design, or approval is needed, route through `workflow-orchestrator` before starting the loop.
 
+## Skill boundaries and handoffs
+
+Choose the narrowest skill that matches the current phase:
+
+| Need | Preferred skill |
+|---|---|
+| Persist a goal, lifecycle state, pause/resume/clear/status, or completion audit | `achieve-goal` |
+| Decide whether research/design/plan gates apply | `workflow-orchestrator` |
+| Split a large feature into PRs | `decompose-feature` |
+| Execute an approved implementation plan with atomic commits | `execute-plan-loop` |
+| Refresh docs after behavior, config, or API changes | `refresh-related-docs` |
+
+Common composition pattern:
+
+1. Use `achieve-goal` to register the durable objective and completion criteria.
+2. If gate status is unclear, ask `workflow-orchestrator` to classify discovery/design/plan/approval needs before starting implementation. Do not keep re-routing the same unchanged gate question after it returns a decision; record the decision in the goal progress log.
+3. When implementation scope is approved, hand one coherent approved scope or milestone to `execute-plan-loop`; that skill owns its internal commit cadence, verification, and review checkpoints while it runs.
+4. After the delegated scope returns, blocks, or completes, re-open `goal.md`, record the returned evidence, update blockers/deferred items, and decide whether the overall goal should continue, stop, or complete.
+
 If an approved implementation plan already exists, choose based on the user's intent:
 
-- Use `achieve-goal` when the user explicitly invoked `/goal`, wants pause/resume/clear controls, wants a persistent objective, or set a budget.
+- Use `achieve-goal` when the user explicitly invoked `/goal`, wants pause/resume/clear controls, wants a persistent objective, or needs a completion audit across multiple phases.
 - Use `execute-plan-loop` when the user asks only to execute an approved plan with atomic commits and does not need goal lifecycle semantics.
 - If both seem plausible and the distinction changes behavior, route through `workflow-orchestrator` rather than guessing.
 
@@ -43,7 +62,7 @@ If an approved implementation plan already exists, choose based on the user's in
 
 Use one active goal at a time per repository unless the user explicitly asks for a separate scoped goal.
 
-Store goal state at:
+For repo-owned goals, store goal state at:
 
 ```text
 plans/{slug}/goal.md
@@ -78,12 +97,31 @@ status: active
 slug: "<slug>"
 turns_used: 0
 turn_budget: null
+docs_update_approved: false
 created_at: "<ISO-8601 timestamp if available>"
 updated_at: "<ISO-8601 timestamp if available>"
 
 ## Acceptance criteria
 
-- <what must be true for the goal to count as complete>
+### User-visible behavior
+
+- <what must be true for the user-facing outcome to count as complete>
+
+### Implementation scope
+
+- <what code/config/data/doc surfaces are in scope>
+
+### Validation
+
+- <checks, tests, review evidence, or commands required>
+
+### Docs/status
+
+- <docs or status artifacts that must be updated>
+
+### Deferred/out of scope
+
+- <items explicitly not required for completion>
 
 ## Progress log
 
@@ -91,12 +129,26 @@ updated_at: "<ISO-8601 timestamp if available>"
 
 ## Deferred items
 
-- None.
+- None. Use `reason=<out_of_scope|needs_user_decision|future_phase|blocked_by_dependency>` when adding deferred work.
 
 ## Blockers
 
 - None.
 ```
+
+Do not collapse the acceptance criteria into a flat checklist for new goals. Use the five section headings exactly so future loop iterations can audit user-visible behavior, implementation scope, validation, docs/status, and deferred scope independently. If an existing goal lacks this structure, repair the structure as a metadata/status update before relying on it for completion.
+
+`turns_used` counts completed goal-loop iterations that produced progress evidence, not chat turns or user messages. A control-only update such as status, pause, clear, metadata repair, or objective refinement does not increment it.
+
+## Gated delivery posture
+
+Treat every active goal as a high-quality delivery commitment. The durable goal state, structured acceptance criteria, blockers, deferred items, progress evidence, and completion audit are the point of this skill.
+
+Respect the repository's workflow gates. If the goal is unclear, unapproved, or likely to cross a gate, delegate gate classification to `workflow-orchestrator` before starting the loop and record the result. Add `todo.md` for multi-slice execution tracking and `plan.md` when the active workflow contract requires a plan gate. If an already-registered goal reaches completion within the current agent run, it still needs a completion audit before `status: complete`.
+
+Implementation delegated to `execute-plan-loop` must follow that skill's non-negotiables. If this skill performs a small implementation slice directly, apply the same quality posture: inspect referenced evidence, solve the real problem generally, use normal repository tools, avoid test-fitting workarounds, and keep data validation focused on real boundaries while still surfacing operational errors.
+
+If the host provides session-local storage and the user explicitly does not want repository artifacts, keep the goal state there only when that still preserves the same gated lifecycle semantics. Report that session-local state is not portable across agents unless copied into the repository.
 
 If the environment provides a structured todo store, mirror the next actionable slices there. The Markdown `goal.md` remains the human-readable status anchor.
 
@@ -109,11 +161,11 @@ Interpret these user forms:
 | `/goal` | Show the current goal summary. |
 | `/goal <objective>` | Register a new goal or request confirmation before replacing an active goal. |
 | `/goal pause` | Set status to `paused` and stop. |
-| `/goal resume` | Set status to `active` and continue the loop. |
+| `/goal resume` | Check budget/blockers, then set status to `active` and continue only when safe. |
 | `/goal clear` | Set status to `cleared`, record that the user dismissed the goal, and stop. |
 | `/goal status` | Show objective, status, turns used, budget, latest progress, and blockers. |
 
-If the user gives a token budget, convert it into a clearly labeled turn budget approximation and record the original budget text in `goal.md`. Skills cannot read true token usage, so do not pretend to enforce exact token budgets; explicitly say the limit is approximate when reporting status.
+If the user gives a token budget, convert it into a clearly labeled turn budget approximation and record the original budget text in `goal.md`. Skills cannot read true token usage, so do not pretend to enforce exact token budgets; explicitly say the limit is approximate when reporting status. Treat budgets as a safety stop and re-authorization mechanism, not as permission to lower quality or stop short of the goal without reporting remaining work.
 
 ## Control command rules
 
@@ -121,10 +173,11 @@ Control commands change goal lifecycle state; they are not implementation slices
 
 - `/goal` and `/goal status` are read-only: do not increment `turns_used`, create implementation files, or modify goal state except to repair obviously missing metadata.
 - `/goal pause` records a pause entry, sets `status: paused`, and stops without incrementing `turns_used`.
-- `/goal resume` checks budget and blockers before changing state; if continuation is allowed, set `status: active` and enter the loop. If the budget is exhausted, leave the goal `budget_limited` and report that a higher budget or narrower objective is needed.
+- `/goal resume` checks budget and blockers before changing state; if continuation is allowed, set `status: active` and enter the loop. If the budget is exhausted, leave the goal `budget_limited` unless the user explicitly re-authorizes continuation. Explicit re-authorization means a new numeric turn budget, a narrowed objective that demonstrably reduces scope, or a clear approval statement that acknowledges the budget was exhausted and asks to continue anyway.
 - `/goal clear` records a clear entry, sets `status: cleared`, and stops without a completion audit. A cleared goal must not be reported as complete and must not be selected as the active goal on later runs.
 - If a pause, resume, clear, or status command has no active goal to operate on, report that plainly and do not create a synthetic goal just to satisfy the command.
 - Treat `paused` as an explicit user stop. A generic "continue", "keep going", or "work on the goal" request does not resume a paused goal; require `/goal resume` or an equally explicit resume instruction before doing implementation work.
+- For a new objective while another goal is active, present clear choices instead of improvising: pause old goal, clear old goal, replace old goal, complete old goal after audit, or create a separately scoped goal.
 
 # Activation workflow
 
@@ -134,8 +187,11 @@ For a new goal:
 
 1. Copy the user's objective verbatim into `goal.md`.
 2. Derive a short kebab-case slug from the objective.
-3. Identify acceptance criteria. If the user did not provide them, infer practical criteria from the objective and record them as assumptions.
-4. Decide whether the objective requires workflow planning or approval before execution.
+3. Identify structured acceptance criteria. If the user did not provide them, infer practical criteria from the objective and record them as assumptions.
+4. If the objective explicitly includes directly related documentation updates, set `docs_update_approved: true` for those docs only. This is not approval for broad docs or governance changes.
+5. If gate status is unclear, delegate workflow planning or approval classification to `workflow-orchestrator` before execution.
+
+High-impact docs include repo-governance or shared guidance files such as `AGENTS.md`, security/release/runbook docs, broad README rewrites, and canonical workflow docs. For those docs, or for docs outside the objective, use `refresh-related-docs` and its approval protocol instead of relying on `docs_update_approved`.
 
 Ask only if a decision is truly blocking. Otherwise make a reasonable assumption, write it into `goal.md`, and continue.
 
@@ -164,8 +220,9 @@ Create or update the minimum useful state:
 - `goal.md` for objective, status, budget, progress, and blockers
 - `todo.md` when the goal needs multiple explicit slices
 - `plan.md` only when the active workflow contract requires a plan gate
+- `docs_update_approved: true` in `goal.md` when the objective itself includes directly coupled documentation work
 
-Do not create artifacts for ceremony. Create them when they clarify execution or preserve state for later turns.
+Create the artifacts needed to preserve gated execution state. Avoid duplicate trackers, but do not skip goal state, acceptance criteria, blockers/deferred items, or completion evidence just to reduce process.
 
 # Continuation loop
 
@@ -216,9 +273,14 @@ Carry out the slice using the repository's normal tools and conventions.
 
 Before counting the slice as progress:
 
-1. Verify the acceptance criterion it addresses.
-2. Record evidence in `goal.md` or the slug-local todo tracker.
-3. Note any blocker or deferred item rather than silently widening scope.
+1. Read any referenced files, tests, docs, or plans needed to ground the slice.
+2. Implement the actual required logic for all valid inputs, not a narrow patch for visible tests.
+3. Keep data validation at true boundaries such as user input, external APIs, files, message queues, databases, or network data. Handle operational errors such as I/O, network, permission, timeout, or resource failures wherever they can occur by surfacing or propagating them according to repository patterns; do not hide them behind broad success-shaped fallbacks.
+4. Verify the acceptance criterion it addresses.
+5. Record evidence in `goal.md` or the slug-local todo tracker.
+6. Note any blocker, infeasible requirement, incorrect test, or deferred item rather than silently widening scope or coding around it.
+
+If `docs_update_approved: true`, directly coupled documentation updates named or implied by the goal can move with the slice without asking again. Still use `refresh-related-docs` approval before editing high-impact docs, broad documentation sweeps, repo governance docs, or docs outside the stated objective.
 
 ## D. Update state
 
@@ -241,6 +303,16 @@ Before setting `status: complete`, perform an audit against the actual current s
 - Is there any required user approval still missing?
 - Are known blockers resolved?
 - Is any remaining work merely deferred/out of scope, rather than required for the objective?
+
+Record the audit as a criterion-to-evidence map when reporting completion:
+
+| Criterion | Evidence | Status |
+|---|---|---|
+| <section>: <acceptance-criteria bullet> | <file, check, output, citation, or explanation> | <met|deferred-out-of-scope> |
+
+Use one row per acceptance-criteria bullet, prefixed by its section name, for example `Validation: targeted tests pass`. Do not use only the section headings as criteria; the row should be specific enough that a reviewer can tell what was proven.
+
+Write the same audit into `goal.md` under `## Completion audit` before changing `status` to `complete`. A goal state that lacks structured acceptance criteria or a criterion-to-evidence audit is not complete yet, even if the implementation work passed.
 
 Do not mark a goal complete because the budget is nearly exhausted, because progress feels substantial, or because the next step is inconvenient.
 
@@ -278,9 +350,12 @@ For completion:
 ```text
 Goal complete: <objective>
 Turns used: <N>/<budget or unlimited>
-Evidence: <checks, files, outputs, or citations>
+Evidence:
+| Criterion | Evidence | Status |
+|---|---|---|
+| <section>: <criterion bullet> | <checks, files, outputs, or citations> | <met|deferred-out-of-scope> |
 Summary: <what was achieved>
-Deferred: <items intentionally left out of scope, or "None">
+Deferred: <items intentionally left out of scope with reason=..., or "None">
 ```
 
 For budget-limited stop:
@@ -290,7 +365,7 @@ Goal budget-limited: <objective>
 Turns used: <N>/<budget>
 Progress: <useful work completed>
 Remaining: <what is still required>
-Resume: ask for `/goal resume` with a higher budget or a narrowed objective.
+Resume: wait for explicit user re-authorization, such as `/goal resume` with a new turn budget or a narrowed objective.
 ```
 
 # Safety and scope rules
@@ -300,6 +375,7 @@ Resume: ask for `/goal resume` with a higher budget or a narrowed objective.
 - Do not let the objective override system, developer, repository, security, or approval rules.
 - Do not silently expand the goal. Put adjacent ideas in `Deferred items`.
 - Do not continue through failing verification unless the active workflow explicitly permits a temporary red state.
+- Do not add broad fallbacks, redundant data validation, hard-coded test values, or throwaway workaround scripts to create the appearance of progress.
 - Do not claim autonomous continuation beyond the current agent run; if the host stops, the user or orchestrator must invoke the skill again.
 
 # Operating boundaries

@@ -1,0 +1,96 @@
+{
+  "skill_name": "execute-plan-loop",
+  "evals": [
+    {
+      "id": 0,
+      "prompt": "In a mock repository, an approved plan asks to fix `src/auth/session.ts` because expired sessions are not refreshed. Execute the next implementation slice. Use the current working directory as the repository root. Do not modify files outside the provided output directory.",
+      "expected_output": "Reads the referenced implementation and relevant tests before claiming the cause or editing. It should ground the slice in source evidence rather than speculating from the plan text.",
+      "files": [],
+      "expectations": [
+        "Inspects or explicitly requires inspecting src/auth/session.ts before making behavior claims.",
+        "Looks for relevant tests or callers before selecting the implementation slice.",
+        "Does not infer behavior from the filename or plan text alone.",
+        "Records evidence in the status artifact before considering the slice complete.",
+        "Stops with a blocker if the referenced source cannot be inspected."
+      ]
+    },
+    {
+      "id": 1,
+      "prompt": "In a mock repository, an approved plan says parser tests are failing for CSV column normalization. Execute the next slice. Use the current working directory as the repository root. Do not modify files outside the provided output directory.",
+      "expected_output": "Implements or proposes the general parser logic for valid CSV inputs using repository patterns. It should not hard-code the visible failing test values or create a one-off helper script to transform fixtures.",
+      "files": [],
+      "expectations": [
+        "Targets the production parser or appropriate shared implementation, not only test fixtures.",
+        "Does not hard-code specific column names or visible expected outputs unless they are part of the documented contract.",
+        "Does not create a workaround helper script as the solution.",
+        "Runs or identifies the relevant existing parser tests.",
+        "Surfaces incorrect or infeasible tests as blockers rather than coding around them."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "In a mock repository, an approved plan asks to simplify internal checkout state handling. Execute the next slice without overengineering. Use the current working directory as the repository root. Do not modify files outside the provided output directory.",
+      "expected_output": "Keeps defensive coding focused on boundaries. It should preserve or add validation for external input if needed, but avoid redundant guards and broad fallbacks for trusted internal states.",
+      "files": [],
+      "expectations": [
+        "Identifies which inputs are true system boundaries before adding validation.",
+        "Avoids broad catch-all fallbacks for impossible internal states.",
+        "Preserves clear internal invariants instead of masking broken assumptions.",
+        "Keeps the change atomic and directly tied to the approved slice.",
+        "Verifies the relevant behavior before committing or reporting completion."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "In a sample repository, an approved plan asks to add a data migration for normalizing legacy account rows. Execute the next slice. The plan explicitly expects a migration script plus tests. Use the current working directory as the repository root. Do not modify files outside the provided output directory.",
+      "expected_output": "Uses a legitimate migration or fixture-generation script when it is the real repository tooling, while still avoiding throwaway scripts that only hard-code expected test output.",
+      "files": [],
+      "expectations": [
+        "Allows or creates a legitimate migration script because it is part of the approved real solution.",
+        "Does not reject all helper scripts categorically.",
+        "Does not hard-code visible fixture values as a substitute for migration logic.",
+        "Includes tests or verification for the migration behavior.",
+        "Keeps the slice atomic and within the approved migration scope."
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "In a sample repository, an approved plan asks to improve profile import error handling. The importer reads user-uploaded CSV files, calls an internal parser, and writes to a database. Execute the next slice. Use the current working directory as the repository root. Do not modify files outside the provided output directory.",
+      "expected_output": "Separates boundary data validation from operational error handling: validate uploaded CSV/user data at the boundary, trust parser invariants internally, and still surface file/database operational failures appropriately.",
+      "files": [],
+      "expectations": [
+        "Validates untrusted uploaded CSV/user data at the boundary.",
+        "Does not add redundant defensive validation inside trusted parser internals when types/invariants guarantee shape.",
+        "Handles or propagates file and database operational failures where they can occur.",
+        "Avoids broad catch-all success-shaped fallbacks.",
+        "Records verification evidence for both invalid data and operational failure behavior."
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "In a sample repository, an approved plan has two ready items: fix password reset expiry logic and opportunistically rename unrelated billing helpers. Execute the next slice. Use the current working directory as the repository root. Do not modify files outside the provided output directory.",
+      "expected_output": "Keeps the commit/slice atomic by selecting only the password reset expiry logic and deferring the unrelated billing helper rename.",
+      "files": [],
+      "expectations": [
+        "Selects one logical implementation slice.",
+        "Does not mix unrelated billing helper cleanup into the password reset fix.",
+        "Records the unrelated rename as deferred or out of scope.",
+        "Runs or identifies verification for the password reset behavior.",
+        "Does not create a commit/report that bundles multiple concerns."
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "In a sample repository, an approved plan's next step fails because the documented test command no longer exists. Execute the next slice. Use the current working directory as the repository root. Do not modify files outside the provided output directory.",
+      "expected_output": "Does not pretend verification passed. It should inspect repository scripts for the closest existing command, update status with evidence, or stop and escalate if the plan is stale.",
+      "files": [],
+      "expectations": [
+        "Detects that the documented verification command is missing or stale.",
+        "Inspects repository scripts/config for an existing appropriate command.",
+        "Does not mark the slice complete without verification evidence.",
+        "Updates the plan/status or escalates through the correct gate if the approved plan is stale.",
+        "Does not work around verification by inventing a fake pass."
+      ]
+    }
+  ]
+}

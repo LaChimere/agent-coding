@@ -34,10 +34,12 @@ Read `references/workflow-contract.md` before making orchestration decisions.
 
 That file is the portable summary of the framework rules this skill needs:
 - discovery expectations
+- grounded investigation rules
 - plan-mode triggers
 - artifact layout
 - approval gates
 - verification rules
+- implementation quality posture
 - worker-skill routing
 
 ## 2) Use repo-local `AGENTS.md` only for project-specific rules
@@ -77,6 +79,8 @@ Decide which state the work is currently in:
 - **Execution ready** — approved scope can move forward
 - **Recovery/review needed** — an existing diff or branch lost atomicity
 - **Doc refresh needed** — broader Markdown docs may be stale
+
+Ground the classification in evidence. If the user references a concrete file, symbol, plan slug, diff, or test failure and the evidence is not already available, route first to discovery/research or the appropriate worker step with explicit instructions to inspect it before making codebase claims. If available evidence contradicts the request or tests, stop and report the conflict rather than routing toward a workaround.
 
 Also decide whether the task is:
 - a new slug

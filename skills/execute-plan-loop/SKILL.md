@@ -39,12 +39,15 @@ Carry approved implementation work forward in small, reviewable, verified increm
 # Non-negotiables
 
 - Keep the final approved objective visible at all times.
+- Read the referenced code, tests, plans, or docs before making claims about them. If the user names a file or symbol, inspect it before answering or editing.
 - Execute only the approved scope; do not silently expand to adjacent cleanup.
 - One commit should have one logical purpose and be explainable in one sentence.
 - Do not create a commit until the relevant checks for that slice have passed.
 - Before each commit, check whether execution status artifacts and docs need to be updated, and include those updates in the same commit when they are directly tied to the slice.
 - After every 3-5 commits, or at the end of any coherent milestone, run a deeper review before continuing.
 - Review findings must lead to explicit action: fix now, split follow-up work, update the plan/design, or stop and escalate.
+- Implement the principled general solution using the repository's normal tools and patterns. Do not hard-code visible test values or create throwaway workaround scripts/files as a substitute for solving the real problem. Legitimate repository tooling such as build scripts, migrations, fixture generators, skill eval scripts, or CI utilities is fine when it is part of the actual solution or verification path.
+- Keep defensive coding proportional. Validate data at system boundaries such as user input, external APIs, files, message queues, databases, and network data; trust type-system guarantees, internal invariants, and framework guarantees inside the trust boundary. Separately, handle operational errors such as I/O, network, permission, timeout, and resource failures wherever they can occur by surfacing or propagating them according to repository patterns rather than hiding them behind broad success-shaped fallbacks.
 
 # Pre-loop setup
 
@@ -71,6 +74,8 @@ Before touching code, write down for yourself:
 
 If the user asked for only one phase or step, honor that boundary exactly.
 
+If the implementation target depends on code you have not opened, inspect the relevant files first. Do not infer behavior from filenames, test names, or stale plan text when the source is available.
+
 ## 3) Pick the next atomic slice
 
 Choose the smallest next slice that:
@@ -96,6 +101,9 @@ Repeat this loop until the requested scope is complete or a gate blocks further 
 - Make the smallest code change that satisfies the current acceptance target.
 - Keep supporting tests, fixtures, config, and directly related docs/status files with the same slice when they are part of the same logical change.
 - Avoid batching unrelated refactors, cleanup, or speculative extensibility into the same commit.
+- Solve the actual algorithm or product behavior for all valid inputs. Tests verify the solution; they do not define a set of values to special-case.
+- Add data validation where invalid data can enter from a boundary. For trusted internal calls, prefer clear invariants and simple code over redundant guards. Handle operational failures where the operation can actually fail, but propagate or report them explicitly instead of adding broad catches or success-shaped fallbacks.
+- If a requested change is infeasible, unsafe, or based on an incorrect test, stop with evidence instead of building a workaround.
 
 ## 3) Refresh status artifacts before committing
 
@@ -193,3 +201,5 @@ The loop is complete only when all of these are true for the requested scope:
 - **Treating review as a ceremony.** A 3-5 commit review checkpoint is there to catch structural problems early, not to rubber-stamp what already happened.
 - **Fixing comments cosmetically.** Review feedback should improve the design, correctness, or maintainability of the change. Do not respond with the smallest possible patch if a more principled fix is warranted.
 - **Plowing ahead through approval boundaries.** If plan or design drift is discovered mid-loop, stop and refresh the right artifact instead of sneaking in unapproved changes.
+- **Test-fitting instead of solving.** A green targeted test is not enough if the implementation hard-codes that test's values, creates a throwaway workaround script, or ignores valid inputs outside the fixture. Do not confuse this with legitimate repository tooling that supports the real implementation or verification.
+- **Over-defensive internals.** Data validation belongs at boundaries. Extra fallback branches inside trusted code can hide broken assumptions and make future maintenance harder; operational errors are different and should still be surfaced or propagated where they can occur.

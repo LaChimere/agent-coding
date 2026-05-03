@@ -14,9 +14,12 @@ Repo-local `AGENTS.md` files may add project-specific contributor rules, but the
 ## Default posture
 
 - Prefer evidence over speculation.
+- Do not let any workflow step make codebase claims without evidence. If the user references a specific file or symbol, route to a step that inspects it before answering or implementing.
 - Ask only the minimal blocking questions.
 - Prefer small, focused, reviewable changes.
 - Do not mix unrelated concerns in one PR or one commit.
+- Route implementation work toward principled, general solutions rather than test-fitting or workaround-driven slices.
+- When safety, validation, or error handling is part of the request, route toward boundary-focused analysis instead of blanket defensive coding. Boundary-focused means validating data where untrusted input enters while still surfacing operational failures such as I/O, network, permission, timeout, or resource errors where they can occur.
 
 ## Discovery loop
 
@@ -25,6 +28,8 @@ When key facts are missing:
 1. List the unknowns.
 2. Collect minimal evidence from code, docs, tests, repro steps, or logs.
 3. Stop once the next plan or design decision is justified.
+
+If the user asks a question about a specific file or symbol, ensure discovery includes inspecting the referenced file or defining implementation before the workflow answers or proceeds to execution.
 
 ## Plan-mode triggers
 
@@ -135,6 +140,8 @@ Minimum expectations:
 - Solve the stated problem, not hypothetical future ones.
 - Prefer concrete over abstract when both satisfy the requirement.
 - If extensibility adds noticeable complexity without a present need, leave it for a later PR.
+- If a requirement appears infeasible, unsafe, or contradicted by evidence, surface that conflict instead of routing toward a workaround.
+- Do not route toward throwaway scripts or fixture rewrites that only make visible tests pass. Do allow normal repository tooling such as build scripts, migrations, fixture generators, eval scripts, and CI utilities when they are part of the real solution or verification path.
 
 ## Worker-skill map
 

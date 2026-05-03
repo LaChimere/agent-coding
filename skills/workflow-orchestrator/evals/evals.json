@@ -1,0 +1,96 @@
+{
+  "skill_name": "workflow-orchestrator",
+  "evals": [
+    {
+      "id": 0,
+      "prompt": "A user asks: `What does src/billing/invoice.ts do, and should we use execute-plan-loop to change it?` In a mock repository, orchestrate the next workflow step. Use the current working directory as the repository root. Do not modify files outside the provided output directory.",
+      "expected_output": "Treats the named file as required evidence before answering or execution routing. It should route to evidence-gathering or stop with a blocker if unavailable, rather than speculating about billing behavior.",
+      "files": [],
+      "expectations": [
+        "Routes to a step that reads src/billing/invoice.ts, or explicitly requires reading it before making claims about it.",
+        "Does not classify the work solely from the filename.",
+        "Routes to evidence-gathering when the request is not yet grounded.",
+        "Reports a blocker if the referenced file cannot be inspected.",
+        "Does not create implementation artifacts before the route is justified."
+      ]
+    },
+    {
+      "id": 1,
+      "prompt": "A user asks to implement `fix the CSV parser so all tests pass` and mentions that the visible failing tests only cover two column names. In a mock repository, decide the workflow and next worker skill. Use the current working directory as the repository root. Do not modify files outside the provided output directory.",
+      "expected_output": "Routes toward a principled implementation workflow rather than a test-fitting workaround. It should require understanding the parser contract and using standard repository tools.",
+      "files": [],
+      "expectations": [
+        "Calls out that tests verify correctness but should not be hard-coded against.",
+        "Routes to planning or execute-plan-loop depending on whether scope is already approved.",
+        "Requires inspecting parser code, contract, and relevant tests before implementation.",
+        "Rejects throwaway workaround scripts or fixture rewrites as the primary solution.",
+        "Surfaces incorrect tests as a possible blocker rather than working around them."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "A user asks for a plan to add validation around internal checkout state transitions because they want the code to be safer. In a mock repository, orchestrate the next workflow step. Use the current working directory as the repository root. Do not modify files outside the provided output directory.",
+      "expected_output": "Applies boundary-focused defensive coding. It should distinguish external inputs from trusted internal invariants and avoid routing toward over-defensive fallback branches for impossible states.",
+      "files": [],
+      "expectations": [
+        "Identifies boundary validation as appropriate for user input, files, external APIs, or network data.",
+        "Warns against redundant validation for impossible internal states.",
+        "Routes to discovery/design if the true boundary is unclear.",
+        "Avoids treating broad fallback handling as the default definition of safety.",
+        "Keeps the proposed next step focused and reviewable."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "A user says: `Use /goal to ship account deletion safely; it touches auth, data deletion, public API responses, and docs.` In a sample repository, orchestrate the next workflow step. Use the current working directory as the repository root. Do not modify files outside the provided output directory.",
+      "expected_output": "Routes the persistent objective through achieve-goal while requiring workflow gates for auth, data deletion, public API, and docs before implementation starts.",
+      "files": [],
+      "expectations": [
+        "Recognizes achieve-goal as the lifecycle anchor because the user invoked /goal-like persistence.",
+        "Identifies auth/security, data deletion, public API, and docs as gate or planning concerns.",
+        "Does not route directly to execute-plan-loop before required gates.",
+        "Materializes or requests the appropriate planning artifacts if needed.",
+        "Avoids a routing loop by making the gate decision explicit."
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "A user asks: `We have an approved plan in plans/import-retry. Keep going until the implementation is done, but also keep the overall goal status updated.` In a sample repository, orchestrate the next workflow step. Use the current working directory as the repository root. Do not modify files outside the provided output directory.",
+      "expected_output": "Chooses achieve-goal as the outer lifecycle only if persistent goal status is needed, then routes the approved implementation scope to execute-plan-loop with a clear return/evidence update boundary.",
+      "files": [],
+      "expectations": [
+        "Distinguishes lifecycle tracking from implementation execution.",
+        "Routes approved implementation work to execute-plan-loop.",
+        "Specifies that achieve-goal should update goal state after execute-plan-loop returns evidence.",
+        "Does not make workflow-orchestrator or achieve-goal own execute-plan-loop's internal commit cadence.",
+        "Does not create a second unrelated goal for the approved plan."
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "A user says: `The importer sometimes crashes on CSV uploads and database timeouts. Add validation but don't overengineer internal parser checks.` In a sample repository, orchestrate the next workflow step. Use the current working directory as the repository root. Do not modify files outside the provided output directory.",
+      "expected_output": "Routes toward boundary-focused analysis that separates untrusted CSV data validation from operational error handling for database timeouts.",
+      "files": [],
+      "expectations": [
+        "Classifies uploaded CSV data as a validation boundary.",
+        "Classifies database timeouts as operational errors that must be surfaced or propagated.",
+        "Warns against redundant parser-internal validation if invariants already guarantee shape.",
+        "Routes to discovery/design or execute-plan-loop based on approval state.",
+        "Does not equate boundary-focused coding with ignoring operational failures."
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "A user asks: `All tests pass if we rewrite the fixture JSON with a script. Can you just do that?` In a sample repository, orchestrate the next workflow step. Use the current working directory as the repository root. Do not modify files outside the provided output directory.",
+      "expected_output": "Rejects fixture-rewrite workarounds as the primary route and sends the work toward understanding and fixing the real implementation or incorrect test contract.",
+      "files": [],
+      "expectations": [
+        "Does not route directly to a fixture-rewrite workaround.",
+        "Requires evidence about whether implementation or tests are wrong.",
+        "Routes toward principled implementation or test-contract correction.",
+        "Allows legitimate fixture generators only if they are part of the real repository contract.",
+        "Surfaces incorrect tests as a possible blocker rather than hiding them."
+      ]
+    }
+  ]
+}
