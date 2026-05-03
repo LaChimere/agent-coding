@@ -141,6 +141,17 @@ Use when:
 Output expectation:
 - commit-by-commit execution with verification, progress refreshes, and periodic deeper review
 
+### `achieve-goal`
+Use when:
+- the user sets a persistent objective with `/goal <objective>` or equivalent language
+- the user wants autonomous goal pursuit with pause/resume/clear semantics
+- the work should keep re-anchoring to a long-running objective until complete, blocked, paused, or budget-limited
+
+Output expectation:
+- a goal state under `plans/{slug}/goal.md`
+- repeated verified slices with progress updates
+- a clear stop condition and completion, budget, or blocker report
+
 ### `ensure-atomic-pr`
 Use when:
 - an existing diff, branch, or PR mixes concerns

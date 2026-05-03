@@ -1,0 +1,10 @@
+# Skill evaluation run artifacts
+skills/*-workspace/
+
+# Generated outputs if evals are run inside a skill directory
+skills/**/evals/**/outputs/
+skills/**/evals/**/grading.json
+skills/**/evals/**/timing.json
+skills/**/evals/**/benchmark*.json
+skills/**/evals/**/benchmark*.md
+skills/**/evals/**/review*.html

@@ -85,6 +85,8 @@ skills/                                           # Specialized workflows
   scan-image-vulnerabilities/                     #   Scan container images for vulnerabilities
     SKILL.md
     scripts/trivy_latest_scan.sh
+  achieve-goal/                                   #   Persist and pursue long-running goals
+    SKILL.md
 plans/                                            # Planning/execution artifacts for changes to this repo
 ```
 
@@ -142,6 +144,16 @@ pick next atomic slice → implement → update status → run checks → check 
 
 Use when: the user wants the agent to carry out part or all of an approved feature or `plans/{slug}` scope with atomic commits, per-commit validation, progress updates, and periodic deeper review.
 
+### achieve-goal
+
+Persists a user-provided long-running goal and keeps working toward it until a stop condition:
+
+```
+register goal -> re-anchor -> execute one verified slice -> update state -> continue or stop
+```
+
+Use when: the user types `/goal <objective>`, asks the agent to keep going until a goal is achieved, or wants pause/resume/clear control over a persistent objective. The skill stores goal state in the repository and resumes through later user or orchestrator invocation when needed.
+
 ### refresh-related-docs
 
 Refreshes documentation that has become stale after code changes:
@@ -176,7 +188,7 @@ Use when: the user asks about image vulnerabilities, wants a CVE scan, mentions 
 
 1. Start with `skills/workflow-orchestrator/`.
 2. Keep its bundled `references/` and `templates/` with it; that is the portable coordination bundle.
-3. Add whichever worker skills you want alongside it (`decompose-feature`, `plan-parallel-work`, `execute-plan-loop`, and so on).
+3. Add whichever worker skills you want alongside it (`decompose-feature`, `plan-parallel-work`, `execute-plan-loop`, `achieve-goal`, and so on).
 4. Use the target repo's own `AGENTS.md` or equivalent only for project-specific rules, not as the shared skill-coordination layer.
 5. If you invoke a workflow-managed worker skill directly, make sure the `workflow-orchestrator` contract is present and active; otherwise route through `workflow-orchestrator` first. Read-only inspection skills may document that they operate outside this contract.
 

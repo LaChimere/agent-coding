@@ -141,6 +141,7 @@ Minimum expectations:
 - `decompose-feature` -> decide what PRs should exist
 - `plan-parallel-work` -> decide who works where and in what order
 - `execute-plan-loop` -> carry approved work forward in atomic verified increments
+- `achieve-goal` -> persist and pursue a long-running objective until complete, paused, blocked, or budget-limited
 - `ensure-atomic-pr` -> recover or assess atomic boundaries
 - `refresh-related-docs` -> update broader stale Markdown docs
 
