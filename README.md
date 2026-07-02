@@ -80,6 +80,10 @@ skills/                                           # Specialized workflows
     templates/atomic-pr-checklist.md
   execute-plan-loop/                              #   Execute approved work in atomic long-loop increments
     SKILL.md
+  anti-slop/                                      #   Quality guard that keeps code changes free of AI slop
+    SKILL.md
+    templates/pre-commit-slop-gate.md
+    references/agents-md-block.md
   refresh-related-docs/                            #   Refresh stale docs after code changes
     SKILL.md
   scan-image-vulnerabilities/                     #   Scan container images for vulnerabilities
@@ -143,6 +147,16 @@ pick next atomic slice → implement → update status → run checks → check 
 ```
 
 Use when: the user wants the agent to carry out part or all of an approved feature or `plans/{slug}` scope with atomic commits, per-commit validation, progress updates, and periodic deeper review.
+
+### anti-slop
+
+Keeps code changes free of AI slop — output that looks polished but is unnecessary, wrong, or hard to maintain:
+
+```
+explain it → prove it works → only what's needed → not duplicated → check complexity → gate → milestone review
+```
+
+Use when: writing, changing, refactoring, or extending code, especially during long multi-round loops with many commits, or whenever the user wants to keep quality high and make sure a change is actually correct and needed. Runs **alongside** the execution skills as an always-on quality guard rather than deciding what to build. Ships a hard pre-commit gate (`templates/pre-commit-slop-gate.md`) and an embeddable core-principles block (`references/agents-md-block.md`) for a working repo's own `AGENTS.md`.
 
 ### achieve-goal
 

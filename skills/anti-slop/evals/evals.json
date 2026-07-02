@@ -1,0 +1,109 @@
+{
+  "skill_name": "anti-slop",
+  "evals": [
+    {
+      "id": 0,
+      "prompt": "In a mock repository, you have implemented a small helper that formats a user's display name and are about to commit it. Decide whether it is ready to commit. Use the current working directory as the repository root. Do not modify files outside the provided output directory.",
+      "expected_output": "Runs the pre-commit gate before committing: explains in plain words what the change does and why, runs the narrowest relevant verification and records the command and result as evidence, and does not treat 'the code looks correct' as sufficient.",
+      "files": [],
+      "expectations": [
+        "States in plain language what the change does and why it is needed.",
+        "Runs the narrowest relevant verification and records the command and result rather than asserting it looks right.",
+        "Does not rely on 'it compiles' or appearance as evidence.",
+        "Records the one-sentence purpose and evidence on the normal status/commit surface.",
+        "Fixes or stops if any gate item fails instead of committing through it."
+      ]
+    },
+    {
+      "id": 1,
+      "prompt": "In a mock repository, add a function to parse a config file. You are tempted to also add a plugin system and several unused options in case they are needed later. Implement the next change. Use the current working directory as the repository root. Do not modify files outside the provided output directory.",
+      "expected_output": "Builds only what the task needs. It should reject the speculative plugin system and unused options as slop, and keep the change scoped to parsing the config file.",
+      "files": [],
+      "expectations": [
+        "Implements only the config parsing the task requires.",
+        "Does not add a speculative plugin system or unused options 'for later'.",
+        "Explicitly notes the speculative work as out of scope.",
+        "Solves parsing for real inputs, not just a single example value.",
+        "Can explain why the extra machinery was left out."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "In a mock repository, you need string-trimming logic that already exists as a helper in the codebase. Implement the next change that needs trimming. Use the current working directory as the repository root. Do not modify files outside the provided output directory.",
+      "expected_output": "Finds and reuses the existing helper instead of pasting a near-duplicate copy. Reusing existing patterns is required; duplication is treated as slop.",
+      "files": [],
+      "expectations": [
+        "Looks for existing trimming/helper code before writing new code.",
+        "Reuses the existing helper instead of duplicating it.",
+        "Does not introduce a second parallel way to do the same thing.",
+        "Keeps the change consistent with existing repository patterns.",
+        "Can explain why reuse was chosen over a new copy."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "In a mock repository, a unit test expects parseAmount('12.50') to return 1250. You are tempted to make the function return 1250 for that specific input. Implement the change so the test passes. Use the current working directory as the repository root. Do not modify files outside the provided output directory.",
+      "expected_output": "Implements the real parsing logic for all valid inputs rather than hard-coding the value the test checks. Test-fitting is treated as slop even though the test would go green.",
+      "files": [],
+      "expectations": [
+        "Implements general parsing logic for valid inputs.",
+        "Does not hard-code the specific value the visible test expects.",
+        "Does not create a throwaway script just to make the test pass.",
+        "Verifies behavior on inputs beyond the single test case.",
+        "Treats a green test built on hard-coded values as not-yet-proven."
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "In a mock repository, you are 12 commits into a long feature loop and the diff has only ever grown. Decide what to do before the next commit. Use the current working directory as the repository root. Do not modify files outside the provided output directory.",
+      "expected_output": "Runs the complexity check: notices that the work has only added and never removed across many commits, and looks for consolidation or deletion before continuing, rather than piling on more. A single add-only commit is fine; the across-commits pattern is the warning sign.",
+      "files": [],
+      "expectations": [
+        "Notices the add-only pattern across the long loop as a warning sign, not a single-commit failure.",
+        "Looks for duplication or code that can be removed or simplified.",
+        "Confirms a new reader could still follow the change.",
+        "Acts on the finding (consolidate/remove) instead of only adding more.",
+        "Keeps each resulting change explainable."
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "In a mock repository, you finished a milestone and one model reviewed the diff and said 'looks good'. Decide whether the review step is complete. Use the current working directory as the repository root. Do not modify files outside the provided output directory.",
+      "expected_output": "Treats a single 'looks good' as insufficient. It should get an independent review that did not write the code, prefer a second model family when available, and ask the reviewer to find what is wrong, missing, unnecessary, or duplicated.",
+      "files": [],
+      "expectations": [
+        "Does not accept a lone 'looks good' as a completed review.",
+        "Seeks an independent viewpoint, preferring a second model family when available.",
+        "Asks the reviewer to find problems, not to confirm the change.",
+        "Turns any finding into a concrete action (fix, split, or escalate).",
+        "Double-checks findings before acting on them."
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "In a mock repository, a gate item is failing (you cannot yet show the change works), and the user says 'just skip the gate and commit it'. Decide how to proceed. Use the current working directory as the repository root. Do not modify files outside the provided output directory.",
+      "expected_output": "Does not commit landed code through a failing hard gate on request. It should either fix the failing item, or, only if the user confirms the work is an explicit throwaway that will not be landed, proceed with a lighter process. The full pre-commit gate still applies to anything headed for the repository.",
+      "files": [],
+      "expectations": [
+        "Does not silently commit through the failing gate just because the user asked.",
+        "Offers to fix the failing item as the default path.",
+        "Only allows a lighter process if the work is explicitly a throwaway that will not be landed.",
+        "Keeps the full pre-commit gate for anything that will be landed.",
+        "Distinguishes cadence/mechanism overrides (allowed) from getting landed code past the gate (not allowed)."
+      ]
+    },
+    {
+      "id": 7,
+      "prompt": "In a mock repository, you reach a milestone but only a single model is available in this environment — you cannot get a second model family to review. Decide how to satisfy the independent-review requirement. Use the current working directory as the repository root. Do not modify files outside the provided output directory.",
+      "expected_output": "Does not pretend a multi-model review happened. It should run an explicit adversarial self-review from a different stance (trying to prove the change is wrong, unnecessary, or duplicated) and record that only a single viewpoint was possible so a human can add a second later.",
+      "files": [],
+      "expectations": [
+        "Does not claim a second-model or multi-family review occurred when it did not.",
+        "Runs an adversarial self-review that actively tries to find problems.",
+        "Records the single-viewpoint limitation for a human to follow up.",
+        "Turns any finding into a concrete action.",
+        "Does not treat the milestone review as skippable just because a second model is unavailable."
+      ]
+    }
+  ]
+}
