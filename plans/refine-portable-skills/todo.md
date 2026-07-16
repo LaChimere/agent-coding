@@ -8,7 +8,7 @@
 - [x] Classify existing evals and add missing coverage.
 - [x] Refine the shared workflow contract and core execution skills.
 - [x] Refine planning, recovery, and parallel-work skills.
-- [ ] Refine documentation behavior.
+- [x] Refine documentation behavior.
 - [ ] Fix scanner behavior and add deterministic tests.
 - [ ] Reconcile descriptions and invocation policy.
 - [ ] Update `AGENTS.md` and `README.md`.
