@@ -1,0 +1,96 @@
+{
+  "skill_name": "ensure-atomic-pr",
+  "evals": [
+    {
+      "id": 0,
+      "prompt": "Assess a diff that adds one validation function, its unit test, and one call site for a single bug fix.",
+      "expected_output": "Reports the change is already atomic and does not invent a split.",
+      "files": [],
+      "expectations": [
+        "Concludes the change is atomic.",
+        "States its one logical purpose.",
+        "Keeps the test with the fix.",
+        "Does not propose unnecessary units.",
+        "Recommends proceeding."
+      ]
+    },
+    {
+      "id": 1,
+      "prompt": "A branch renames one symbol across 50 files and includes a small semantic tweak. The user asks to split the rename into two PRs by file count.",
+      "expected_output": "Keeps the indivisible rename in one PR and separates the semantic tweak by commit or follow-up.",
+      "files": [],
+      "expectations": [
+        "Identifies the rename as indivisible.",
+        "Rejects a half-rename PR.",
+        "Preserves a healthy intermediate state.",
+        "Separates the semantic concern.",
+        "Does not use diff size alone as the atomicity test."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Assess an automated formatting pass plus an isolated variable rename with no behavior change.",
+      "expected_output": "Treats it as one mechanical unit kept separate from behavioral work.",
+      "files": [],
+      "expectations": [
+        "Classifies the change as mechanical.",
+        "Does not over-split formatting from the rename.",
+        "States that behavior is unchanged.",
+        "Keeps it separate from unrelated behavior.",
+        "Uses proportionate validation."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Assess a rate-limiter feature that also deletes an unrelated helper and upgrades an unrelated dependency.",
+      "expected_output": "Flags mixed purposes and separates the feature, cleanup, and dependency change.",
+      "files": [],
+      "expectations": [
+        "Concludes the PR is not atomic.",
+        "Identifies all unrelated concerns.",
+        "Creates purpose-based units.",
+        "Does not make cleanup block the feature.",
+        "States dependencies."
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "Assess a discount-rule change with its regression tests and a directly coupled formula doc update.",
+      "expected_output": "Keeps behavior, tests, and directly coupled documentation together as one purpose.",
+      "files": [],
+      "expectations": [
+        "Keeps regression tests with behavior.",
+        "Keeps the coupled doc with behavior.",
+        "Does not create tests-only or docs-only units.",
+        "Frames the unit by logical purpose.",
+        "Adds acceptance criteria and validation."
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "Split a caching fix with refactor and tests plus an unrelated logging improvement with refactor and tests.",
+      "expected_output": "Creates one unit per logical purpose, with each purpose's preparation and tests included.",
+      "files": [],
+      "expectations": [
+        "Creates caching and logging units.",
+        "Keeps each unit's tests with it.",
+        "Does not group all refactors together.",
+        "Does not group all tests together.",
+        "Keeps dependencies genuine."
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "Finalize a proposed three-unit split of a large change.",
+      "expected_output": "Adds acceptance criteria, validation, dependencies, and healthy intermediate-state evidence to every unit.",
+      "files": [],
+      "expectations": [
+        "Every unit has concrete acceptance criteria.",
+        "Every unit has validation.",
+        "Every unit states intermediate-state safety.",
+        "Every unit has one purpose.",
+        "Dependencies are explicit."
+      ]
+    }
+  ]
+}

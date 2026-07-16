@@ -56,24 +56,24 @@
     {
       "id": 4,
       "prompt": "In a mock repository, you are 12 commits into a long feature loop and the diff has only ever grown. Decide what to do before the next commit. Use the current working directory as the repository root. Do not modify files outside the provided output directory.",
-      "expected_output": "Runs the complexity check: notices that the work has only added and never removed across many commits, and looks for consolidation or deletion before continuing, rather than piling on more. A single add-only commit is fine; the across-commits pattern is the warning sign.",
+      "expected_output": "Treats the add-only pattern as a diagnostic that requires inspection before continuing. It should look for concrete duplication or removable complexity, consolidate when evidence supports it, and avoid forcing deletion merely to satisfy a metric.",
       "files": [],
       "expectations": [
         "Notices the add-only pattern across the long loop as a warning sign, not a single-commit failure.",
         "Looks for duplication or code that can be removed or simplified.",
         "Confirms a new reader could still follow the change.",
-        "Acts on the finding (consolidate/remove) instead of only adding more.",
+        "Consolidates or removes code when the inspection finds a justified opportunity; otherwise records why the added code remains necessary.",
         "Keeps each resulting change explainable."
       ]
     },
     {
       "id": 5,
       "prompt": "In a mock repository, you finished a milestone and one model reviewed the diff and said 'looks good'. Decide whether the review step is complete. Use the current working directory as the repository root. Do not modify files outside the provided output directory.",
-      "expected_output": "Treats a single 'looks good' as insufficient. It should get an independent review that did not write the code, prefer a second model family when available, and ask the reviewer to find what is wrong, missing, unnecessary, or duplicated.",
+      "expected_output": "Treats a single 'looks good' as insufficient. It should obtain the strongest independent review available from a perspective that did not produce the change, and ask the reviewer to find what is wrong, missing, unnecessary, or duplicated.",
       "files": [],
       "expectations": [
         "Does not accept a lone 'looks good' as a completed review.",
-        "Seeks an independent viewpoint, preferring a second model family when available.",
+        "Seeks a reviewer or review mechanism that is independent from the perspective that produced the change.",
         "Asks the reviewer to find problems, not to confirm the change.",
         "Turns any finding into a concrete action (fix, split, or escalate).",
         "Double-checks findings before acting on them."
@@ -94,15 +94,28 @@
     },
     {
       "id": 7,
-      "prompt": "In a mock repository, you reach a milestone but only a single model is available in this environment — you cannot get a second model family to review. Decide how to satisfy the independent-review requirement. Use the current working directory as the repository root. Do not modify files outside the provided output directory.",
-      "expected_output": "Does not pretend a multi-model review happened. It should run an explicit adversarial self-review from a different stance (trying to prove the change is wrong, unnecessary, or duplicated) and record that only a single viewpoint was possible so a human can add a second later.",
+      "prompt": "In a mock repository, you reach a milestone but only one model is available. The environment may still offer a dedicated review agent or a human reviewer. Decide how to satisfy the independent-review requirement. Use the current working directory as the repository root. Do not modify files outside the provided output directory.",
+      "expected_output": "Chooses the strongest genuinely independent reviewer available, regardless of model vendor. It falls back to adversarial self-review only when no independent reviewer exists, and records the limitation without pretending independence.",
       "files": [],
       "expectations": [
-        "Does not claim a second-model or multi-family review occurred when it did not.",
-        "Runs an adversarial self-review that actively tries to find problems.",
-        "Records the single-viewpoint limitation for a human to follow up.",
+        "Does not equate model count or model vendor with reviewer independence.",
+        "Uses an available dedicated review agent or human reviewer before falling back to self-review.",
+        "If no independent reviewer exists, runs an adversarial self-review and records the limitation.",
         "Turns any finding into a concrete action.",
-        "Does not treat the milestone review as skippable just because a second model is unavailable."
+        "Does not treat the milestone review as skippable because only one model is available."
+      ]
+    },
+    {
+      "id": 8,
+      "prompt": "In a mock repository, a generated client file duplicates patterns by design, and a temporary compatibility adapter must coexist with the old path for one migration release. Decide whether these are automatically disallowed as slop. Use the current working directory as the repository root. Do not modify files outside the provided output directory.",
+      "expected_output": "Allows justified generated and migration exceptions while requiring the source of generation, removal condition, scope, and verification to be explicit. It does not apply blanket duplication bans.",
+      "files": [],
+      "expectations": [
+        "Does not reject generated duplication solely because similar code exists.",
+        "Requires generated artifacts to be reproducible from an owned source.",
+        "Allows temporary compatibility duplication only with a clear migration and removal condition.",
+        "Keeps the exception narrow and verified.",
+        "Rejects unexplained permanent parallel implementations."
       ]
     }
   ]

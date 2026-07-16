@@ -1,0 +1,96 @@
+{
+  "skill_name": "decompose-feature",
+  "evals": [
+    {
+      "id": 0,
+      "prompt": "Decompose a saved-searches feature spanning a data model, service logic, API endpoint, and UI panel into small reviewable PRs.",
+      "expected_output": "Each PR has one purpose, remains trunk-safe, and carries the tests that verify its behavior.",
+      "files": [],
+      "expectations": [
+        "Keeps tests with the implementation they verify.",
+        "Does not create a standalone tests PR.",
+        "Provides acceptance criteria and validation per PR.",
+        "Keeps every intermediate merge trunk-safe.",
+        "States dependencies explicitly."
+      ]
+    },
+    {
+      "id": 1,
+      "prompt": "Split a wire-protocol version change where the shared constant, client encoder, and server decoder must change together or every message fails to parse.",
+      "expected_output": "Recognizes the change as indivisible and recommends one PR rather than a split that breaks trunk.",
+      "files": [],
+      "expectations": [
+        "Identifies the change as inherently indivisible.",
+        "Recommends one PR.",
+        "Does not split by file count.",
+        "May separate mechanical and semantic work with commits.",
+        "Explains the invalid intermediate state."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Decompose adding archived_at, migrating code to use it, and removing the legacy archived boolean.",
+      "expected_output": "Orders schema compatibility, code adoption, and cleanup so every intermediate state is safe.",
+      "files": [],
+      "expectations": [
+        "Adds compatible schema before dependent code.",
+        "Moves readers and writers before removing the legacy field.",
+        "Defers cleanup until the new path is established.",
+        "Provides validation per PR.",
+        "Explains rollback or migration risk."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "A shared GraphQL type and resolver will support independent web, mobile, and admin consumers. Produce the PR sequence and parallelization readiness.",
+      "expected_output": "Uses a justified shared base followed by independent consumer slices and hands ownership planning to plan-parallel-work.",
+      "files": [],
+      "expectations": [
+        "Uses a base PR for the real shared contract.",
+        "Keeps consumer-specific logic out of the base.",
+        "Allows fan-out only after the contract stabilizes.",
+        "Does not assign branches or agents.",
+        "Names plan-parallel-work as the ownership handoff."
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "Decompose three low-coupling improvements: a settings export button, shortcut help dialog, and copy-to-clipboard action. They share no contract.",
+      "expected_output": "Defaults to independent vertical slices rather than artificial horizontal layers.",
+      "files": [],
+      "expectations": [
+        "Creates one meaningful vertical slice per improvement.",
+        "Does not invent a shared base PR.",
+        "Keeps tests with each slice.",
+        "Explains the low-coupling decision.",
+        "Keeps each slice independently mergeable."
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "Create a staged plan for CSV export on one report page. There is no shared schema, feature flag requirement, or second consumer.",
+      "expected_output": "Uses one small PR or a vertical slice and does not manufacture base scaffolding.",
+      "files": [],
+      "expectations": [
+        "Does not propose an unused base abstraction.",
+        "Does not add a speculative feature flag.",
+        "Requires evidence before adding a base PR.",
+        "Keeps the PR count proportional.",
+        "Provides concrete validation."
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "The user asks conversationally for a rough PR breakdown of a notifications rewrite and says they are not ready to start.",
+      "expected_output": "Provides advisory decomposition inline without forcing plan artifacts or approval gates.",
+      "files": [],
+      "expectations": [
+        "Answers inline.",
+        "Does not create planning artifacts.",
+        "Does not require Gate 1 before answering.",
+        "Offers materialization as an optional next step.",
+        "Keeps the advice clearly provisional."
+      ]
+    }
+  ]
+}

@@ -1,0 +1,96 @@
+{
+  "skill_name": "plan-parallel-work",
+  "evals": [
+    {
+      "id": 0,
+      "prompt": "Two requested parallel tasks must repeatedly edit the same central routing table. Produce the execution topology.",
+      "expected_output": "Rejects naive parallel editing and serializes the work or assigns one owner to the hot file.",
+      "files": [],
+      "expectations": [
+        "Identifies the shared hot file.",
+        "Does not approve concurrent edits to it.",
+        "Uses serial work or one owner.",
+        "Explains why directory ownership is insufficient.",
+        "States the safe fallback."
+      ]
+    },
+    {
+      "id": 1,
+      "prompt": "A base PR has landed a shared API type. Web, mobile, and admin changes now live in separate directories. Assign parallel ownership.",
+      "expected_output": "Creates safe fan-out tasks with isolated work areas, explicit exclusions, and implementation-owned tests.",
+      "files": [],
+      "expectations": [
+        "Uses a separate branch and working copy per task.",
+        "Defines owned and forbidden paths.",
+        "Confirms the base is stable.",
+        "Keeps tests with implementation owners.",
+        "Does not redesign the PR sequence."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Three module owners all need package.json, the lockfile, and one shared CI matrix. Plan the shared-file handling.",
+      "expected_output": "Assigns one owner or serial phase for shared files and regenerates generated artifacts after convergence.",
+      "files": [],
+      "expectations": [
+        "Assigns one owner for shared manifests.",
+        "Prevents independent lockfile edits.",
+        "Regenerates generated artifacts after merge.",
+        "Names a convergence owner.",
+        "Includes final validation."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "The shared data contract changes daily and no frozen base exists. The user asks to fan out work now.",
+      "expected_output": "Recommends waiting or serializing until the contract stabilizes.",
+      "files": [],
+      "expectations": [
+        "Declines immediate fan-out.",
+        "Names contract churn as the reason.",
+        "Defines the condition for safe fan-out.",
+        "Avoids speculative branch assignments.",
+        "Explains rebase risk."
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "Finalize a two-agent plan so both tasks can start unattended and reconcile cleanly.",
+      "expected_output": "Pins the base ref, gives per-task acceptance and handoff payloads, and defines convergence validation.",
+      "files": [],
+      "expectations": [
+        "Pins an exact base ref.",
+        "Provides acceptance criteria per task.",
+        "Provides a standard handoff payload.",
+        "Defines final convergence validation.",
+        "Names merge and cleanup ownership."
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "A feature naturally divides into five independent service-module tasks. Produce the parallel plan.",
+      "expected_output": "Emits five repeatable task blocks rather than a fixed three-agent template.",
+      "files": [],
+      "expectations": [
+        "Creates five task blocks.",
+        "Uses the same fields for each.",
+        "Does not pad or collapse to three.",
+        "Keeps ownership explicit.",
+        "Defines one convergence owner."
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "Worktrees are unavailable, but the environment provides isolated per-agent clones. Plan safe isolation.",
+      "expected_output": "Uses capability-equivalent isolated working copies while preserving separate branches and ownership.",
+      "files": [],
+      "expectations": [
+        "Accepts isolated clones as an alternative.",
+        "Keeps one branch per task.",
+        "Prevents shared working directories.",
+        "States the capability guarantee.",
+        "Does not hard-fail solely because worktrees are unavailable."
+      ]
+    }
+  ]
+}

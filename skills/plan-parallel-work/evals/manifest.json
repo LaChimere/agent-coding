@@ -1,0 +1,12 @@
+{
+  "skill_name": "plan-parallel-work",
+  "default_category": "regression_guard",
+  "critical_ids": [0],
+  "behavior_change_ids": [4, 5, 6],
+  "redundant_ids": [],
+  "behavior_change_rationale": {
+    "4": "Plans pin a base ref, acceptance criteria, handoff payload, and convergence validation.",
+    "5": "Task blocks repeat to match the actual number of work streams.",
+    "6": "Isolation is capability-based; worktrees are a default, not a universal requirement."
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "skill_name": "achieve-goal",
+  "default_category": "regression_guard",
+  "critical_ids": [0, 1, 6, 7, 9, 14, 17, 24, 26, 31, 36, 37, 38, 39, 40, 41],
+  "behavior_change_ids": [39, 41],
+  "redundant_ids": [8, 21, 29, 30, 32, 33, 35],
+  "behavior_change_rationale": {
+    "39": "Explicitly named documentation is approved within the exact stated scope.",
+    "41": "Generic continuation of an approved plan does not create a persistent goal."
+  }
+}

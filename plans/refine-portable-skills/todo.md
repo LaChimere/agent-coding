@@ -1,0 +1,17 @@
+# Todo: Refine Portable Skills
+
+- [x] Approve the implementation and evaluation plan.
+- [x] Prove local repository installation through `npx skills add`.
+- [x] Freeze the old source in an immutable worktree.
+- [ ] Prove the dual-family functional evaluation path.
+- [ ] Prove or downgrade the trigger-selection evaluation path.
+- [ ] Classify existing evals and add missing coverage.
+- [ ] Refine the shared workflow contract and core execution skills.
+- [ ] Refine planning, recovery, and parallel-work skills.
+- [ ] Refine documentation behavior.
+- [ ] Fix scanner behavior and add deterministic tests.
+- [ ] Reconcile descriptions and invocation policy.
+- [ ] Update `AGENTS.md` and `README.md`.
+- [ ] Run final installed-copy validation and dual-family evals.
+- [ ] Generate the evaluation summary and review outputs.
+- [ ] Complete the final criterion-to-evidence audit.

@@ -1,0 +1,12 @@
+{
+  "skill_name": "execute-plan-loop",
+  "default_category": "regression_guard",
+  "critical_ids": [0, 6, 7, 9],
+  "behavior_change_ids": [7, 8, 9],
+  "redundant_ids": [],
+  "behavior_change_rationale": {
+    "7": "Implementation authorization does not imply commit authorization.",
+    "8": "Review cadence follows milestones, risk, and user policy rather than a fixed commit count.",
+    "9": "Repeated failures without new evidence cause replanning or escalation."
+  }
+}
