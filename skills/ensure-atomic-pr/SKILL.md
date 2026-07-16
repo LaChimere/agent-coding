@@ -7,7 +7,7 @@ description: Evaluate whether a diff, commit, or PR is atomic enough. Use when a
 
 This skill operates within the workflow coordinated by `workflow-orchestrator` and its bundled framework contract. It can be invoked at any point — during design, during execution, or after the fact as a recovery tool.
 
-If `skills/workflow-orchestrator/references/workflow-contract.md` exists in the current repository, read it before changing execution strategy. If the shared contract is not present, use this skill only when an equivalent workflow contract is already active or route through `workflow-orchestrator` first.
+When changing an active execution strategy, use the recorded workflow handoff. Invoke the installed `workflow-orchestrator` only when phase or approval is unresolved. Do not rely on repository-source paths.
 
 When used as a quick assessment on an existing diff, it does not by itself force plan mode. The assessment can be delivered directly.
 
@@ -31,40 +31,21 @@ Reduce oversized or mixed-purpose changes into atomic, reviewable units.
 
 A change is not atomic enough if:
 - it has more than one logical purpose
-- it can only be described with "A and B"
+- its description joins independent outcomes rather than one behavior and its supporting tests/docs
 - it mixes mechanical changes with semantic changes
 - it forces reviewers to reason about unrelated concerns together
 
-# Preferred split order
+# Preferred split model
 
-Prefer this order when splitting:
+Split by logical purpose first. Keep each purpose's preparation, behavior, tests, and directly coupled documentation together when they form one reviewable outcome.
 
-1. mechanical-only changes
-   - formatting
-   - imports
-   - isolated renames
-   - generated files, if isolated
+Separate mechanical work when it can land independently and would otherwise obscure semantic review:
 
-2. preparatory refactor
-   - extraction
-   - adapters
-   - interfaces
-   - indirection required to support a later change
+- formatting, imports, or generated output
+- an indivisible repository-wide rename
+- a preparatory refactor that has independent value and leaves a healthy intermediate state
 
-3. behavioral change
-   - feature logic
-   - bug fix
-   - state transition change
-
-4. tests
-   - regression tests
-   - integration tests
-   - fixtures
-
-5. docs / cleanup
-   - documentation
-   - comments
-   - follow-up cleanup
+Do not group all refactors, tests, or docs across unrelated purposes merely because they share an artifact type.
 
 # Required output
 
@@ -79,6 +60,9 @@ For each proposed commit or PR:
 - included concerns
 - excluded concerns
 - dependencies
+- acceptance criteria
+- validation
+- healthy intermediate-state evidence
 
 ## Recovery guidance
 - whether to use interactive staging
