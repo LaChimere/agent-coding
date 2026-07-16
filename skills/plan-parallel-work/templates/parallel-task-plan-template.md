@@ -5,30 +5,19 @@ Name:
 Purpose:
 Why serial:
 Must stabilize first:
+Base ref / commit:
 
-## Agent / Task A
+## Task: [name]
 Branch:
-Worktree:
+Isolated working copy:
 Owns:
 Must not touch:
 Depends on:
+Acceptance criteria:
 Validation:
+Handoff payload:
 
-## Agent / Task B
-Branch:
-Worktree:
-Owns:
-Must not touch:
-Depends on:
-Validation:
-
-## Agent / Task C
-Branch:
-Worktree:
-Owns:
-Must not touch:
-Depends on:
-Validation:
+Repeat the task block for each real parallel work stream.
 
 ## Merge strategy
 Rebase order:
@@ -42,3 +31,4 @@ Conflict hotspots:
 
 Convergence owner:
 Final cleanup owner:
+Final convergence validation:

@@ -7,7 +7,7 @@ description: Plan safe parallel work for multiple agents on one repository by de
 
 This skill operates within the workflow coordinated by `workflow-orchestrator` and its bundled framework contract.
 
-If `skills/workflow-orchestrator/references/workflow-contract.md` exists in the current repository, read it before planning ownership boundaries. If the shared contract is not present, use this skill only when an equivalent workflow contract is already active or route through `workflow-orchestrator` first.
+Use the recorded handoff from the installed `workflow-orchestrator`. Invoke it only when phase, approval, or the PR sequence is unresolved. Do not rely on repository-source paths.
 
 Before producing a parallelization design, create or update `plans/{slug}/research.md` with the evidence, dependency analysis, and conflict hotspots that justify the split.
 
@@ -35,10 +35,12 @@ Turn a multi-agent implementation request into an explicit parallel execution pl
 - The work overlaps heavily in the same hot files
 - Shared contracts are still changing rapidly and no stable base exists
 
+When declining fan-out for an unstable base, explain the rebase and coordination cost and name the condition that would make parallel work safe.
+
 # Default safety rules
 
-- One agent = one branch
-- One branch = one worktree
+- One task owner = one branch
+- Each task owner needs an isolated working copy; a worktree is the default, while an isolated clone or sandbox is acceptable when it provides the same guarantee
 - Shared contracts may be changed only in the base PR unless explicitly allowed
 - Each agent must have explicit owned paths
 - Each agent must also have explicit forbidden paths
@@ -47,6 +49,7 @@ Turn a multi-agent implementation request into an explicit parallel execution pl
 # Planning procedure
 
 1. Identify the serial prerequisite base
+   - exact base ref or commit
    - contract
    - schema
    - interface
@@ -60,17 +63,20 @@ Turn a multi-agent implementation request into an explicit parallel execution pl
 
 3. For each parallel task, define:
    - branch name
-   - worktree name
+   - isolated working copy (worktree, clone, or sandbox)
    - owned directories
    - forbidden directories
    - dependencies
-   - validation commands
+   - validation commands and implementation-owned tests
+   - acceptance criteria
+   - handoff payload
    - expected merge order
 
 # Required output
 
 ## Base prerequisite
 - name
+- exact ref or commit
 - why it must be serial
 - what must stabilize first
 
@@ -78,17 +84,20 @@ Turn a multi-agent implementation request into an explicit parallel execution pl
 For each task:
 - task name
 - branch name
-- worktree name
+- isolated working copy
 - owns
 - must not touch
 - depends on
+- acceptance criteria
 - validation
+- handoff payload
 
 ## Merge strategy
 - rebase order
 - likely conflict hotspots
 - convergence owner
 - final cleanup owner
+- final convergence validation
 
 # Gotchas
 
@@ -107,6 +116,6 @@ These are failure patterns that come up repeatedly when agents plan parallel wor
 # Strong preferences
 
 - Prefer parallelism across modules, not within the same hot files
-- Prefer backend/frontend/tests/docs split only after contracts stabilize
+- Keep tests with the implementation owner unless shared test infrastructure is independently useful
 - Prefer one owner for final cleanup and branch reconciliation
 - If two tasks need the same core files, recommend serial execution instead

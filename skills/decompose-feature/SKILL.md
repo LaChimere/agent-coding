@@ -1,19 +1,17 @@
 ---
 name: decompose-feature
-description: Split a large feature into a sequence of small, mergeable, reviewable PRs. Use when a task is too broad for one PR, when stacked PRs or vertical slices are desired, or when a base PR plus parallel fan-out work is needed. Also trigger when the user describes a feature that touches multiple modules or layers, mentions phased delivery or incremental rollout, or when the estimated diff would exceed a comfortable review size.
+description: Split work that is too large for one reviewable PR into a trunk-safe sequence of mergeable slices. Use when the user asks for stacked PRs, phased delivery, incremental rollout, or when evidence shows one PR would mix purposes or exceed a comfortable review boundary.
 ---
 
 # Operating context
 
 This skill operates within the workflow coordinated by `workflow-orchestrator` and its bundled framework contract.
 
-If `skills/workflow-orchestrator/references/workflow-contract.md` exists in the current repository, read it before producing the split. If the shared contract is not present, use this skill only when an equivalent workflow contract is already active or route through `workflow-orchestrator` first.
+Use an active handoff from the installed `workflow-orchestrator` when materializing workflow artifacts. If phase or approval is unresolved, invoke that skill by name. Do not rely on repository-source paths.
 
-Before producing a split plan, create or update `plans/{slug}/research.md` with the evidence, constraints, and unknowns that justify the decomposition.
+For an advisory request, return the decomposition inline without creating artifacts or gates, then offer materialization into `plans/{slug}` as an optional next step.
 
-Then place the proposed PR decomposition in `plans/{slug}/design.md` (the split itself is a design decision) and stop for Gate 1 (Design approval).
-
-After Gate 1 approval, translate the approved design into `plans/{slug}/plan.md` and `plans/{slug}/todo.md`, then stop again for Gate 2 before execution.
+For workflow-managed delivery, create or update `plans/{slug}/research.md`, place the proposed split in `design.md`, and follow the active approval state before translating it into `plan.md` and `todo.md`.
 
 This skill decides **what PRs should exist**. If the resulting PR sequence also needs explicit branch/worktree/path ownership for multiple agents, follow it with `plan-parallel-work`.
 
@@ -45,34 +43,17 @@ Produce a PR sequence where each PR:
 
 # Default decomposition model
 
-Prefer this structure unless the codebase strongly suggests another split:
+Prefer vertical slices: each PR delivers one meaningful behavior end to end, including its tests and directly coupled documentation.
 
-1. Base PR
-   - types / schema / interfaces
-   - feature flag
-   - abstraction / adapter / compatibility layer
-   - no-op or disabled wiring
-   - no intended user-visible behavior change
+Use a serial base PR only when evidence shows later PRs share a real prerequisite such as a schema, public contract, compatibility layer, or stabilized interface. Keep that base limited to what the fan-out genuinely requires; do not add speculative flags, abstractions, or no-op wiring for structure alone.
 
-2. Implementation PR(s)
-   - core logic
-   - unit tests
-   - still guarded by flag or abstraction when possible
-
-3. Integration PR(s)
-   - connect callers, routes, handlers, workers, UI entry points
-   - add focused integration tests
-
-4. Cleanup PR
-   - remove legacy path
-   - remove temporary compatibility code
-   - update docs / metrics / migration notes if relevant
+Use cleanup PRs only for temporary compatibility or migration work introduced by the sequence.
 
 # Decision rules
 
 Prefer base/fan-out/cleanup when:
-- there is shared infrastructure
-- there are shared contracts
+- there is a demonstrated shared prerequisite
+- more than one later slice depends on the same stabilized contract
 - multiple agents may work in parallel
 - partial mergeability matters
 
@@ -93,7 +74,7 @@ Return the plan in this structure:
 - why this split was chosen
 
 ## PR sequence
-For each PR:
+Use one repeatable block per proposed PR:
 - PR name
 - goal
 - likely directories/files
@@ -103,6 +84,8 @@ For each PR:
 - acceptance criteria (concrete, verifiable conditions that must be true before this PR can be proposed)
 - validation commands
 - mergeability notes
+
+If the feature is already one reviewable, indivisible purpose, recommend one PR instead of manufacturing a sequence.
 
 ## Parallelization readiness
 - which PRs must be serial

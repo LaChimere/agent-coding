@@ -11,7 +11,7 @@
 - [reason]
 - [reason]
 
-## PR 1: [name]
+## PR: [name]
 Goal:
 Acceptance criteria:
 Likely paths:
@@ -21,35 +21,7 @@ Validation:
 Depends on:
 Mergeability notes:
 
-## PR 2: [name]
-Goal:
-Acceptance criteria:
-Likely paths:
-Allowed:
-Prohibited:
-Validation:
-Depends on:
-Mergeability notes:
-
-## PR 3: [name]
-Goal:
-Acceptance criteria:
-Likely paths:
-Allowed:
-Prohibited:
-Validation:
-Depends on:
-Mergeability notes:
-
-## Cleanup PR: [name]
-Goal:
-Acceptance criteria:
-Likely paths:
-Allowed:
-Prohibited:
-Validation:
-Depends on:
-Mergeability notes:
+Repeat the PR block for each real slice. Add a cleanup PR only when temporary compatibility or migration work needs removal.
 
 ## Parallelization readiness
 Must stay serial:

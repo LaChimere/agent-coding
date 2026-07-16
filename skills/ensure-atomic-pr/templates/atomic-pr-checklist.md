@@ -7,11 +7,9 @@
 - Can it be merged independently?
 
 ## If not atomic, split into
-- [ ] mechanical-only
-- [ ] preparatory refactor
-- [ ] behavioral change
-- [ ] tests
-- [ ] docs / cleanup
+- [ ] one unit per logical purpose
+- [ ] mechanical work separated only when independently mergeable
+- [ ] each purpose keeps its tests and directly coupled docs
 
 ## Proposed split
 ### PR / Commit 1
@@ -20,6 +18,9 @@ Purpose:
 Includes:
 Excludes:
 Depends on:
+Acceptance criteria:
+Validation:
+Healthy intermediate state:
 
 ### PR / Commit 2
 Title:
@@ -27,6 +28,9 @@ Purpose:
 Includes:
 Excludes:
 Depends on:
+Acceptance criteria:
+Validation:
+Healthy intermediate state:
 
 ### PR / Commit 3
 Title:
@@ -34,3 +38,8 @@ Purpose:
 Includes:
 Excludes:
 Depends on:
+Acceptance criteria:
+Validation:
+Healthy intermediate state:
+
+Repeat the block for each real unit.
