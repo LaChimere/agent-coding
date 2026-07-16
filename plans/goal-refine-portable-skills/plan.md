@@ -1,5 +1,7 @@
 # Plan: Refine Portable Skills
 
+Landing mode: `commits`
+
 ## 1. Validate installed-runtime evaluation
 
 - Verify isolated local installs and supported skill combinations.

@@ -1,5 +1,7 @@
 # Research: Refine Portable Skills
 
+Runtime slug: `goal-refine-portable-skills`
+
 ## Objective
 
 Refine the nine skills distributed by this repository so they remain useful with strong current models while preserving a provider-neutral runtime contract.
