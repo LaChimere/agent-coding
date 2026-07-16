@@ -3,13 +3,13 @@
 objective: "好，开始完整执行 plan"
 status: active
 slug: "refine-portable-skills"
-turns_used: 4
+turns_used: 5
 turn_budget: null
 budget_note: null
 landing_mode: commits
 docs_update_approved: true
 created_at: "2026-07-16T23:13:21+08:00"
-updated_at: "2026-07-17T03:10:00+08:00"
+updated_at: "2026-07-17T03:15:00+08:00"
 
 ## Acceptance criteria
 
@@ -48,6 +48,7 @@ updated_at: "2026-07-17T03:10:00+08:00"
 - Turn 2: Refined the shared contract and core execution skills, corrected the blind-eval harness, and completed dual-family core evaluation.
 - Turn 3: Refined decomposition, atomicity recovery, and parallel-work planning; candidates outperformed the old installed versions on both model families.
 - Turn 4: Refined documentation discovery and approval behavior; named targets no longer cause redundant approval loops.
+- Turn 5: Fixed installed scanner paths, output handling, executable packaging, and partial-failure exit semantics; hermetic tests pass.
 
 ## Deferred items
 

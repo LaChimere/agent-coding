@@ -117,7 +117,8 @@ test_default_output_is_workspace_controlled() {
     bash "$scanner" registry.example.com/app:3 >"$workspace/default.out" 2>&1
   )
   output_dir="$(sed -n 's/^Output directory: //p' "$workspace/default.out")"
-  [[ "$output_dir" == "$workspace/project/"* ]] ||
+  project_dir="$(cd "$workspace/project" && pwd -L)"
+  [[ "$output_dir" == "$project_dir/"* ]] ||
     fail "default output directory is not controlled by the working repository"
   [[ -f "$output_dir/registry.example.com_app_3.json" ]] ||
     fail "default output artifact is missing"
@@ -125,7 +126,7 @@ test_default_output_is_workspace_controlled() {
 
 test_remote_scan_does_not_require_docker() {
   : >"$FAKE_SCAN_LOG"
-  bash "$scanner" --output-dir "$workspace/remote" registry.example.com/app:4 \
+  "$scanner" --output-dir "$workspace/remote" registry.example.com/app:4 \
     >"$workspace/remote.out" 2>&1
 }
 

@@ -9,7 +9,7 @@
 - [x] Refine the shared workflow contract and core execution skills.
 - [x] Refine planning, recovery, and parallel-work skills.
 - [x] Refine documentation behavior.
-- [ ] Fix scanner behavior and add deterministic tests.
+- [x] Fix scanner behavior and add deterministic tests.
 - [ ] Reconcile descriptions and invocation policy.
 - [ ] Update `AGENTS.md` and `README.md`.
 - [ ] Run final installed-copy validation and dual-family evals.

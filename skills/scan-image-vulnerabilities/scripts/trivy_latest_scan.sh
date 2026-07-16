@@ -8,7 +8,7 @@ Usage:
 
 Examples:
   trivy_latest_scan.sh sandbox-orchestrator:dev
-  trivy_latest_scan.sh --output-dir /tmp/trivy-results mcr.microsoft.com/hello-world:latest
+  trivy_latest_scan.sh --output-dir ./trivy-results mcr.microsoft.com/hello-world:latest
 EOF
 }
 
@@ -47,7 +47,7 @@ if [[ ${#images[@]} -eq 0 ]]; then
 fi
 
 if [[ -z "$output_dir" ]]; then
-  output_dir="$(mktemp -d /tmp/trivy-image-scan.XXXXXX)"
+  output_dir="$(mktemp -d "$PWD/trivy-image-scan.XXXXXX")"
 else
   mkdir -p "$output_dir"
 fi
@@ -132,5 +132,7 @@ if [[ ${#failed_images[@]} -gt 0 ]]; then
   for img in "${failed_images[@]}"; do
     echo "  - $img" >&2
   done
+  echo "Partial raw JSON results are in: $output_dir" >&2
+  exit 1
 fi
 echo "Done. Raw JSON results are in: $output_dir"

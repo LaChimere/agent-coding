@@ -1,9 +1,9 @@
 ---
 name: scan-image-vulnerabilities
-description: Scan one or more container images for known vulnerabilities using the latest vulnerability database, then summarize the results clearly. Use this whenever the user asks whether an image has vulnerabilities, wants a CVE scan for a Docker image, asks to check images running in a cluster, or mentions Trivy, container CVEs, image security, or package vulnerabilities even if they do not explicitly ask for a "scan."
+description: Scan container image references or images used by cluster workloads for known vulnerabilities with Trivy and a freshly updated database. Use for container-image CVEs, image security posture, Trivy scans, or discovering and scanning exact workload images; do not use for source-code security audits or generic dependency questions.
 compatibility:
-  tools: [bash, docker]
-  dependencies: [Trivy installed locally; Docker daemon access for local images; optional kubectl access when discovering images from a cluster]
+  tools: [bash, python3]
+  dependencies: [Trivy installed locally; Docker access only for local daemon images; optional kubectl access when discovering images from a cluster]
 ---
 
 # Trivy image vulnerability scan
@@ -21,7 +21,7 @@ Use Trivy to scan one or more images against the **latest** vulnerability databa
 - the user asks whether an image has vulnerabilities
 - the user asks for a Trivy scan
 - the user wants to check images used by a Kubernetes workload or cluster
-- the user asks about CVEs, package vulnerabilities, or image security posture
+- the user asks about CVEs or package vulnerabilities in a container image
 
 ## Core expectations
 
@@ -47,17 +47,17 @@ Narrow to the relevant namespace, deployment, or workload when the user gave a m
 
 ### 2. Run the bundled scanner
 
-Use the helper script:
+Resolve the helper relative to this installed skill's base directory:
 
 ```bash
-skills/scan-image-vulnerabilities/scripts/trivy_latest_scan.sh <image> [more-images...]
+<skill-base>/scripts/trivy_latest_scan.sh <image> [more-images...]
 ```
 
 If you want deterministic artifacts, pass an explicit output directory:
 
 ```bash
-skills/scan-image-vulnerabilities/scripts/trivy_latest_scan.sh \
-  --output-dir /tmp/trivy-scan-results \
+<skill-base>/scripts/trivy_latest_scan.sh \
+  --output-dir ./trivy-scan-results \
   <image> [more-images...]
 ```
 
@@ -67,6 +67,9 @@ The script:
 - scans each image with `--scanners vuln`
 - saves raw JSON per image
 - prints a severity summary and top findings
+- returns nonzero if the DB refresh or any requested image scan fails
+
+Without `--output-dir`, raw artifacts are created under the current working directory. Use an explicit ignored or session-controlled directory when the project should remain clean.
 
 ### 3. Summarize for the user
 
@@ -132,7 +135,7 @@ These are failure patterns that come up when agents run Trivy scans.
 
 - **Overwhelming the user with hundreds of findings.** A base OS image can have dozens of CVEs. Lead with CRITICAL and HIGH, give a count summary, and only detail the top findings. Do not dump 200 rows of LOW severity noise.
 
-- **Missing Docker daemon when scanning local images.** `trivy image` needs Docker access for local images. If Docker is not running or the user does not have permissions, the error message can be cryptic. Check Docker access early and explain the issue clearly.
+- **Missing Docker daemon for a local-only image.** Docker access is needed when the target exists only in the local daemon. Remote registry references do not require Docker; diagnose registry access and local-daemon access separately.
 
 ## Bundled resource
 
