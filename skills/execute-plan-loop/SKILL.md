@@ -1,13 +1,13 @@
 ---
 name: execute-plan-loop
-description: Execute an approved feature request or approved `plans/{slug}` scope in a persistent implementation loop with atomic commits, per-commit verification, plan/todo status refreshes, doc checks, and periodic deep review. Use whenever the user asks the agent to implement a feature end-to-end, continue from an approved plan, finish a phase or step, carry part or all of a slug to completion, "keep going until it's done", or otherwise wants disciplined multi-commit execution instead of a single big diff.
+description: Execute an approved implementation scope in small verified slices while keeping plan and status artifacts accurate. Use for an approved `plans/{slug}` step, an explicitly scoped implementation request, or continuation of execution that needs atomic changes and milestone review. This skill does not create persistent goal lifecycle state.
 ---
 
 # Operating context
 
 This skill operates within the workflow coordinated by `workflow-orchestrator` and its bundled framework contract.
 
-If `skills/workflow-orchestrator/references/workflow-contract.md` exists in the current repository, read it before execution. If the shared contract is not present, use this skill only when an equivalent workflow contract is already active or route through `workflow-orchestrator` first.
+If `workflow-orchestrator` or `achieve-goal` handed off an approved scope with recorded phase, approval, and landing mode, treat that as the active contract and do not route the unchanged decision back through the orchestrator. Invoke `workflow-orchestrator` only when phase, approval, scope, or worker selection is unresolved. If no active contract exists and the orchestrator is unavailable, report the missing dependency.
 
 It is an **execution skill**, not a planning shortcut. If the task triggers plan mode and the necessary approvals are missing, do not start coding. Create or update the required plan artifacts, stop at the correct gate, and wait for approval.
 
@@ -28,7 +28,7 @@ Carry approved implementation work forward in small, reviewable, verified increm
 - The user asks to execute part or all of an approved `plans/{slug}` plan
 - The user asks to finish a phase, step, or checklist item from a planning slug
 - The user wants multi-commit discipline instead of one large unreviewed change
-- The work needs explicit per-commit validation and periodic deeper review
+- The work needs explicit per-slice validation and milestone review
 
 # Do not use this skill when
 
@@ -41,13 +41,12 @@ Carry approved implementation work forward in small, reviewable, verified increm
 - Keep the final approved objective visible at all times.
 - Read the referenced code, tests, plans, or docs before making claims about them. If the user names a file or symbol, inspect it before answering or editing.
 - Execute only the approved scope; do not silently expand to adjacent cleanup.
-- One commit should have one logical purpose and be explainable in one sentence.
-- Do not create a commit until the relevant checks for that slice have passed.
-- Before each commit, check whether execution status artifacts and docs need to be updated, and include those updates in the same commit when they are directly tied to the slice.
-- After every 3-5 commits, or at the end of any coherent milestone, run a deeper review before continuing.
+- One landed slice should have one logical purpose and be explainable in one sentence.
+- Do not create a commit unless commit creation is authorized and the relevant checks have passed.
+- Before landing a slice, check whether execution status artifacts and directly coupled docs need to move with it.
+- Run deeper review at coherent milestones, earlier for high-risk changes, and at the cadence set by the user or active contract.
 - Review findings must lead to explicit action: fix now, split follow-up work, update the plan/design, or stop and escalate.
-- Implement the principled general solution using the repository's normal tools and patterns. Do not hard-code visible test values or create throwaway workaround scripts/files as a substitute for solving the real problem. Legitimate repository tooling such as build scripts, migrations, fixture generators, skill eval scripts, or CI utilities is fine when it is part of the actual solution or verification path.
-- Keep defensive coding proportional. Validate data at system boundaries such as user input, external APIs, files, message queues, databases, and network data; trust type-system guarantees, internal invariants, and framework guarantees inside the trust boundary. Separately, handle operational errors such as I/O, network, permission, timeout, and resource failures wherever they can occur by surfacing or propagating them according to repository patterns rather than hiding them behind broad success-shaped fallbacks.
+- Follow the shared contract's implementation-quality, boundary-validation, and error-handling rules rather than repeating them here.
 
 # Pre-loop setup
 
@@ -76,7 +75,15 @@ If the user asked for only one phase or step, honor that boundary exactly.
 
 If the implementation target depends on code you have not opened, inspect the relevant files first. Do not infer behavior from filenames, test names, or stale plan text when the source is available.
 
-## 3) Pick the next atomic slice
+## 3) Resolve landing authorization
+
+Implementation authorization and commit authorization are separate. Read the active landing mode from the workflow state:
+
+- If landing mode is `commits`, use atomic commits after verification.
+- Otherwise make and verify logical working-tree slices, update approved status artifacts, and report what is ready to commit.
+- Do not infer commit permission from requests such as "implement", "fix", "finish", or "keep going".
+
+## 4) Pick the next atomic slice
 
 Choose the smallest next slice that:
 - advances the approved plan
@@ -86,7 +93,7 @@ Choose the smallest next slice that:
 
 If the next step is too large for one commit, split it before coding. Reach for `ensure-atomic-pr` when you need help recovering atomic boundaries.
 
-# Per-commit execution loop
+# Per-slice execution loop
 
 Repeat this loop until the requested scope is complete or a gate blocks further execution.
 
@@ -105,7 +112,7 @@ Repeat this loop until the requested scope is complete or a gate blocks further 
 - Add data validation where invalid data can enter from a boundary. For trusted internal calls, prefer clear invariants and simple code over redundant guards. Handle operational failures where the operation can actually fail, but propagate or report them explicitly instead of adding broad catches or success-shaped fallbacks.
 - If a requested change is infeasible, unsafe, or based on an incorrect test, stop with evidence instead of building a workaround.
 
-## 3) Refresh status artifacts before committing
+## 3) Refresh status artifacts before landing the slice
 
 Before creating the commit, update whichever progress artifacts are meant to reflect reality:
 - `plans/{slug}/todo.md` checklist items and evidence notes
@@ -124,7 +131,7 @@ If updating `plan.md` or `design.md` changes the approved path, stop for the req
 
 ## 5) Check whether docs must move with the code
 
-Before every commit, ask whether this slice changed:
+Before landing or reporting every slice, ask whether it changed:
 - user-visible behavior
 - configuration
 - public interfaces
@@ -146,9 +153,9 @@ Do not stop the long loop for trivial docs that are tightly coupled to the imple
 
 Before proposing the final PR or completion message, do one last doc-staleness sweep consistent with the active workflow contract: count the inline slice-coupled updates you already made, then invoke `refresh-related-docs` only if broader Markdown docs may still be stale.
 
-## 6) Create one atomic commit
+## 6) Land or report one atomic slice
 
-Commit only the files that belong to this slice.
+When commits are authorized, commit only the files that belong to this slice. Otherwise leave the verified slice in the working tree and report its purpose, files, evidence, and readiness.
 
 Good commit shapes:
 - one implementation step + its tests
@@ -162,7 +169,7 @@ Bad commit shapes:
 
 # Periodic deep review loop
 
-Run a fuller review after every 3-5 commits, or sooner when a coherent milestone finishes.
+Run a fuller review when a coherent milestone finishes, before or after a high-risk slice as appropriate, or at the cadence requested by the user or active workflow. Commit count alone is not the trigger. Every milestone review compares the actual diff with the approved plan and acceptance criteria, then turns each validated finding into a fix, split, plan/design update, or evidence-backed escalation.
 
 ## Review procedure
 
@@ -183,6 +190,15 @@ When review finds something, choose the action that matches the problem:
 
 Resolve review comments at the root-cause level. Prefer the cleanest correct fix over narrow patches that only silence the comment.
 
+## Repeated-failure rule
+
+Do not continue a fix-on-fix loop without new evidence. After two materially similar failed attempts:
+
+1. record what was tried and what each result disproved
+2. reassess the current assumption and implementation path
+3. update the plan or design through the required gate when the path changed
+4. stop and escalate when safe replanning is not possible
+
 # Completion criteria
 
 The loop is complete only when all of these are true for the requested scope:
@@ -192,13 +208,13 @@ The loop is complete only when all of these are true for the requested scope:
 - Required checks have passed at the appropriate verification level
 - Related slug status artifacts reflect reality
 - Related docs are updated or explicitly deferred under the repo's approval rules
-- Periodic review findings are resolved, deferred explicitly, or escalated with evidence
+- Milestone review findings are resolved, deferred explicitly, or escalated with evidence
 
 # Gotchas
 
 - **Losing track of the exact target.** Long execution loops drift easily. Re-anchor on the approved objective before each slice so "while I'm here" work does not quietly expand the change.
 - **Letting `todo.md` lag behind the code.** If the status tracker says one thing and the branch says another, the next session will make bad decisions. Update the progress truth before you commit.
-- **Treating review as a ceremony.** A 3-5 commit review checkpoint is there to catch structural problems early, not to rubber-stamp what already happened.
+- **Treating review as a ceremony.** Milestone review exists to catch structural problems early, not to rubber-stamp what already happened.
 - **Fixing comments cosmetically.** Review feedback should improve the design, correctness, or maintainability of the change. Do not respond with the smallest possible patch if a more principled fix is warranted.
 - **Plowing ahead through approval boundaries.** If plan or design drift is discovered mid-loop, stop and refresh the right artifact instead of sneaking in unapproved changes.
 - **Test-fitting instead of solving.** A green targeted test is not enough if the implementation hard-codes that test's values, creates a throwaway workaround script, or ignores valid inputs outside the fixture. Do not confuse this with legitimate repository tooling that supports the real implementation or verification.

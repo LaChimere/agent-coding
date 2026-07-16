@@ -2,6 +2,12 @@
   "skill_name": "workflow-orchestrator",
   "default_category": "regression_guard",
   "critical_ids": [3, 4, 7, 9],
+  "critical_expectations": {
+    "3": [0, 1, 2, 3, 4],
+    "4": [0, 1, 2, 3, 4],
+    "7": [0, 1, 2, 3, 4],
+    "9": [0, 1, 2, 3, 4]
+  },
   "behavior_change_ids": [7, 8, 9],
   "redundant_ids": [2, 6],
   "behavior_change_rationale": {

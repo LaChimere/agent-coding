@@ -50,28 +50,32 @@ If the task is trivial and low-risk, execution can proceed directly.
 
 ## Runtime artifact layout
 
-When plan mode applies, the runtime artifacts live under `plans/{slug}/`:
+When plan mode applies, create only the runtime artifacts needed for the active phase under `plans/{slug}/`:
 
-- `research.md`
-- `design.md`
-- `plan.md`
-- `todo.md`
-- `lessons.md`
+- `research.md` when evidence or unknowns need durable capture
+- `design.md` when a design decision requires review
+- `plan.md` and `todo.md` when execution needs an approved, reviewable sequence
+- `lessons.md` after a material correction reveals reusable learning
 
 Use the skill-local templates to create missing artifacts. Treat the repo-local files as the runtime source of truth after creation.
 
 ## Gate model
 
-Default sequence:
+Treat the workflow as conditional transitions, not a mandatory ceremony:
 
-`Research -> Design -> Gate 1 -> Plan + Todo -> Gate 2 -> Execute -> Verify -> Gate 3 -> Lessons`
+`Discover if needed -> Design if needed -> Plan if needed -> Execute -> Verify -> Review if needed -> Record lessons if earned`
 
 Use Gate 1 for design approval when:
 - design is required by the trigger table
 - the user explicitly wants a design review
 
 Use Gate 2 before execution when:
-- a reviewable execution plan is required
+- the work spans multiple implementation slices or commits
+- execution order, migration order, ownership, or rollback needs review
+- the user explicitly asks to approve the plan before implementation
+- the active design or policy requires a plan gate
+
+Low-risk work that does not need a reviewable sequence can proceed without Gate 2 once its scope is clear.
 
 Use Gate 3 after execution when:
 - the change is high-risk (for example auth, security, data migration, infra, or public contract changes)
@@ -128,6 +132,18 @@ Minimum expectations:
 | Infra / CI / deploy / security / data migration | L2 + rollback, L3 when feasible |
 | Performance-related | numbers + method |
 
+When a repository does not provide a named lint, typecheck, test, integration, or staging command, use the closest existing evidence that verifies the changed behavior. Record what was run and the limitation; do not invent a command or treat missing tooling as a pass.
+
+## Landing authorization
+
+Authorization to implement does not automatically authorize commits.
+
+- Record the active landing mode as `working_tree` or `commits`.
+- Use `commits` only when the user or approved workflow explicitly authorizes creating commits.
+- When landing mode is absent, default to `working_tree`.
+- A worker may produce verified logical slices in either mode; it creates commits only in `commits` mode.
+- Changing landing mode requires explicit user or workflow authorization, not inference from words such as "implement", "fix", or "continue".
+
 ## Parallel work rules
 
 - Do not assume parallel work is safe by default.
@@ -151,12 +167,17 @@ Minimum expectations:
 - `achieve-goal` -> persist and pursue a long-running objective until complete, paused, blocked, or budget-limited
 - `ensure-atomic-pr` -> recover or assess atomic boundaries
 - `refresh-related-docs` -> update broader stale Markdown docs
+- `anti-slop` -> accompany implementation as a quality guard; it is not the primary workflow owner
+- `scan-image-vulnerabilities` -> direct read-only image inspection outside plan mode
+
+Workers are separate installed skills. Route by skill name and current capability availability; do not rely on repository-source paths. If a required worker is unavailable, report the capability gap. Use a bounded contract-equivalent fallback only when the active environment can perform it safely without pretending the missing skill was invoked.
 
 ## Escalation conditions
 
 Stop and surface the issue when:
 - the next action would cross a gate without approval
 - the approved plan or design no longer matches reality
-- the diff is no longer atomic
 - a required verification step is missing or failing
 - the orchestration bundle and repo-local policy conflict materially
+
+When a diff is no longer atomic, pause the current implementation route and use `ensure-atomic-pr` to assess or recover the boundaries. Resume only after the split preserves valid intermediate states and the active approval state still applies.

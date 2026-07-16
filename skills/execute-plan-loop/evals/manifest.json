@@ -1,12 +1,19 @@
 {
   "skill_name": "execute-plan-loop",
   "default_category": "regression_guard",
-  "critical_ids": [0, 6, 7, 9],
-  "behavior_change_ids": [7, 8, 9],
+  "critical_ids": [6, 7, 9, 10],
+  "critical_expectations": {
+    "6": [0, 2, 4],
+    "7": [0, 1, 2, 3, 4],
+    "9": [0, 1, 3, 4],
+    "10": [0, 1, 2, 3]
+  },
+  "behavior_change_ids": [7, 8, 9, 10],
   "redundant_ids": [],
   "behavior_change_rationale": {
     "7": "Implementation authorization does not imply commit authorization.",
     "8": "Review cadence follows milestones, risk, and user policy rather than a fixed commit count.",
-    "9": "Repeated failures without new evidence cause replanning or escalation."
+    "9": "Repeated failures without new evidence cause replanning or escalation.",
+    "10": "An approved orchestrator or goal handoff is consumed directly instead of creating a routing loop."
   }
 }
