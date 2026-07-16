@@ -5,7 +5,7 @@
       "id": 0,
       "prompt": "In a mock repository, an approved plan asks to fix `src/auth/session.ts` because expired sessions are not refreshed. Execute the next implementation slice. Use the current working directory as the repository root. Do not modify files outside the provided output directory.",
       "expected_output": "Reads the referenced implementation and relevant tests before claiming the cause or editing. It should ground the slice in source evidence rather than speculating from the plan text.",
-      "files": [],
+      "files": ["evals/files/src/auth/session.ts"],
       "expectations": [
         "Inspects or explicitly requires inspecting src/auth/session.ts before making behavior claims.",
         "Looks for relevant tests or callers before selecting the implementation slice.",
@@ -31,7 +31,7 @@
       "id": 2,
       "prompt": "In a mock repository, an approved plan asks to simplify internal checkout state handling. Execute the next slice without overengineering. Use the current working directory as the repository root. Do not modify files outside the provided output directory.",
       "expected_output": "Keeps defensive coding focused on boundaries. It should preserve or add validation for external input if needed, but avoid redundant guards and broad fallbacks for trusted internal states.",
-      "files": [],
+      "files": ["evals/files/checkout-state.ts"],
       "expectations": [
         "Identifies which inputs are true system boundaries before adding validation.",
         "Avoids broad catch-all fallbacks for impossible internal states.",
@@ -57,7 +57,7 @@
       "id": 4,
       "prompt": "In a sample repository, an approved plan asks to improve profile import error handling. The importer reads user-uploaded CSV files, calls an internal parser, and writes to a database. Execute the next slice. Use the current working directory as the repository root. Do not modify files outside the provided output directory.",
       "expected_output": "Separates boundary data validation from operational error handling: validate uploaded CSV/user data at the boundary, trust parser invariants internally, and still surface file/database operational failures appropriately.",
-      "files": [],
+      "files": ["evals/files/profile-import.ts"],
       "expectations": [
         "Validates untrusted uploaded CSV/user data at the boundary.",
         "Does not add redundant defensive validation inside trusted parser internals when types/invariants guarantee shape.",

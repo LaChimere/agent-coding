@@ -2,6 +2,9 @@
   "skill_name": "plan-parallel-work",
   "default_category": "regression_guard",
   "critical_ids": [0],
+  "critical_expectations": {
+    "0": [0, 1, 2, 3, 4]
+  },
   "behavior_change_ids": [4, 5, 6],
   "redundant_ids": [],
   "behavior_change_rationale": {

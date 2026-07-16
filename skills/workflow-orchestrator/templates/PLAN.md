@@ -1,9 +1,10 @@
 # Plan
 
-> Purpose: a reviewable plan that can be annotated. Do not implement until the plan is approved when plan mode is triggered.
+> Purpose: a reviewable plan that can be annotated. Do not implement until Gate 2 approval when the active workflow contract requires that gate.
 
 ## Objective
 - What outcome we want (1–2 sentences):
+- Landing mode: `working_tree` | `commits`
 
 ## Constraints
 - Compatibility constraints:

@@ -17,6 +17,11 @@ if ! command -v trivy >/dev/null 2>&1; then
   exit 1
 fi
 
+if ! command -v python3 >/dev/null 2>&1; then
+  echo "ERROR: python3 is not installed or not on PATH." >&2
+  exit 1
+fi
+
 output_dir=""
 images=()
 
@@ -64,18 +69,29 @@ echo "Output directory: $output_dir"
 failed_images=()
 
 for image in "${images[@]}"; do
-  safe_name="$(printf '%s' "$image" | tr '/:@' '___')"
+  safe_name="$(python3 - "$image" <<'PY'
+import hashlib
+import re
+import sys
+
+image = sys.argv[1]
+stem = re.sub(r"[^A-Za-z0-9._-]+", "_", image).strip("._-")[:120] or "image"
+digest = hashlib.sha256(image.encode("utf-8")).hexdigest()[:12]
+print(f"{stem}_{digest}")
+PY
+)"
   json_path="$output_dir/${safe_name}.json"
 
   echo
   echo "=== Scanning: $image ==="
+  rm -f "$json_path"
   if ! trivy image --scanners vuln --format json -o "$json_path" "$image" 2>&1; then
     echo "ERROR: Failed to scan $image" >&2
     failed_images+=("$image")
     continue
   fi
 
-  python3 - <<'PY' "$json_path" "$image"
+  if ! python3 - "$json_path" "$image" <<'PY'
 import json
 import sys
 from collections import Counter
@@ -124,6 +140,11 @@ else:
     print("Top findings:")
     print("  - none")
 PY
+  then
+    echo "ERROR: Failed to summarize scan result for $image" >&2
+    failed_images+=("$image")
+    continue
+  fi
 done
 
 echo

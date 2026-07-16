@@ -111,6 +111,10 @@ Repeat this loop until the requested scope is complete or a gate blocks further 
 - Solve the actual algorithm or product behavior for all valid inputs. Tests verify the solution; they do not define a set of values to special-case.
 - Add data validation where invalid data can enter from a boundary. For trusted internal calls, prefer clear invariants and simple code over redundant guards. Handle operational failures where the operation can actually fail, but propagate or report them explicitly instead of adding broad catches or success-shaped fallbacks.
 - If a requested change is infeasible, unsafe, or based on an incorrect test, stop with evidence instead of building a workaround.
+- During real execution, stop when a concrete required source, test, or plan artifact cannot be inspected. When the user asks only to plan or describe the next slice, state the required inspection, the boundary or invariant that must be confirmed, and the intended behavior without pretending the evidence was already read.
+- Before changing validation or error handling, name the actual external trust boundary before relying on internal invariants.
+- Identify each operation that can fail. For file-to-database flows, cover file-read and database failures separately rather than collapsing them into one generic error path.
+- Verification for boundary/error-handling work covers invalid-data behavior and each relevant operational-failure class, and records that evidence before completion.
 
 ## 3) Refresh status artifacts before landing the slice
 

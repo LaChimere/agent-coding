@@ -1,6 +1,6 @@
 # Anti-slop core principles (embeddable block)
 
-Paste this block into a working repository's own `AGENTS.md` (or `CLAUDE.md`) so every agent carries these habits by default. It is local policy for that repository, not part of any shared workflow contract. It is the short, always-on version; the full method and the hard gates live in the `anti-slop` skill, when it is installed.
+Paste this block into a working repository's agent-guidance file so every agent carries these habits by default. It is local policy for that repository, not part of any shared workflow contract. It is the short, always-on version; the full method and the hard gates live in the `anti-slop` skill, when it is installed.
 
 ---
 

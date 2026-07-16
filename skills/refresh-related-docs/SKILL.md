@@ -56,7 +56,9 @@ Do not assume a directory is canonical merely because it is named `docs/`. When 
 - Summarize the change in 1-3 bullets and list the docs you plan to update.
 - Separate already approved named targets from newly discovered candidates.
 - Ask one focused question only for the new or expanded candidates.
+- For a high-impact candidate such as `AGENTS.md`, show the specific proposed change and why it is related before asking.
 - If the user declines a candidate, leave it untouched and report the deferral.
+- If approval is declined or absent, still report the underlying task result and identify which documentation remains stale.
 
 ### 4) Update with style preservation (only after approval)
 

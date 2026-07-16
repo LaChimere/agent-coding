@@ -41,6 +41,7 @@ When declining fan-out for an unstable base, explain the rebase and coordination
 
 - One task owner = one branch
 - Each task owner needs an isolated working copy; a worktree is the default, while an isolated clone or sandbox is acceptable when it provides the same guarantee
+- A branch name alone is not isolation. Every task block must name a distinct working copy.
 - Shared contracts may be changed only in the base PR unless explicitly allowed
 - Each agent must have explicit owned paths
 - Each agent must also have explicit forbidden paths
@@ -83,6 +84,7 @@ When declining fan-out for an unstable base, explain the rebase and coordination
 ## Parallel task table
 For each task:
 - task name
+- owner
 - branch name
 - isolated working copy
 - owns
