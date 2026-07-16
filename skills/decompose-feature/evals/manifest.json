@@ -1,0 +1,12 @@
+{
+  "skill_name": "decompose-feature",
+  "default_category": "regression_guard",
+  "critical_ids": [1],
+  "behavior_change_ids": [4, 5, 6],
+  "redundant_ids": [],
+  "behavior_change_rationale": {
+    "4": "Low-coupling work should default to vertical slices.",
+    "5": "A base PR requires evidence of a real shared dependency.",
+    "6": "Advisory decomposition does not force workflow artifacts or gates."
+  }
+}

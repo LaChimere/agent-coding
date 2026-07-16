@@ -91,6 +91,45 @@
         "Allows legitimate fixture generators only if they are part of the real repository contract.",
         "Surfaces incorrect tests as a possible blocker rather than hiding them."
       ]
+    },
+    {
+      "id": 7,
+      "prompt": "A user asks to implement an approved feature and also asks to keep the change free of unnecessary abstractions and duplication. Orchestrate the next step. Use the current working directory as the repository root. Do not modify files outside the provided output directory.",
+      "expected_output": "Selects execute-plan-loop as the primary implementation owner and activates anti-slop only as a companion quality guard, without giving both skills ownership of planning or commit cadence.",
+      "files": [],
+      "expectations": [
+        "Names execute-plan-loop as the primary worker.",
+        "Names anti-slop as a companion rather than an exclusive route.",
+        "Keeps planning and execution ownership with the workflow worker.",
+        "Avoids duplicate review loops.",
+        "States the completion or stop boundary."
+      ]
+    },
+    {
+      "id": 8,
+      "prompt": "A user asks only to scan `registry.example.com/payments:4.2` for container CVEs. Orchestrate the next step. Use the current working directory as the repository root. Do not modify files outside the provided output directory.",
+      "expected_output": "Routes directly to the read-only image scanner without creating planning artifacts or applying implementation approval gates.",
+      "files": [],
+      "expectations": [
+        "Selects scan-image-vulnerabilities directly.",
+        "Treats the scan as read-only inspection outside plan mode.",
+        "Does not create research/design/plan artifacts for the scan.",
+        "Does not route to execute-plan-loop.",
+        "Preserves exact-image and latest-database requirements."
+      ]
+    },
+    {
+      "id": 9,
+      "prompt": "A user has an approved implementation plan, but execute-plan-loop is not installed in the current environment. Orchestrate the next step. Use the current working directory as the repository root. Do not modify files outside the provided output directory.",
+      "expected_output": "Reports the missing worker as a capability gap and gives a bounded fallback or installation requirement without pretending the handoff occurred.",
+      "files": [],
+      "expectations": [
+        "Does not claim execute-plan-loop was invoked.",
+        "Reports that the required worker is unavailable.",
+        "Offers a contract-equivalent bounded fallback only if the current environment can perform it safely.",
+        "Otherwise names installation or user action as the blocker.",
+        "Keeps approval and scope state intact."
+      ]
     }
   ]
 }

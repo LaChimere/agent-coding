@@ -1,0 +1,12 @@
+{
+  "skill_name": "workflow-orchestrator",
+  "default_category": "regression_guard",
+  "critical_ids": [3, 4, 7, 9],
+  "behavior_change_ids": [7, 8, 9],
+  "redundant_ids": [2, 6],
+  "behavior_change_rationale": {
+    "7": "Add explicit primary-worker plus companion routing.",
+    "8": "Add direct read-only scanner routing outside plan mode.",
+    "9": "Add an honest fallback when a selected worker is unavailable."
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "skill_name": "anti-slop",
+  "default_category": "regression_guard",
+  "critical_ids": [5, 6, 7],
+  "behavior_change_ids": [4, 5, 7, 8],
+  "redundant_ids": [],
+  "behavior_change_rationale": {
+    "4": "Add-only growth is a diagnostic, not a mandatory deletion quota.",
+    "5": "Independent review is capability-based rather than model-family-based.",
+    "7": "Reviewer independence is not inferred from model count or vendor.",
+    "8": "Generated artifacts and bounded compatibility migrations may justify temporary duplication."
+  }
+}

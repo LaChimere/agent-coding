@@ -1,0 +1,14 @@
+{
+  "skill_name": "scan-image-vulnerabilities",
+  "default_category": "regression_guard",
+  "critical_ids": [0, 4, 5, 6],
+  "deterministic_ids": [0, 4, 5, 6],
+  "behavior_change_ids": [3, 4, 5, 6],
+  "redundant_ids": [],
+  "behavior_change_rationale": {
+    "3": "Trigger only for container image, cluster, and Trivy vulnerability work.",
+    "4": "Any requested image failure produces a nonzero process status.",
+    "5": "Output paths are caller-controlled and Docker is conditional.",
+    "6": "The scanner is resolved relative to the installed skill directory."
+  }
+}

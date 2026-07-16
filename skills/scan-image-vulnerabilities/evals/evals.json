@@ -1,0 +1,96 @@
+{
+  "skill_name": "scan-image-vulnerabilities",
+  "evals": [
+    {
+      "id": 0,
+      "prompt": "A hermetic fake trivy makes the vulnerability database download fail. Run the installed scanner against registry.example.com/app:1.2.3.",
+      "expected_output": "Stops before scanning, exits nonzero, and does not report a clean result.",
+      "files": [],
+      "expectations": [
+        "Returns nonzero.",
+        "Does not scan the image.",
+        "Reports DB refresh failure.",
+        "Does not use stale data.",
+        "Does not claim no vulnerabilities."
+      ]
+    },
+    {
+      "id": 1,
+      "prompt": "A fake kubectl lists exact image digests in the payments namespace. Discover and scan the running images.",
+      "expected_output": "Scans the exact discovered references and reports the namespace and targets.",
+      "files": [],
+      "expectations": [
+        "Discovers images before scanning.",
+        "Uses exact tags or digests.",
+        "Does not guess latest.",
+        "Narrows to payments.",
+        "Reports targets."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "One image has critical, high, and hundreds of low findings. A second image cannot be pulled due to registry auth. Summarize.",
+      "expected_output": "Prioritizes severe findings and reports the second image as failed rather than clean.",
+      "files": [],
+      "expectations": [
+        "Leads with critical and high.",
+        "Provides severity counts.",
+        "Does not dump low-severity noise.",
+        "Reports authentication failure.",
+        "Does not report the failed image as clean."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Decide whether this skill applies to (A) a container image CVE scan and (B) an application source-code SQL injection audit.",
+      "expected_output": "Applies to A and not B.",
+      "files": [],
+      "expectations": [
+        "Routes the image request to this skill.",
+        "Does not route the source audit.",
+        "Uses container/cluster/Trivy as the boundary.",
+        "Does not trigger on the word vulnerability alone.",
+        "Names a different capability for source security."
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "A fake trivy scans one image successfully and fails a second requested image. Run the installed scanner.",
+      "expected_output": "Keeps the successful artifact but returns nonzero and lists the failed image.",
+      "files": [],
+      "expectations": [
+        "Returns nonzero.",
+        "Keeps successful JSON.",
+        "Lists failed images.",
+        "Prints successful summary.",
+        "Does not claim overall success."
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "Scan a remote registry reference with a caller-provided output directory and no Docker daemon, then test the default output location.",
+      "expected_output": "Uses the exact provided directory, uses a controlled non-/tmp default, and does not require Docker for the remote reference.",
+      "files": [],
+      "expectations": [
+        "Honors --output-dir.",
+        "Avoids a hard-coded /tmp default.",
+        "Does not require Docker for remote scans.",
+        "Reports the output location.",
+        "Creates JSON only in the selected location."
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "Invoke the scanner from a standalone npx-installed skill while the current project has no repository-root skills/ directory.",
+      "expected_output": "Finds the bundled script relative to the installed skill directory.",
+      "files": [],
+      "expectations": [
+        "Uses a skill-relative script path.",
+        "Does not require a repository-root skills path.",
+        "Runs from an unrelated working directory.",
+        "Does not fail with script not found.",
+        "Uses the installed bundled script."
+      ]
+    }
+  ]
+}

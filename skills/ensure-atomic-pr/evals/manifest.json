@@ -1,0 +1,12 @@
+{
+  "skill_name": "ensure-atomic-pr",
+  "default_category": "regression_guard",
+  "critical_ids": [1],
+  "behavior_change_ids": [4, 5, 6],
+  "redundant_ids": [],
+  "behavior_change_rationale": {
+    "4": "Tests and directly coupled docs stay with the behavior they verify.",
+    "5": "Splits are organized by logical purpose instead of artifact type.",
+    "6": "Every proposed unit includes acceptance, validation, and intermediate-state evidence."
+  }
+}
