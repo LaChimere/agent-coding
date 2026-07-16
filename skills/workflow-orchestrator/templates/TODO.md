@@ -10,6 +10,7 @@
 ## Plan Reference
 - Plan version/date:
 - Approved by (if applicable):
+- Landing mode: `working_tree` | `commits`
 
 ## Checklist
 ### Preparation

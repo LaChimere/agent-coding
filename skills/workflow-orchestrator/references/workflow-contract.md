@@ -148,7 +148,7 @@ Authorization to implement does not automatically authorize commits.
 
 - Do not assume parallel work is safe by default.
 - Shared contracts should stabilize in a base PR first.
-- One agent should own one branch/worktree.
+- One task owner should own one branch and one isolated working copy. A worktree, isolated clone, or sandbox may provide that isolation.
 - Ownership boundaries should be explicit.
 
 ## Simplicity rules

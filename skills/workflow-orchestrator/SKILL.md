@@ -1,6 +1,6 @@
 ---
 name: workflow-orchestrator
-description: Route multi-phase repository work through the appropriate discovery, design, planning, execution, recovery, inspection, and documentation skills. Use when the next workflow phase or primary worker is unclear, when `plans/{slug}` state must be created or reconciled, or when several installed skills must cooperate.
+description: Determine the next workflow phase or repair workflow state when approval or the primary worker is unresolved. Use for ambiguous multi-phase requests or explicit phase coordination. Do not use for direct execution of an approved plan, explicit PR decomposition, parallel ownership planning, atomicity assessment, documentation refresh, or image scanning.
 ---
 
 # Purpose

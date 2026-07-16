@@ -2,6 +2,11 @@
   "skill_name": "refresh-related-docs",
   "default_category": "regression_guard",
   "critical_ids": [0, 1, 5],
+  "critical_expectations": {
+    "0": [0, 1, 2, 3, 4],
+    "1": [0, 1, 2, 3, 4],
+    "5": [0, 1, 2, 3, 4]
+  },
   "behavior_change_ids": [3, 4, 5, 6],
   "redundant_ids": [],
   "behavior_change_rationale": {

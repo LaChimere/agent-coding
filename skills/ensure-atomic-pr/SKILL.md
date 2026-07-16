@@ -32,7 +32,7 @@ Reduce oversized or mixed-purpose changes into atomic, reviewable units.
 A change is not atomic enough if:
 - it has more than one logical purpose
 - its description joins independent outcomes rather than one behavior and its supporting tests/docs
-- it mixes mechanical changes with semantic changes
+- it mixes unrelated or independently mergeable mechanical work with semantic changes
 - it forces reviewers to reason about unrelated concerns together
 
 # Preferred split model

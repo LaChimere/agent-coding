@@ -112,4 +112,4 @@ Independent review is complete only after findings are checked and each one is f
 
 # Embedding the core principles
 
-For teams that want every agent to carry these habits by default, `references/agents-md-block.md` is a short block to paste into the working repository's own `AGENTS.md` (or `CLAUDE.md`). It is local project policy for that repo — not part of any shared workflow contract. It gives all agents the baseline awareness; the full method and the hard gates live in this `anti-slop` skill, when it is installed.
+For teams that want every agent to carry these habits by default, `references/agents-md-block.md` is a short block to paste into the working repository's own agent-guidance file. It is local project policy for that repo — not part of any shared workflow contract. It gives all agents the baseline awareness; the full method and the hard gates live in this `anti-slop` skill, when it is installed.

@@ -3,7 +3,7 @@
 ## Atomicity test
 - Can this PR be described in one sentence?
 - Does it have one logical purpose?
-- Does it avoid mixing formatting, refactor, behavior, and dependency changes?
+- Does it avoid mixing unrelated or independently mergeable mechanical work with semantic changes?
 - Can it be merged independently?
 
 ## If not atomic, split into

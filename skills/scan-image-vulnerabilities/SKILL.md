@@ -1,9 +1,7 @@
 ---
 name: scan-image-vulnerabilities
 description: Scan container image references or images used by cluster workloads for known vulnerabilities with Trivy and a freshly updated database. Use for container-image CVEs, image security posture, Trivy scans, or discovering and scanning exact workload images; do not use for source-code security audits or generic dependency questions.
-compatibility:
-  tools: [bash, python3]
-  dependencies: [Trivy installed locally; Docker access only for local daemon images; optional kubectl access when discovering images from a cluster]
+compatibility: Requires bash, python3, and Trivy. Docker is needed only for local daemon images; kubectl is optional for cluster image discovery.
 ---
 
 # Trivy image vulnerability scan

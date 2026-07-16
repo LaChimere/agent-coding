@@ -8,3 +8,6 @@ skills/**/evals/**/timing.json
 skills/**/evals/**/benchmark*.json
 skills/**/evals/**/benchmark*.md
 skills/**/evals/**/review*.html
+
+# Local review scratch directories
+.scratch-test*/

@@ -1,6 +1,6 @@
 ---
 name: achieve-goal
-description: Persist and pursue an explicit long-running objective with durable status, acceptance criteria, completion evidence, and pause/resume/clear controls. Use for `/goal` commands, continuation of an existing active goal, or a request that explicitly needs persistent lifecycle tracking across phases.
+description: Handle `/goal` commands and explicit persistent objectives with durable status, acceptance criteria, completion evidence, and pause/resume/clear controls. Use for `/goal <objective>`, `/goal status|pause|resume|clear`, continuation of an existing active goal, or a request that explicitly needs lifecycle tracking across phases.
 ---
 
 # Purpose
@@ -170,6 +170,8 @@ Interpret these user forms:
 
 If the user gives a token budget and the host exposes reliable usage telemetry, honor it through that host capability and record the original request in `budget_note`. Otherwise record it as an advisory limit and, if useful, a clearly labeled turn-budget approximation. The skill's own stop check remains turn-based unless the host reports that the external token limit was reached. Do not claim exact token accounting when it is unavailable.
 
+After registering or changing a budget, report the next allowed phase or concrete action.
+
 ## Control command rules
 
 Control commands change goal lifecycle state; they are not implementation slices.
@@ -188,7 +190,7 @@ Control commands change goal lifecycle state; they are not implementation slices
 
 For a new goal:
 
-1. For an explicit `/goal <objective>` or equivalent persistent-lifecycle request, create the goal state before delegating phase classification.
+1. For an explicit `/goal <objective>` or equivalent persistent-lifecycle request, run the active-goal check in section 2 and resolve any replacement decision first. Then create the goal state before delegating phase classification.
 2. Copy the user's objective verbatim into `goal.md`.
 3. Derive a short kebab-case slug from the objective.
 4. Identify structured acceptance criteria. If the user did not provide them, infer practical criteria from the objective and record them as assumptions.
@@ -284,6 +286,8 @@ Bad slices:
 ## C. Execute and verify
 
 When the slice is implementation work, delegate one coherent approved scope to `execute-plan-loop`. Perform a slice directly only when it is small, non-implementation lifecycle work such as evidence capture or status maintenance, or when the executor is unavailable and the active contract permits a bounded equivalent fallback.
+
+When an approved implementation scope exists and `execute-plan-loop` is available, delegate it; do not execute the implementation inside the goal loop. Record that the executor owns the implementation rules and wait for returned evidence before updating or completing the goal. Direct implementation is only a declared fallback when the executor is unavailable.
 
 Before counting the slice as progress:
 

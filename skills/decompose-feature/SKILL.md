@@ -9,7 +9,7 @@ This skill operates within the workflow coordinated by `workflow-orchestrator` a
 
 Use an active handoff from the installed `workflow-orchestrator` when materializing workflow artifacts. If phase or approval is unresolved, invoke that skill by name. Do not rely on repository-source paths.
 
-For an advisory request, return the decomposition inline without creating artifacts or gates, then offer materialization into `plans/{slug}` as an optional next step.
+For an advisory request, especially when the user says they are not ready to start, return the decomposition inline without creating artifacts or approval gates. Offer materialization into `plans/{slug}` only as an optional later step.
 
 For workflow-managed delivery, create or update `plans/{slug}/research.md`, place the proposed split in `design.md`, and follow the active approval state before translating it into `plan.md` and `todo.md`.
 
@@ -51,11 +51,11 @@ Use cleanup PRs only for temporary compatibility or migration work introduced by
 
 # Decision rules
 
-Prefer base/fan-out/cleanup when:
+Prefer base/fan-out/cleanup only when:
 - there is a demonstrated shared prerequisite
 - more than one later slice depends on the same stabilized contract
-- multiple agents may work in parallel
-- partial mergeability matters
+
+Parallelism and partial mergeability strengthen that choice, but neither justifies a base PR without the shared prerequisite.
 
 Prefer vertical slices when:
 - each slice is independently meaningful
@@ -63,6 +63,8 @@ Prefer vertical slices when:
 - slices do not fight over hot files
 
 Do not propose a split that leaves the repository broken in an intermediate state.
+
+If the evidence states that components must change together and every partial merge is invalid, recommend one PR. Do not invent dual-read, compatibility, or rollout mechanisms that the request or codebase evidence does not provide. Commits inside the PR may separate mechanical preparation from semantic behavior when useful.
 
 # Required output
 
@@ -84,6 +86,8 @@ Use one repeatable block per proposed PR:
 - acceptance criteria (concrete, verifiable conditions that must be true before this PR can be proposed)
 - validation commands
 - mergeability notes
+
+Every PR block includes both concrete acceptance criteria and a validation command or method, including cleanup PRs.
 
 If the feature is already one reviewable, indivisible purpose, recommend one PR instead of manufacturing a sequence.
 
