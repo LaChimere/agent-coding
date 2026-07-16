@@ -28,14 +28,14 @@ This repository turns those failure modes into reusable skills and a portable or
 ### Core workflow
 
 ```
-Research → Design → [Gate 1: Human Approve] → Plan + Todo → [Gate 2: Human Approve] → Execute → Verify → [Gate 3: Post-exec Review] → Lessons
+Discover if needed → Design if needed → Plan if needed → Execute → Verify → Review if needed → Lessons if earned
 ```
 
 ```
 Fast path (urgent):  Execute → Verify → Lessons (backfill)
 ```
 
-The portable workflow still uses these structured phases; `workflow-orchestrator` is the front door for workflow-managed skills and decides when each phase applies and which worker skill should take over. Read-only inspection skills may explicitly operate outside that contract.
+`workflow-orchestrator` decides which conditional phase applies, which installed worker owns the next step, and whether a companion or direct read-only inspection skill should also run.
 
 ### Approval gates
 
@@ -48,7 +48,7 @@ The portable workflow still uses these structured phases; `workflow-orchestrator
 
 ### Acceptance criteria
 
-Every plan defines concrete acceptance criteria per step/PR. Before proposing a PR, the agent must demonstrate all criteria are met with evidence. If they're not met, the workflow recovers through fix → update plan → update design → escalate.
+Every planned step or PR defines concrete acceptance criteria. Before proposing completion, the agent must demonstrate them with evidence. Implementation authorization and commit authorization are separate; the active landing mode is either `working_tree` or `commits`.
 
 ### Verification levels
 
@@ -69,6 +69,7 @@ skills/                                           # Specialized workflows
     SKILL.md
     references/workflow-contract.md
     templates/
+    evals/
   decompose-feature/                              #   Split large features into small PRs
     SKILL.md
     templates/feature-plan-template.md
@@ -89,10 +90,14 @@ skills/                                           # Specialized workflows
   scan-image-vulnerabilities/                     #   Scan container images for vulnerabilities
     SKILL.md
     scripts/trivy_latest_scan.sh
+    tests/test_trivy_latest_scan.sh
+    evals/
   achieve-goal/                                   #   Persist and pursue long-running goals
     SKILL.md
 plans/                                            # Planning/execution artifacts for changes to this repo
 ```
+
+Every distributed skill also carries an `evals/` directory with functional cases and a classification manifest.
 
 ## Skills
 
@@ -101,29 +106,31 @@ plans/                                            # Planning/execution artifacts
 Splits a large feature into a sequence of small, mergeable PRs:
 
 ```
-Base PR (contracts/flags) → Implementation PR(s) → Integration PR(s) → Cleanup PR
+Vertical slice A → Vertical slice B → Vertical slice C
+        or, when a real shared dependency exists:
+Shared base → independent fan-out slices → required cleanup
 ```
 
-Use when: feature is too large for one PR, stacked PRs needed, or staged rollout desired. This skill decides **what PRs should exist**. If you also need branch/worktree/path ownership for multiple agents, follow up with `plan-parallel-work`.
+Use when: evidence shows the work is too large for one reviewable PR, stacked PRs are requested, or staged rollout is needed. Advisory requests can stay inline; workflow artifacts are materialized only when delivery begins.
 
 ### plan-parallel-work
 
 Defines safe parallel execution boundaries for multiple agents:
 
 ```
-        ┌── Agent A (owns: backend/)
-Base PR ─┼── Agent B (owns: frontend/)
-        └── Agent C (owns: tests/)
+        ┌── Task A (isolated working copy, owned paths)
+Base ref ─┼── Task B (isolated working copy, owned paths)
+        └── Task C (isolated working copy, owned paths)
 ```
 
-Use when: multiple agents need to work simultaneously, branch/path ownership must be explicit, or the PR sequence already exists and now needs a safe execution topology. This skill decides **who works where and in what order**, not how to split the feature into PRs.
+Use when: multiple agents need to work simultaneously, branch/path ownership must be explicit, or the PR sequence already exists. It pins a base ref, task acceptance, handoff payloads, merge order, and final convergence validation.
 
 ### ensure-atomic-pr
 
 Evaluates whether a diff is atomic enough and proposes splits:
 
 ```
-mechanical-only → preparatory refactor → behavioral change → tests → docs/cleanup
+purpose A (preparation + behavior + tests/docs) → purpose B (preparation + behavior + tests/docs)
 ```
 
 Use when: a PR is too large, mixes concerns, or needs post-hoc recovery.
@@ -143,20 +150,20 @@ Use when: the user wants one skill to decide how work should proceed end-to-end,
 Executes approved implementation work in a disciplined long-running loop:
 
 ```
-pick next atomic slice → implement → update status → run checks → check docs → commit → deep review every 3-5 commits
+pick next atomic slice → implement → update status → run checks → land or report → milestone review
 ```
 
-Use when: the user wants the agent to carry out part or all of an approved feature or `plans/{slug}` scope with atomic commits, per-commit validation, progress updates, and periodic deeper review.
+Use when: the user wants the agent to carry out an approved implementation scope with verified slices and progress updates. It creates commits only when the recorded landing mode is `commits`.
 
 ### anti-slop
 
 Keeps code changes free of AI slop — output that looks polished but is unnecessary, wrong, or hard to maintain:
 
 ```
-explain it → prove it works → only what's needed → not duplicated → check complexity → gate → milestone review
+explain it → support correctness claims → only what's needed → justify duplication → inspect complexity → milestone review
 ```
 
-Use when: writing, changing, refactoring, or extending code, especially during long multi-round loops with many commits, or whenever the user wants to keep quality high and make sure a change is actually correct and needed. Runs **alongside** the execution skills as an always-on quality guard rather than deciding what to build. Ships a hard pre-commit gate (`templates/pre-commit-slop-gate.md`) and an embeddable core-principles block (`references/agents-md-block.md`) for a working repo's own `AGENTS.md`.
+Use when: writing, changing, refactoring, or extending code. It runs **alongside** the primary execution skill, checks necessity and evidence, permits only bounded justified exceptions, and reuses the executor's milestone review rather than creating a second loop.
 
 ### achieve-goal
 
@@ -166,17 +173,17 @@ Persists a user-provided long-running goal and keeps working toward it until a s
 register goal -> re-anchor -> execute one verified slice -> update state -> continue or stop
 ```
 
-Use when: the user types `/goal <objective>`, asks the agent to keep going until a goal is achieved, or wants pause/resume/clear control over a persistent objective. The skill stores goal state in the repository and resumes through later user or orchestrator invocation when needed.
+Use when: the user explicitly creates a persistent objective with `/goal`, continues an existing active goal, or wants pause/resume/clear and cross-phase completion auditing. Generic execution continuation routes to `execute-plan-loop`.
 
 ### refresh-related-docs
 
 Refreshes documentation that has become stale after code changes:
 
 ```
-detect doc-worthy changes → find related docs → ask user approval → update with style preservation → report
+detect evidence of staleness → discover documentation authority → use named approvals / ask for expanded scope → update minimally → report
 ```
 
-Use when: a milestone or feature is completed, behavior or configuration changes, or API surface changes. Always asks for explicit user approval before editing any doc.
+Use when confirmed behavior, configuration, interfaces, or maintenance workflow make Markdown stale. Explicitly named targets are already approved; newly discovered or expanded scope still requires approval.
 
 ### scan-image-vulnerabilities
 
@@ -186,7 +193,7 @@ Scans container images with Trivy using the latest vulnerability database:
 refresh DB → scan image(s) → summarize findings by severity
 ```
 
-Use when: the user asks about image vulnerabilities, wants a CVE scan, mentions Trivy, or asks to check images running in a Kubernetes cluster.
+Use when: the user asks about container image vulnerabilities, exact cluster workload images, or Trivy. The bundled installed script preserves partial artifacts but returns nonzero if any requested image fails.
 
 ## Key design principles
 
@@ -200,11 +207,11 @@ Use when: the user asks about image vulnerabilities, wants a CVE scan, mentions 
 
 ### Using the workflow in another repo
 
-1. Start with `skills/workflow-orchestrator/`.
-2. Keep its bundled `references/` and `templates/` with it; that is the portable coordination bundle.
-3. Add whichever worker skills you want alongside it (`decompose-feature`, `plan-parallel-work`, `execute-plan-loop`, `achieve-goal`, and so on).
-4. Use the target repo's own `AGENTS.md` or equivalent only for project-specific rules, not as the shared skill-coordination layer.
-5. If you invoke a workflow-managed worker skill directly, make sure the `workflow-orchestrator` contract is present and active; otherwise route through `workflow-orchestrator` first. Read-only inspection skills may document that they operate outside this contract.
+1. Install skills through `npx skills add`; source-checkout execution is unsupported.
+2. Install `workflow-orchestrator` with each workflow-managed worker combination you intend to use.
+3. Install standalone inspection skills independently when needed.
+4. Use the target repo's own `AGENTS.md` only for project-specific rules.
+5. Keep every installed skill's bundled references, templates, and scripts intact.
 
 ### Working on this repo
 
@@ -218,7 +225,7 @@ Use when: the user asks about image vulnerabilities, wants a CVE scan, mentions 
 1. Uses `workflow-orchestrator` as the front door for workflow-managed skills when the next workflow phase is not already obvious.
 2. Lets `workflow-orchestrator` classify the task, derive the slug, and create/update the needed `plans/{slug}` artifacts from its bundled templates.
 3. Hands off to a narrower worker skill when the phase is clear (`decompose-feature`, `plan-parallel-work`, `execute-plan-loop`, and so on).
-4. When a workflow-managed worker skill is invoked directly, it should first load `skills/workflow-orchestrator/references/workflow-contract.md` if available, or require an equivalent active workflow contract. Read-only inspection skills can remain outside this contract when their own operating context says so.
+4. A workflow-managed worker consumes an existing installed `workflow-orchestrator` handoff or invokes that skill when phase or approval is unresolved. Read-only inspection skills can remain outside this contract when their operating context says so.
 5. Verifies the resulting work at the appropriate level before proposing completion.
 
 ## Customization
@@ -275,4 +282,4 @@ If your agent platform supports hooks, consider adding them to high-risk skills 
 
 ## Status
 
-**v1.0** — Framework is complete and internally consistent. Not yet validated through real-world usage. Expect iteration after first production use.
+The current skill set has installed-copy functional eval coverage for all nine skills, dual-family behavior comparisons, and hermetic scanner validation. Continue refining from real usage evidence rather than adding speculative workflow rules.

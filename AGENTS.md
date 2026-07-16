@@ -18,6 +18,14 @@ It is **not** the portable coordination contract for downstream skills or downst
 - Repo-root `AGENTS.md` is for repo-specific contributor guidance only.
 - Repo-root `templates/` should not exist; reusable templates belong with the skill that uses them.
 
+## Distribution contract
+
+- Users consume `skills/` only through copies installed by `npx skills add`.
+- Running a skill from the repository source checkout is unsupported.
+- Runtime references, templates, scripts, and platform adapters must be bundled under the skill that uses them and resolved relative to the installed skill directory.
+- Skills documented as standalone must work when installed alone.
+- Workflow-managed dependencies must be explicit and tested in their supported installed combinations.
+
 ## Working rules for this repo
 
 - Prefer small, focused, reviewable changes.
@@ -26,6 +34,7 @@ It is **not** the portable coordination contract for downstream skills or downst
 - When changing portable workflow behavior, update `workflow-orchestrator` first and then align any affected worker skills.
 - Worker skills in this repo should not cite repo-root `AGENTS.md` as their runtime coordination source.
 - If a skill needs templates, reference docs, or helper scripts, bundle them under that skill's directory.
+- Do not use repository-root runtime paths inside distributed skills.
 
 ## Documentation rules
 
@@ -43,6 +52,7 @@ Use the narrowest validation that matches the change:
 - minimum structural check: `git diff --check`
 - workflow changes: targeted skill/doc consistency review
 - doc-only changes: consistency review of the affected skills/docs
+- distributed skill changes: install the affected skill combinations through `npx skills add` and validate the installed copies
 
 ## Practical change map
 

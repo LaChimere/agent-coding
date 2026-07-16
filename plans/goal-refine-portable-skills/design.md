@@ -1,5 +1,7 @@
 # Design: Refine Portable Skills
 
+Runtime slug: `goal-refine-portable-skills`
+
 ## Direction
 
 Keep the existing nine-skill topology. Refine contracts and routing rather than merging or deleting skills without comparative evidence.

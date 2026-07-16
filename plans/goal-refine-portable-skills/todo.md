@@ -1,5 +1,7 @@
 # Todo: Refine Portable Skills
 
+Landing mode: `commits`
+
 - [x] Approve the implementation and evaluation plan.
 - [x] Prove local repository installation through `npx skills add`.
 - [x] Freeze the old source in an immutable worktree.
@@ -10,8 +12,8 @@
 - [x] Refine planning, recovery, and parallel-work skills.
 - [x] Refine documentation behavior.
 - [x] Fix scanner behavior and add deterministic tests.
-- [ ] Reconcile descriptions and invocation policy.
-- [ ] Update `AGENTS.md` and `README.md`.
-- [ ] Run final installed-copy validation and dual-family evals.
-- [ ] Generate the evaluation summary and review outputs.
-- [ ] Complete the final criterion-to-evidence audit.
+- [x] Reconcile descriptions and invocation policy.
+- [x] Update `AGENTS.md` and `README.md`.
+- [x] Run final installed-copy validation and dual-family evals.
+- [x] Generate the evaluation summary and review outputs.
+- [x] Complete the final criterion-to-evidence audit.
