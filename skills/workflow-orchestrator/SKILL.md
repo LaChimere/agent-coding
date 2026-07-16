@@ -1,6 +1,6 @@
 ---
 name: workflow-orchestrator
-description: Orchestrate the full framework workflow from request to research/design/plan/execution/review by creating or updating `plans/{slug}` artifacts, applying the framework contract, and choosing the right worker skill next. Use whenever the user wants one skill to decide how work should proceed end-to-end, asks to turn a request into the right slug docs plus next action, or wants multiple workflow skills to cooperate as one system.
+description: Route multi-phase repository work through the appropriate discovery, design, planning, execution, recovery, inspection, and documentation skills. Use when the next workflow phase or primary worker is unclear, when `plans/{slug}` state must be created or reconciled, or when several installed skills must cooperate.
 ---
 
 # Purpose
@@ -30,7 +30,7 @@ This skill does not replace the worker skills. It decides:
 
 ## 1) Load the bundled contract first
 
-Read `references/workflow-contract.md` before making orchestration decisions.
+Read the bundled `references/workflow-contract.md` relative to this installed skill before making orchestration decisions.
 
 That file is the portable summary of the framework rules this skill needs:
 - discovery expectations
@@ -79,6 +79,7 @@ Decide which state the work is currently in:
 - **Execution ready** — approved scope can move forward
 - **Recovery/review needed** — an existing diff or branch lost atomicity
 - **Doc refresh needed** — broader Markdown docs may be stale
+- **Direct inspection** — a read-only specialist can answer without plan artifacts
 
 Ground the classification in evidence. If the user references a concrete file, symbol, plan slug, diff, or test failure and the evidence is not already available, route first to discovery/research or the appropriate worker step with explicit instructions to inspect it before making codebase claims. If available evidence contradicts the request or tests, stop and report the conflict rather than routing toward a workaround.
 
@@ -113,7 +114,7 @@ Do not create files just for ceremony. Create them when they clarify the workflo
 
 ## 4) Pick the next worker skill
 
-Use this routing table:
+Choose one primary worker. Add companions only when they provide a distinct supporting role.
 
 ### `decompose-feature`
 Use when:
@@ -139,11 +140,11 @@ Output expectation:
 ### `execute-plan-loop`
 Use when:
 - scope is approved or clearly trivial
-- the next need is disciplined implementation in atomic commits
+- the next need is disciplined implementation in atomic verified slices
 - the user wants the agent to keep going until a meaningful slice is done
 
 Output expectation:
-- commit-by-commit execution with verification, progress refreshes, and periodic deeper review
+- verified slice-by-slice execution, commits only in `commits` landing mode, progress refreshes, and milestone review
 
 ### `achieve-goal`
 Use when:
@@ -173,7 +174,31 @@ Use when:
 Output expectation:
 - approved doc refresh across the affected Markdown surfaces
 
-## 5) Keep the state surfaces synchronized
+### `anti-slop`
+Use as a companion when:
+- implementation is being written, changed, or reviewed
+- the task needs explicit checks for unnecessary work, duplication, or accumulating complexity
+
+It does not become the primary owner of planning, implementation cadence, or commits. Its milestone review should satisfy the executor's matching review checkpoint rather than creating a duplicate review loop.
+The handoff stops when the primary worker returns the requested verified slice or milestone evidence; state that boundary in the routing result.
+
+### `scan-image-vulnerabilities`
+Route directly when:
+- the request is to inspect container images, workload image references, or Trivy findings
+
+This is read-only inspection outside plan mode. Do not create slug artifacts or implementation gates unless the user separately asks for remediation work.
+Require the exact image reference and a successfully refreshed vulnerability database before accepting scan findings.
+
+## 5) Handle unavailable workers
+
+Installed workers may be absent.
+
+- Do not claim a handoff or invocation occurred when the skill is unavailable.
+- Report the missing capability and the intended worker by name.
+- Use a bounded contract-equivalent fallback only when the current environment can safely perform the same work.
+- Otherwise stop with the smallest installation or user action needed to continue.
+
+## 6) Keep the state surfaces synchronized
 
 As the workflow moves, keep these aligned:
 
@@ -185,7 +210,24 @@ As the workflow moves, keep these aligned:
 
 If those surfaces disagree, fix the artifact/state mismatch before continuing.
 
-## 6) Stop at the right boundary
+## 7) Return a routing result
+
+Before handing off or stopping, make the decision auditable:
+
+```text
+Phase: <current phase>
+Evidence: <files, artifacts, approvals, or facts used>
+Artifacts: <created, updated, or none>
+Approval: <not-needed|missing|recorded>
+Landing: <working_tree|commits>
+Primary worker: <skill name or none>
+Companions: <skill names or none>
+Stop reason: <handoff, approval, blocker, complete, or none>
+```
+
+Keep the user-facing form concise, but do not omit a missing approval, missing worker, or blocker.
+
+## 8) Stop at the right boundary
 
 Stop and wait when:
 - key scope or expected behavior is still unclear
@@ -197,6 +239,8 @@ Continue directly when:
 - the next phase is clear
 - the required artifacts already exist or can be created safely
 - the appropriate worker skill is obvious
+- any required approval is recorded in the active state, not merely implied by an artifact's existence
+- the landing mode is recorded before implementation begins
 
 # Strong preferences
 

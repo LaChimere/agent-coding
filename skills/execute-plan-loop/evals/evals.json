@@ -86,9 +86,9 @@
       "files": [],
       "expectations": [
         "Detects that the documented verification command is missing or stale.",
-        "Inspects repository scripts/config for an existing appropriate command.",
+        "Requires inspecting repository scripts/config for an existing appropriate command.",
         "Does not mark the slice complete without verification evidence.",
-        "Updates the plan/status or escalates through the correct gate if the approved plan is stale.",
+        "Requires a plan/status update or escalation through the correct gate if the approved plan is stale.",
         "Does not work around verification by inventing a fake pass."
       ]
     },
@@ -102,7 +102,7 @@
         "Does not create or claim to create a commit.",
         "Keeps the slice atomic and within approved scope.",
         "Runs or identifies the relevant verification.",
-        "Reports what is ready to commit if the user later authorizes it."
+        "Specifies that a readiness report must include the slice purpose, files, and verification evidence."
       ]
     },
     {
@@ -126,9 +126,22 @@
       "expectations": [
         "Recognizes repeated failures without new evidence.",
         "Does not continue patching indefinitely.",
-        "Records what was tried and what failed.",
+        "Requires recording what was tried and what failed.",
         "Routes to plan or design revision when the approach is invalidated.",
         "Reports a blocker or decision needed when safe replanning is unavailable."
+      ]
+    },
+    {
+      "id": 10,
+      "prompt": "workflow-orchestrator has already handed an approved implementation scope to execute-plan-loop with landing mode working_tree. Execute the next slice.",
+      "expected_output": "Uses the recorded handoff directly and does not route the unchanged phase or worker decision back through workflow-orchestrator.",
+      "files": [],
+      "expectations": [
+        "Treats the recorded handoff as the active workflow contract.",
+        "Does not invoke workflow-orchestrator again for the unchanged decision.",
+        "Does not create an executor-orchestrator routing loop.",
+        "Preserves landing mode working_tree.",
+        "Selects one verified implementation slice as the next action."
       ]
     }
   ]

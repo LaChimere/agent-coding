@@ -3,11 +3,13 @@
 objective: "好，开始完整执行 plan"
 status: active
 slug: "refine-portable-skills"
-turns_used: 1
+turns_used: 2
 turn_budget: null
+budget_note: null
+landing_mode: commits
 docs_update_approved: true
 created_at: "2026-07-16T23:13:21+08:00"
-updated_at: "2026-07-16T23:22:00+08:00"
+updated_at: "2026-07-17T02:50:00+08:00"
 
 ## Acceptance criteria
 
@@ -43,6 +45,7 @@ updated_at: "2026-07-16T23:22:00+08:00"
 
 - Turn 0: Plan approved.
 - Turn 1: Validated local installed copies and froze the old source.
+- Turn 2: Refined the shared contract and core execution skills, corrected the blind-eval harness, and completed dual-family core evaluation.
 
 ## Deferred items
 
@@ -50,4 +53,4 @@ updated_at: "2026-07-16T23:22:00+08:00"
 
 ## Blockers
 
-- Claude CLI is not authenticated; verify the available Claude task runner can provide enough metadata for the required dual-family evaluation.
+- None.

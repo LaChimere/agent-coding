@@ -25,7 +25,7 @@ Refine the nine skills distributed by this repository so they remain useful with
 - The installed scanner includes `SKILL.md` and its script.
 - A workflow combination install preserves the orchestrator contract, templates, worker evals, and anti-slop resources.
 - Copilot can run against an isolated installed skill set when `COPILOT_HOME` is isolated.
-- Claude CLI is not authenticated in this environment; the available Claude task runner is the candidate execution path for Claude-family evals.
+- Copilot CLI can run both selected model families with isolated `COPILOT_HOME`, exact model identity, output-token counts, timing, and installed-skill discovery.
 
 ## Known behavior problems
 
@@ -47,8 +47,8 @@ Refine the nine skills distributed by this repository so they remain useful with
 - Existing cases that encode intentionally changing behavior must be classified as behavior-change cases before candidate runs.
 - Final acceptance evidence must come from installed copies.
 
-## Open items
+## Evaluation decisions
 
-- Confirm the Claude task runner exposes sufficient completion metadata for the committed evaluation summary.
-- Confirm installed-skill trigger selection can be isolated from user-global skills on both model families.
-- Decide invocation-mode changes only after the trigger feasibility checks.
+- Functional runs use isolated Copilot CLI sessions for both model families.
+- The first harness attempt exposed expected outputs to the tested model; those runs were discarded and the harness now supplies only case ids, prompts, and files.
+- Automatic trigger isolation was verified for Copilot. Equivalent faithful Claude trigger-selection measurement is unavailable, so invocation modes remain unchanged.
