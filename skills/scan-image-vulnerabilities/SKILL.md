@@ -1,7 +1,7 @@
 ---
 name: scan-image-vulnerabilities
 description: Scan container image references or images used by cluster workloads for known vulnerabilities with Trivy and a freshly updated database. Use for container-image CVEs, image security posture, Trivy scans, or discovering and scanning exact workload images; do not use for source-code security audits or generic dependency questions.
-compatibility: Requires bash, python3, and Trivy. Docker is needed only for local daemon images; kubectl is optional for cluster image discovery.
+compatibility: Requires bash, python3, and Trivy 0.58.0 or newer. Docker is needed only for local daemon images; kubectl is optional for cluster image discovery.
 ---
 
 # Trivy image vulnerability scan
@@ -23,7 +23,12 @@ Use Trivy to scan one or more images against the **latest** vulnerability databa
 
 ## Core expectations
 
-- Refresh the Trivy vulnerability DB before scanning.
+- Refresh both the Trivy vulnerability DB and Java DB before scanning.
+- Use comprehensive vulnerability detection for both OS and language-library packages.
+- Include unknown, root, workspace, direct, and indirect package relationships, with online dependency resolution enabled.
+- Include every severity, unfixed findings, and the complete package inventory returned by Trivy.
+- Retain suppressed findings in raw JSON, summarize them separately from active vulnerability counts, and report the combined total.
+- Override ambient status/file filters and vulnerability/EOL exit-code settings that could silently reduce or misclassify a completed scan; registry and authentication settings remain available.
 - Prefer scanning the exact image reference the workload is using, not a guessed tag.
 - When scanning cluster workloads, first enumerate the actual image references from the cluster, then scan those exact images.
 - Report the outcome plainly: whether vulnerabilities were found, the severity breakdown, and the most important findings.
@@ -61,10 +66,10 @@ If you want deterministic artifacts, pass an explicit output directory:
 
 The script:
 
-- refreshes the vulnerability DB
-- scans each image with `--scanners vuln`
+- refreshes the vulnerability and Java databases
+- scans with `--scanners vuln`, OS and library package types, every package relationship, online comprehensive detection, every severity, unfixed and suppressed findings, and `--list-all-pkgs`
 - saves raw JSON per image
-- prints a severity summary and top findings
+- prints active, suppressed, and combined severity summaries, top findings, package inventory, and detected language-package ecosystems
 - returns nonzero if the DB refresh or any requested image scan fails
 
 Without `--output-dir`, raw artifacts are created under the current working directory. Use an explicit ignored or session-controlled directory when the project should remain clean.
@@ -94,6 +99,7 @@ Use a compact structure like this:
 ## Notes
 - whether the image came from a live cluster or local Docker
 - any scan limitations
+- which Trivy result classes/types and language-package ecosystems were detected
 
 ## Practical guidance
 
@@ -102,6 +108,8 @@ Use a compact structure like this:
 - If a fix version exists, call it out.
 - If the scan is against a live cluster image, mention the exact image reference and namespace/workload you used.
 - If Trivy cannot pull or inspect the image, say whether the issue is image access, registry auth, or missing local image data.
+- Describe this as a complete Trivy vulnerability scan, not a complete security assessment: secrets, misconfigurations, licenses, malware, and runtime risks remain outside `--scanners vuln`.
+- Ignore-file, VEX, and policy suppressions remain visible under the separate suppressed and combined summaries rather than disappearing from the report.
 
 ## Example
 

@@ -91,6 +91,22 @@
         "Does not fail with script not found.",
         "Uses the installed bundled script."
       ]
+    },
+    {
+      "id": 7,
+      "prompt": "A hermetic Trivy result contains one Alpine OS package plus two npm packages, with one HIGH lodash vulnerability. Run the installed scanner and report package coverage.",
+      "expected_output": "Uses Trivy package inventory data to report result class/type coverage, detected language packages and ecosystems, and vulnerable library package details.",
+      "files": [],
+      "expectations": [
+        "Runs online comprehensive vulnerability detection for OS and library packages across every package relationship, every severity, unfixed and suppressed findings, with all package inventory enabled.",
+        "Reports package counts grouped by Trivy result class and type.",
+        "Reports detected language-package count and ecosystem.",
+        "Reports lodash as a vulnerable npm package with its installed version and HIGH finding.",
+        "Reports suppressed vulnerabilities separately from active severity counts.",
+        "Reports a combined total covering active and suppressed vulnerabilities.",
+        "Overrides ambient status, skipped-path, vulnerability exit-code, and EOL exit-code settings that could reduce or misclassify the scan.",
+        "Keeps the complete raw JSON artifact."
+      ]
     }
   ]
 }

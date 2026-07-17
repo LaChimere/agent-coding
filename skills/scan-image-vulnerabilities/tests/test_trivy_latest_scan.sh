@@ -17,7 +17,15 @@ cat >"$fake_bin/trivy" <<'EOF'
 #!/usr/bin/env bash
 set -euo pipefail
 
+if [[ "$1" == "--version" ]]; then
+  echo "Version: ${FAKE_TRIVY_VERSION:-0.72.0}"
+  exit 0
+fi
+
 if [[ "$1" == "clean" ]]; then
+  if [[ "${FAKE_CLEAN_FAIL:-0}" == "1" ]]; then
+    exit 1
+  fi
   exit 0
 fi
 
@@ -28,7 +36,19 @@ fi
 
 shift
 if [[ "${1:-}" == "--download-db-only" ]]; then
+  if [[ "${FAKE_REQUIRE_REFRESH_OVERRIDE:-0}" == "1" && "${2:-}" != "--skip-db-update=false" ]]; then
+    exit 14
+  fi
   if [[ "${FAKE_DB_FAIL:-0}" == "1" ]]; then
+    exit 1
+  fi
+  exit 0
+fi
+if [[ "${1:-}" == "--download-java-db-only" ]]; then
+  if [[ "${FAKE_REQUIRE_REFRESH_OVERRIDE:-0}" == "1" && "${2:-}" != "--skip-java-db-update=false" ]]; then
+    exit 15
+  fi
+  if [[ "${FAKE_JAVA_DB_FAIL:-0}" == "1" ]]; then
     exit 1
   fi
   exit 0
@@ -36,6 +56,21 @@ fi
 
 output=""
 image=""
+list_all_packages=0
+pkg_types=""
+pkg_relationships=""
+detection_priority=""
+online_scan=0
+severity_filter=""
+include_unfixed=0
+show_suppressed=0
+update_db=0
+update_java_db=0
+ignore_status_reset=0
+skip_dirs_reset=0
+skip_files_reset=0
+exit_code=""
+exit_on_eol=""
 while [[ $# -gt 0 ]]; do
   case "$1" in
     -o)
@@ -43,6 +78,66 @@ while [[ $# -gt 0 ]]; do
       shift 2
       ;;
     --scanners|--format)
+      shift 2
+      ;;
+    --pkg-types)
+      pkg_types="$2"
+      shift 2
+      ;;
+    --pkg-relationships)
+      pkg_relationships="$2"
+      shift 2
+      ;;
+    --detection-priority)
+      detection_priority="$2"
+      shift 2
+      ;;
+    --offline-scan=false)
+      online_scan=1
+      shift
+      ;;
+    --severity)
+      severity_filter="$2"
+      shift 2
+      ;;
+    --ignore-unfixed=false)
+      include_unfixed=1
+      shift
+      ;;
+    --ignore-status=)
+      ignore_status_reset=1
+      shift
+      ;;
+    --skip-dirs=)
+      skip_dirs_reset=1
+      shift
+      ;;
+    --skip-files=)
+      skip_files_reset=1
+      shift
+      ;;
+    --skip-db-update=false)
+      update_db=1
+      shift
+      ;;
+    --skip-java-db-update=false)
+      update_java_db=1
+      shift
+      ;;
+    --show-suppressed)
+      show_suppressed=1
+      shift
+      ;;
+    --list-all-pkgs)
+      list_all_packages=1
+      shift
+      ;;
+    --exit-code)
+      exit_code="$2"
+      shift 2
+      ;;
+    --exit-on-eol)
+      exit_on_eol="$2"
       shift 2
       ;;
     *)
@@ -64,8 +159,93 @@ if [[ -n "${FAKE_FAIL_IMAGE:-}" && "$image" == "$FAKE_FAIL_IMAGE" ]]; then
 fi
 
 mkdir -p "$(dirname "$output")"
+if [[ "${FAKE_REQUIRE_LIST_ALL:-0}" == "1" && "$list_all_packages" != "1" ]]; then
+  exit 3
+fi
+if [[ "${FAKE_REQUIRE_COMPREHENSIVE:-0}" == "1" ]]; then
+  [[ "$pkg_types" == "os,library" ]] || exit 4
+  [[ "$pkg_relationships" == "unknown,root,workspace,direct,indirect" ]] || exit 16
+  [[ "$detection_priority" == "comprehensive" ]] || exit 5
+  [[ "$online_scan" == "1" ]] || exit 17
+  [[ "$severity_filter" == "UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL" ]] || exit 6
+  [[ "$include_unfixed" == "1" ]] || exit 7
+  [[ "$show_suppressed" == "1" ]] || exit 8
+  [[ "$list_all_packages" == "1" ]] || exit 9
+  [[ "$update_db" == "1" ]] || exit 14
+  [[ "$update_java_db" == "1" ]] || exit 15
+fi
+if [[ "${FAKE_REQUIRE_FILTER_RESET:-0}" == "1" ]]; then
+  [[ "$ignore_status_reset" == "1" ]] || exit 10
+  [[ "$skip_dirs_reset" == "1" ]] || exit 11
+  [[ "$skip_files_reset" == "1" ]] || exit 12
+  [[ "$exit_code" == "0" ]] || exit 13
+  [[ "$exit_on_eol" == "0" ]] || exit 18
+fi
 if [[ "$image" == *invalid-json* ]]; then
   printf '{' >"$output"
+  exit 0
+fi
+if [[ "$image" == *coverage* ]]; then
+  cat >"$output" <<JSON
+{
+  "Results": [
+    {
+      "Target": "alpine",
+      "Class": "os-pkgs",
+      "Type": "alpine",
+      "Packages": [
+        {"Name": "busybox", "Version": "1.36.1"}
+      ],
+      "Vulnerabilities": []
+    },
+    {
+      "Target": "app/node_modules",
+      "Class": "lang-pkgs",
+      "Type": "npm",
+      "Packages": [
+        {"Name": "lodash", "Version": "4.17.20"},
+        {"Name": "express", "Version": "4.18.2"},
+        {"Name": "minipass", "Version": "3.3.6", "FilePath": "node_modules/a/node_modules/minipass"},
+        {"Name": "minipass", "Version": "3.3.6", "FilePath": "node_modules/b/node_modules/minipass"}
+      ],
+      "Vulnerabilities": [
+        {
+          "VulnerabilityID": "CVE-2021-23337",
+          "PkgName": "lodash",
+          "InstalledVersion": "4.17.20",
+          "FixedVersion": "4.17.21",
+          "Severity": "HIGH"
+        }
+      ],
+      "ExperimentalModifiedFindings": [
+        {
+          "Type": "vulnerability",
+          "Status": "not_affected",
+          "Statement": "vulnerable_code_not_in_execute_path",
+          "Source": "test.vex",
+          "Finding": {
+            "VulnerabilityID": "CVE-2020-7598",
+            "PkgName": "minimist",
+            "InstalledVersion": "1.2.0",
+            "FixedVersion": "1.2.2",
+            "PkgPath": "node_modules/minimist",
+            "Severity": "CRITICAL"
+          }
+        }
+      ]
+    },
+    {
+      "Target": "app/vendor",
+      "Class": "lang-pkgs",
+      "Type": "npm",
+      "Packages": [
+        {"Name": "lodash", "Version": "3.10.1"}
+      ],
+      "Vulnerabilities": []
+    }
+  ]
+}
+JSON
   exit 0
 fi
 cat >"$output" <<JSON
@@ -96,6 +276,39 @@ test_db_failure_stops_scan() {
   fi
   [[ ! -s "$FAKE_SCAN_LOG" ]] || fail "image scan ran after DB refresh failure"
   grep -q "Failed to download" "$workspace/db-fail.out" || fail "DB failure was not reported"
+}
+
+test_old_trivy_version_stops_before_db_refresh() {
+  : >"$FAKE_SCAN_LOG"
+  if FAKE_TRIVY_VERSION=0.57.2 bash "$scanner" --output-dir "$workspace/old-version" \
+    registry.example.com/app:1 >"$workspace/old-version.out" 2>&1; then
+    fail "unsupported Trivy version returned success"
+  fi
+  [[ ! -s "$FAKE_SCAN_LOG" ]] || fail "image scan ran with unsupported Trivy"
+  grep -q "Trivy 0.58.0 or newer is required" "$workspace/old-version.out" ||
+    fail "minimum Trivy version failure was not reported"
+}
+
+test_db_clean_failure_stops_scan() {
+  : >"$FAKE_SCAN_LOG"
+  if FAKE_CLEAN_FAIL=1 bash "$scanner" --output-dir "$workspace/db-clean-fail" \
+    registry.example.com/app:1 >"$workspace/db-clean-fail.out" 2>&1; then
+    fail "DB clean failure returned success"
+  fi
+  [[ ! -s "$FAKE_SCAN_LOG" ]] || fail "image scan ran after DB clean failure"
+  grep -q "Failed to clear" "$workspace/db-clean-fail.out" ||
+    fail "DB clean failure was not reported"
+}
+
+test_java_db_failure_stops_scan() {
+  : >"$FAKE_SCAN_LOG"
+  if FAKE_JAVA_DB_FAIL=1 bash "$scanner" --output-dir "$workspace/java-db-fail" \
+    registry.example.com/app:1 >"$workspace/java-db-fail.out" 2>&1; then
+    fail "Java DB refresh failure returned success"
+  fi
+  [[ ! -s "$FAKE_SCAN_LOG" ]] || fail "image scan ran after Java DB failure"
+  grep -q "Failed to download Trivy Java database" "$workspace/java-db-fail.out" ||
+    fail "Java DB failure was not reported"
 }
 
 test_partial_failure_is_nonzero() {
@@ -205,7 +418,71 @@ test_reordered_rescan_removes_stale_artifact() {
     fail "successful reordered image artifact is missing"
 }
 
+test_package_coverage_is_reported() {
+  : >"$FAKE_SCAN_LOG"
+  FAKE_REQUIRE_LIST_ALL=1 FAKE_REQUIRE_COMPREHENSIVE=1 \
+    "$scanner" --output-dir "$workspace/coverage" \
+    registry.example.com/coverage:1 >"$workspace/coverage.out" 2>&1
+  grep -q "Scan mode: comprehensive vulnerabilities for OS and library packages" \
+    "$workspace/coverage.out" ||
+    fail "comprehensive scan mode was not reported"
+  grep -q "os-pkgs/alpine: 1 package(s)" "$workspace/coverage.out" ||
+    fail "OS package inventory was not reported"
+  grep -q "lang-pkgs/npm: 5 package(s)" "$workspace/coverage.out" ||
+    fail "language package inventory was not reported"
+  grep -q "Detected: 5 package(s) (npm=5)" "$workspace/coverage.out" ||
+    fail "language ecosystem summary was not reported"
+  grep -q "lodash: type=npm versions=4.17.20 targets=app/node_modules.*findings=HIGH=1" \
+    "$workspace/coverage.out" ||
+    fail "vulnerable library package summary was not reported"
+  grep -q "Suppressed findings:" "$workspace/coverage.out" ||
+    fail "suppressed findings section was not reported"
+  awk '
+    /Suppressed findings:/ { in_suppressed = 1; next }
+    in_suppressed && /TOTAL: 1/ { found = 1; exit }
+    END { exit !found }
+  ' "$workspace/coverage.out" ||
+    fail "suppressed finding total was not reported"
+  grep -q "CVE-2020-7598.*pkg=minimist.*target=app/node_modules.*path=node_modules/minimist.*status=not_affected" \
+    "$workspace/coverage.out" ||
+    fail "suppressed vulnerability details were not reported"
+  awk '
+    /All findings \(active \+ suppressed\):/ { in_all = 1; next }
+    in_all && /TOTAL: 2/ { found = 1; exit }
+    END { exit !found }
+  ' "$workspace/coverage.out" ||
+    fail "combined active and suppressed total was not reported"
+}
+
+test_ambient_filters_are_overridden() {
+  : >"$FAKE_SCAN_LOG"
+  TRIVY_IGNORE_STATUS=fixed \
+  TRIVY_PKG_RELATIONSHIPS=direct \
+  TRIVY_OFFLINE_SCAN=true \
+  TRIVY_SKIP_DIRS=node_modules \
+  TRIVY_SKIP_FILES=package-lock.json \
+  TRIVY_EXIT_CODE=7 \
+  TRIVY_EXIT_ON_EOL=9 \
+  FAKE_REQUIRE_FILTER_RESET=1 \
+    "$scanner" --output-dir "$workspace/filter-reset" \
+    registry.example.com/app:6 >"$workspace/filter-reset.out" 2>&1
+  grep -q "Ambient status/file filters" "$workspace/filter-reset.out" ||
+    fail "ambient filter reset was not reported"
+}
+
+test_ambient_db_skip_is_overridden() {
+  : >"$FAKE_SCAN_LOG"
+  TRIVY_SKIP_DB_UPDATE=true \
+  TRIVY_SKIP_JAVA_DB_UPDATE=true \
+  FAKE_REQUIRE_REFRESH_OVERRIDE=1 \
+    "$scanner" --output-dir "$workspace/db-skip-reset" \
+    registry.example.com/app:7 >"$workspace/db-skip-reset.out" 2>&1
+}
+
 test_db_failure_stops_scan
+test_old_trivy_version_stops_before_db_refresh
+test_db_clean_failure_stops_scan
+test_java_db_failure_stops_scan
 test_partial_failure_is_nonzero
 test_explicit_output_directory
 test_default_output_is_workspace_controlled
@@ -215,5 +492,8 @@ test_colliding_safe_names_do_not_overwrite
 test_long_image_reference_has_bounded_filename
 test_failed_rescan_removes_stale_artifact
 test_reordered_rescan_removes_stale_artifact
+test_package_coverage_is_reported
+test_ambient_filters_are_overridden
+test_ambient_db_skip_is_overridden
 
 echo "All scanner tests passed."
