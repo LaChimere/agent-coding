@@ -187,13 +187,13 @@ Use when confirmed behavior, configuration, interfaces, or maintenance workflow 
 
 ### scan-image-vulnerabilities
 
-Scans container images with Trivy using the latest vulnerability database:
+Scans container images with Trivy using freshly downloaded vulnerability and Java databases:
 
 ```
-refresh DB → scan image(s) → summarize findings by severity
+refresh DBs → comprehensive OS/library scan → summarize active/suppressed findings and package coverage
 ```
 
-Use when: the user asks about container image vulnerabilities, exact cluster workload images, or Trivy. The bundled installed script preserves partial artifacts but returns nonzero if any requested image fails.
+Use when: the user asks about container image vulnerabilities, exact cluster workload images, or Trivy. The scan includes all package relationships, every severity, unfixed and suppressed findings, and a full package inventory. The bundled installed script preserves partial artifacts but returns nonzero if any requested image fails.
 
 ## Key design principles
 
