@@ -282,4 +282,4 @@ If your agent platform supports hooks, consider adding them to high-risk skills 
 
 ## Status
 
-The current skill set has installed-copy functional eval coverage for all nine skills, dual-family behavior comparisons, and hermetic scanner validation. Continue refining from real usage evidence rather than adding speculative workflow rules.
+Every distributed skill has functional eval definitions and classification metadata, and the scanner has hermetic installed-copy validation. Continue refining from real usage evidence rather than adding speculative workflow rules.
