@@ -47,6 +47,7 @@ EXTERNAL_FORBIDDEN_CAPABILITIES = frozenset({'security-review'})
 # Evals are repository-maintenance assets: they live in a central corpus outside skills/ so
 # `npx skills add` never distributes cases, fixtures, or expected answers with a skill.
 EVAL_ROOT = 'evals'
+SUITE_ROOT = 'suites'
 LEGACY_EVAL_DIRNAME = 'evals'
 # Mirrors .gitignore's evals/*/outputs/ (anchored to the top of each skill's eval directory,
 # never a nested directory that merely happens to share the name) plus its evals/**/ generated
@@ -1173,7 +1174,9 @@ def eval_directories(repo: Path) -> list[Path]:
     root = eval_corpus_root(repo)
     if not root.is_dir():
         return []
-    return sorted(path for path in root.glob('*/') if path.is_dir())
+    return sorted(
+        path for path in root.glob('*/') if path.is_dir() and path.name != SUITE_ROOT
+    )
 
 
 def validate_repository(repo: Path) -> list[str]:
@@ -1200,9 +1203,9 @@ def validate_repository(repo: Path) -> list[str]:
     return errors
 
 
-def bundled_suites() -> list[Path]:
-    """List the trigger/composition suites bundled next to this harness."""
-    return sorted((Path(__file__).resolve().parent / 'suites').glob('*.json'))
+def bundled_suites(repo: Path) -> list[Path]:
+    """List trigger/composition suites from the central eval corpus."""
+    return sorted((eval_corpus_root(repo) / SUITE_ROOT).glob('*.json'))
 
 
 def git_sha(repo: Path) -> str | None:
@@ -2866,7 +2869,7 @@ def main(argv: list[str] | None = None) -> int:
             repo = Path(args.repo).resolve()
             errors = validate_repository(repo)
             full_universe = {path.name for path in skill_directories(repo)}
-            for suite in [*bundled_suites(), *(Path(path) for path in args.suite)]:
+            for suite in [*bundled_suites(repo), *(Path(path) for path in args.suite)]:
                 errors.extend(validate_suite(suite, full_universe))
             if errors:
                 print('INVALID\n' + '\n'.join(errors), file=sys.stderr)

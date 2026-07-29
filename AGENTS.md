@@ -65,6 +65,7 @@ Use the narrowest validation that matches the change:
 - Changing cross-skill routing or approval/gate behavior -> update `skills/workflow-orchestrator/`
 - Changing a worker skill's narrow behavior -> update that skill and keep it aligned with `workflow-orchestrator`
 - Changing eval cases, fixtures, or classifications -> update `evals/<skill>/`, never `skills/<skill>/evals/`
-- Changing harness contracts or trigger/composition suites -> update `tools/skill-evals/` and its tests
+- Changing trigger/composition suites -> update `evals/suites/`
+- Changing harness contracts -> update `tools/skill-evals/` and its tests
 - Changing repo contribution guidance -> update this `AGENTS.md`
 - Changing planning artifact formats -> update `skills/workflow-orchestrator/templates/`

@@ -1127,10 +1127,14 @@ class TestHarness:
 
     def test_bundled_trigger_matrix_suite_is_schema_valid_and_covers_all_skills(self):
         """Verify bundled trigger matrix suite is schema valid and covers all skills."""
-        matrix_path = Path(__file__).parents[1] / 'suites' / 'trigger-matrix.json'
+        matrix_path = HARNESS.parents[2] / 'evals' / 'suites' / 'trigger-matrix.json'
         assert harness.validate_suite(matrix_path) == []
         suite = json.loads(matrix_path.read_text())
         real_repo_root = HARNESS.parents[2]
+        assert 'suites' not in {
+            path.name for path in harness.eval_directories(real_repo_root)
+        }
+        assert matrix_path in harness.bundled_suites(real_repo_root)
         real_skills = {path.name for path in harness.skill_directories(real_repo_root)}
         per_skill_trigger = dict.fromkeys(real_skills, 0)
         per_skill_forbidden = dict.fromkeys(real_skills, 0)

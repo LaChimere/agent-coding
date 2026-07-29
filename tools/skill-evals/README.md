@@ -38,7 +38,8 @@ uv run --locked --project tools/skill-evals \
 skills/<skill>/            # runtime, distributed by `npx skills add` (SKILL.md, references/, templates/, scripts/)
 evals/<skill>/             # central eval corpus: evals.json, manifest.json, files/ fixtures — never distributed
 evals/<skill>/outputs/     # generated grading/run artifacts (git-ignored, excluded from digests and snapshots)
-tools/skill-evals/         # this harness and its bundled suites
+evals/suites/              # cross-skill trigger/composition suites
+tools/skill-evals/         # harness implementation, configuration, and tests
 .skill-evals/              # git-ignored workspace for generated run requests, snapshots, imports, aggregates
 ```
 
@@ -53,7 +54,7 @@ uv run --locked --project tools/skill-evals \
   python tools/skill-evals/skill_evals.py validate --repo .
 ```
 
-Validation checks every `skills/*/SKILL.md` frontmatter, referenced bundled `references/`, `templates/`, and `scripts/` files, each `evals/<skill>/evals.json` document, fixture path, and manifest case-ID relation. Fixture paths in `files` are relative to the skill's central eval directory (for example `files/checkout-state.ts` for `evals/execute-plan-loop/files/checkout-state.ts`) and may not escape it; an optional case-level `fixture_prefix` declares the corpus directory to strip when the fixture is written into the case workspace (see below). It also checks every bundled suite under `suites/*.json`; use `--suite path.json` for an additional suite. Existing free-text expectations remain intact as evidence; only `grading` checks are deterministically machine-graded, and expectations are graded by rubric (see below).
+Validation checks every `skills/*/SKILL.md` frontmatter, referenced bundled `references/`, `templates/`, and `scripts/` files, each `evals/<skill>/evals.json` document, fixture path, and manifest case-ID relation. Fixture paths in `files` are relative to the skill's central eval directory (for example `files/checkout-state.ts` for `evals/execute-plan-loop/files/checkout-state.ts`) and may not escape it; an optional case-level `fixture_prefix` declares the corpus directory to strip when the fixture is written into the case workspace (see below). It also checks every bundled suite under `evals/suites/*.json`; use `--suite path.json` for an additional suite. Existing free-text expectations remain intact as evidence; only `grading` checks are deterministically machine-graded, and expectations are graded by rubric (see below).
 
 Frontmatter rules: `name` must equal the skill's directory name, match `^[a-z0-9]+(-[a-z0-9]+)*$`, and be at most 64 characters; `description` must be non-empty and at most 1024 characters. Frontmatter is parsed by hand (no YAML dependency is added).
 
@@ -71,7 +72,7 @@ uv run --locked --project tools/skill-evals \
   --repo . --role baseline --model provider/model@fixed \
   --config-json '{"temperature":0,"max_tokens":4096}' \
   --agent agent-a --agent agent-b --comparison-key pr-1 \
-  --suite tools/skill-evals/suites/trigger-composition.json \
+  --suite evals/suites/trigger-composition.json \
   --output .skill-evals/baseline-run.json
 
 uv run --locked --project tools/skill-evals \
@@ -79,7 +80,7 @@ uv run --locked --project tools/skill-evals \
   --repo . --role candidate --model provider/model@fixed \
   --config-json '{"temperature":0,"max_tokens":4096}' \
   --agent agent-a --comparison-key pr-1 \
-  --suite tools/skill-evals/suites/trigger-composition.json \
+  --suite evals/suites/trigger-composition.json \
   --baseline-run-id baseline-... --output .skill-evals/candidate-run.json
 ```
 
@@ -199,7 +200,7 @@ uv run --locked --project tools/skill-evals \
   --repo . --role baseline --model provider/model@fixed \
   --config-json '{"temperature":0,"max_tokens":4096}' \
   --agent agent-a --comparison-key trigger-iter-1 \
-  --suite tools/skill-evals/suites/trigger-matrix.json --suite-only \
+  --suite evals/suites/trigger-matrix.json --suite-only \
   --output .skill-evals/trigger-matrix-baseline.json
 ```
 
@@ -318,13 +319,13 @@ Run the full matrix (all skills, supported agents, and fixed configurations) for
 
 ## Trigger/composition suites
 
-`suites/trigger-composition.json` is the original compact, reviewable seed corpus for routing/composition behavior: orchestrator versus a direct worker, goal versus executor, decomposition versus atomic/parallel work, direct versus broad documentation refresh, and image CVE scanning versus source-security review.
+`evals/suites/trigger-composition.json` is the original compact, reviewable seed corpus for routing/composition behavior: orchestrator versus a direct worker, goal versus executor, decomposition versus atomic/parallel work, direct versus broad documentation refresh, and image CVE scanning versus source-security review.
 
-`suites/trigger-matrix.json` is the full baseline-coverage suite that followed those seeds: 144 cases, 16 per skill, across all nine bundled skills (8 `should_trigger` plus 8 `should_not_trigger` per skill). Each `should_not_trigger` case is a difficult, realistic near miss against a specific adjacent skill (or, when no skill applies, the literal route `"none"`) rather than an unrelated trivial negative, and the suite explicitly exercises every pairing called out above (orchestrator/direct worker, goal/executor, decompose/atomic/parallel, docs direct/broad, image/source security, and anti-slop as a companion versus each primary workflow skill).
+`evals/suites/trigger-matrix.json` is the full baseline-coverage suite that followed those seeds: 144 cases, 16 per skill, across all nine bundled skills (8 `should_trigger` plus 8 `should_not_trigger` per skill). Each `should_not_trigger` case is a difficult, realistic near miss against a specific adjacent skill (or, when no skill applies, the literal route `"none"`) rather than an unrelated trivial negative, and the suite explicitly exercises every pairing called out above (orchestrator/direct worker, goal/executor, decompose/atomic/parallel, docs direct/broad, image/source security, and anti-slop as a companion versus each primary workflow skill).
 
 Both suites share the same `skill-evals/trigger-suite-v1` schema. Every case's `expected_skills` names the actual correct route and is never empty — even a `should_not_trigger` case must say what *should* happen, either a real, plausible competing skill or `"none"` — so a near miss is exactly as gradeable as a hit. `forbidden_skills` names the skill(s) that must not fire (required for `should_not_trigger` cases), `related_skills` documents plausible-but-ungraded neighbors for context, and an optional `direction` (`should_trigger` / `should_not_trigger`) makes the case's intent explicit and self-checking: `validate` rejects `expected_skills` and `forbidden_skills` overlapping on the same case, a `should_trigger` case whose only expectation is `"none"`, or a `should_not_trigger` case with no `forbidden_skills`. Every case still requires its own deterministic `grading` (typically a `json_shape` check that `response_json.route` equals the expected route) and non-empty free-text `expectations`, kept in the source suite file as reviewable documentation of intent.
 
-**A suite's skill names are checked against the full repository skill universe**, not against any run's narrower `--skill` selection: `validate` (and `prepare`'s own suite revalidation) requires every `expected_skills` entry to be `"none"` or a real name in `skills/`, and every `forbidden_skills` entry to be a real skill name or a name in the explicit `EXTERNAL_FORBIDDEN_CAPABILITIES` allowlist (currently `security-review`, a built-in agent capability rather than a distributed skill, as used by `suites/trigger-composition.json`'s image-scan-vs-source-security case). `expected_skills` never accepts an allowlisted name -- a suite can only *expect* a real skill to activate -- while `forbidden_skills` can name either a real skill or an external capability, since both are things a case can legitimately require to not fire. This full-universe check is deliberately independent of which subset of skills a particular run selects: a suite document's own correctness cannot depend on run flags. The `universe` a case is actually *graded* against at run time (see below) is the narrower, run-selected set.
+**A suite's skill names are checked against the full repository skill universe**, not against any run's narrower `--skill` selection: `validate` (and `prepare`'s own suite revalidation) requires every `expected_skills` entry to be `"none"` or a real name in `skills/`, and every `forbidden_skills` entry to be a real skill name or a name in the explicit `EXTERNAL_FORBIDDEN_CAPABILITIES` allowlist (currently `security-review`, a built-in agent capability rather than a distributed skill, as used by `evals/suites/trigger-composition.json`'s image-scan-vs-source-security case). `expected_skills` never accepts an allowlisted name -- a suite can only *expect* a real skill to activate -- while `forbidden_skills` can name either a real skill or an external capability, since both are things a case can legitimately require to not fire. This full-universe check is deliberately independent of which subset of skills a particular run selects: a suite document's own correctness cannot depend on run flags. The `universe` a case is actually *graded* against at run time (see below) is the narrower, run-selected set.
 
 **How a trigger case is actually scored at run time** is different from that source-file `grading`, and is entirely provider-neutral: `prepare --suite` (via `collect_suite_cases`) first filters the suite to cases observable with the run-selected skills or an explicit external forbidden capability, then discards each retained case's hand-authored `grading` and replaces it with a single synthesized `skill_selection` check built from that case's own `expected_skills`, `forbidden_skills`, and `universe` set to the run's selected real skills (`--skill`, or all skills by default). The case also gets `rubric_required: false`, so its `expectations` stay in the run request purely as documentation — the case's final grade comes only from whether the runner-reported `activated_skills` (see "Runner result" above) satisfy that `skill_selection` check. **The source suite JSON files on disk are never modified** by this normalization; it happens only to the in-memory case copy that goes into the run request.
 

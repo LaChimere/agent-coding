@@ -102,7 +102,8 @@ evals/                                            # Central eval corpus (reposit
   <skill>/evals.json                              #   Functional cases for the matching skills/<skill>/
   <skill>/manifest.json                           #   Case classification manifest (critical/behavior-change/...)
   <skill>/files/                                  #   Case fixtures
-tools/skill-evals/                                # Provider-neutral eval harness and trigger/composition suites
+  suites/                                         #   Cross-skill trigger/composition suites
+tools/skill-evals/                                # Provider-neutral eval harness, configuration, and tests
 plans/                                            # Planning/execution artifacts for changes to this repo
 ```
 
