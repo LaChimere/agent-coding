@@ -1,30 +1,24 @@
 # Pre-commit slop gate
 
-Run this before landing a change. Correctness and scope failures require a fix or stop. Duplication and complexity findings may use a narrow recorded exception for generated output, bounded compatibility work, or another demonstrated need.
+Use this only when the full anti-slop check is triggered: an explicit request, readiness to land, scope/add-only/fix-on-fix signal, or a meaningful/high-risk milestone. Routine edits use the primary executor's compact quality invariants instead.
 
-(Atomic-commit and verification-level discipline are owned by the workflow contract / `execute-plan-loop`; this gate does not repeat them. It adds the slop-specific checks.)
+Correctness, safety, and requested-scope failures mean fix or stop. A duplication or complexity exception must be narrow and recorded.
 
-## Can you explain it?
-- [ ] I can say what this change does in one or two plain sentences.
-- [ ] I can say why it is needed.
-- [ ] I understand the owned source and behavior I am about to land. Generated output is traceable to its generator and inputs.
+## Purpose and evidence
 
-## Have you proven it works?
-- [ ] The workflow contains the narrowest relevant verification evidence for this change.
-- [ ] I recorded the command and result as evidence, on the status/evidence surface the workflow already uses (or the commit body when there is none).
-- [ ] The tests check real behavior — they do not just assert hard-coded values I copied in.
+- [ ] In one or two plain sentences, I state what this change does and why it is needed.
+- [ ] I ran the narrowest runnable validation that demonstrates the real behavior, beyond a copied visible value where relevant.
+- [ ] I recorded that purpose, command, and result on the existing status/evidence surface (or commit body when none exists).
+- [ ] If the existing status surface was stale, I refreshed it with this evidence instead of treating stale bookkeeping as a correctness failure.
 
-## Is it only what's needed?
-- [ ] It uses existing patterns unless a new path is required by the task.
-- [ ] Duplication is absent or justified by a reproducible source, bounded scope, verification, and removal condition.
-- [ ] No speculative options, flags, config, or abstractions added "for later"; nothing here is unused by the actual task.
+## Necessity, reuse, and complexity
 
-## Complexity check
-- [ ] I looked for concrete removable or simpler code and acted when the evidence supported it.
-- [ ] If the recent diff is add-only, I inspected the whole change for duplication or missed consolidation and recorded why remaining additions are necessary.
-- [ ] A new reader could follow this change without private context from the author.
+- [ ] The change solves the requested problem without speculative options, flags, plugins, or abstractions.
+- [ ] I looked for and reused existing behavior or patterns. Any generated or compatibility duplication has a source, bounds, verification, and removal condition.
+- [ ] I looked for a concrete simplification or removal and acted when supported.
+- [ ] For repeated add-only work, I inspected the full diff for duplication, dead scaffolding, missed consolidation, and reader clarity; I recorded why remaining additions are necessary when no removal is warranted.
 
-## Record and result
-- [ ] The change or commit description states the single purpose in one sentence.
-- [ ] The verification evidence is recorded on the normal status surface (or the commit body when there is no status artifact).
-- [ ] Every box above is checked, or an exception permitted by this checklist is recorded with its scope and removal condition.
+## Result
+
+- [ ] Every required item passed, or I fixed the issue or stopped. Any permitted exception records its scope and removal condition.
+- [ ] For an explicit or meaningful/high-risk milestone, independent adversarial review findings were checked and fixed, split, or escalated; if unavailable, adversarial self-review is recorded as a limitation.

@@ -1,0 +1,21 @@
+{
+  "skill_name": "anti-slop",
+  "default_category": "regression_guard",
+  "critical_ids": [5, 6, 7],
+  "critical_expectations": {
+    "5": [0, 1, 2, 4],
+    "6": [0, 1, 3],
+    "7": [0, 1, 4]
+  },
+  "behavior_change_ids": [4, 5, 7, 8],
+  "redundant_ids": [],
+  "behavior_change_rationale": {
+    "4": "Add-only growth is a diagnostic, not a mandatory deletion quota.",
+    "5": "Independent review is capability-based rather than model-family-based. The prompt now asks the agent to decide and, if the review is incomplete, obtain it, matching the expected_output and expectations, which already describe performing the review rather than only judging it.",
+    "7": "Reviewer independence is not inferred from model count or vendor. Expectation index 3 ('Turns any finding into a concrete action') stays in the case as a conditional expectation: this prompt only asks the agent to decide how to satisfy the independent-review requirement, so a run may never surface a finding to act on. It is intentionally excluded from critical_expectations and may legitimately grade applicable:false (N/A) rather than fail.",
+    "8": "Generated artifacts and bounded compatibility migrations may justify temporary duplication."
+  },
+  "clarification_rationale": {
+    "_critical_expectations": "Finding-action, throwaway, and no-independent-review branches are conditional. They remain rubric-visible but are excluded from paired critical indexes so N/A cannot masquerade as a regression."
+  }
+}

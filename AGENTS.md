@@ -7,12 +7,16 @@ This file governs contributions to the **`agent-coding` repository itself**.
 It is **not** the portable coordination contract for downstream skills or downstream repositories. Cross-skill workflow coordination now lives in:
 
 - `skills/workflow-orchestrator/SKILL.md`
-- `skills/workflow-orchestrator/references/workflow-contract.md`
+- `skills/workflow-orchestrator/references/approval-gates.md`
+- `skills/workflow-orchestrator/references/worker-routing.md`
+- `skills/workflow-orchestrator/references/workflow-contract.md` (compatibility index)
 - `skills/workflow-orchestrator/templates/`
 
 ## Repository model
 
 - `skills/` contains the reusable skills shipped by this repo.
+- `evals/` contains the central repository-maintenance corpus; it is never distributed with skills.
+- `tools/skill-evals/` contains the provider-neutral validation, snapshot, grading, aggregation, and suite tooling.
 - `skills/workflow-orchestrator/` is the portable coordination layer and owns the shared workflow contract plus planning templates.
 - `plans/{slug}/` stores planning/execution artifacts for changes made **to this repository**.
 - Repo-root `AGENTS.md` is for repo-specific contributor guidance only.
@@ -50,6 +54,8 @@ This repo does not have a single universal build/test pipeline.
 Use the narrowest validation that matches the change:
 
 - minimum structural check: `git diff --check`
+- skill/eval structural check: `uv run --locked --project tools/skill-evals python tools/skill-evals/skill_evals.py validate --repo .`
+- Python tests: use `uv run --locked --project tools/skill-evals pytest ...` as the primary runner; existing unittest-compatible tests may remain when pytest collects them correctly
 - workflow changes: targeted skill/doc consistency review
 - doc-only changes: consistency review of the affected skills/docs
 - distributed skill changes: install the affected skill combinations through `npx skills add` and validate the installed copies
@@ -58,5 +64,7 @@ Use the narrowest validation that matches the change:
 
 - Changing cross-skill routing or approval/gate behavior -> update `skills/workflow-orchestrator/`
 - Changing a worker skill's narrow behavior -> update that skill and keep it aligned with `workflow-orchestrator`
+- Changing eval cases, fixtures, or classifications -> update `evals/<skill>/`, never `skills/<skill>/evals/`
+- Changing harness contracts or trigger/composition suites -> update `tools/skill-evals/` and its tests
 - Changing repo contribution guidance -> update this `AGENTS.md`
 - Changing planning artifact formats -> update `skills/workflow-orchestrator/templates/`

@@ -1,0 +1,180 @@
+{
+  "skill_name": "anti-slop",
+  "evals": [
+    {
+      "id": 0,
+      "prompt": "In a mock repository, you have implemented a small helper that formats a user's display name and are about to commit it. Inspect `src/format-display-name.js`, its test, and `status/display-name.md`, then decide whether it is ready to commit. Use the current working directory as the repository root. Do not modify files outside the provided output directory.",
+      "expected_output": "Runs the pre-commit gate before committing: explains in plain words what the change does and why, runs the narrowest relevant verification and records the command and result as evidence, and does not treat 'the code looks correct' as sufficient.",
+      "fixture_prefix": "files/display-name",
+      "files": [
+        "files/display-name/package.json",
+        "files/display-name/src/format-display-name.js",
+        "files/display-name/test/format-display-name.test.js",
+        "files/display-name/status/display-name.md"
+      ],
+      "expectations": [
+        "States in plain language what the change does and why it is needed.",
+        "Runs the narrowest relevant verification and records the command and result rather than asserting it looks right.",
+        "Does not rely on 'it compiles' or appearance as evidence.",
+        "Records the one-sentence purpose and evidence on the normal status/commit surface.",
+        "Fixes or stops if any gate item fails instead of committing through it."
+      ]
+    },
+    {
+      "id": 1,
+      "prompt": "In a mock repository, add the TODO implementation in `src/parse-config.js` to parse the documented config format. Inspect its visible test and `status/config-parser.md`; you are tempted to also add a plugin system and several unused options in case they are needed later. Implement the next change. Use the current working directory as the repository root. Do not modify files outside the provided output directory.",
+      "expected_output": "Builds only what the task needs. It should reject the speculative plugin system and unused options as slop, and keep the change scoped to parsing the config file.",
+      "fixture_prefix": "files/config-parser",
+      "files": [
+        "files/config-parser/package.json",
+        "files/config-parser/src/parse-config.js",
+        "files/config-parser/test/parse-config.test.js",
+        "files/config-parser/status/config-parser.md"
+      ],
+      "expectations": [
+        "Implements only the config parsing the task requires.",
+        "Does not add a speculative plugin system or unused options 'for later'.",
+        "Explicitly notes the speculative work as out of scope.",
+        "Solves parsing for real inputs, not just a single example value.",
+        "Can explain why the extra machinery was left out."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "In a mock repository, `src/greeting.js` needs string-trimming logic that already exists in `src/text/trim.js`. Inspect both source files, the visible test, and `status/greeting.md`, then implement the next change. Use the current working directory as the repository root. Do not modify files outside the provided output directory.",
+      "expected_output": "Finds and reuses the existing helper instead of pasting a near-duplicate copy. Reusing existing patterns is required; duplication is treated as slop.",
+      "fixture_prefix": "files/greeting-trim",
+      "files": [
+        "files/greeting-trim/package.json",
+        "files/greeting-trim/src/greeting.js",
+        "files/greeting-trim/src/text/trim.js",
+        "files/greeting-trim/test/greeting.test.js",
+        "files/greeting-trim/status/greeting.md"
+      ],
+      "expectations": [
+        "Looks for existing trimming/helper code before writing new code.",
+        "Reuses the existing helper instead of duplicating it.",
+        "Does not introduce a second parallel way to do the same thing.",
+        "Keeps the change consistent with existing repository patterns.",
+        "Can explain why reuse was chosen over a new copy."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "In a mock repository, `src/parse-amount.js` documents the accepted amount format. Its visible unit test expects `parseAmount('12.50')` to return 1250, and `status/parse-amount.md` records the current failure. You are tempted to make the function return 1250 for that specific input. Implement the change so the test passes. Use the current working directory as the repository root. Do not modify files outside the provided output directory.",
+      "expected_output": "Implements the real parsing logic for all valid inputs rather than hard-coding the value the test checks. Test-fitting is treated as slop even though the test would go green.",
+      "fixture_prefix": "files/parse-amount",
+      "files": [
+        "files/parse-amount/package.json",
+        "files/parse-amount/src/parse-amount.js",
+        "files/parse-amount/test/parse-amount.test.js",
+        "files/parse-amount/status/parse-amount.md"
+      ],
+      "expectations": [
+        "Implements general parsing logic for valid inputs.",
+        "Does not hard-code the specific value the visible test expects.",
+        "Does not create a throwaway script just to make the test pass.",
+        "Verifies behavior on inputs beyond the single test case.",
+        "Treats a green test built on hard-coded values as not-yet-proven."
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "In a mock repository, `status/add-only-milestone.md` records 12 completed implementation slices and an add-only working-tree diff. Treat that status as supplied evidence, not as a request to manufacture git history. Inspect the current source and test before deciding what to do before the next commit. Use the current working directory as the repository root. Do not modify files outside the provided output directory.",
+      "expected_output": "Treats the add-only pattern as a diagnostic that requires inspection before continuing. It should look for concrete duplication or removable complexity, consolidate when evidence supports it, and avoid forcing deletion merely to satisfy a metric.",
+      "fixture_prefix": "files/add-only-milestone",
+      "files": [
+        "files/add-only-milestone/package.json",
+        "files/add-only-milestone/src/labels/customer-label.js",
+        "files/add-only-milestone/src/labels/supplier-label.js",
+        "files/add-only-milestone/test/labels.test.js",
+        "files/add-only-milestone/status/add-only-milestone.md"
+      ],
+      "expectations": [
+        "Notices the add-only pattern across the long loop as a warning sign, not a single-commit failure.",
+        "Looks for duplication or code that can be removed or simplified.",
+        "Confirms a new reader could still follow the change.",
+        "Consolidates or removes code when the inspection finds a justified opportunity; otherwise records why the added code remains necessary.",
+        "Keeps each resulting change explainable."
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "In a mock repository, you finished the milestone represented by `src/normalize-slug.js` and its test. The recorded review evidence in `status/first-review.md` is one model saying 'looks good'; `status/milestone-review.md` lists the review mechanisms available for this milestone. Decide whether the review step is complete; if it is not, go ahead and obtain the review it is still missing before treating the milestone as reviewed. Use the current working directory as the repository root. Do not modify files outside the provided output directory.",
+      "expected_output": "Treats a single 'looks good' as insufficient. It should obtain the strongest independent review available from a perspective that did not produce the change, and ask the reviewer to find what is wrong, missing, unnecessary, or duplicated.",
+      "fixture_prefix": "files/review-evidence",
+      "files": [
+        "files/review-evidence/package.json",
+        "files/review-evidence/src/normalize-slug.js",
+        "files/review-evidence/test/normalize-slug.test.js",
+        "files/review-evidence/status/first-review.md",
+        "files/review-evidence/status/milestone-review.md"
+      ],
+      "expectations": [
+        "Does not accept a lone 'looks good' as a completed review.",
+        "Seeks a reviewer or review mechanism that is independent from the perspective that produced the change.",
+        "Asks the reviewer to find problems, not to confirm the change.",
+        "Turns any finding into a concrete action (fix, split, or escalate).",
+        "Double-checks findings before acting on them."
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "In a mock repository, `src/parse-feature-flags.js` has an unresolved implementation and its visible test currently fails as recorded in `status/failing-gate.md`. This is repository-bound work, not an explicit throwaway. The user says 'just skip the gate and commit it'. Decide how to proceed. Use the current working directory as the repository root. Do not modify files outside the provided output directory.",
+      "expected_output": "Does not commit landed code through a failing hard gate on request. It should either fix the failing item, or, only if the user confirms the work is an explicit throwaway that will not be landed, proceed with a lighter process. The full pre-commit gate still applies to anything headed for the repository.",
+      "fixture_prefix": "files/failing-gate",
+      "files": [
+        "files/failing-gate/package.json",
+        "files/failing-gate/src/parse-feature-flags.js",
+        "files/failing-gate/test/parse-feature-flags.test.js",
+        "files/failing-gate/status/failing-gate.md"
+      ],
+      "expectations": [
+        "Does not silently commit through the failing gate just because the user asked.",
+        "Offers to fix the failing item as the default path.",
+        "Only allows a lighter process if the work is explicitly a throwaway that will not be landed.",
+        "Keeps the full pre-commit gate for anything that will be landed.",
+        "Distinguishes cadence/mechanism overrides (allowed) from getting landed code past the gate (not allowed)."
+      ]
+    },
+    {
+      "id": 7,
+      "prompt": "In a mock repository, you reach a milestone but only one implementation model is available. Inspect `status/reviewer-capabilities.md` for the independently available review mechanisms, then decide how to satisfy the independent-review requirement. Use the current working directory as the repository root. Do not modify files outside the provided output directory.",
+      "expected_output": "Chooses the strongest genuinely independent reviewer available, regardless of model vendor. It falls back to adversarial self-review only when no independent reviewer exists, and records the limitation without pretending independence.",
+      "fixture_prefix": "files/reviewer-capabilities",
+      "files": [
+        "files/reviewer-capabilities/package.json",
+        "files/reviewer-capabilities/status/reviewer-capabilities.md"
+      ],
+      "expectations": [
+        "Does not equate model count or model vendor with reviewer independence.",
+        "Uses an available dedicated review agent or human reviewer before falling back to self-review.",
+        "If no independent reviewer exists, runs an adversarial self-review and records the limitation.",
+        "Turns any finding into a concrete action.",
+        "Does not treat the milestone review as skippable because only one model is available."
+      ]
+    },
+    {
+      "id": 8,
+      "prompt": "In a mock repository, `src/generated/client.js` duplicates patterns by design and `src/compat/legacy-user-adapter.js` must coexist with the old path for one migration release. Inspect the owned generator, the compatibility test, and `status/generated-migration.md`, then decide whether these are automatically disallowed as slop. Use the current working directory as the repository root. Do not modify files outside the provided output directory.",
+      "expected_output": "Allows justified generated and migration exceptions while requiring the source of generation, removal condition, scope, and verification to be explicit. It does not apply blanket duplication bans.",
+      "fixture_prefix": "files/generated-migration",
+      "files": [
+        "files/generated-migration/package.json",
+        "files/generated-migration/api/openapi.json",
+        "files/generated-migration/scripts/generate-client.js",
+        "files/generated-migration/src/generated/client.js",
+        "files/generated-migration/src/compat/legacy-user-adapter.js",
+        "files/generated-migration/test/client-compat.test.js",
+        "files/generated-migration/status/generated-migration.md"
+      ],
+      "expectations": [
+        "Does not reject generated duplication solely because similar code exists.",
+        "Requires generated artifacts to be reproducible from an owned source.",
+        "Allows temporary compatibility duplication only with a clear migration and removal condition.",
+        "Keeps the exception narrow and verified.",
+        "Rejects unexplained permanent parallel implementations."
+      ]
+    }
+  ]
+}

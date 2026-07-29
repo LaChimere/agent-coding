@@ -67,9 +67,10 @@ AGENTS.md                                         # Repo-specific maintainer gui
 skills/                                           # Specialized workflows
   workflow-orchestrator/                         #   Portable coordination layer + bundled planning templates
     SKILL.md
-    references/workflow-contract.md
+    references/approval-gates.md
+    references/worker-routing.md
+    references/workflow-contract.md               #   Compatibility index only; rules live in SKILL.md + the two references above
     templates/
-    evals/
   decompose-feature/                              #   Split large features into small PRs
     SKILL.md
     templates/feature-plan-template.md
@@ -89,15 +90,23 @@ skills/                                           # Specialized workflows
     SKILL.md
   scan-image-vulnerabilities/                     #   Scan container images for vulnerabilities
     SKILL.md
+    references/scanner-contract.md
     scripts/trivy_latest_scan.sh
     tests/test_trivy_latest_scan.sh
-    evals/
   achieve-goal/                                   #   Persist and pursue long-running goals
     SKILL.md
+    references/goal-lifecycle-state.md
+    scripts/goal_lifecycle.py
+    tests/test_goal_lifecycle.py
+evals/                                            # Central eval corpus (repository maintenance, never distributed)
+  <skill>/evals.json                              #   Functional cases for the matching skills/<skill>/
+  <skill>/manifest.json                           #   Case classification manifest (critical/behavior-change/...)
+  <skill>/files/                                  #   Case fixtures
+tools/skill-evals/                                # Provider-neutral eval harness and trigger/composition suites
 plans/                                            # Planning/execution artifacts for changes to this repo
 ```
 
-Every distributed skill also carries an `evals/` directory with functional cases and a classification manifest.
+**Evals are repository-maintenance assets, not skill content.** Every skill has a matching `evals/<skill>/` directory with functional cases, fixtures, and a classification manifest, but that material lives outside `skills/` and is never distributed: `npx skills add` installs only the runtime skill tree, so an installed copy cannot read its own cases or expected answers. See `tools/skill-evals/README.md` for validation, run preparation, and grading.
 
 ## Skills
 
@@ -163,7 +172,7 @@ Keeps code changes free of AI slop — output that looks polished but is unneces
 explain it → support correctness claims → only what's needed → justify duplication → inspect complexity → milestone review
 ```
 
-Use when: writing, changing, refactoring, or extending code. It runs **alongside** the primary execution skill, checks necessity and evidence, permits only bounded justified exceptions, and reuses the executor's milestone review rather than creating a second loop.
+Use for explicit or ongoing anti-slop guarding, pre-commit readiness, visible-test hard-coding, scope/add-only/fix-on-fix signals, or meaningful/high-risk milestones. Routine edits keep compact quality invariants in the executor instead of loading a second review loop.
 
 ### achieve-goal
 
@@ -212,6 +221,7 @@ Use when: the user asks about container image vulnerabilities, exact cluster wor
 3. Install standalone inspection skills independently when needed.
 4. Use the target repo's own `AGENTS.md` only for project-specific rules.
 5. Keep every installed skill's bundled references, templates, and scripts intact.
+6. Check a skill's `compatibility` frontmatter field before relying on its bundled script: `achieve-goal` requires python3 3.9+, and `scan-image-vulnerabilities` requires bash, python3, and Trivy 0.58.0+ (Docker/`kubectl` only for local-daemon or cluster discovery).
 
 ### Working on this repo
 
@@ -219,6 +229,9 @@ Use when: the user asks about container image vulnerabilities, exact cluster wor
 2. If you change cross-skill workflow behavior, update `workflow-orchestrator` first.
 3. If you change a worker skill, keep it aligned with the `workflow-orchestrator` contract.
 4. Put repo-change planning artifacts under `plans/{slug}/`.
+5. Add or change eval cases under `evals/<skill>/`, never inside `skills/<skill>/`; validate with
+   `uv run --locked --project tools/skill-evals python tools/skill-evals/skill_evals.py validate --repo .`.
+6. Keep generated eval run artifacts in the ignored `.skill-evals/` workspace.
 
 ### What the agent does at runtime
 
@@ -282,4 +295,4 @@ If your agent platform supports hooks, consider adding them to high-risk skills 
 
 ## Status
 
-Every distributed skill has functional eval definitions and classification metadata, and the scanner has hermetic installed-copy validation. Continue refining from real usage evidence rather than adding speculative workflow rules.
+Every skill has functional eval definitions and classification metadata in the central `evals/` corpus. The provider-neutral harness has 96 pytest cases; all nine skills pass real isolated `npx skills add --copy` installation without distributing eval material. Final five-model behavior certification improved every model and produced zero critical regressions; trigger/composition gained a net 20 paired passes with documented provider and fixture limitations. Continue refining from real usage evidence rather than adding speculative workflow rules.

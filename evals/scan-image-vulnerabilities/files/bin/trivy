@@ -1,0 +1,173 @@
+#!/usr/bin/env bash
+# Hermetic Trivy fixture shim.
+#
+# This stands in for the real `trivy` binary during evaluation. It never contacts a
+# registry, a vulnerability database mirror, a Docker daemon, or any network endpoint.
+# Every answer is derived from static fixture data next to this script:
+#
+#   ../trivy-fixture/images/<sanitized-image-reference>.json    successful scan result
+#   ../trivy-fixture/images/<sanitized-image-reference>.error   failure (line 1: exit_code=N)
+#   ../trivy-fixture/db-refresh-fails                           vulnerability DB refresh fails
+#   ../trivy-fixture/java-db-refresh-fails                      Java DB refresh fails
+#
+# An image reference with no fixture is reported as an inspect failure, never as a clean
+# scan. Every invocation is appended to the call log so a reviewer can confirm exactly
+# which commands ran.
+set -uo pipefail
+
+fixture_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+images_dir="$fixture_root/trivy-fixture/images"
+state_dir="$fixture_root/trivy-fixture"
+log_dir="${SCAN_FIXTURE_CALL_LOG_DIR:-$PWD/.scan-fixture-calls}"
+
+mkdir -p "$log_dir" 2>/dev/null || true
+
+log_invocation() {
+  local argument redact_next=0
+  local -a logged=()
+  for argument in "$@"; do
+    if ((redact_next)); then
+      logged+=("<redacted>")
+      redact_next=0
+      continue
+    fi
+    case "$argument" in
+      --password|--token|--registry-token|--username|--kubeconfig)
+        logged+=("$argument")
+        redact_next=1
+        ;;
+      --password=*|--token=*|--registry-token=*|--username=*|--kubeconfig=*)
+        logged+=("${argument%%=*}=<redacted>")
+        ;;
+      *)
+        logged+=("$argument")
+        ;;
+    esac
+  done
+  {
+    printf 'trivy'
+    printf ' %s' "${logged[@]}"
+    printf '\n'
+  } >>"$log_dir/trivy.log" 2>/dev/null || true
+}
+
+log_invocation "$@"
+
+fixture_name() {
+  printf '%s' "$1" | tr -c 'A-Za-z0-9._-' '_'
+}
+
+fail_from_fixture() {
+  local file="$1" code
+  code="$(sed -n '1s/^exit_code=//p' "$file")"
+  sed '1d' "$file" >&2
+  exit "${code:-1}"
+}
+
+command="${1:-}"
+case "$command" in
+  --version|-v|version)
+    echo "Version: ${FIXTURE_TRIVY_VERSION:-0.72.0}"
+    echo "Vulnerability DB:"
+    echo "  Version: 2"
+    echo "  UpdatedAt: 2026-07-28 00:00:00 +0000 UTC"
+    exit 0
+    ;;
+  clean)
+    echo "Removing cached databases..."
+    exit 0
+    ;;
+  image)
+    shift
+    ;;
+  -h|--help|help|"")
+    echo "hermetic trivy fixture: supports 'trivy --version', 'trivy clean', and 'trivy image'"
+    exit 0
+    ;;
+  *)
+    echo "hermetic trivy fixture: unsupported command '$command'; no live Trivy is available" >&2
+    exit 64
+    ;;
+esac
+
+download_db=0
+download_java_db=0
+for argument in "$@"; do
+  case "$argument" in
+    --download-db-only) download_db=1 ;;
+    --download-java-db-only) download_java_db=1 ;;
+  esac
+done
+
+if [[ "$download_db" == "1" ]]; then
+  if [[ -f "$state_dir/db-refresh-fails" ]]; then
+    cat "$state_dir/db-refresh-fails" >&2
+    exit 1
+  fi
+  echo "2026-07-28T00:00:00Z INFO Vulnerability DB downloaded (fixture snapshot 2026-07-28)"
+  exit 0
+fi
+
+if [[ "$download_java_db" == "1" ]]; then
+  if [[ -f "$state_dir/java-db-refresh-fails" ]]; then
+    cat "$state_dir/java-db-refresh-fails" >&2
+    exit 1
+  fi
+  echo "2026-07-28T00:00:00Z INFO Java DB downloaded (fixture snapshot 2026-07-28)"
+  exit 0
+fi
+
+image=""
+output=""
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    -o|--output)
+      output="${2:-}"
+      shift 2
+      ;;
+    --scanners|--format|--pkg-types|--pkg-relationships|--detection-priority|--severity)
+      shift 2
+      ;;
+    --exit-code|--exit-on-eol|--cache-dir|--timeout|--input|--vex|--ignorefile)
+      shift 2
+      ;;
+    --db-repository|--java-db-repository|--image-src|--platform|--username|--password)
+      shift 2
+      ;;
+    -*)
+      shift
+      ;;
+    *)
+      image="$1"
+      shift
+      ;;
+  esac
+done
+
+if [[ -z "$image" ]]; then
+  echo "hermetic trivy fixture: no image reference was supplied" >&2
+  exit 64
+fi
+
+name="$(fixture_name "$image")"
+if [[ -f "$images_dir/$name.error" ]]; then
+  fail_from_fixture "$images_dir/$name.error"
+fi
+
+if [[ ! -f "$images_dir/$name.json" ]]; then
+  {
+    echo "2026-07-28T00:00:00Z FATAL Fatal error image scan error: scan error: unable to initialize a scanner:"
+    echo "  unable to inspect \"$image\": no such image in this environment."
+    echo "  This environment has no registry, vulnerability database, Docker daemon, or cluster access."
+    echo "  Only image references that already exist here can be scanned."
+  } >&2
+  exit 1
+fi
+
+if [[ -n "$output" ]]; then
+  mkdir -p "$(dirname "$output")" 2>/dev/null || true
+  cp "$images_dir/$name.json" "$output"
+else
+  cat "$images_dir/$name.json"
+fi
+exit 0

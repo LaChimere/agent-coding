@@ -1,13 +1,28 @@
-# Skill evaluation run artifacts
-skills/*-workspace/
+# Repository-level skill evaluation workspaces (run requests, snapshots, imports, aggregates)
+.skill-evals/
+.certify-work/
 
-# Generated outputs if evals are run inside a skill directory
-skills/**/evals/**/outputs/
-skills/**/evals/**/grading.json
-skills/**/evals/**/timing.json
-skills/**/evals/**/benchmark*.json
-skills/**/evals/**/benchmark*.md
-skills/**/evals/**/review*.html
+# Generated grading/run outputs inside the central eval corpus
+evals/*/outputs/
+evals/**/grading.json
+evals/**/timing.json
+evals/**/benchmark*.json
+evals/**/benchmark*.md
+evals/**/review*.html
+
+# Installed-copy smoke output from `npx skills add --copy`
+.agents/
+skills-lock.json
+
+# Python and tool caches
+__pycache__/
+*.py[codz]
+tools/skill-evals/.venv/
+.pytest_cache/
+.ruff_cache/
 
 # Local review scratch directories
 .scratch-test*/
+
+# Hermetic scanner shim invocation logs
+.scan-fixture-calls/

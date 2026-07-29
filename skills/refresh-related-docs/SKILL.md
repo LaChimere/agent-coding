@@ -5,79 +5,58 @@ description: Refresh Markdown documentation when evidence shows completed behavi
 
 # Refresh Related Docs
 
-## Operating context
+## Classify targets before editing
 
-This skill operates within the workflow coordinated by `workflow-orchestrator` and its bundled framework contract.
+**Hard stop:** never edit a newly discovered `AGENTS.md` in the same turn that proposes it. End that branch after the concrete proposal and approval question; edit only after a later explicit approval.
 
-Use the active installed `workflow-orchestrator` handoff for broader workflow or planning documentation. Invoke it only when phase or approval is unresolved. Do not rely on repository-source paths.
+Before any edit, sort each target:
 
-This skill may be invoked after evidence shows documentation is stale. It does not enter plan mode. Its lightweight approval rule applies only to targets not already named by the user or approved workflow.
+- **Named or already approved** — the user or an active approved workflow named this document and the change. Edit it for exactly that stated purpose; do not re-ask.
+- **Newly discovered or expanded** — anything you found yourself, an unrelated section, or a wider set than requested. Ask one focused approval question first, then edit only what is approved.
 
-Because changes to `AGENTS.md` affect future maintenance, a blanket "update docs" request does not automatically include it. A request that explicitly names `AGENTS.md` and the intended change is approval for that scope.
+When stopping for that approval, include both:
 
-## Overview
+```text
+Proposed change: <file + exact old value -> new value, and why>
+Approval needed: update <file> for <stated reason>?
+```
 
-Keep documentation aligned with confirmed work. Search narrowly for related documents, preserve each file's style, and avoid approval loops for targets the user already named.
+Saying only "deferred", "pending approval", or "high impact" is incomplete. Do not finish that branch until the concrete old-to-new proposal and direct approval question are present.
 
-## Non-negotiables
+Rules that never bend:
 
-- Treat explicitly named document targets as approved for the stated purpose.
-- Ask before editing newly discovered files, unrelated sections, or an expanded documentation set.
-- If the user declines or does not respond, skip doc edits and proceed with the task result.
-- Preserve each document's tone, headings, formatting, and organization; make minimal, targeted edits.
-- Update docs only to reflect confirmed changes; do not invent features or rewrite unrelated sections.
+- A blanket "update the docs" or "update all docs" request never includes `AGENTS.md`. It is high-impact contributor guidance: show the specific proposed change and its maintenance impact, then ask. A request naming `AGENTS.md` approves only the change it states.
+- A declined target stays untouched. Record the deferral and do not ask again.
+- Silence or no response is not approval.
+- A document under active external review is off limits unless the user explicitly names it; editing it can override reviewer feedback.
 
-## Discover the documentation structure
+## Inspection is not authorization
 
-Determine the repository's documentation authority from its contributor guidance, links, directory structure, and existing references. Common surfaces include:
+"Find", "assess", or "list stale docs" is a report request. Return the candidate list and what is stale in each, end with the proposed-change/approval-needed form above, and make no edits until answered. Edit unasked only when the user also asked to update, or an approved workflow already covers those files.
 
-- a project-specific documentation directory such as `docs/` or `documentation/`
-- `plans/{slug}/` — planning slugs (`research.md`, `design.md`, `plan.md`, `todo.md`). These carry execution constraints derived from the canonical design, not the design itself.
-- `AGENTS.md` — the repo-local contributor guidance for agents working on this repository. Changes here affect how future maintenance work is performed.
-- `README.md`, runbooks, and feature-specific guides.
+## Scope
 
-Do not assume a directory is canonical merely because it is named `docs/`. When a change affects product semantics, update the repository's actual authority. When it affects only execution status, update the plan surface only.
+Runs after confirmed work makes documentation stale. Never enter plan mode or produce plan artifacts. Consume the active installed `workflow-orchestrator` handoff only when phase or approval is unresolved; never rely on repository-source paths.
 
-## Workflow
+Skip entirely for internal-only changes no user- or contributor-facing document describes; report the no-op instead of opening an approval loop.
 
-### 1) Detect doc-worthy changes
+## Find the right documents
 
-- Trigger when confirmed changes affect documented behavior, usage, configuration, interfaces, examples, or maintenance workflow.
-- Do not trigger for internal-only refactors that cannot make user or contributor documentation stale.
+Determine the repository's real documentation authority from contributor guidance, links, and existing references. Do not assume a directory is canonical because it is named `docs/`; a deprecation notice or pointer elsewhere overrides the name.
 
-### 2) Find related docs
+Search from what actually changed: feature names, endpoints, config keys, commands, public identifiers. Build a short candidate list; prefer few relevant documents over broad, noisy ones. Common surfaces: the documentation directory, `README.md`, runbooks and guides, `plans/{slug}` artifacts (execution constraints only, never product design), and `AGENTS.md`.
 
-- Discover the repo's documentation entry points before selecting targets.
-- Search from changed feature names, endpoints, config keys, commands, or public identifiers.
-- Build a concise candidate list; prefer fewer, relevant docs over broad, noisy updates.
+## Propose, then update
 
-### 3) Ask for approval
+Summarize the change in 1-3 bullets and list the documents you intend to touch, separating approved targets from new candidates. Ask one question covering only the new candidates.
 
-- Summarize the change in 1-3 bullets and list the docs you plan to update.
-- Separate already approved named targets from newly discovered candidates.
-- Ask one focused question only for the new or expanded candidates.
-- For a high-impact candidate such as `AGENTS.md`, show the specific proposed change and why it is related before asking.
-- If the user declines a candidate, leave it untouched and report the deferral.
-- If approval is declined or absent, still report the underlying task result and identify which documentation remains stale.
+In each approved document, mirror its heading hierarchy, bullet style, and voice; read the paragraphs around the edit site first so you do not homogenize its tone. Prefer editing an existing section over adding one. Update only the examples, parameters, and outputs this change affects; file unrelated staleness as follow-up. After editing planning files, cross-check the canonical design document and flag drift.
 
-### 4) Update with style preservation (only after approval)
+## Report
 
-- Open each approved document and mirror its existing structure:
-  - Keep heading hierarchy, bullet style, voice, and formatting conventions.
-  - Prefer editing existing sections over adding new ones.
-  - Update examples, parameters, and expected outputs to match the change.
-- Keep edits minimal and directly tied to the confirmed change.
-- After editing planning files, cross-check the repository's corresponding canonical product or design document when one exists; flag any drift.
+List the documents updated, deferred, and still stale. Report the underlying task result even when doc edits were declined or absent. Raise remaining gaps as follow-up questions rather than acting on them.
 
-### 5) Report updates
+Before sending the final response:
 
-- List the documents updated and summarize the changes.
-- Call out any uncertainties or doc gaps and ask follow-up questions if needed.
-
-## Gotchas
-
-- **Don't touch docs under active external review.** If a canonical design doc is currently out for review, do not edit it unless the user explicitly says so. Edits during review can cause merge conflicts or silently override reviewer feedback.
-- **Don't let plans and canonical docs drift.** When the repository has a separate product/design authority, cross-check it after changing related planning constraints.
-- **Don't rewrite tone.** It is easy to accidentally homogenize a doc's voice when making targeted edits. Read a few paragraphs around your edit site before writing so you match the existing style.
-- **Don't expand scope.** When detecting doc-worthy changes, resist the urge to also fix unrelated stale sections you notice. Only touch what the current change requires; file the rest as follow-up.
-- **`AGENTS.md` is high-impact.** A broad docs request does not include it automatically; an explicitly named `AGENTS.md` change is approved only for the stated purpose.
+- If a newly discovered `AGENTS.md` lacks approval, include the literal labels `Proposed change:` and `Approval needed:`, then stop that branch.
+- List every declined or unapproved target under deferred or still stale, with its path and reason.

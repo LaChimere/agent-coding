@@ -1,0 +1,52 @@
+{
+  "schema": "skill-evals/trigger-suite-v1",
+  "suite_name": "trigger-composition-seeds",
+  "cases": [
+    {
+      "id": "orchestrator-vs-direct-worker",
+      "prompt": "An approved plan asks for one implementation slice. Which skill owns it?",
+      "expected_skills": ["execute-plan-loop"],
+      "forbidden_skills": ["workflow-orchestrator"],
+      "expectations": ["Consume the approved handoff directly.", "Do not create an orchestrator loop."],
+      "grading": [{"type": "text_contains", "value": "execute-plan-loop"}]
+    },
+    {
+      "id": "goal-vs-executor",
+      "prompt": "Use /goal to ship an approved import plan and preserve long-lived goal status.",
+      "expected_skills": ["achieve-goal", "execute-plan-loop"],
+      "expectations": ["Goal owns lifecycle state.", "Executor owns one verified implementation slice."],
+      "grading": [{"type": "text_regex", "pattern": "achieve-goal.*execute-plan-loop|execute-plan-loop.*achieve-goal"}]
+    },
+    {
+      "id": "decompose-vs-atomic",
+      "prompt": "A broad feature spans auth, API, migrations, and UI; decide whether to split it before implementation.",
+      "expected_skills": ["decompose-feature"],
+      "related_skills": ["ensure-atomic-pr"],
+      "expectations": ["Create trunk-safe PR slices.", "Use atomicity assessment for an already mixed diff."],
+      "grading": [{"type": "text_contains", "value": "decompose-feature"}]
+    },
+    {
+      "id": "decompose-vs-parallel",
+      "prompt": "The approved PR slices have independent owners and worktrees. Plan safe simultaneous work.",
+      "expected_skills": ["plan-parallel-work"],
+      "related_skills": ["decompose-feature"],
+      "expectations": ["Specify ownership and dependencies.", "Do not use decomposition merely because agents are parallel."],
+      "grading": [{"type": "text_contains", "value": "plan-parallel-work"}]
+    },
+    {
+      "id": "docs-direct-vs-broad-refresh",
+      "prompt": "Update the explicitly named API guide, then assess whether newly discovered docs are stale.",
+      "expected_skills": ["refresh-related-docs"],
+      "expectations": ["The named guide is directly approved.", "Request approval before broad discovered-document expansion."],
+      "grading": [{"type": "text_contains", "value": "refresh-related-docs"}]
+    },
+    {
+      "id": "image-scan-vs-source-security",
+      "prompt": "Scan registry.example.com/payments:4.2 for CVEs; do not audit source code.",
+      "expected_skills": ["scan-image-vulnerabilities"],
+      "forbidden_skills": ["security-review"],
+      "expectations": ["Route directly to read-only image scanning.", "Do not convert an image-CVE request into source security review."],
+      "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "scan-image-vulnerabilities"}}]
+    }
+  ]
+}

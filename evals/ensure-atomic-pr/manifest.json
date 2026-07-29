@@ -1,0 +1,17 @@
+{
+  "skill_name": "ensure-atomic-pr",
+  "default_category": "regression_guard",
+  "critical_ids": [1],
+  "critical_expectations": {
+    "1": [0, 1, 2, 3, 4]
+  },
+  "behavior_change_ids": [1, 2, 4, 5, 6],
+  "redundant_ids": [],
+  "behavior_change_rationale": {
+    "1": "The case now supplies status/rename-branch.md and status/rename.diff showing the rename and its coupled semantic tweak as state already committed on the current branch, not a proposal for a future/not-yet-started feature, so the agent evaluates real evidence instead of an abstract description.",
+    "2": "No repository diff or file state is provided for this case by design; the prompt now says so explicitly so the agent evaluates strictly from the stated description instead of assuming files or a diff that do not exist, which would create an inconsistent grading premise.",
+    "4": "Tests and directly coupled docs stay with the behavior they verify. The case now supplies a real discount implementation, its regression tests, its coupled formula doc, and the diff/status fixtures that land them together in one commit, so the expectations are graded against concrete evidence rather than an abstract description.",
+    "5": "Splits are organized by logical purpose instead of artifact type.",
+    "6": "Every proposed unit includes acceptance, validation, and intermediate-state evidence."
+  }
+}

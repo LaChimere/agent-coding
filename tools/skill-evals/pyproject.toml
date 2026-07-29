@@ -1,0 +1,16 @@
+[project]
+name = "agent-coding-skill-evals"
+version = "0.1.0"
+description = "Provider-neutral Agent Skills evaluation harness"
+requires-python = ">=3.14"
+dependencies = []
+
+[dependency-groups]
+dev = [
+    "pytest>=9.1.1",
+    "ruff>=0.16.0",
+    "ty>=0.0.64",
+]
+
+[tool.uv]
+package = false

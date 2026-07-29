@@ -1,0 +1,7 @@
+exit_code=1
+2026-07-28T00:00:00Z FATAL Fatal error image scan error: scan error: unable to initialize a scanner:
+  unable to initialize an image scanner: 4 errors occurred:
+    * docker error: unable to inspect the image (registry.example.com/private/billing:5.0.0): Cannot connect to the Docker daemon at unix:///var/run/docker.sock. Is the docker daemon running?
+    * containerd error: containerd socket not found: /run/containerd/containerd.sock
+    * podman error: unable to initialize Podman client: no podman socket found
+    * remote error: GET https://registry.example.com/v2/private/billing/manifests/5.0.0: UNAUTHORIZED: authentication required; [map[Action:pull Class: Name:private/billing Type:repository]]

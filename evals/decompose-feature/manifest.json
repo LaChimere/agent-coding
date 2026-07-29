@@ -1,0 +1,16 @@
+{
+  "skill_name": "decompose-feature",
+  "default_category": "regression_guard",
+  "critical_ids": [1],
+  "critical_expectations": {
+    "1": [0, 1, 2, 4]
+  },
+  "behavior_change_ids": [1, 4, 5, 6],
+  "redundant_ids": [],
+  "behavior_change_rationale": {
+    "1": "The prompt now states this is real code already on an existing branch, not a proposal for a future/not-yet-started feature, so 'commits' language on expectation index 3 ('May separate mechanical and semantic work with commits') is grounded in an actual branch. That expectation stays conditional ('may') and outside critical_expectations because a single indivisible PR need not contain more than one commit.",
+    "4": "Low-coupling work should default to vertical slices.",
+    "5": "A base PR requires evidence of a real shared dependency.",
+    "6": "Advisory decomposition does not force workflow artifacts or gates. The essential bar for this case is a provisional, inline breakdown; 'Does not create planning artifacts', 'Does not require Gate 1', and 'Offers materialization as an optional next step' are supporting signals of that same advisory-mode requirement, not independent hard gates."
+  }
+}

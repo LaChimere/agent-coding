@@ -1,0 +1,17 @@
+$ npm test
+> csv-normalizer@0.2.0 test
+> node --test
+
+ok 1 - trims, lowercases, and collapses separators
+not ok 2 - strips leading and trailing underscores
+  expected 'unit_price_usd', got 'unit_price_usd_'
+not ok 3 - replaces an empty result with its column position
+  expected [ 'name', 'column_2', 'column_3' ], got [ 'name', '_', '_' ]
+not ok 4 - suffixes collisions in header order
+  expected [ 'total_amount', 'total_amount_2', 'total_amount_3' ], got [ 'total_amount', 'total_amount', 'total_amount' ]
+not ok 5 - expands currency symbols to their ISO code
+  expected 'total_eur', got 'total_'
+
+# tests 5
+# pass 1
+# fail 4

@@ -5,253 +5,102 @@ description: Determine the next workflow phase or repair workflow state when app
 
 # Purpose
 
-Act as the **front door** for this workflow.
+Decide the next workflow step and hand it off. This skill routes; it does not implement.
 
-This skill does not replace the worker skills. It decides:
-- which workflow phase applies now
-- which `plans/{slug}` artifacts must exist
-- which worker skill should handle the next step
-- when to stop for approval, review, or missing information
+It decides which phase applies now, which `plans/{slug}` artifacts must exist, which worker skill acts next, and when to stop for approval or missing information.
 
 # Use this skill when
 
-- The user wants one entry point that can take a request from discovery to execution
-- The user asks how the existing skills should cooperate on a task
-- The user has a feature/problem statement, but the correct next skill is not obvious yet
-- The user wants the agent to create or update the slug artifacts and then continue with the right workflow
-- The work may need planning, execution, diff recovery, review, or doc refresh in sequence
+- The correct next skill is not obvious, or the work may need planning, execution, recovery, review, or doc refresh in sequence
+- The user asks how the installed skills should cooperate, or wants slug artifacts created before work continues
+- Approval state or the primary worker is unresolved
 
 # Do not use this skill when
 
-- The correct worker skill is already obvious and the user is explicitly asking for that narrower workflow
-- The task is a tiny one-off edit that clearly does not need slug artifacts or cross-skill coordination
+- The right worker is already obvious and the user asked for that narrower workflow
+- The task is a tiny one-off edit needing no artifacts or cross-skill coordination
 
-# Operating model
+# Reference material
 
-## 1) Load the bundled contract first
+Read a reference only when the trigger below applies. Do not load them by default.
 
-Read the bundled `references/workflow-contract.md` relative to this installed skill before making orchestration decisions.
+| Read | When |
+|---|---|
+| `references/approval-gates.md` | Deciding whether a gate, approval, landing mode, fast path, or verification level blocks the next step |
+| `references/worker-routing.md` | Choosing between workers, defining companion boundaries, or handling an unavailable worker |
+| `references/workflow-contract.md` | A caller asks for the legacy contract index |
 
-That file is the portable summary of the framework rules this skill needs:
-- discovery expectations
-- grounded investigation rules
-- plan-mode triggers
-- artifact layout
-- approval gates
-- verification rules
-- implementation quality posture
-- worker-skill routing
+Repo-local `AGENTS.md` supplies project-specific rules only (validation commands, ownership notes, doc expectations). It is not the orchestration contract.
 
-## 2) Use repo-local `AGENTS.md` only for project-specific rules
+Use this skill's bundled `templates/` to create missing artifacts; the repo-local `plans/{slug}` files are the runtime truth after creation.
 
-If the repository also has `AGENTS.md`, treat it as the source for **project-local contributor rules** such as:
+# Procedure
 
-- validation command preferences
-- hot-file or directory ownership notes
-- repo maintenance conventions
-- documentation expectations for that specific repository
+## 1) Classify from evidence
 
-Do **not** treat repo-root `AGENTS.md` as the orchestration contract for the skill graph. That coordination logic lives in this skill and `references/workflow-contract.md`.
+Pick the current state: **discovery**, **design**, **plan**, **execution ready**, **recovery/review**, **doc refresh**, or **direct inspection**.
 
-## 3) Use skill-local templates to create runtime artifacts
+If the request names a file, symbol, slug, diff, or failing test, inspect it (or route to a step that does) before making codebase claims. If evidence contradicts the request or the tests, report the conflict instead of routing toward a workaround. Never route to a throwaway script or fixture rewrite whose purpose is making visible tests pass; normal repository tooling (build scripts, migrations, fixture generators, CI utilities) is fine when it is part of the real solution or verification path.
 
-When `plans/{slug}` artifacts are missing or need to be bootstrapped, use this skill's bundled `templates/` directory as the source material.
+## 2) Resolve the slug before creating anything
 
-Write the runtime artifacts into the repository under:
+- **Existing slug wins.** If the request names or implies an existing `plans/{slug}`, continue it. Never open a second slug for work an existing plan already covers.
+- New work gets one short kebab-case slug matching one logical purpose (`add-auth-middleware`, not `misc-fixes`).
+- One approved plan plus a request for persistent goal status is still **one** slug: `achieve-goal` keeps the outer lifecycle in `plans/{slug}/goal.md`, and the approved implementation scope goes to `execute-plan-loop`. Record `achieve-goal` as the primary worker and `execute-plan-loop` as the delegated executor under companions. Every executor result returns to the lifecycle layer: verified progress may increment the goal turn, while a blocker updates goal status without a turn increment. Never leave the requested overall status only in plan/todo artifacts. Do not invent a new objective, and do not let the lifecycle layer own the executor's slice, verification, or commit cadence.
 
-`plans/{slug}/research.md`
-`plans/{slug}/design.md`
-`plans/{slug}/plan.md`
-`plans/{slug}/todo.md`
-`plans/{slug}/lessons.md`
+## 3) Materialize the minimum artifacts
 
-The bundled templates are the creation source. The repo-local `plans/{slug}` files are the runtime truth.
+Create only what the current phase needs: `research.md` (evidence), `design.md` (trade-off review), `plan.md` + `todo.md` (approved executable sequence), `lessons.md` (after a material correction). Reuse existing artifacts instead of duplicating them. No files for ceremony.
 
-# Orchestration procedure
+## 4) Pick one primary worker
 
-## 1) Classify the request
+| Worker | Primary when |
+|---|---|
+| `decompose-feature` | The work exceeds one reviewable PR or the PR sequence is unclear |
+| `plan-parallel-work` | Multiple agents need branch/path ownership and merge order |
+| `execute-plan-loop` | Scope is approved or trivially safe and needs verified slice execution |
+| `achieve-goal` | The user set a persistent objective (`/goal`-style) needing status, pause/resume/clear, or a completion audit |
+| `ensure-atomic-pr` | An existing diff, branch, or PR mixes concerns |
+| `refresh-related-docs` | Broader Markdown docs may be stale beyond slice-local files |
+| `scan-image-vulnerabilities` | Container images or Trivy findings need read-only inspection: exact image reference, freshly refreshed database, no slug artifacts, no gates |
 
-Decide which state the work is currently in:
+Add `anti-slop` only for an explicit quality request, pre-commit readiness, scope/add-only/fix-on-fix signals, or a meaningful/high-risk milestone. Routine implementation uses the executor's compact quality invariants. It never becomes the primary owner or adds a second review loop.
 
-- **Discovery needed** — key facts or scope are still unclear
-- **Design needed** — trade-offs or workflow shape must be reviewed
-- **Plan needed** — implementation steps should be written before execution
-- **Execution ready** — approved scope can move forward
-- **Recovery/review needed** — an existing diff or branch lost atomicity
-- **Doc refresh needed** — broader Markdown docs may be stale
-- **Direct inspection** — a read-only specialist can answer without plan artifacts
+When safety, validation, or error handling is in scope, route boundary-first: validate external inputs where untrusted data enters, surface operational failures (I/O, network, permission, timeout, resource) where they occur, and skip redundant checks for internal states existing invariants already guarantee. Blanket defensive coding is not the definition of safety.
 
-Ground the classification in evidence. If the user references a concrete file, symbol, plan slug, diff, or test failure and the evidence is not already available, route first to discovery/research or the appropriate worker step with explicit instructions to inspect it before making codebase claims. If available evidence contradicts the request or tests, stop and report the conflict rather than routing toward a workaround.
+## 5) Check approval and worker availability
 
-Also decide whether the task is:
-- a new slug
-- a continuation of an existing slug
-- a direct small task that still benefits from orchestration
+Continue only when required approval is recorded in the active state (not implied by a file existing) and the landing mode is recorded. Default landing mode is `working_tree`; commits, destructive actions, and external side effects need explicit authorization. See `references/approval-gates.md` when a gate decision is unclear.
 
-## 2) Derive and normalize the slug
+If the selected worker is not installed, do not claim a handoff occurred. Name the missing worker, state the required action (install it, approve a bounded contract-equivalent fallback in this environment, or supply the missing decision), and stop unless the fallback is already safe and authorized.
 
-Choose a short kebab-case slug that matches the task's one logical purpose.
+If the request, slug, recorded gate, `plans/{slug}` artifacts, and next worker disagree, reconcile them before routing and state which surface was stale or incorrect.
 
-Prefer:
-- `add-auth-middleware`
-- `parallelize-report-import`
-- `workflow-orchestrator-skill`
-
-Avoid broad or mixed slugs like:
-- `misc-fixes`
-- `auth-and-ci-and-docs`
-
-## 3) Materialize the minimum artifact set
-
-Create or update only the artifacts needed for the current phase:
-
-- `research.md` when discovery or evidence capture is needed
-- `design.md` when workflow/architecture trade-offs need review
-- `plan.md` and `todo.md` once the implementation path is stable enough to execute
-- `lessons.md` only after a material correction or reusable process failure
-
-Do not create files just for ceremony. Create them when they clarify the workflow or are required by the contract.
-
-## 4) Pick the next worker skill
-
-Choose one primary worker. Add companions only when they provide a distinct supporting role.
-
-### `decompose-feature`
-Use when:
-- the request is too large for one PR
-- the PR sequence itself is still unclear
-- staged delivery or stacked PRs are needed
-
-Output expectation:
-- a proposed PR sequence
-- acceptance criteria and validation per PR
-
-### `plan-parallel-work`
-Use when:
-- multiple agents need explicit ownership boundaries
-- a base PR must stabilize before fan-out
-- branch/worktree/path ownership must be defined
-
-Output expectation:
-- base prerequisite
-- parallel task table
-- merge strategy
-
-### `execute-plan-loop`
-Use when:
-- scope is approved or clearly trivial
-- the next need is disciplined implementation in atomic verified slices
-- the user wants the agent to keep going until a meaningful slice is done
-
-Output expectation:
-- verified slice-by-slice execution, commits only in `commits` landing mode, progress refreshes, and milestone review
-
-### `achieve-goal`
-Use when:
-- the user sets a persistent objective with `/goal <objective>` or equivalent language
-- the user wants autonomous goal pursuit with pause/resume/clear semantics
-- the work should keep re-anchoring to a long-running objective until complete, blocked, paused, or budget-limited
-
-Output expectation:
-- a goal state under `plans/{slug}/goal.md`
-- repeated verified slices with progress updates
-- a clear stop condition and completion, budget, or blocker report
-
-### `ensure-atomic-pr`
-Use when:
-- an existing diff, branch, or PR mixes concerns
-- the current change no longer fits one logical purpose
-- recovery guidance is needed before continuing
-
-Output expectation:
-- a cleaner split or explicit recovery path
-
-### `refresh-related-docs`
-Use when:
-- broader Markdown docs may be stale after a behavior/config/API change
-- the update extends beyond tightly coupled slice-local docs/status files
-
-Output expectation:
-- approved doc refresh across the affected Markdown surfaces
-
-### `anti-slop`
-Use as a companion when:
-- implementation is being written, changed, or reviewed
-- the task needs explicit checks for unnecessary work, duplication, or accumulating complexity
-
-It does not become the primary owner of planning, implementation cadence, or commits. Its milestone review should satisfy the executor's matching review checkpoint rather than creating a duplicate review loop.
-The handoff stops when the primary worker returns the requested verified slice or milestone evidence; state that boundary in the routing result.
-
-### `scan-image-vulnerabilities`
-Route directly when:
-- the request is to inspect container images, workload image references, or Trivy findings
-
-This is read-only inspection outside plan mode. Do not create slug artifacts or implementation gates unless the user separately asks for remediation work.
-Require the exact image reference and a successfully refreshed vulnerability database before accepting scan findings.
-
-## 5) Handle unavailable workers
-
-Installed workers may be absent.
-
-- Do not claim a handoff or invocation occurred when the skill is unavailable.
-- Report the missing capability and the intended worker by name.
-- Use a bounded contract-equivalent fallback only when the current environment can safely perform the same work.
-- Otherwise stop with the smallest installation or user action needed to continue.
-
-## 6) Keep the state surfaces synchronized
-
-As the workflow moves, keep these aligned:
-
-- the active request
-- the chosen slug
-- the current gate/phase
-- the repo-local `plans/{slug}` files
-- the worker skill that should act next
-
-If those surfaces disagree, fix the artifact/state mismatch before continuing.
-
-## 7) Return a routing result
-
-Before handing off or stopping, make the decision auditable:
+## 6) Return the structured handoff
 
 ```text
-Phase: <current phase>
+Phase: <discovery|design|plan|execution|recovery|docs|inspection>
+Scope: <slug + the one logical purpose being handed off>
 Evidence: <files, artifacts, approvals, or facts used>
-Artifacts: <created, updated, or none>
-Approval: <not-needed|missing|recorded>
+Approval: <not-needed|missing|recorded: quote or artifact>
 Landing: <working_tree|commits>
+Acceptance: <criteria or evidence the worker must return>
 Primary worker: <skill name or none>
 Companions: <skill names or none>
-Stop reason: <handoff, approval, blocker, complete, or none>
+Artifacts: <created, updated, or none>
+Worker availability: <available|missing: required action>
+Stop reason: <handoff|approval|blocker|complete|none>
 ```
 
-Keep the user-facing form concise, but do not omit a missing approval, missing worker, or blocker.
+Keep the user-facing form concise, but never drop a missing approval, missing worker, or blocker. The handoff ends when the worker returns the named acceptance evidence; say so explicitly.
 
-## 8) Stop at the right boundary
+## 7) Stop at the right boundary
 
-Stop and wait when:
-- key scope or expected behavior is still unclear
-- the contract says a gate is required
-- design/plan drift invalidates the current path
-- the next action would mix concerns or silently expand scope
-
-Continue directly when:
-- the next phase is clear
-- the required artifacts already exist or can be created safely
-- the appropriate worker skill is obvious
-- any required approval is recorded in the active state, not merely implied by an artifact's existence
-- the landing mode is recorded before implementation begins
-
-# Strong preferences
-
-- Prefer creating the missing slug artifacts over describing them abstractly.
-- Prefer a concrete next worker skill over a vague "someone should figure this out."
-- Prefer preserving the existing `plans/{slug}` runtime layout over inventing a new one.
-- Prefer a bounded first step over trying to solve framework portability, orchestration, and full worker-skill refactoring in one pass.
+Stop when scope is unclear, a gate is required, design/plan drift invalidates the path, or the next action would mix concerns or silently expand scope. Otherwise continue with the chosen worker.
 
 # Gotchas
 
-- **Thin-wrapper trap.** If this skill merely punts coordination back to repo-root files, it has not actually integrated the framework.
-- **Artifact spam.** Do not create every possible file up front when only one or two are needed right now.
-- **Routing without state.** Choosing a worker skill without first checking which artifacts and approvals already exist leads to bad handoffs.
-- **Overclaiming portability.** This skill can carry the orchestration contract itself, but the wider framework may still have repo-local assumptions. Be explicit about that boundary.
+- **Thin wrapper.** Punting coordination back to repo-root files is not orchestration.
+- **Duplicate slug/goal.** Adding a parallel goal or plan next to an approved one splits the state surfaces.
+- **Artifact spam.** Do not pre-create every file.
+- **Routing without state.** Check existing artifacts and approvals before choosing a worker.

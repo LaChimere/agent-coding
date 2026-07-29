@@ -1,0 +1,3252 @@
+{
+  "cases": [
+    {
+      "direction": "should_trigger",
+      "expectations": [
+        "Recognizes the explicit /goal command.",
+        "Starts a persistent objective with acceptance criteria."
+      ],
+      "expected_skills": [
+        "achieve-goal"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "achieve-goal"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "goal-explicit-ship-command",
+      "prompt": "/goal Ship the payments retry feature end to end, tracking status until it's fully done."
+    },
+    {
+      "direction": "should_trigger",
+      "expectations": [
+        "Reports durable goal status.",
+        "Does not silently start new work instead of reporting status."
+      ],
+      "expected_skills": [
+        "achieve-goal"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "achieve-goal"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "goal-status-query",
+      "prompt": "/goal status"
+    },
+    {
+      "direction": "should_trigger",
+      "expectations": [
+        "Pauses the active goal's lifecycle.",
+        "Preserves resumable state."
+      ],
+      "expected_skills": [
+        "achieve-goal"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "achieve-goal"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "goal-pause-command",
+      "prompt": "/goal pause"
+    },
+    {
+      "direction": "should_trigger",
+      "expectations": [
+        "Resumes the paused goal.",
+        "Continues from the recorded checkpoint."
+      ],
+      "expected_skills": [
+        "achieve-goal"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "achieve-goal"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "goal-resume-command",
+      "prompt": "/goal resume"
+    },
+    {
+      "direction": "should_trigger",
+      "expectations": [
+        "Clears the persistent goal state.",
+        "Confirms the objective is no longer tracked."
+      ],
+      "expected_skills": [
+        "achieve-goal"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "achieve-goal"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "goal-clear-command",
+      "prompt": "/goal clear"
+    },
+    {
+      "direction": "should_trigger",
+      "expectations": [
+        "Recognizes continuation of an existing active goal.",
+        "Keeps durable status instead of restarting from scratch."
+      ],
+      "expected_skills": [
+        "achieve-goal"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "achieve-goal"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "goal-continue-active-objective",
+      "prompt": "Continue working on the active goal from yesterday about migrating the billing service to the new provider."
+    },
+    {
+      "direction": "should_trigger",
+      "expectations": [
+        "Establishes lifecycle tracking across explicit phases.",
+        "Defines acceptance criteria for the persistent objective."
+      ],
+      "expected_skills": [
+        "achieve-goal"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "achieve-goal"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "goal-multiphase-tracking",
+      "prompt": "I want to track a persistent objective to eliminate flaky CI across three phases: triage, fix, and verification, checking status periodically."
+    },
+    {
+      "direction": "should_trigger",
+      "expectations": [
+        "Resumes a previously paused persistent goal.",
+        "Reports the recorded state before continuing."
+      ],
+      "expected_skills": [
+        "achieve-goal"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "achieve-goal"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "goal-resume-paused-onboarding",
+      "prompt": "We paused the onboarding-redesign goal last week for a launch freeze; resume it now and tell me exactly where it left off."
+    },
+    {
+      "direction": "should_not_trigger",
+      "expectations": [
+        "Consumes the already-approved plan step directly.",
+        "Does not wrap a single approved slice in new goal lifecycle state."
+      ],
+      "expected_skills": [
+        "execute-plan-loop"
+      ],
+      "forbidden_skills": [
+        "achieve-goal"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "execute-plan-loop"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "goal-vs-executor-approved-step",
+      "prompt": "Implement the next step in plans/import-pipeline/plan.md; it's already approved, so there's no need to open a persistent goal for it."
+    },
+    {
+      "direction": "should_not_trigger",
+      "expectations": [
+        "Routes the ambiguous, unplanned request to the front door.",
+        "Does not start persistent goal tracking before a plan exists."
+      ],
+      "expected_skills": [
+        "workflow-orchestrator"
+      ],
+      "forbidden_skills": [
+        "achieve-goal"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "workflow-orchestrator"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "goal-vs-orchestrator-no-plan-yet",
+      "prompt": "We don't have a plan yet for this request and it's not clear what phase we're even in; figure that out before tracking anything long-term."
+    },
+    {
+      "direction": "should_not_trigger",
+      "expectations": [
+        "Splits the oversized feature into a trunk-safe sequence.",
+        "Does not treat a decomposition request as a lifecycle-tracking request."
+      ],
+      "expected_skills": [
+        "decompose-feature"
+      ],
+      "forbidden_skills": [
+        "achieve-goal"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "decompose-feature"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "goal-vs-decompose-oversized-feature",
+      "prompt": "This feature is too big for one PR — help me split it into stacked, mergeable slices."
+    },
+    {
+      "direction": "should_not_trigger",
+      "expectations": [
+        "Handles the trivial one-line fix directly.",
+        "Does not open persistent goal state for a single typo."
+      ],
+      "expected_skills": [
+        "none"
+      ],
+      "forbidden_skills": [
+        "achieve-goal"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "none"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "goal-vs-none-trivial-typo",
+      "prompt": "Just fix this one typo in the README; it's a one-line change."
+    },
+    {
+      "direction": "should_not_trigger",
+      "expectations": [
+        "Answers the definitional question directly.",
+        "Does not start tracking a persistent objective from a curiosity question."
+      ],
+      "expected_skills": [
+        "none"
+      ],
+      "forbidden_skills": [
+        "achieve-goal"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "none"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "goal-vs-none-definitional-question",
+      "prompt": "What does 'goal' mean in our project vocabulary? Just curious, not asking to track anything right now."
+    },
+    {
+      "direction": "should_not_trigger",
+      "expectations": [
+        "Assesses the commit's atomicity.",
+        "Does not reinterpret an atomicity check as goal tracking."
+      ],
+      "expected_skills": [
+        "ensure-atomic-pr"
+      ],
+      "forbidden_skills": [
+        "achieve-goal"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "ensure-atomic-pr"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "goal-vs-atomic-review-last-commit",
+      "prompt": "Review my last commit for atomicity, not for any long-term lifecycle tracking."
+    },
+    {
+      "direction": "should_not_trigger",
+      "expectations": [
+        "Answers the one-off status question directly.",
+        "Does not start persistent tracking for a request explicitly scoped as one-off."
+      ],
+      "expected_skills": [
+        "none"
+      ],
+      "forbidden_skills": [
+        "achieve-goal"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "none"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "goal-vs-none-oneoff-status",
+      "prompt": "Give me a one-off status update on CI test flakiness right now; I don't need this tracked going forward."
+    },
+    {
+      "direction": "should_not_trigger",
+      "expectations": [
+        "Plans worktree and ownership boundaries for the parallel agents.",
+        "Does not substitute goal tracking for parallel-work planning."
+      ],
+      "expected_skills": [
+        "plan-parallel-work"
+      ],
+      "forbidden_skills": [
+        "achieve-goal"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "plan-parallel-work"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "goal-vs-parallel-worktrees",
+      "prompt": "We have three agents about to work in parallel on this repo; set up their worktrees and ownership boundaries."
+    },
+    {
+      "direction": "should_trigger",
+      "expectations": [
+        "Audits the change for scope creep.",
+        "Checks whether the performance claim is actually supported by evidence."
+      ],
+      "expected_skills": [
+        "anti-slop"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "anti-slop"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "slop-scope-creep-after-caching",
+      "prompt": "I just added a caching layer to the checkout service; before we call it done, check for scope creep and any unsupported performance claims."
+    },
+    {
+      "direction": "should_trigger",
+      "expectations": [
+        "Flags duplicated logic against existing code.",
+        "Flags speculative complexity not required by the task."
+      ],
+      "expected_skills": [
+        "anti-slop"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "anti-slop"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "slop-duplicated-logic-review",
+      "prompt": "Review this diff for duplicated logic and speculative complexity before we merge it."
+    },
+    {
+      "direction": "should_trigger",
+      "expectations": [
+        "Checks the milestone diff against the original scope.",
+        "Flags anything built beyond what was asked."
+      ],
+      "expected_skills": [
+        "anti-slop"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "anti-slop"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "slop-milestone-overbuild-check",
+      "prompt": "At this milestone checkpoint, verify we haven't over-built beyond what the ticket actually asked for."
+    },
+    {
+      "direction": "should_trigger",
+      "expectations": [
+        "Audits the correctness claim against actual evidence.",
+        "Does not accept the claim without verification."
+      ],
+      "expected_skills": [
+        "anti-slop"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "anti-slop"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "slop-unsupported-fix-claim",
+      "prompt": "I claimed this change resolves the race condition in the scheduler — audit whether that claim is actually backed by evidence."
+    },
+    {
+      "direction": "should_trigger",
+      "expectations": [
+        "Runs as an ongoing companion guard during implementation.",
+        "Flags unnecessary abstraction as it appears."
+      ],
+      "expected_skills": [
+        "anti-slop"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "anti-slop"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "slop-ongoing-guard-mid-implementation",
+      "prompt": "We're mid-implementation on the reporting feature; keep guarding against unnecessary abstraction as we go."
+    },
+    {
+      "direction": "should_trigger",
+      "expectations": [
+        "Questions whether the diff size matches the task.",
+        "Requires justification for the extra file changes."
+      ],
+      "expected_skills": [
+        "anti-slop"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "anti-slop"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "slop-oversized-diff-for-config-change",
+      "prompt": "This PR touches twelve files for what should be a one-line config change — check whether that's actually justified."
+    },
+    {
+      "direction": "should_trigger",
+      "expectations": [
+        "Checks for duplication against the existing rate-limiter.",
+        "Recommends reuse over duplication if found."
+      ],
+      "expected_skills": [
+        "anti-slop"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "anti-slop"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "slop-duplicate-ratelimiter-check",
+      "prompt": "Before merging, confirm this change didn't duplicate the existing rate-limiter instead of reusing it."
+    },
+    {
+      "direction": "should_trigger",
+      "expectations": [
+        "Flags speculative, unrequested configuration options.",
+        "Ties each flag back to an actual requirement."
+      ],
+      "expected_skills": [
+        "anti-slop"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "anti-slop"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "slop-speculative-flags-check",
+      "prompt": "Double-check this change doesn't add speculative configuration flags that nobody actually asked for."
+    },
+    {
+      "direction": "should_not_trigger",
+      "expectations": [
+        "Decides on PR decomposition strategy.",
+        "Does not use the always-on quality guard to make a what-to-build decision."
+      ],
+      "expected_skills": [
+        "decompose-feature"
+      ],
+      "forbidden_skills": [
+        "anti-slop"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "decompose-feature"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "slop-vs-decompose-split-decision",
+      "prompt": "Decide whether this feature should be split into multiple PRs before anyone starts implementing it."
+    },
+    {
+      "direction": "should_not_trigger",
+      "expectations": [
+        "Owns execution cadence for the approved slice.",
+        "Does not let the companion guard replace the primary executor."
+      ],
+      "expected_skills": [
+        "execute-plan-loop"
+      ],
+      "forbidden_skills": [
+        "anti-slop"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "execute-plan-loop"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "slop-vs-executor-run-next-slice",
+      "prompt": "Execute the next approved slice of the plan now."
+    },
+    {
+      "direction": "should_not_trigger",
+      "expectations": [
+        "Routes the ambiguous phase question to the front door.",
+        "Does not use the quality guard as a phase router."
+      ],
+      "expected_skills": [
+        "workflow-orchestrator"
+      ],
+      "forbidden_skills": [
+        "anti-slop"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "workflow-orchestrator"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "slop-vs-orchestrator-next-phase",
+      "prompt": "What's the next workflow phase we should be in for this ambiguous request?"
+    },
+    {
+      "direction": "should_not_trigger",
+      "expectations": [
+        "Runs the existing suite and reports the result.",
+        "Does not invoke a scope/complexity audit for a plain test run."
+      ],
+      "expected_skills": [
+        "none"
+      ],
+      "forbidden_skills": [
+        "anti-slop"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "none"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "slop-vs-none-just-run-tests",
+      "prompt": "Just run the existing test suite and tell me if it passes."
+    },
+    {
+      "direction": "should_not_trigger",
+      "expectations": [
+        "Routes the CVE scan request to image scanning.",
+        "Does not substitute a code-quality guard for a vulnerability scan."
+      ],
+      "expected_skills": [
+        "scan-image-vulnerabilities"
+      ],
+      "forbidden_skills": [
+        "anti-slop"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "scan-image-vulnerabilities"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "slop-vs-image-scan-cve",
+      "prompt": "Scan our container image for known CVEs before we ship it."
+    },
+    {
+      "direction": "should_not_trigger",
+      "expectations": [
+        "Writes tests for the not-yet-built feature.",
+        "Does not invoke a quality guard for work that doesn't decide scope."
+      ],
+      "expected_skills": [
+        "none"
+      ],
+      "forbidden_skills": [
+        "anti-slop"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "none"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "slop-vs-none-new-feature-tests",
+      "prompt": "Write brand-new unit tests for a feature we haven't built yet."
+    },
+    {
+      "direction": "should_not_trigger",
+      "expectations": [
+        "Assesses the commit's atomicity across modules.",
+        "Does not treat an atomicity question as a scope-creep audit."
+      ],
+      "expected_skills": [
+        "ensure-atomic-pr"
+      ],
+      "forbidden_skills": [
+        "anti-slop"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "ensure-atomic-pr"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "slop-vs-atomic-is-this-mergeable",
+      "prompt": "Is this commit atomic enough to merge as a single PR, given it touches three unrelated modules?"
+    },
+    {
+      "direction": "should_not_trigger",
+      "expectations": [
+        "Starts persistent goal lifecycle tracking.",
+        "Does not use the always-on guard to own multi-session lifecycle state."
+      ],
+      "expected_skills": [
+        "achieve-goal"
+      ],
+      "forbidden_skills": [
+        "anti-slop"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "achieve-goal"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "slop-vs-goal-longterm-tracking",
+      "prompt": "Track this modernization effort as a persistent goal across multiple sessions and report status periodically."
+    },
+    {
+      "direction": "should_trigger",
+      "expectations": [
+        "Splits the cross-cutting feature into trunk-safe slices.",
+        "Defines a mergeable sequence, not one giant PR."
+      ],
+      "expected_skills": [
+        "decompose-feature"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "decompose-feature"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "decompose-spans-auth-billing-notifications",
+      "prompt": "This feature spans auth, billing, and notifications and is too big for one PR — help me plan a trunk-safe sequence of slices."
+    },
+    {
+      "direction": "should_trigger",
+      "expectations": [
+        "Plans phased, mergeable delivery.",
+        "Sequences the three merges in a trunk-safe order."
+      ],
+      "expected_skills": [
+        "decompose-feature"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "decompose-feature"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "decompose-phased-onboarding-delivery",
+      "prompt": "The user asked for phased delivery of the new onboarding flow across three separate merges."
+    },
+    {
+      "direction": "should_trigger",
+      "expectations": [
+        "Splits the mixed-purpose PR before it's written.",
+        "Produces a trunk-safe sequence of slices."
+      ],
+      "expected_skills": [
+        "decompose-feature"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "decompose-feature"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "decompose-evidence-mixed-migrations-ui",
+      "prompt": "Evidence shows this PR would mix a database migration with unrelated UI changes; split it into a trunk-safe sequence before implementation."
+    },
+    {
+      "direction": "should_trigger",
+      "expectations": [
+        "Plans incremental, flagged rollout steps.",
+        "Keeps each step independently mergeable."
+      ],
+      "expected_skills": [
+        "decompose-feature"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "decompose-feature"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "decompose-incremental-rollout-flag",
+      "prompt": "We need incremental rollout of the search-reindexing feature behind a flag, delivered in mergeable steps."
+    },
+    {
+      "direction": "should_trigger",
+      "expectations": [
+        "Breaks the epic into small PRs.",
+        "Ensures each PR is independently mergeable."
+      ],
+      "expected_skills": [
+        "decompose-feature"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "decompose-feature"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "decompose-break-epic-into-prs",
+      "prompt": "Break this epic into a sequence of small, independently mergeable pull requests."
+    },
+    {
+      "direction": "should_trigger",
+      "expectations": [
+        "Decomposes the oversized PR before implementation.",
+        "Respects the review-boundary constraint."
+      ],
+      "expected_skills": [
+        "decompose-feature"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "decompose-feature"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "decompose-review-flagged-oversized-pr",
+      "prompt": "Design review flagged that this single PR would exceed our comfortable review boundary — decompose it before we start."
+    },
+    {
+      "direction": "should_trigger",
+      "expectations": [
+        "Plans a stacked sequence for the migration.",
+        "Keeps the migration trunk-safe across the stack."
+      ],
+      "expected_skills": [
+        "decompose-feature"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "decompose-feature"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "decompose-stack-rest-to-graphql",
+      "prompt": "Plan a stacked PR sequence for migrating our API from REST to GraphQL."
+    },
+    {
+      "direction": "should_trigger",
+      "expectations": [
+        "Plans progressive, sliced delivery.",
+        "Avoids one giant PR for the redesign."
+      ],
+      "expected_skills": [
+        "decompose-feature"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "decompose-feature"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "decompose-progressive-redesign-shipping",
+      "prompt": "We want to ship the checkout redesign progressively rather than as one giant PR."
+    },
+    {
+      "direction": "should_not_trigger",
+      "expectations": [
+        "Recovers the already-written mixed commit into atomic pieces.",
+        "Does not re-plan pre-implementation decomposition for already-written code."
+      ],
+      "expected_skills": [
+        "ensure-atomic-pr"
+      ],
+      "forbidden_skills": [
+        "decompose-feature"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "ensure-atomic-pr"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "decompose-vs-atomic-already-mixed-commit",
+      "prompt": "This single commit already mixes three unrelated concerns — help me recover it into atomic commits after the fact."
+    },
+    {
+      "direction": "should_not_trigger",
+      "expectations": [
+        "Plans worktrees and merge order for the already-approved slices.",
+        "Does not re-decompose work that's already been split."
+      ],
+      "expected_skills": [
+        "plan-parallel-work"
+      ],
+      "forbidden_skills": [
+        "decompose-feature"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "plan-parallel-work"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "decompose-vs-parallel-slices-already-defined",
+      "prompt": "The PR slices are already approved and defined with separate owners; now set up their worktrees and merge order."
+    },
+    {
+      "direction": "should_not_trigger",
+      "expectations": [
+        "Executes the already-scoped slice directly.",
+        "Does not invoke decomposition for work that's already sized correctly."
+      ],
+      "expected_skills": [
+        "execute-plan-loop"
+      ],
+      "forbidden_skills": [
+        "decompose-feature"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "execute-plan-loop"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "decompose-vs-executor-slice-already-scoped",
+      "prompt": "Implement the next approved slice from the plan; it's already scoped, nothing to split."
+    },
+    {
+      "direction": "should_not_trigger",
+      "expectations": [
+        "Routes the ambiguous phase question to the front door.",
+        "Does not assume decomposition before the phase is known."
+      ],
+      "expected_skills": [
+        "workflow-orchestrator"
+      ],
+      "forbidden_skills": [
+        "decompose-feature"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "workflow-orchestrator"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "decompose-vs-orchestrator-unclear-phase",
+      "prompt": "We don't know what phase we're in on this request — help me figure out the workflow state first."
+    },
+    {
+      "direction": "should_not_trigger",
+      "expectations": [
+        "Refactors the single function directly.",
+        "Does not invoke PR-splitting for a small, self-contained change."
+      ],
+      "expected_skills": [
+        "none"
+      ],
+      "forbidden_skills": [
+        "decompose-feature"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "none"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "decompose-vs-none-single-function-refactor",
+      "prompt": "Just refactor this one function for clarity; nothing here needs splitting across PRs."
+    },
+    {
+      "direction": "should_not_trigger",
+      "expectations": [
+        "Fixes the typo directly.",
+        "Does not treat a trivial fix as needing a slice plan."
+      ],
+      "expected_skills": [
+        "none"
+      ],
+      "forbidden_skills": [
+        "decompose-feature"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "none"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "decompose-vs-none-copy-typo-fix",
+      "prompt": "Fix this typo in the login page copy."
+    },
+    {
+      "direction": "should_not_trigger",
+      "expectations": [
+        "Implements the small feature directly.",
+        "Does not force decomposition on work that already fits one PR."
+      ],
+      "expected_skills": [
+        "none"
+      ],
+      "forbidden_skills": [
+        "decompose-feature"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "none"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "decompose-vs-none-small-enough-feature",
+      "prompt": "This feature is small enough for one PR — just implement it directly, no need to plan slices."
+    },
+    {
+      "direction": "should_not_trigger",
+      "expectations": [
+        "Plans conflict-avoiding boundaries for the already-assigned engineers.",
+        "Does not re-decompose work that already has assigned owners."
+      ],
+      "expected_skills": [
+        "plan-parallel-work"
+      ],
+      "forbidden_skills": [
+        "decompose-feature"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "plan-parallel-work"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "decompose-vs-parallel-three-engineers-assigned",
+      "prompt": "We already have three engineers assigned to separate directories for this large feature; help them avoid merge conflicts."
+    },
+    {
+      "direction": "should_trigger",
+      "expectations": [
+        "Assesses whether the branch is atomic enough.",
+        "Flags the mix of unrelated concerns."
+      ],
+      "expected_skills": [
+        "ensure-atomic-pr"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "ensure-atomic-pr"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "atomic-branch-grown-touches-three-areas",
+      "prompt": "This branch has grown to touch auth, docs, and a database migration — is it atomic enough to merge as one PR?"
+    },
+    {
+      "direction": "should_trigger",
+      "expectations": [
+        "Assesses the diff for mixed concerns.",
+        "Recommends splitting if warranted."
+      ],
+      "expected_skills": [
+        "ensure-atomic-pr"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "ensure-atomic-pr"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "atomic-review-flagged-mixed-concerns",
+      "prompt": "Code review flagged mixed concerns in this diff; assess whether it should be split before merging."
+    },
+    {
+      "direction": "should_trigger",
+      "expectations": [
+        "Evaluates atomicity across the unrelated modules.",
+        "Gives a clear split-or-keep recommendation."
+      ],
+      "expected_skills": [
+        "ensure-atomic-pr"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "ensure-atomic-pr"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "atomic-diff-across-three-modules",
+      "prompt": "My git diff shows changes across three unrelated modules — help me evaluate whether this is atomic."
+    },
+    {
+      "direction": "should_trigger",
+      "expectations": [
+        "Checks the diff against the commit message.",
+        "Flags the mismatch as an atomicity signal."
+      ],
+      "expected_skills": [
+        "ensure-atomic-pr"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "ensure-atomic-pr"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "atomic-commit-message-mismatch",
+      "prompt": "This commit message doesn't match what the diff actually does; check whether it's atomic."
+    },
+    {
+      "direction": "should_trigger",
+      "expectations": [
+        "Recovers the merged PR into atomic commits after the fact.",
+        "Treats atomicity assessment as usable post-merge, not just pre-merge."
+      ],
+      "expected_skills": [
+        "ensure-atomic-pr"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "ensure-atomic-pr"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "atomic-recover-already-merged-mess",
+      "prompt": "We already merged a messy PR — help recover it into smaller atomic commits after the fact."
+    },
+    {
+      "direction": "should_trigger",
+      "expectations": [
+        "Assesses whether the diff is doing too much.",
+        "Recommends a split if the diff exceeds one concern."
+      ],
+      "expected_skills": [
+        "ensure-atomic-pr"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "ensure-atomic-pr"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "atomic-single-diff-doing-too-much",
+      "prompt": "Is this one diff doing too much before I open the PR?"
+    },
+    {
+      "direction": "should_trigger",
+      "expectations": [
+        "Assesses planned atomicity before code is written.",
+        "Applies the same atomicity judgment at design time."
+      ],
+      "expected_skills": [
+        "ensure-atomic-pr"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "ensure-atomic-pr"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "atomic-design-time-atomicity-check",
+      "prompt": "During design, before writing any code, help me judge whether the planned change will be one atomic PR or several."
+    },
+    {
+      "direction": "should_trigger",
+      "expectations": [
+        "Assesses the rename-plus-behavior mix.",
+        "Recommends splitting rename from behavior change."
+      ],
+      "expected_skills": [
+        "ensure-atomic-pr"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "ensure-atomic-pr"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "atomic-rename-plus-behavior-change",
+      "prompt": "This PR mixes a rename with an actual behavior change — assess it and possibly split it."
+    },
+    {
+      "direction": "should_not_trigger",
+      "expectations": [
+        "Plans the stacked-slice sequence up front.",
+        "Does not treat pre-implementation planning as a single-diff atomicity check."
+      ],
+      "expected_skills": [
+        "decompose-feature"
+      ],
+      "forbidden_skills": [
+        "ensure-atomic-pr"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "decompose-feature"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "atomic-vs-decompose-epic-from-scratch",
+      "prompt": "This epic clearly needs to ship as multiple stacked PRs from the very start — plan out the slices."
+    },
+    {
+      "direction": "should_not_trigger",
+      "expectations": [
+        "Assigns owners and worktrees for the agreed slices.",
+        "Does not re-run an atomicity assessment that's already settled."
+      ],
+      "expected_skills": [
+        "plan-parallel-work"
+      ],
+      "forbidden_skills": [
+        "ensure-atomic-pr"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "plan-parallel-work"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "atomic-vs-parallel-slices-agreed",
+      "prompt": "The atomic slices are already agreed on; now assign owners and worktrees so people can work on them in parallel."
+    },
+    {
+      "direction": "should_not_trigger",
+      "expectations": [
+        "Audits the performance claim for evidence.",
+        "Does not substitute an atomicity check for a correctness-claim audit."
+      ],
+      "expected_skills": [
+        "anti-slop"
+      ],
+      "forbidden_skills": [
+        "ensure-atomic-pr"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "anti-slop"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "atomic-vs-slop-performance-claim",
+      "prompt": "Check whether this fix's performance claim is actually justified by evidence, not whether it's a single PR."
+    },
+    {
+      "direction": "should_not_trigger",
+      "expectations": [
+        "Executes the approved step directly.",
+        "Does not insert an atomicity review the requester didn't ask for."
+      ],
+      "expected_skills": [
+        "execute-plan-loop"
+      ],
+      "forbidden_skills": [
+        "ensure-atomic-pr"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "execute-plan-loop"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "atomic-vs-executor-just-execute",
+      "prompt": "Just execute the next approved plan step; there's no atomicity question here."
+    },
+    {
+      "direction": "should_not_trigger",
+      "expectations": [
+        "Routes the phase question to the front door.",
+        "Does not assume an atomicity review before the phase is known."
+      ],
+      "expected_skills": [
+        "workflow-orchestrator"
+      ],
+      "forbidden_skills": [
+        "ensure-atomic-pr"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "workflow-orchestrator"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "atomic-vs-orchestrator-what-phase",
+      "prompt": "What phase of the workflow are we in right now for this request?"
+    },
+    {
+      "direction": "should_not_trigger",
+      "expectations": [
+        "Routes the CVE scan to image scanning.",
+        "Does not treat a vulnerability scan as a diff-atomicity question."
+      ],
+      "expected_skills": [
+        "scan-image-vulnerabilities"
+      ],
+      "forbidden_skills": [
+        "ensure-atomic-pr"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "scan-image-vulnerabilities"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "atomic-vs-image-scan-referenced-docker",
+      "prompt": "Scan the Docker image referenced in this PR for known vulnerabilities."
+    },
+    {
+      "direction": "should_not_trigger",
+      "expectations": [
+        "Merges the trivial one-line fix directly.",
+        "Does not run an atomicity assessment on a single-line typo."
+      ],
+      "expected_skills": [
+        "none"
+      ],
+      "forbidden_skills": [
+        "ensure-atomic-pr"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "none"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "atomic-vs-none-oneline-typo-merge",
+      "prompt": "This is a one-line typo fix — just merge it, there's nothing to assess."
+    },
+    {
+      "direction": "should_not_trigger",
+      "expectations": [
+        "Starts persistent goal tracking for the migration.",
+        "Does not substitute a single-diff atomicity check for multi-week lifecycle tracking."
+      ],
+      "expected_skills": [
+        "achieve-goal"
+      ],
+      "forbidden_skills": [
+        "ensure-atomic-pr"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "achieve-goal"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "atomic-vs-goal-longrunning-migration",
+      "prompt": "Track long-term progress on this multi-week migration as a persistent goal, not a single-PR question."
+    },
+    {
+      "direction": "should_trigger",
+      "expectations": [
+        "Consumes the approved plan step directly.",
+        "Implements it in small, verified slices."
+      ],
+      "expected_skills": [
+        "execute-plan-loop"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "execute-plan-loop"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "executor-approved-plan-step-three",
+      "prompt": "The plan at plans/import-pipeline/step-3 is approved — implement it now in small, verified slices."
+    },
+    {
+      "direction": "should_trigger",
+      "expectations": [
+        "Continues the approved execution from the recorded point.",
+        "Verifies each slice as it goes."
+      ],
+      "expected_skills": [
+        "execute-plan-loop"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "execute-plan-loop"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "executor-continue-onboarding-redesign",
+      "prompt": "Continue executing the approved onboarding-redesign plan from where we left off, verifying each slice."
+    },
+    {
+      "direction": "should_trigger",
+      "expectations": [
+        "Implements the explicitly scoped request.",
+        "Keeps the diff atomic and verified at each step."
+      ],
+      "expected_skills": [
+        "execute-plan-loop"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "execute-plan-loop"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "executor-explicit-scoped-rate-limiting",
+      "prompt": "This is an explicitly scoped implementation request: add rate limiting to the API gateway; keep the diff atomic and verified."
+    },
+    {
+      "direction": "should_trigger",
+      "expectations": [
+        "Resumes the in-progress step directly.",
+        "Keeps plan and status artifacts accurate as it continues."
+      ],
+      "expected_skills": [
+        "execute-plan-loop"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "execute-plan-loop"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "executor-resume-billing-migration-step2",
+      "prompt": "Resume the in-progress execution of plan step 2 for the billing migration."
+    },
+    {
+      "direction": "should_trigger",
+      "expectations": [
+        "Implements the next approved milestone.",
+        "Keeps plan/status artifacts accurate throughout."
+      ],
+      "expected_skills": [
+        "execute-plan-loop"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "execute-plan-loop"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "executor-next-milestone-update-artifacts",
+      "prompt": "Implement the next milestone from the approved plan and update the plan and status artifacts as we go."
+    },
+    {
+      "direction": "should_trigger",
+      "expectations": [
+        "Ships the clearly scoped fix with verification.",
+        "Does not create new persistent goal lifecycle state for it."
+      ],
+      "expected_skills": [
+        "execute-plan-loop"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "execute-plan-loop"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "executor-clearly-scoped-fix-no-lifecycle",
+      "prompt": "Ship this one clearly scoped fix with verification at each small step; no need to invent new lifecycle state for it."
+    },
+    {
+      "direction": "should_trigger",
+      "expectations": [
+        "Executes the ready plan step.",
+        "Follows the plan document's defined scope."
+      ],
+      "expected_skills": [
+        "execute-plan-loop"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "execute-plan-loop"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "executor-plan-step-four-ready",
+      "prompt": "The plan document says step 4 is ready for implementation — execute it now."
+    },
+    {
+      "direction": "should_trigger",
+      "expectations": [
+        "Implements the approved design incrementally.",
+        "Verifies each slice before moving to the next."
+      ],
+      "expected_skills": [
+        "execute-plan-loop"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "execute-plan-loop"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "executor-turn-approved-design-into-code",
+      "prompt": "Take this approved design and turn it into working, tested code slice by slice."
+    },
+    {
+      "direction": "should_not_trigger",
+      "expectations": [
+        "Starts persistent goal lifecycle tracking with pause/resume.",
+        "Does not treat a multi-session lifecycle request as a single execution slice."
+      ],
+      "expected_skills": [
+        "achieve-goal"
+      ],
+      "forbidden_skills": [
+        "execute-plan-loop"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "achieve-goal"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "executor-vs-goal-track-multiweek-migration",
+      "prompt": "Use /goal to track this multi-week migration with pause and resume support across sessions."
+    },
+    {
+      "direction": "should_not_trigger",
+      "expectations": [
+        "Routes the unplanned request to the front door.",
+        "Does not begin execution before a plan is approved."
+      ],
+      "expected_skills": [
+        "workflow-orchestrator"
+      ],
+      "forbidden_skills": [
+        "execute-plan-loop"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "workflow-orchestrator"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "executor-vs-orchestrator-no-plan-approved",
+      "prompt": "We don't have an approved plan yet for this — figure out what phase we're in first."
+    },
+    {
+      "direction": "should_not_trigger",
+      "expectations": [
+        "Splits the oversized request into slices first.",
+        "Does not start executing before the work is properly sized."
+      ],
+      "expected_skills": [
+        "decompose-feature"
+      ],
+      "forbidden_skills": [
+        "execute-plan-loop"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "decompose-feature"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "executor-vs-decompose-too-large-first",
+      "prompt": "This request is too large for one PR — split it into slices before implementing anything."
+    },
+    {
+      "direction": "should_not_trigger",
+      "expectations": [
+        "Audits the existing diff for scope creep.",
+        "Does not start new implementation when only a review was requested."
+      ],
+      "expected_skills": [
+        "anti-slop"
+      ],
+      "forbidden_skills": [
+        "execute-plan-loop"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "anti-slop"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "executor-vs-slop-review-before-new-code",
+      "prompt": "Just review this diff for scope creep and unsupported claims before merging; don't implement anything new."
+    },
+    {
+      "direction": "should_not_trigger",
+      "expectations": [
+        "Assesses the diff's atomicity across modules.",
+        "Does not treat an atomicity question as an execution request."
+      ],
+      "expected_skills": [
+        "ensure-atomic-pr"
+      ],
+      "forbidden_skills": [
+        "execute-plan-loop"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "ensure-atomic-pr"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "executor-vs-atomic-is-this-diff-atomic",
+      "prompt": "Is this diff atomic enough, given it touches five different modules?"
+    },
+    {
+      "direction": "should_not_trigger",
+      "expectations": [
+        "Plans the worktrees and ownership boundaries first.",
+        "Does not begin single-agent execution before parallel setup is done."
+      ],
+      "expected_skills": [
+        "plan-parallel-work"
+      ],
+      "forbidden_skills": [
+        "execute-plan-loop"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "plan-parallel-work"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "executor-vs-parallel-worktrees-before-anyone-codes",
+      "prompt": "Three agents need separate worktrees set up before anyone starts implementing anything."
+    },
+    {
+      "direction": "should_not_trigger",
+      "expectations": [
+        "Answers the conceptual question directly.",
+        "Does not start implementing code when only an explanation was requested."
+      ],
+      "expected_skills": [
+        "none"
+      ],
+      "forbidden_skills": [
+        "execute-plan-loop"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "none"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "executor-vs-none-conceptual-plan-question",
+      "prompt": "What is our current implementation plan, conceptually? I don't need any code written right now."
+    },
+    {
+      "direction": "should_not_trigger",
+      "expectations": [
+        "Routes the CVE scan to image scanning.",
+        "Does not treat a vulnerability scan as an implementation-slice request."
+      ],
+      "expected_skills": [
+        "scan-image-vulnerabilities"
+      ],
+      "forbidden_skills": [
+        "execute-plan-loop"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "scan-image-vulnerabilities"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "executor-vs-image-scan-base-image",
+      "prompt": "Scan the base image we deploy this service on for known CVEs."
+    },
+    {
+      "direction": "should_trigger",
+      "expectations": [
+        "Defines worktree and path-ownership boundaries.",
+        "Specifies a safe merge order for the four agents."
+      ],
+      "expected_skills": [
+        "plan-parallel-work"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "plan-parallel-work"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "parallel-four-agents-simultaneous",
+      "prompt": "We have four agents working simultaneously on this repo — define worktrees, path ownership, and merge order for them."
+    },
+    {
+      "direction": "should_trigger",
+      "expectations": [
+        "Sets up non-overlapping branch boundaries.",
+        "Prevents conflicts between the two simultaneous workstreams."
+      ],
+      "expected_skills": [
+        "plan-parallel-work"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "plan-parallel-work"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "parallel-branch-boundaries-two-engineers",
+      "prompt": "Set up branch boundaries so two engineers can work on auth and billing at the same time without conflicts."
+    },
+    {
+      "direction": "should_trigger",
+      "expectations": [
+        "Plans dependency and validation order.",
+        "Covers all three parallel work streams."
+      ],
+      "expected_skills": [
+        "plan-parallel-work"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "plan-parallel-work"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "parallel-dependencies-three-streams",
+      "prompt": "Plan dependencies and validation order for three parallel work streams on this migration."
+    },
+    {
+      "direction": "should_trigger",
+      "expectations": [
+        "Assigns clear ownership per agent.",
+        "Coordinates the three simultaneous streams."
+      ],
+      "expected_skills": [
+        "plan-parallel-work"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "plan-parallel-work"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "parallel-coordinate-api-frontend-migrations",
+      "prompt": "Coordinate who works where: one agent on the API, one on the frontend, one on migrations, all in parallel."
+    },
+    {
+      "direction": "should_trigger",
+      "expectations": [
+        "Defines the base PR and worktree layout.",
+        "Prepares the ground for simultaneous contributor work."
+      ],
+      "expected_skills": [
+        "plan-parallel-work"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "plan-parallel-work"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "parallel-base-pr-worktree-layout",
+      "prompt": "We need a base PR and worktree layout before splitting simultaneous work across contributors."
+    },
+    {
+      "direction": "should_trigger",
+      "expectations": [
+        "Defines path ownership to prevent overlap.",
+        "Covers the concurrent-editing scenario explicitly."
+      ],
+      "expected_skills": [
+        "plan-parallel-work"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "plan-parallel-work"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "parallel-path-ownership-overlap",
+      "prompt": "Define path-ownership boundaries for two agents editing overlapping directories concurrently."
+    },
+    {
+      "direction": "should_trigger",
+      "expectations": [
+        "Plans safe parallel execution.",
+        "Specifies merge sequencing across engineers."
+      ],
+      "expected_skills": [
+        "plan-parallel-work"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "plan-parallel-work"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "parallel-multiple-engineers-today",
+      "prompt": "Multiple engineers will touch this codebase today — plan safe parallel execution and merge sequencing."
+    },
+    {
+      "direction": "should_trigger",
+      "expectations": [
+        "Sets up isolated worktrees per slice.",
+        "Supports simultaneous building of the three approved slices."
+      ],
+      "expected_skills": [
+        "plan-parallel-work"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "plan-parallel-work"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "parallel-isolated-worktrees-three-slices",
+      "prompt": "Set up isolated worktrees for the three approved PR slices so they can be built simultaneously."
+    },
+    {
+      "direction": "should_not_trigger",
+      "expectations": [
+        "Decides how to split the feature first.",
+        "Does not plan parallel worktrees before the work is even sliced."
+      ],
+      "expected_skills": [
+        "decompose-feature"
+      ],
+      "forbidden_skills": [
+        "plan-parallel-work"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "decompose-feature"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "parallel-vs-decompose-not-split-yet",
+      "prompt": "This single large feature hasn't been split into slices yet — decide how to break it up first."
+    },
+    {
+      "direction": "should_not_trigger",
+      "expectations": [
+        "Executes the single-agent slice directly.",
+        "Does not plan multi-agent coordination when only one agent is involved."
+      ],
+      "expected_skills": [
+        "execute-plan-loop"
+      ],
+      "forbidden_skills": [
+        "plan-parallel-work"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "execute-plan-loop"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "parallel-vs-executor-single-agent-only",
+      "prompt": "Just one agent will implement the next approved slice — no other agents are involved."
+    },
+    {
+      "direction": "should_not_trigger",
+      "expectations": [
+        "Routes the ambiguous phase question to the front door.",
+        "Does not assume parallel work is needed before the phase is known."
+      ],
+      "expected_skills": [
+        "workflow-orchestrator"
+      ],
+      "forbidden_skills": [
+        "plan-parallel-work"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "workflow-orchestrator"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "parallel-vs-orchestrator-unclear-phase",
+      "prompt": "We're not sure which phase of the workflow we're even in yet for this request."
+    },
+    {
+      "direction": "should_not_trigger",
+      "expectations": [
+        "Assesses the single diff's atomicity.",
+        "Does not invoke parallel-work planning for a single-agent review."
+      ],
+      "expected_skills": [
+        "ensure-atomic-pr"
+      ],
+      "forbidden_skills": [
+        "plan-parallel-work"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "ensure-atomic-pr"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "parallel-vs-atomic-single-diff-review",
+      "prompt": "Review whether this messy diff mixes unrelated concerns; no other agents are involved here."
+    },
+    {
+      "direction": "should_not_trigger",
+      "expectations": [
+        "Implements the fix directly.",
+        "Does not plan multi-agent worktrees for solo work."
+      ],
+      "expected_skills": [
+        "none"
+      ],
+      "forbidden_skills": [
+        "plan-parallel-work"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "none"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "parallel-vs-none-solo-repo-work",
+      "prompt": "I'm the only person touching this repo today; just implement the fix."
+    },
+    {
+      "direction": "should_not_trigger",
+      "expectations": [
+        "Starts persistent goal tracking for the modernization effort.",
+        "Does not substitute worktree planning for multi-month lifecycle tracking."
+      ],
+      "expected_skills": [
+        "achieve-goal"
+      ],
+      "forbidden_skills": [
+        "plan-parallel-work"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "achieve-goal"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "parallel-vs-goal-longrunning-modernization",
+      "prompt": "Track a long-running persistent goal to modernize our test suite over the next several months."
+    },
+    {
+      "direction": "should_not_trigger",
+      "expectations": [
+        "Routes the CVE scan to image scanning.",
+        "Does not treat independent cluster scanning as agent-coordination planning."
+      ],
+      "expected_skills": [
+        "scan-image-vulnerabilities"
+      ],
+      "forbidden_skills": [
+        "plan-parallel-work"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "scan-image-vulnerabilities"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "parallel-vs-image-scan-two-clusters",
+      "prompt": "Scan the images used by our two independently deployed clusters for known CVEs."
+    },
+    {
+      "direction": "should_not_trigger",
+      "expectations": [
+        "Runs the quality guard on the solo change.",
+        "Does not invoke multi-agent coordination for solo work."
+      ],
+      "expected_skills": [
+        "anti-slop"
+      ],
+      "forbidden_skills": [
+        "plan-parallel-work"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "anti-slop"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "parallel-vs-slop-guard-while-solo",
+      "prompt": "Guard this change against scope creep and unjustified complexity while I work on it alone."
+    },
+    {
+      "direction": "should_trigger",
+      "expectations": [
+        "Refreshes the explicitly named docs.",
+        "Matches the docs to the new rate-limit defaults."
+      ],
+      "expected_skills": [
+        "refresh-related-docs"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "refresh-related-docs"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "docs-ratelimit-defaults-changed",
+      "prompt": "I just changed the API's rate-limit defaults; update docs/api-guide.md and docs/rate-limits.md, which name that config directly."
+    },
+    {
+      "direction": "should_trigger",
+      "expectations": [
+        "Refreshes the explicitly named CLI docs.",
+        "Reflects the new --dry-run behavior."
+      ],
+      "expected_skills": [
+        "refresh-related-docs"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "refresh-related-docs"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "docs-cli-dryrun-flag-changed",
+      "prompt": "The CLI's --dry-run flag now behaves differently; refresh README.md and docs/cli-reference.md to match."
+    },
+    {
+      "direction": "should_trigger",
+      "expectations": [
+        "Refreshes docs/architecture.md for the rename.",
+        "Removes the stale old interface name."
+      ],
+      "expected_skills": [
+        "refresh-related-docs"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "refresh-related-docs"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "docs-renamed-execute-interface",
+      "prompt": "We renamed the `execute` interface to `run`; docs/architecture.md still describes the old name — refresh it."
+    },
+    {
+      "direction": "should_trigger",
+      "expectations": [
+        "Refreshes CONTRIBUTING.md's workflow guidance.",
+        "Matches the newly completed merge process."
+      ],
+      "expected_skills": [
+        "refresh-related-docs"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "refresh-related-docs"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "docs-contributing-merge-process",
+      "prompt": "Update the workflow guidance in CONTRIBUTING.md now that we finished changing our merge process."
+    },
+    {
+      "direction": "should_trigger",
+      "expectations": [
+        "Refreshes docs/setup.md's install steps.",
+        "Matches the changed setup script."
+      ],
+      "expected_skills": [
+        "refresh-related-docs"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "refresh-related-docs"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "docs-setup-install-steps-stale",
+      "prompt": "docs/setup.md still documents the old install steps; the setup script changed last week — refresh it."
+    },
+    {
+      "direction": "should_trigger",
+      "expectations": [
+        "Refreshes docs/auth.md for the new behavior.",
+        "Preserves the doc's existing tone and structure."
+      ],
+      "expected_skills": [
+        "refresh-related-docs"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "refresh-related-docs"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "docs-auth-flow-behavior-changed",
+      "prompt": "The auth flow behavior changed last sprint; update the explicitly named docs/auth.md to match."
+    },
+    {
+      "direction": "should_trigger",
+      "expectations": [
+        "Refreshes docs/migration-guide.md for the completed migration.",
+        "Reflects the final schema accurately."
+      ],
+      "expected_skills": [
+        "refresh-related-docs"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "refresh-related-docs"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "docs-migration-guide-completed",
+      "prompt": "We completed the migration described in docs/migration-guide.md; refresh it to reflect the final schema."
+    },
+    {
+      "direction": "should_trigger",
+      "expectations": [
+        "Refreshes the explicitly named docs/webhooks.md directly.",
+        "Requests approval before expanding to newly discovered docs beyond the named target."
+      ],
+      "expected_skills": [
+        "refresh-related-docs"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "refresh-related-docs"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "docs-direct-named-then-broad-discovery",
+      "prompt": "We finished implementing the new webhook retry policy; refresh the explicitly named docs/webhooks.md now, and if you notice other docs referencing the old policy while you're at it, ask before touching them."
+    },
+    {
+      "direction": "should_not_trigger",
+      "expectations": [
+        "Plans the PR split for the upcoming rewrite.",
+        "Does not refresh documentation before there's any completed behavior to document."
+      ],
+      "expected_skills": [
+        "decompose-feature"
+      ],
+      "forbidden_skills": [
+        "refresh-related-docs"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "decompose-feature"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "docs-vs-decompose-before-any-doc-work",
+      "prompt": "Nothing here is stale yet; help me decide whether the upcoming rewrite should be split into multiple PRs before we touch any docs."
+    },
+    {
+      "direction": "should_not_trigger",
+      "expectations": [
+        "Implements the approved code step directly.",
+        "Does not refresh docs before the requester wants the code done."
+      ],
+      "expected_skills": [
+        "execute-plan-loop"
+      ],
+      "forbidden_skills": [
+        "refresh-related-docs"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "execute-plan-loop"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "docs-vs-executor-code-first",
+      "prompt": "Implement the approved plan step first; documentation can wait, this is purely code right now."
+    },
+    {
+      "direction": "should_not_trigger",
+      "expectations": [
+        "Routes the phase question to the front door.",
+        "Does not refresh docs when only phase clarification was requested."
+      ],
+      "expected_skills": [
+        "workflow-orchestrator"
+      ],
+      "forbidden_skills": [
+        "refresh-related-docs"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "workflow-orchestrator"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "docs-vs-orchestrator-unclear-phase",
+      "prompt": "Nothing here is stale yet — just tell me what phase of our workflow we're in."
+    },
+    {
+      "direction": "should_not_trigger",
+      "expectations": [
+        "Scans the referenced image for CVEs.",
+        "Does not treat an image-scan request as a documentation refresh."
+      ],
+      "expected_skills": [
+        "scan-image-vulnerabilities"
+      ],
+      "forbidden_skills": [
+        "refresh-related-docs"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "scan-image-vulnerabilities"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "docs-vs-image-scan-deployment-doc-images",
+      "prompt": "Scan the base image referenced in our deployment docs for known vulnerabilities, not the doc text itself."
+    },
+    {
+      "direction": "should_not_trigger",
+      "expectations": [
+        "Assesses the doc PR's atomicity.",
+        "Does not refresh doc content when an atomicity review was requested instead."
+      ],
+      "expected_skills": [
+        "ensure-atomic-pr"
+      ],
+      "forbidden_skills": [
+        "refresh-related-docs"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "ensure-atomic-pr"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "docs-vs-atomic-is-doc-pr-mixed",
+      "prompt": "Check whether this new documentation PR itself mixes unrelated content changes with the docs update — is it atomic?"
+    },
+    {
+      "direction": "should_not_trigger",
+      "expectations": [
+        "Fixes the comment typo directly.",
+        "Does not invoke a documentation refresh for a code-comment fix."
+      ],
+      "expected_skills": [
+        "none"
+      ],
+      "forbidden_skills": [
+        "refresh-related-docs"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "none"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "docs-vs-none-python-comment-typo",
+      "prompt": "Fix a grammar typo in a code comment inside a .py file, not in any documentation."
+    },
+    {
+      "direction": "should_not_trigger",
+      "expectations": [
+        "Drafts new documentation for planning purposes.",
+        "Does not treat unbuilt-feature drafting as a refresh of stale, completed-behavior docs."
+      ],
+      "expected_skills": [
+        "none"
+      ],
+      "forbidden_skills": [
+        "refresh-related-docs"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "none"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "docs-vs-none-write-docs-for-unbuilt-feature",
+      "prompt": "I want to write brand-new docs for a feature we haven't built yet."
+    },
+    {
+      "direction": "should_not_trigger",
+      "expectations": [
+        "Runs the quality guard on the in-progress doc PR.",
+        "Does not perform the actual doc refresh when a scope/claims audit was requested."
+      ],
+      "expected_skills": [
+        "anti-slop"
+      ],
+      "forbidden_skills": [
+        "refresh-related-docs"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "anti-slop"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "docs-vs-slop-guard-ongoing-docs-pr",
+      "prompt": "Guard this ongoing documentation PR against scope creep and unsupported claims while I write it."
+    },
+    {
+      "direction": "should_trigger",
+      "expectations": [
+        "Scans the specific image tag with Trivy.",
+        "Reports known CVEs for that exact image."
+      ],
+      "expected_skills": [
+        "scan-image-vulnerabilities"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "scan-image-vulnerabilities"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "image-scan-specific-tag",
+      "prompt": "Scan ghcr.io/acme/api:2.3.1 for known CVEs using Trivy."
+    },
+    {
+      "direction": "should_trigger",
+      "expectations": [
+        "Discovers images running in the production cluster.",
+        "Scans them for known vulnerabilities."
+      ],
+      "expected_skills": [
+        "scan-image-vulnerabilities"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "scan-image-vulnerabilities"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "image-scan-production-cluster-posture",
+      "prompt": "Check the security posture of every image currently running in our production cluster."
+    },
+    {
+      "direction": "should_trigger",
+      "expectations": [
+        "Discovers workload images in the named namespace.",
+        "Scans each discovered image for CVEs."
+      ],
+      "expected_skills": [
+        "scan-image-vulnerabilities"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "scan-image-vulnerabilities"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "image-scan-discover-namespace-workloads",
+      "prompt": "Discover every image used by workloads in the 'payments' namespace and scan them for vulnerabilities."
+    },
+    {
+      "direction": "should_trigger",
+      "expectations": [
+        "Scans the local daemon image with a fresh Trivy database.",
+        "Reports the scan results for that image."
+      ],
+      "expected_skills": [
+        "scan-image-vulnerabilities"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "scan-image-vulnerabilities"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "image-scan-local-docker-daemon",
+      "prompt": "Run a fresh Trivy scan against our local Docker daemon image acme/worker:latest."
+    },
+    {
+      "direction": "should_trigger",
+      "expectations": [
+        "Verifies base images for critical CVEs before shipping.",
+        "Covers every deployed base image."
+      ],
+      "expected_skills": [
+        "scan-image-vulnerabilities"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "scan-image-vulnerabilities"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "image-scan-preship-basecheck",
+      "prompt": "Before we ship, verify none of the base images we deploy have known critical CVEs."
+    },
+    {
+      "direction": "should_trigger",
+      "expectations": [
+        "Scans the named registry image.",
+        "Reports current known vulnerabilities."
+      ],
+      "expected_skills": [
+        "scan-image-vulnerabilities"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "scan-image-vulnerabilities"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "image-scan-registry-reference",
+      "prompt": "What vulnerabilities exist in registry.example.com/frontend:1.0 right now?"
+    },
+    {
+      "direction": "should_trigger",
+      "expectations": [
+        "Scans the exact image digest.",
+        "Reports CVEs for that precise staging image."
+      ],
+      "expected_skills": [
+        "scan-image-vulnerabilities"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "scan-image-vulnerabilities"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "image-scan-exact-digest",
+      "prompt": "Scan the exact image digest sha256:abcd1234 used by our staging deployment for known CVEs."
+    },
+    {
+      "direction": "should_trigger",
+      "expectations": [
+        "Refreshes the vulnerability database first.",
+        "Rescans every image referenced in the manifests."
+      ],
+      "expected_skills": [
+        "scan-image-vulnerabilities"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "scan-image-vulnerabilities"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "image-scan-kustomize-manifests",
+      "prompt": "Update the vulnerability database and rescan every image referenced in our kustomize manifests."
+    },
+    {
+      "direction": "should_not_trigger",
+      "expectations": [
+        "Routes the source-code security audit away from image scanning.",
+        "Does not convert a source-code review request into an image CVE scan."
+      ],
+      "expected_skills": [
+        "none"
+      ],
+      "forbidden_skills": [
+        "scan-image-vulnerabilities"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "none"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "image-vs-none-source-code-injection-audit",
+      "prompt": "Audit our application's source code for injection vulnerabilities, not the container image it runs in.",
+      "related_skills": [
+        "security-review"
+      ]
+    },
+    {
+      "direction": "should_not_trigger",
+      "expectations": [
+        "Answers the generic dependency-version question directly.",
+        "Does not invoke an image vulnerability scan for a simple version lookup."
+      ],
+      "expected_skills": [
+        "none"
+      ],
+      "forbidden_skills": [
+        "scan-image-vulnerabilities"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "none"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "image-vs-none-generic-dependency-version",
+      "prompt": "What version of lodash do we depend on? Just a generic dependency question, no scanning needed."
+    },
+    {
+      "direction": "should_not_trigger",
+      "expectations": [
+        "Reviews the diff for logic and security issues in source.",
+        "Does not redirect a source-code review into an image CVE scan."
+      ],
+      "expected_skills": [
+        "none"
+      ],
+      "forbidden_skills": [
+        "scan-image-vulnerabilities"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "none"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "image-vs-none-pr-logic-review",
+      "prompt": "Review this pull request's diff for logic bugs and security issues in the code itself, not the container image.",
+      "related_skills": [
+        "security-review"
+      ]
+    },
+    {
+      "direction": "should_not_trigger",
+      "expectations": [
+        "Reviews the RBAC policy configuration.",
+        "Does not treat an RBAC review as an image vulnerability scan."
+      ],
+      "expected_skills": [
+        "none"
+      ],
+      "forbidden_skills": [
+        "scan-image-vulnerabilities"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "none"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "image-vs-none-rbac-policy-review",
+      "prompt": "Is our Kubernetes RBAC policy configured securely? This isn't about container images."
+    },
+    {
+      "direction": "should_not_trigger",
+      "expectations": [
+        "Plans the PR split for building the automation feature.",
+        "Does not run an actual image scan when the request is about planning the build."
+      ],
+      "expected_skills": [
+        "decompose-feature"
+      ],
+      "forbidden_skills": [
+        "scan-image-vulnerabilities"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "decompose-feature"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "image-vs-decompose-split-scanning-feature",
+      "prompt": "Split this large image-scanning automation feature into multiple PRs before we build it."
+    },
+    {
+      "direction": "should_not_trigger",
+      "expectations": [
+        "Starts persistent goal tracking for the hardening effort.",
+        "Does not substitute a single scan run for multi-quarter lifecycle tracking."
+      ],
+      "expected_skills": [
+        "achieve-goal"
+      ],
+      "forbidden_skills": [
+        "scan-image-vulnerabilities"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "achieve-goal"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "image-vs-goal-hardening-over-quarters",
+      "prompt": "Track long-term progress on hardening our container supply chain as a persistent goal across quarters."
+    },
+    {
+      "direction": "should_not_trigger",
+      "expectations": [
+        "Plans worktree and ownership boundaries for the two teams.",
+        "Does not run a vulnerability scan when the request is about coordinating teams."
+      ],
+      "expected_skills": [
+        "plan-parallel-work"
+      ],
+      "forbidden_skills": [
+        "scan-image-vulnerabilities"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "plan-parallel-work"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "image-vs-parallel-two-teams-hardening",
+      "prompt": "Two teams will work in parallel hardening different clusters — plan their worktrees and ownership."
+    },
+    {
+      "direction": "should_not_trigger",
+      "expectations": [
+        "Refreshes the deployment docs to describe the new cadence.",
+        "Does not trigger an actual scan when only a docs update was requested."
+      ],
+      "expected_skills": [
+        "refresh-related-docs"
+      ],
+      "forbidden_skills": [
+        "scan-image-vulnerabilities"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "refresh-related-docs"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "image-vs-docs-update-scanning-cadence",
+      "prompt": "Update the deployment docs to mention our new scanning cadence; no scan needs to run right now."
+    },
+    {
+      "direction": "should_trigger",
+      "expectations": [
+        "Acts as the front door for the unplanned idea.",
+        "Determines the correct starting phase."
+      ],
+      "expected_skills": [
+        "workflow-orchestrator"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "workflow-orchestrator"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "orchestrator-rough-idea-no-plan",
+      "prompt": "I have a rough idea for a new feature but no plan yet — figure out what phase we should start in."
+    },
+    {
+      "direction": "should_trigger",
+      "expectations": [
+        "Determines which downstream phase applies.",
+        "Resolves the ambiguity before any worker skill starts."
+      ],
+      "expected_skills": [
+        "workflow-orchestrator"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "workflow-orchestrator"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "orchestrator-unclear-decompose-atomic-or-execute",
+      "prompt": "It's unclear whether this request needs decomposition, atomicity review, or straight execution — determine the right phase."
+    },
+    {
+      "direction": "should_trigger",
+      "expectations": [
+        "Repairs the broken workflow state.",
+        "Reports the corrected next step."
+      ],
+      "expected_skills": [
+        "workflow-orchestrator"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "workflow-orchestrator"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "orchestrator-repair-broken-approval-state",
+      "prompt": "The previous approval state for this workflow seems broken; repair the workflow state and tell me what's next."
+    },
+    {
+      "direction": "should_trigger",
+      "expectations": [
+        "Routes the ambiguous multi-phase request.",
+        "Identifies the correct next phase rather than guessing a single worker."
+      ],
+      "expected_skills": [
+        "workflow-orchestrator"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "workflow-orchestrator"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "orchestrator-ambiguous-multiphase-request",
+      "prompt": "This is an ambiguous multi-phase request spanning planning, splitting, and execution — route it correctly."
+    },
+    {
+      "direction": "should_trigger",
+      "expectations": [
+        "Decides between persistent-goal tracking and a single slice.",
+        "Acts as the front-door decision point."
+      ],
+      "expected_skills": [
+        "workflow-orchestrator"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "workflow-orchestrator"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "orchestrator-goal-or-single-slice-unclear",
+      "prompt": "We don't know if this needs a persistent goal or just a single executed slice — decide which applies."
+    },
+    {
+      "direction": "should_trigger",
+      "expectations": [
+        "Acts as the front door for the unapproved, broad request.",
+        "Routes it to the correct next phase."
+      ],
+      "expected_skills": [
+        "workflow-orchestrator"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "workflow-orchestrator"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "orchestrator-broad-unapproved-request",
+      "prompt": "Nobody has approved a plan yet, and this request is broad; act as the front door and route it appropriately."
+    },
+    {
+      "direction": "should_trigger",
+      "expectations": [
+        "Resolves which worker should own the task next.",
+        "Repairs the unresolved workflow state."
+      ],
+      "expected_skills": [
+        "workflow-orchestrator"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "workflow-orchestrator"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "orchestrator-primary-worker-unresolved",
+      "prompt": "The primary worker for this task is unresolved — help determine who should own it next."
+    },
+    {
+      "direction": "should_trigger",
+      "expectations": [
+        "Determines the next phase for the messy request.",
+        "Does this before any code is written."
+      ],
+      "expected_skills": [
+        "workflow-orchestrator"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "workflow-orchestrator"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "orchestrator-messy-multipart-request",
+      "prompt": "Given this messy multi-part request, tell me the next workflow phase before anyone starts coding."
+    },
+    {
+      "direction": "should_not_trigger",
+      "expectations": [
+        "Executes the already-approved step directly.",
+        "Does not route an unambiguous, already-approved request through the front door."
+      ],
+      "expected_skills": [
+        "execute-plan-loop"
+      ],
+      "forbidden_skills": [
+        "workflow-orchestrator"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "execute-plan-loop"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "orchestrator-vs-executor-already-approved",
+      "prompt": "Execute this already-approved plan step directly; there's nothing ambiguous about the phase."
+    },
+    {
+      "direction": "should_not_trigger",
+      "expectations": [
+        "Splits the feature into stacked PRs directly.",
+        "Does not re-route an already-decided decomposition request through phase determination."
+      ],
+      "expected_skills": [
+        "decompose-feature"
+      ],
+      "forbidden_skills": [
+        "workflow-orchestrator"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "decompose-feature"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "orchestrator-vs-decompose-explicit-split",
+      "prompt": "Explicitly split this oversized feature into stacked PRs; the decision to split is already made."
+    },
+    {
+      "direction": "should_not_trigger",
+      "expectations": [
+        "Assesses the diff's atomicity directly.",
+        "Does not treat an explicit atomicity request as an ambiguous phase question."
+      ],
+      "expected_skills": [
+        "ensure-atomic-pr"
+      ],
+      "forbidden_skills": [
+        "workflow-orchestrator"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "ensure-atomic-pr"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "orchestrator-vs-atomic-explicit-assessment",
+      "prompt": "Assess whether this diff is atomic enough to merge; that's the whole ask, nothing ambiguous."
+    },
+    {
+      "direction": "should_not_trigger",
+      "expectations": [
+        "Plans the parallel worktrees directly.",
+        "Does not route an already-clear parallel-work request through phase determination."
+      ],
+      "expected_skills": [
+        "plan-parallel-work"
+      ],
+      "forbidden_skills": [
+        "workflow-orchestrator"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "plan-parallel-work"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "orchestrator-vs-parallel-explicit-worktrees",
+      "prompt": "Plan safe parallel worktrees for our three agents; the parallel-work need is already clear."
+    },
+    {
+      "direction": "should_not_trigger",
+      "expectations": [
+        "Refreshes the explicitly named doc directly.",
+        "Does not route an unambiguous, directly named doc refresh through the front door."
+      ],
+      "expected_skills": [
+        "refresh-related-docs"
+      ],
+      "forbidden_skills": [
+        "workflow-orchestrator"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "refresh-related-docs"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "orchestrator-vs-docs-explicit-named-refresh",
+      "prompt": "Refresh the explicitly named docs/api-guide.md now that the API changed; this is a direct, unambiguous ask."
+    },
+    {
+      "direction": "should_not_trigger",
+      "expectations": [
+        "Scans the production image directly.",
+        "Does not treat an unambiguous scan request as a phase-routing question."
+      ],
+      "expected_skills": [
+        "scan-image-vulnerabilities"
+      ],
+      "forbidden_skills": [
+        "workflow-orchestrator"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "scan-image-vulnerabilities"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "orchestrator-vs-image-scan-explicit-request",
+      "prompt": "Scan our production image for known CVEs; there's no ambiguity about what's being asked."
+    },
+    {
+      "direction": "should_not_trigger",
+      "expectations": [
+        "Starts persistent goal tracking directly from the explicit command.",
+        "Does not route an explicit /goal command through phase determination."
+      ],
+      "expected_skills": [
+        "achieve-goal"
+      ],
+      "forbidden_skills": [
+        "workflow-orchestrator"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "achieve-goal"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "orchestrator-vs-goal-explicit-command",
+      "prompt": "Use /goal to track this multi-week objective with pause and resume support; the command is explicit."
+    },
+    {
+      "direction": "should_not_trigger",
+      "expectations": [
+        "Runs the scope-creep audit directly.",
+        "Does not route an explicit, unambiguous quality-guard request through the front door."
+      ],
+      "expected_skills": [
+        "anti-slop"
+      ],
+      "forbidden_skills": [
+        "workflow-orchestrator"
+      ],
+      "grading": [
+        {
+          "path": "response_json",
+          "required": {
+            "route": "anti-slop"
+          },
+          "type": "json_shape"
+        }
+      ],
+      "id": "orchestrator-vs-slop-explicit-scope-check",
+      "prompt": "Just check this one diff for scope creep before merging; there's nothing ambiguous about which phase we're in."
+    }
+  ],
+  "schema": "skill-evals/trigger-suite-v1",
+  "suite_name": "trigger-matrix"
+}

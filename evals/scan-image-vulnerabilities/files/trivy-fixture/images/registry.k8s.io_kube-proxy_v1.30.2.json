@@ -1,0 +1,21 @@
+{
+  "SchemaVersion": 2,
+  "ArtifactName": "registry.k8s.io/kube-proxy:v1.30.2",
+  "ArtifactType": "container_image",
+  "Results": [
+    {
+      "Target": "registry.k8s.io/kube-proxy:v1.30.2 (debian 12.6)",
+      "Class": "os-pkgs",
+      "Type": "debian",
+      "Packages": [
+        {
+          "ID": "iptables@1.8.9-2",
+          "Name": "iptables",
+          "Version": "1.8.9-2",
+          "Release": "r0"
+        }
+      ],
+      "Vulnerabilities": []
+    }
+  ]
+}

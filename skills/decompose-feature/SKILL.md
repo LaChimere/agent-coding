@@ -1,125 +1,67 @@
 ---
 name: decompose-feature
-description: Split work that is too large for one reviewable PR into a trunk-safe sequence of mergeable slices. Use when the user asks for stacked PRs, phased delivery, incremental rollout, or when evidence shows one PR would mix purposes or exceed a comfortable review boundary.
+description: Plan what PRs should exist and how they should land as a trunk-safe sequence, for new work or an existing branch being reorganized for delivery. Use for stacked PRs, phased delivery, incremental rollout, or work that exceeds one reviewable PR. Not for judging whether a change set is atomic or recovering its commit boundaries — that is ensure-atomic-pr.
 ---
-
-# Operating context
-
-This skill operates within the workflow coordinated by `workflow-orchestrator` and its bundled framework contract.
-
-Use an active handoff from the installed `workflow-orchestrator` when materializing workflow artifacts. If phase or approval is unresolved, invoke that skill by name. Do not rely on repository-source paths.
-
-For an advisory request, especially when the user says they are not ready to start, return the decomposition inline without creating artifacts or approval gates. Offer materialization into `plans/{slug}` only as an optional later step.
-
-For workflow-managed delivery, create or update `plans/{slug}/research.md`, place the proposed split in `design.md`, and follow the active approval state before translating it into `plan.md` and `todo.md`.
-
-This skill decides **what PRs should exist**. If the resulting PR sequence also needs explicit branch/worktree/path ownership for multiple agents, follow it with `plan-parallel-work`.
 
 # Purpose
 
-Convert a large feature request into a staged delivery plan made of small PRs.
+Decide **what PRs should exist** for work that has not been written yet, and in what order they land.
 
-# Use this skill when
+# Boundaries
 
-- The requested feature spans multiple modules, layers, or services
-- The user asks for small PRs, stacked PRs, phased delivery, or incremental rollout
-- The task is too large for one reviewable PR
-- The task may later be parallelized, but the PR sequence is not stable enough yet to assign agent ownership
+| Situation | Owner |
+|---|---|
+| Work needing a delivery sequence — including an existing branch when the question is what PRs should exist | this skill |
+| A change set whose atomicity or commit boundaries need assessment/recovery | `ensure-atomic-pr` |
+| A settled PR sequence that now needs branch/worktree/path ownership across agents | `plan-parallel-work` |
 
-# Do not use this skill when
+If an existing branch question mixes both concerns, decide the PR sequence here and name `ensure-atomic-pr` only for commit/diff recovery detail.
 
-- The change is already narrow and single-purpose
-- The task is a trivial fix that fits cleanly into one PR
-- The change is inherently indivisible and intermediate states would be invalid
+Skip this skill when the planned change is already narrow and single-purpose.
 
-# Primary goal
+For workflow-managed delivery, put the split in the active `plans/{slug}` design artifact and follow the recorded approval state. Invoke `workflow-orchestrator` only when phase or approval is unresolved.
 
-Produce a PR sequence where each PR:
-- has one logical purpose
-- can be described in one sentence
-- can merge without breaking trunk
-- is independently testable at the appropriate level
-- has clear dependencies
+# Advisory mode
 
-# Default decomposition model
+When the user asks for a rough, provisional, or early breakdown, or says they are not ready to start: answer inline with 3–6 concise bullets, one per candidate PR, each a name plus its one-sentence purpose, and state plainly that the split is provisional and will change as evidence arrives.
 
-Prefer vertical slices: each PR delivers one meaningful behavior end to end, including its tests and directly coupled documentation.
+Do not create artifacts, require approval gates, or emit the full required output below. End with at most one factual sentence that the provisional split can later be materialized into `plans/{slug}`; do not turn it into an open-ended offer of further help.
 
-Use a serial base PR only when evidence shows later PRs share a real prerequisite such as a schema, public contract, compatibility layer, or stabilized interface. Keep that base limited to what the fan-out genuinely requires; do not add speculative flags, abstractions, or no-op wiring for structure alone.
+# Decomposition model
 
-Use cleanup PRs only for temporary compatibility or migration work introduced by the sequence.
+Prefer vertical slices: each PR delivers one meaningful behavior end to end with its own tests and directly coupled docs.
 
-# Decision rules
+Use a base PR only when evidence shows later slices share a real prerequisite — a schema, public contract, compatibility layer, or stabilized interface. Keep the base to what the fan-out genuinely requires: contracts, types, and wiring stubs, never consumer logic, speculative flags, or no-op abstractions. Parallelism or partial mergeability alone never justifies a base PR. Add a cleanup PR only to remove temporary compatibility or migration work the sequence itself introduced.
 
-Prefer base/fan-out/cleanup only when:
-- there is a demonstrated shared prerequisite
-- more than one later slice depends on the same stabilized contract
+Schema work orders as compatible schema first, then readers and writers, then removal of the legacy path.
 
-Parallelism and partial mergeability strengthen that choice, but neither justifies a base PR without the shared prerequisite.
+Rules that override PR count:
 
-Prefer vertical slices when:
-- each slice is independently meaningful
-- coupling is low
-- slices do not fight over hot files
-
-Do not propose a split that leaves the repository broken in an intermediate state.
-
-If the evidence states that components must change together and every partial merge is invalid, recommend one PR. Do not invent dual-read, compatibility, or rollout mechanisms that the request or codebase evidence does not provide. Commits inside the PR may separate mechanical preparation from semantic behavior when useful.
+- Never leave trunk broken in an intermediate state; every PR must be independently mergeable.
+- If the components must change together and every partial merge is invalid, recommend **one PR** — never a split by file count. Commits inside it may still separate mechanical preparation from semantic behavior. Do not invent dual-read, compatibility, or rollout mechanisms the request or codebase evidence does not provide.
+- Tests ship with the implementation they verify. There is no standalone "tests PR".
+- Optimize for reviewability, not PR count: three well-scoped PRs beat eight tiny ones.
 
 # Required output
 
-Return the plan in this structure:
+For a delivery request (not advisory mode):
 
 ## Feature summary
-- one-sentence summary
-- main constraints
-- why this split was chosen
+One sentence, main constraints, why this split.
 
 ## PR sequence
-Use one repeatable block per proposed PR:
-- PR name
-- goal
-- likely directories/files
-- dependencies
-- allowed changes
-- prohibited changes
-- acceptance criteria (concrete, verifiable conditions that must be true before this PR can be proposed)
-- validation commands
-- mergeability notes
+One block per PR: name; goal; likely paths; dependencies; allowed changes; prohibited changes; concrete acceptance criteria; validation command or method; mergeability note. Every block, cleanup PRs included, carries acceptance criteria and validation.
 
-Every PR block includes both concrete acceptance criteria and a validation command or method, including cleanup PRs.
-
-If the feature is already one reviewable, indivisible purpose, recommend one PR instead of manufacturing a sequence.
+If the feature is one indivisible purpose, say so and propose one PR instead of manufacturing a sequence.
 
 ## Parallelization readiness
-- which PRs must be serial
-- which PRs can fan out after the base PR lands
-- note that this is only readiness guidance; use `plan-parallel-work` for explicit agent / branch / worktree ownership
+Which PRs stay serial, which can fan out after the base lands. Readiness only; `plan-parallel-work` assigns agents, branches, and paths.
 
 ## Risks
-- contract churn
-- migration hazards
-- conflict hotspots
-- rollback considerations
+Contract churn, migration hazards, conflict hotspots, rollback considerations.
 
-# Gotchas
-
-These are failure patterns that come up repeatedly when agents use this skill. Knowing them upfront saves entire rework cycles.
-
-- **Lumping all tests into a "tests PR."** Tests should travel with the implementation they verify, not be batched into a separate PR. A standalone "add all tests" PR is hard to review because the reviewer has to mentally reconnect each test to its implementation. If a test belongs to PR 2's logic, it ships in PR 2.
-
-- **Over-splitting.** Not every conceptual boundary deserves its own PR. If splitting a feature into 8 tiny PRs makes the whole sequence harder to follow than 3 well-scoped ones, the split is hurting, not helping. Optimize for reviewability, not for PR count.
-
-- **Base PR scope creep.** The base PR should contain only contracts, types, flags, and wiring stubs — things that other PRs depend on. When implementation logic starts leaking into the base PR "for convenience," the entire staged delivery plan weakens because the base PR becomes a large, hard-to-review change itself.
-
-- **Ignoring data migration order.** When a feature involves schema changes, the decomposition must respect the migration order: schema first, then code that reads/writes the new schema, then cleanup of the old schema. Splitting these out of order creates broken intermediate states.
-
-- **Forgetting that each PR must be independently mergeable.** A proposed split that leaves the repository broken after PR 2 merges but before PR 3 lands is not a valid decomposition. Every intermediate state must be trunk-safe.
+`templates/feature-plan-template.md` is available for a fuller written artifact; the structure above stands on its own.
 
 # Quality bar
 
-A proposed PR is good only if:
-- its purpose is singular
-- a reviewer can understand it in isolation
-- it can be safely merged on its own
-- it does not quietly smuggle unrelated cleanup
+A proposed PR is good only if its purpose is singular, a reviewer understands it in isolation, it merges safely alone, and it smuggles in no unrelated cleanup.

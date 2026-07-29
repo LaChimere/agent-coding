@@ -1,0 +1,237 @@
+{
+  "skill_name": "scan-image-vulnerabilities",
+  "evals": [
+    {
+      "id": 0,
+      "prompt": "Scan registry.example.com/app:1.2.3 with the installed skill's bundled scanner. The `trivy` on PATH is this workspace's local binary, and its vulnerability database refresh currently fails.",
+      "expected_output": "Stops before scanning, exits nonzero, and does not report a clean result.",
+      "fixture_prefix": "files",
+      "files": [
+        "files/bin/trivy",
+        "files/bin/kubectl",
+        "files/bin/docker",
+        "files/trivy-fixture/db-refresh-fails",
+        "files/trivy-fixture/images/registry.example.com_app_1.2.3.json"
+      ],
+      "expectations": [
+        "Returns nonzero.",
+        "Does not scan the image.",
+        "Reports DB refresh failure.",
+        "Does not use stale data.",
+        "Does not claim no vulnerabilities."
+      ],
+      "grading": [
+        {
+          "type": "file_exists",
+          "path": ".scan-fixture-calls/trivy.log"
+        },
+        {
+          "type": "text_regex",
+          "pattern": "(?i)(database|\\bDB\\b).*(fail|error|rate limit)|(?:fail|error).*(database|\\bDB\\b)"
+        }
+      ]
+    },
+    {
+      "id": 1,
+      "prompt": "The `kubectl` on PATH reads this workspace's recorded cluster snapshot. Discover the images running in the payments namespace and scan them with the installed skill's bundled scanner.",
+      "expected_output": "Scans the exact discovered references and reports the namespace and targets.",
+      "fixture_prefix": "files",
+      "files": [
+        "files/bin/trivy",
+        "files/bin/kubectl",
+        "files/bin/docker",
+        "files/cluster/pods-all-namespaces.json",
+        "files/cluster/pods-payments.json",
+        "files/trivy-fixture/images/registry.example.com_payments_api_sha256_8f2c4ad4bb6ec2a1e0f2c8e2f3f2d1b0a9c8d7e6f5a4b3c2d1e0f9a8b7c6d5e4.json",
+        "files/trivy-fixture/images/registry.example.com_payments_worker_2.7.1.json",
+        "files/trivy-fixture/images/registry.example.com_checkout_web_9.9.9.json",
+        "files/trivy-fixture/images/registry.k8s.io_kube-proxy_v1.30.2.json"
+      ],
+      "expectations": [
+        "Discovers images before scanning.",
+        "Uses exact tags or digests.",
+        "Does not guess latest.",
+        "Narrows to payments.",
+        "Reports targets."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Scan registry.example.com/platform/base:3.1.0 and registry.example.com/private/billing:5.0.0 with the installed skill's bundled scanner, then summarize the result for a release decision.",
+      "expected_output": "Prioritizes severe findings and reports the second image as failed rather than clean.",
+      "fixture_prefix": "files",
+      "files": [
+        "files/bin/trivy",
+        "files/bin/kubectl",
+        "files/bin/docker",
+        "files/trivy-fixture/images/registry.example.com_platform_base_3.1.0.json",
+        "files/trivy-fixture/images/registry.example.com_private_billing_5.0.0.error"
+      ],
+      "expectations": [
+        "Leads with critical and high.",
+        "Provides severity counts.",
+        "Does not dump low-severity noise.",
+        "Reports authentication failure.",
+        "Does not report the failed image as clean."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Decide whether this skill applies to (A) a container image CVE scan and (B) an application source-code SQL injection audit.",
+      "expected_output": "Applies to A and not B.",
+      "fixture_prefix": "files",
+      "files": [
+        "files/bin/trivy",
+        "files/bin/kubectl",
+        "files/bin/docker"
+      ],
+      "expectations": [
+        "Routes the image request to this skill.",
+        "Does not route the source audit.",
+        "Uses container/cluster/Trivy as the boundary.",
+        "Does not trigger on the word vulnerability alone.",
+        "Names a different capability for source security."
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "Run the installed skill's bundled scanner against registry.example.com/app/ok:1.0.0 and registry.example.com/app/missing:1.0.0 in one invocation, then report the outcome and the process exit status.",
+      "expected_output": "Keeps the successful artifact but returns nonzero and lists the failed image.",
+      "fixture_prefix": "files",
+      "files": [
+        "files/bin/trivy",
+        "files/bin/kubectl",
+        "files/bin/docker",
+        "files/trivy-fixture/images/registry.example.com_app_ok_1.0.0.json",
+        "files/trivy-fixture/images/registry.example.com_app_missing_1.0.0.error"
+      ],
+      "expectations": [
+        "Returns nonzero.",
+        "Keeps successful JSON.",
+        "Lists failed images.",
+        "Prints successful summary.",
+        "Does not claim overall success."
+      ],
+      "grading": [
+        {
+          "type": "file_exists",
+          "path": "trivy-scan-results/registry.example.com_app_ok_1.0.0_e0d5a8af213a.json"
+        },
+        {
+          "type": "text_regex",
+          "pattern": "(?i)(exit status|returned?|status)[^\\n]*1"
+        },
+        {
+          "type": "text_regex",
+          "pattern": "(?i)(missing|MANIFEST_UNKNOWN|manifest does not exist)"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "Scan the remote reference registry.example.com/app:1.2.3 into the caller-provided directory ./scan-artifacts with the installed skill's bundled scanner; this workspace has no Docker daemon. Then run the scanner again without an explicit output directory and report where the default artifacts landed.",
+      "expected_output": "Uses the exact provided directory, uses a controlled non-/tmp default, and does not require Docker for the remote reference.",
+      "fixture_prefix": "files",
+      "files": [
+        "files/bin/trivy",
+        "files/bin/kubectl",
+        "files/bin/docker",
+        "files/trivy-fixture/images/registry.example.com_app_1.2.3.json"
+      ],
+      "expectations": [
+        "Honors --output-dir.",
+        "Avoids a hard-coded /tmp default.",
+        "Does not require Docker for remote scans.",
+        "Reports the output location.",
+        "Creates JSON only in the selected location."
+      ],
+      "grading": [
+        {
+          "type": "file_exists",
+          "path": "scan-artifacts/registry.example.com_app_1.2.3_a2636d4dc77a.json"
+        },
+        {
+          "type": "text_regex",
+          "pattern": "(?i)scan-artifacts"
+        },
+        {
+          "type": "text_regex",
+          "pattern": "(?i)(default artifact|default.*landed|trivy-image-scan)"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "This project has no repository-root skills/ directory; the skill exists only as an npx-installed copy. Invoke its bundled scanner against registry.example.com/app:1.2.3 from this working directory.",
+      "expected_output": "Finds the bundled script relative to the installed skill directory.",
+      "fixture_prefix": "files",
+      "files": [
+        "files/bin/trivy",
+        "files/bin/kubectl",
+        "files/bin/docker",
+        "files/trivy-fixture/images/registry.example.com_app_1.2.3.json"
+      ],
+      "expectations": [
+        "Uses a skill-relative script path.",
+        "Does not require a repository-root skills path.",
+        "Runs from an unrelated working directory.",
+        "Does not fail with script not found.",
+        "Uses the installed bundled script."
+      ],
+      "grading": [
+        {
+          "type": "file_exists",
+          "path": "trivy-scan-results/registry.example.com_app_1.2.3_a2636d4dc77a.json"
+        },
+        {
+          "type": "text_regex",
+          "pattern": "(?i)(CVE-2024-30001|zlib)"
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "prompt": "Scan registry.example.com/coverage/app:1.0.0 with the installed skill's bundled scanner and report package coverage as well as vulnerabilities.",
+      "expected_output": "Uses Trivy package inventory data to report result class/type coverage, detected language packages and ecosystems, and vulnerable library package details.",
+      "fixture_prefix": "files",
+      "files": [
+        "files/bin/trivy",
+        "files/bin/kubectl",
+        "files/bin/docker",
+        "files/trivy-fixture/images/registry.example.com_coverage_app_1.0.0.json"
+      ],
+      "expectations": [
+        "Runs online comprehensive vulnerability detection for OS and library packages across every package relationship, every severity, unfixed and suppressed findings, with all package inventory enabled.",
+        "Reports package counts grouped by Trivy result class and type.",
+        "Reports detected language-package count and ecosystem.",
+        "Reports lodash as a vulnerable npm package with its installed version and HIGH finding.",
+        "Reports suppressed vulnerabilities separately from active severity counts.",
+        "Reports a combined total covering active and suppressed vulnerabilities.",
+        "Overrides ambient status, skipped-path, vulnerability exit-code, and EOL exit-code settings that could reduce or misclassify the scan.",
+        "Keeps the complete raw JSON artifact."
+      ],
+      "grading": [
+        {
+          "type": "file_exists",
+          "path": "trivy-scan-results/registry.example.com_coverage_app_1.0.0_621e6f78efbb.json"
+        },
+        {
+          "type": "text_regex",
+          "pattern": "(?i)lodash[^\\n]*4\\.17\\.20"
+        },
+        {
+          "type": "text_regex",
+          "pattern": "(?i)(npm|language.package)"
+        },
+        {
+          "type": "text_regex",
+          "pattern": "(?i)suppress"
+        },
+        {
+          "type": "text_regex",
+          "pattern": "(?i)(combined|active plus suppressed|total)[^\\n]*2"
+        }
+      ]
+    }
+  ]
+}

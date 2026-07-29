@@ -1,0 +1,21 @@
+{
+  "skill_name": "refresh-related-docs",
+  "default_category": "regression_guard",
+  "critical_ids": [0, 1, 5],
+  "critical_expectations": {
+    "0": [0, 1, 2, 3],
+    "1": [0, 1, 2, 3, 4],
+    "5": [0, 2, 3, 4]
+  },
+  "behavior_change_ids": [3, 4, 5, 6],
+  "redundant_ids": [],
+  "behavior_change_rationale": {
+    "3": "Explicitly named document targets are already approved.",
+    "4": "Discover the repository's documentation authority and search from changed public names.",
+    "5": "Ask only for approval of newly discovered or expanded scope.",
+    "6": "Do not trigger a documentation workflow when no documentation can be stale."
+  },
+  "clarification_rationale": {
+    "_critical_expectations": "Optional ordinary-doc progress and a newly discovered target whose decline is already present in the prompt are conditional branches; the approval and no-edit safety requirements remain critical."
+  }
+}

@@ -1,0 +1,99 @@
+# ============================================================================
+# ty - Type Checker Configuration
+# ============================================================================
+# Documentation: https://docs.astral.sh/ty/reference/configuration/
+#
+# Division of responsibility:
+#   ty   → Type correctness, inference, and safety
+#   ruff → Code style, imports, naming, docstrings, formatting, complexity
+# ============================================================================
+
+# ============================================================================
+# Environment Settings
+# ============================================================================
+[environment]
+python-version = "3.14"  # Target Python version for type checking
+root = ["."]             # Flat project layout; uv supplies the active Python environment
+
+# ============================================================================
+# Source Configuration
+# ============================================================================
+[src]
+include = ["skill_evals.py", "generate_scanner_fixtures.py", "tests"]  # Project Python sources
+
+# Excluded paths (aligned with ruff.toml; ty also respects .gitignore)
+exclude = [
+    ".venv",
+    "venv",
+    "env",
+    ".env",
+    "__pycache__",
+    "build",
+    "dist",
+    "logs",
+    "**/*.ipynb",  # Notebooks have dynamic typing patterns
+]
+
+# ============================================================================
+# Type Checking Rules
+# ============================================================================
+[rules]
+
+# --- ERRORS: Issues that will cause runtime failures ---
+
+# Import resolution
+unresolved-import = "error"           # Missing or uninstalled imports
+
+# Function calls
+call-non-callable = "error"           # Calling non-callable objects
+invalid-argument-type = "error"       # Wrong argument types
+missing-argument = "error"            # Missing required arguments
+invalid-parameter-default = "error"   # Invalid default parameter values
+unknown-argument = "error"            # Unknown keyword arguments
+
+# Return types
+invalid-return-type = "error"         # Return value doesn't match declared type
+
+# Assignments
+invalid-assignment = "error"          # Assigning incompatible types
+conflicting-declarations = "error"    # Multiple conflicting type declarations
+
+# Attribute & subscript access
+unresolved-attribute = "error"        # Accessing non-existent attributes
+not-subscriptable = "error"           # Subscripting non-subscriptable types
+
+# Iteration & context managers
+not-iterable = "error"                # Iterating over non-iterable objects
+invalid-context-manager = "error"     # Invalid context manager usage
+
+# Class & inheritance
+invalid-base = "error"                # Invalid base class
+invalid-method-override = "error"     # Override with incompatible signature
+invalid-explicit-override = "error"   # @override on non-overriding method
+
+# Exception handling & overloads
+invalid-raise = "error"               # Raising non-exception types
+invalid-overload = "error"            # Invalid @overload definitions
+
+# Generics & type arguments
+invalid-type-arguments = "error"      # Wrong number/type of generic args
+
+# Deprecation
+deprecated = "error"                  # Using deprecated APIs
+
+# Numerical safety (critical for quant applications)
+division-by-zero = "error"            # Literal division by zero
+
+# --- WARNINGS: Potential issues worth investigating ---
+redundant-cast = "warn"               # Unnecessary type casts
+unused-ignore-comment = "warn"        # Unused # type: ignore comments
+possibly-unresolved-reference = "warn" # Potentially undefined references
+possibly-missing-attribute = "warn"   # Potentially missing attributes
+possibly-missing-import = "warn"      # Potentially missing imports
+unsupported-base = "warn"             # Base class not fully supported
+
+# ============================================================================
+# Terminal Output
+# ============================================================================
+[terminal]
+error-on-warning = false  # Warnings don't cause non-zero exit code

@@ -1,0 +1,31 @@
+{
+  "apiVersion": "v1",
+  "kind": "List",
+  "items": [
+    {
+      "apiVersion": "v1",
+      "kind": "Pod",
+      "metadata": {"name": "payments-api-7c9f4d8b56-2xkq9", "namespace": "payments"},
+      "spec": {
+        "containers": [
+          {
+            "name": "api",
+            "image": "registry.example.com/payments/api@sha256:8f2c4ad4bb6ec2a1e0f2c8e2f3f2d1b0a9c8d7e6f5a4b3c2d1e0f9a8b7c6d5e4"
+          }
+        ]
+      },
+      "status": {"phase": "Running", "ready": "1/1"}
+    },
+    {
+      "apiVersion": "v1",
+      "kind": "Pod",
+      "metadata": {"name": "payments-worker-58d6c9f47b-lm4rt", "namespace": "payments"},
+      "spec": {
+        "containers": [
+          {"name": "worker", "image": "registry.example.com/payments/worker:2.7.1"}
+        ]
+      },
+      "status": {"phase": "Running", "ready": "1/1"}
+    }
+  ]
+}

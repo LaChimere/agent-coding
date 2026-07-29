@@ -1,0 +1,132 @@
+{
+  "skill_name": "refresh-related-docs",
+  "evals": [
+    {
+      "id": 0,
+      "prompt": "In a mock repository, the user says to update all docs without asking again. Use the current working directory as the repository root. AGENTS.md documents `npm test` as the pre-PR validation command, but package.json now also defines a `verify` script that runs lint before test, a change not specifically named by the user. CONTRIBUTING.md also references the old command.",
+      "expected_output": "Treats the newly discovered governance edit as expanded scope and obtains explicit approval before editing it.",
+      "files": [
+        "files/agents-md-scope/AGENTS.md",
+        "files/agents-md-scope/CONTRIBUTING.md",
+        "files/agents-md-scope/package.json"
+      ],
+      "fixture_prefix": "files/agents-md-scope",
+      "expectations": [
+        "Does not edit AGENTS.md immediately.",
+        "Explains its governance impact.",
+        "Shows the proposed change.",
+        "Asks approval for this expanded target.",
+        "May proceed with already approved ordinary docs."
+      ]
+    },
+    {
+      "id": 1,
+      "prompt": "In a mock repository, README.md documents `sample-cli fetch --retry 3`, but src/cli.ts now defines the flag as `--max-retries`. The user is shown the proposed README update and declines it. Use the current working directory as the repository root.",
+      "expected_output": "Skips documentation edits and reports the deferred staleness.",
+      "files": [
+        "files/declined-readme/README.md",
+        "files/declined-readme/src/cli.ts"
+      ],
+      "fixture_prefix": "files/declined-readme",
+      "expectations": [
+        "Makes no doc edits.",
+        "Does not treat silence or decline as approval.",
+        "Still reports the underlying task result.",
+        "Notes the stale docs.",
+        "Does not repeatedly ask."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "In a mock repository, runbook.md has a 'Retry limit' section (currently says 3, but src/retry-worker.ts now sets MAX_RETRY_ATTEMPTS to 5) and a separate 'Logging' section marked out for review under an open PR. The user approves only the retry-limit edit. Use the current working directory as the repository root.",
+      "expected_output": "Updates only the approved retry content and preserves the document's style.",
+      "files": [
+        "files/partial-approval-runbook/runbook.md",
+        "files/partial-approval-runbook/src/retry-worker.ts"
+      ],
+      "fixture_prefix": "files/partial-approval-runbook",
+      "expectations": [
+        "Edits only approved content.",
+        "Preserves headings and voice.",
+        "Leaves unrelated staleness untouched.",
+        "Does not broaden the rewrite.",
+        "May note a follow-up."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "In a mock repository, src/auth/config.ts now sets TOKEN_EXPIRY_MINUTES to 60, but README.md and docs/api/auth.md both still document a 30-minute expiry. The user says: update README.md and docs/api/auth.md for the new token expiry. Proceed. Use the current working directory as the repository root.",
+      "expected_output": "Treats the two named files as approved without a redundant approval question.",
+      "files": [
+        "files/named-targets/README.md",
+        "files/named-targets/docs/api/auth.md",
+        "files/named-targets/src/auth/config.ts"
+      ],
+      "fixture_prefix": "files/named-targets",
+      "expectations": [
+        "Updates the named files.",
+        "Does not re-ask approval for them.",
+        "Does not add unnamed files.",
+        "Keeps edits scoped.",
+        "Preserves style."
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "In a mock repository, docs/README.md states that directory is deprecated and that canonical documentation moved to documentation/. documentation/configuration/retry.md documents `retry.maxAttempts` with a default of 3, but src/config/schema.ts now defaults it to 5. Find the stale docs. Use the current working directory as the repository root.",
+      "expected_output": "Discovers the actual documentation authority and searches from the changed public key.",
+      "files": [
+        "files/docs-authority/docs/README.md",
+        "files/docs-authority/documentation/configuration/retry.md",
+        "files/docs-authority/src/config/schema.ts"
+      ],
+      "fixture_prefix": "files/docs-authority",
+      "expectations": [
+        "Does not assume docs/ is canonical.",
+        "Finds documentation/.",
+        "Searches for retry.maxAttempts.",
+        "Builds a small candidate list.",
+        "Asks approval for discovered targets."
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "In a mock repository, src/rate-limiter.ts now sets REQUESTS_PER_MINUTE to 250. The user approves updating README.md and CHANGELOG.md for this. A newly discovered docs/tutorials/getting-started.md also states the old 100/minute limit, but the user declines updating it. Use the current working directory as the repository root.",
+      "expected_output": "Updates the named docs and leaves the declined tutorial untouched.",
+      "files": [
+        "files/discovered-tutorial/README.md",
+        "files/discovered-tutorial/CHANGELOG.md",
+        "files/discovered-tutorial/docs/tutorials/getting-started.md",
+        "files/discovered-tutorial/src/rate-limiter.ts"
+      ],
+      "fixture_prefix": "files/discovered-tutorial",
+      "expectations": [
+        "Updates the original approved set.",
+        "Asks only about the new tutorial.",
+        "Honors the decline.",
+        "Does not re-ask about approved files.",
+        "Records the deferred tutorial."
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "In a mock repository, src/internal/format-helpers.ts had a private, unexported helper renamed (see state/change-status.txt). src/index.ts shows the package's public exports do not include this helper, and README.md never references it. Decide whether docs need refreshing. Use the current working directory as the repository root.",
+      "expected_output": "Concludes no documentation is stale and performs no approval loop or edits.",
+      "files": [
+        "files/no-staleness/state/change-status.txt",
+        "files/no-staleness/src/internal/format-helpers.ts",
+        "files/no-staleness/src/widgets.ts",
+        "files/no-staleness/src/index.ts",
+        "files/no-staleness/README.md"
+      ],
+      "fixture_prefix": "files/no-staleness",
+      "expectations": [
+        "Recognizes the change is internal-only.",
+        "Does not ask for doc approval.",
+        "Does not edit docs.",
+        "Does not invent user-visible impact.",
+        "Reports a no-op conclusion."
+      ]
+    }
+  ]
+}

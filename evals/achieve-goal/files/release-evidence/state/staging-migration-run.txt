@@ -1,0 +1,11 @@
+release-ci job 8841 "migrate-staging" — 2026-06-19T13:41:07Z
+target: staging-eu
+migration: 20260618_add_refund_ledger
+
+applying forward migration ... ok (4.1s)
+rows copied into refund_ledger: 18422
+orders.refund_cents dropped ... ok
+post-migration checks: 12 passed, 0 failed
+
+result: PASS
+artifact written by release-ci; do not edit by hand
