@@ -1,3 +1,6 @@
+# Claude
+.omc/
+
 # Repository-level skill evaluation workspaces (run requests, snapshots, imports, aggregates)
 .skill-evals/
 .certify-work/
