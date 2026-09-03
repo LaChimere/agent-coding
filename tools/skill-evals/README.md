@@ -179,6 +179,13 @@ The hints are provider-neutral: they state a requirement, never a mechanism. No 
 npx skills add /abs/path/to/<run_id>.skills-snapshot/<skill> --agent <agent> --copy --yes
 ```
 
+This is intentionally a skill-content evaluation boundary. A plugin-owned skill uses the same
+standalone snapshot-copy step as a root skill, so the run can evaluate its instructions without
+depending on mutable plugin state. It does **not** prove that the owning plugin manifest,
+marketplace entry, Codex cache, or skill discovery works. Validate those separately by installing
+the plugin through its marketplace, checking the installed cache against the release candidate,
+and invoking it from a new Codex thread.
+
 Because the eval corpus lives outside `skills/`, the runtime snapshot contains no `evals/` directory, no `evals.json`, and no `manifest.json`; `prepare` asserts this after materializing the snapshot and fails loudly if any eval material is present. The tests execute the recorded `installed_copy_steps` against a fake `npx` on `PATH` and re-assert that the installed copy carries no eval material.
 
 Each `installed_copy_steps` entry also has a matching, same-index `install_requirements` entry: a declarative `{agent, skill_name, package_manager, package, action, source, options}` description of the identical install intent, for an adapter that cannot or does not want to shell out to the recorded `argv`. `installed_copy_steps[i]["argv"]` remains unchanged and is still the source of truth for any adapter that does shell out; `install_requirements` is purely additive, so existing adapters that only read `installed_copy_steps` are unaffected.
