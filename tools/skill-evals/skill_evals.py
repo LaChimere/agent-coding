@@ -1155,8 +1155,26 @@ def validate_suite(path: Path, universe: set[str] | None = None) -> list[str]:
 
 
 def skill_directories(repo: Path) -> list[Path]:
-    """List the real runtime skill directories under skills/."""
-    return sorted(path for path in (repo / 'skills').glob('*/') if path.is_dir())
+    """List real runtime skills from the root and bundled Codex plugins."""
+    root_skills = [path for path in (repo / 'skills').glob('*/') if path.is_dir()]
+    plugin_skills = [
+        path for path in (repo / 'plugins').glob('*/skills/*/') if path.is_dir()
+    ]
+    return sorted([*root_skills, *plugin_skills])
+
+
+def skill_directory_map(repo: Path) -> dict[str, Path]:
+    """Index runtime skills by name and reject ambiguous duplicate names."""
+    indexed: dict[str, Path] = {}
+    for path in skill_directories(repo):
+        existing = indexed.get(path.name)
+        if existing is not None:
+            first = existing.relative_to(repo).as_posix()
+            second = path.relative_to(repo).as_posix()
+            message = f'duplicate runtime skill name {path.name!r}: {first}, {second}'
+            raise ContractError(message)
+        indexed[path.name] = path
+    return indexed
 
 
 def eval_corpus_root(repo: Path) -> Path:
@@ -1180,19 +1198,23 @@ def eval_directories(repo: Path) -> list[Path]:
 
 
 def validate_repository(repo: Path) -> list[str]:
-    """Validate runtime skills (skills/*) against the central eval corpus (evals/*).
+    """Validate runtime skills against the central eval corpus (evals/*).
 
     Runtime discovery and eval discovery are deliberately separate roots: every runtime skill
-    must have a matching central eval directory, no eval directory may be orphaned, and any
-    surviving legacy `skills/<name>/evals/` corpus is rejected outright.
+    in `skills/*` or `plugins/*/skills/*` must have a matching central eval directory, no eval
+    directory may be orphaned, and any surviving in-skill eval corpus is rejected outright.
     """
     skills = skill_directories(repo)
     if not skills:
         return [f'{repo}: no skills found']
+    try:
+        indexed = skill_directory_map(repo)
+    except ContractError as error:
+        return [str(error)]
     errors: list[str] = []
     for skill in skills:
         errors.extend(validate_skill(skill, eval_directory(repo, skill.name)))
-    known = {skill.name for skill in skills}
+    known = set(indexed)
     for eval_dir in eval_directories(repo):
         if eval_dir.name not in known:
             issue(
@@ -1230,7 +1252,7 @@ def resolve_skill_selection(repo: Path, selected: list[str]) -> list[str]:
     Kept independent of behavior-case collection so a --suite-only run can still snapshot
     and install the exact selected real skills without loading their 108 behavior cases.
     """
-    all_skills = {path.name: path for path in skill_directories(repo)}
+    all_skills = skill_directory_map(repo)
     names = selected or sorted(all_skills)
     unknown = sorted(set(names) - set(all_skills))
     if unknown:
@@ -1423,8 +1445,9 @@ def runtime_tree_digest(repo: Path, names: list[str]) -> dict[str, Any]:
     without Git, and only reflects the runtime skills actually selected for this run. It
     covers nothing from the eval corpus, so editing a case never changes it.
     """
+    skill_paths = skill_directory_map(repo)
     per_skill = {
-        name: digest(tree_entries(repo / 'skills' / name, skip_runtime_generated=True))
+        name: digest(tree_entries(skill_paths[name], skip_runtime_generated=True))
         for name in names
     }
     return {'skills': per_skill, 'digest': digest(per_skill)}
@@ -1495,7 +1518,7 @@ def copy_tree(
 
 
 def materialize_snapshot(
-    source_root: Path,
+    skill_paths: dict[str, Path],
     names: list[str],
     snapshot_root: Path,
 ) -> dict[str, str]:
@@ -1508,7 +1531,7 @@ def materialize_snapshot(
     for name in names:
         destination = snapshot_root / name
         copy_tree(
-            source_root / name,
+            skill_paths[name],
             destination,
             skip_runtime_generated=True,
         )
@@ -1782,7 +1805,7 @@ def prepare_run(args: argparse.Namespace) -> dict[str, Any]:
     pre_existing_evaluation_snapshot = evaluation_snapshot_root.exists()
     try:
         snapshot_copies = materialize_snapshot(
-            repo / 'skills', selected_skills, snapshot_root
+            skill_directory_map(repo), selected_skills, snapshot_root
         )
         assert_no_eval_material(snapshot_root)
         assert_no_runtime_artifacts(snapshot_root)

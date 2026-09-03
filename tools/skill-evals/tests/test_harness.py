@@ -280,6 +280,14 @@ class TestHarness:
         data['evals'][0]['expectations'] = list(expectations)
         eval_path.write_text(json.dumps(data), encoding='utf-8')
 
+    def _move_skill_into_plugin(self) -> Path:
+        """Move the example skill into the supported plugin runtime layout."""
+        plugin_skill = self.repo / 'plugins' / 'pr-review' / 'skills' / 'example'
+        plugin_skill.parent.mkdir(parents=True)
+        shutil.move(self.skill_dir, plugin_skill)
+        self.skill_dir = plugin_skill
+        return plugin_skill
+
     def test_invalid_schema_is_reported(self):
         """Verify invalid schema is reported."""
         eval_path = self.eval_dir / 'evals.json'
@@ -302,6 +310,38 @@ class TestHarness:
         (self.repo / 'evals' / 'ghost').mkdir()
         errors = harness.validate_repository(self.repo)
         assert any('no matching runtime skill' in error for error in errors)
+
+    def test_plugin_skill_uses_the_central_eval_corpus_and_runtime_snapshot(self):
+        """Plugin skills participate in validation and prepare without leaking evals."""
+        plugin_skill = self._move_skill_into_plugin()
+        assert harness.validate_repository(self.repo) == []
+        assert harness.resolve_skill_selection(self.repo, ['example']) == ['example']
+
+        run = self._prepare(
+            'baseline', self.repo / 'plugin-run.json', ('--skill', 'example')
+        )
+        snapshot = Path(run['snapshot']['skills']['example'])
+        assert (snapshot / 'SKILL.md').read_text() == (
+            plugin_skill / 'SKILL.md'
+        ).read_text()
+        assert not (snapshot / 'evals').exists()
+        assert run['repository']['skill_tree_digests']['example']
+
+    def test_duplicate_root_and_plugin_skill_names_are_rejected(self):
+        """A skill name must identify exactly one runtime directory."""
+        plugin_skill = self.repo / 'plugins' / 'duplicate' / 'skills' / 'example'
+        plugin_skill.mkdir(parents=True)
+        (plugin_skill / 'SKILL.md').write_text(
+            '---\nname: example\ndescription: Duplicate skill.\n---\n',
+            encoding='utf-8',
+        )
+        errors = harness.validate_repository(self.repo)
+        assert errors == [
+            (
+                "duplicate runtime skill name 'example': "
+                'plugins/duplicate/skills/example, skills/example'
+            )
+        ]
 
     def test_legacy_in_skill_eval_directory_is_rejected(self):
         """Verify legacy in skill eval directory is rejected."""
