@@ -72,6 +72,10 @@ Run test, build, lint, or typecheck commands only when the user explicitly reque
 applicable repository guidance requires it. Keep command/result evidence separate from reviewer
 judgement, and never present an unrun check as passing.
 
+A rule requiring tests or coverage to exist does not by itself require command execution. Treat
+repository guidance as an execution requirement only when it explicitly says to run a check or
+names a command that must be executed.
+
 ## Aggregate
 
 Read [references/report-format.md](references/report-format.md). The primary agent must independently
