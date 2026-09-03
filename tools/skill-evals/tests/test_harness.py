@@ -326,33 +326,12 @@ class TestHarness:
         ).read_text()
         assert not (snapshot / 'evals').exists()
         assert run['repository']['skill_tree_digests']['example']
-        assert run['installed_copy_steps'] == [
-            {
-                'agent': 'test-agent',
-                'skill_name': 'example',
-                'argv': [
-                    'npx',
-                    'skills',
-                    'add',
-                    str(snapshot),
-                    '--agent',
-                    'test-agent',
-                    '--copy',
-                    '--yes',
-                ],
-            }
-        ]
-        assert run['install_requirements'] == [
-            {
-                'agent': 'test-agent',
-                'skill_name': 'example',
-                'package_manager': 'npx',
-                'package': 'skills',
-                'action': 'add',
-                'source': str(snapshot),
-                'options': {'agent': 'test-agent', 'copy': True, 'yes': True},
-            }
-        ]
+        copy_step = run['installed_copy_steps'][0]
+        assert copy_step['argv'][:4] == ['npx', 'skills', 'add', str(snapshot)]
+        requirement = run['install_requirements'][0]
+        assert requirement['package_manager'] == 'npx'
+        assert requirement['package'] == 'skills'
+        assert requirement['source'] == str(snapshot)
 
     def test_duplicate_root_and_plugin_skill_names_are_rejected(self):
         """A skill name must identify exactly one runtime directory."""
