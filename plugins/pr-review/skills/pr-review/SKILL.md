@@ -1,6 +1,6 @@
 ---
 name: pr-review
-description: "Review a pull request, branch diff, commit range, or working-tree change set with applicable code, comment, test, error, type, spec, and optional security reviewers. Aggregate only double-confirmed findings. Do not use for implementing fixes, repository-wide security audits, container-image CVEs, or PR atomicity analysis."
+description: "Default general review entrypoint for a pull request, branch diff, commit range, working-tree change set, or requests phrased as review since X. Use applicable code, comment, test, error, type, spec, and optional security reviewers, then aggregate only double-confirmed findings. Do not use for implementing fixes, repository-wide security audits, container-image CVEs, or PR atomicity analysis."
 ---
 
 # PR Review
