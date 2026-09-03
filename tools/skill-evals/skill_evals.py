@@ -1220,7 +1220,7 @@ def validate_repository(repo: Path) -> list[str]:
             issue(
                 errors,
                 str(eval_dir),
-                f'eval corpus has no matching runtime skill skills/{eval_dir.name}/',
+                f'eval corpus has no matching runtime skill named {eval_dir.name}',
             )
     return errors
 
