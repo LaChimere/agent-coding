@@ -312,7 +312,7 @@ class TestHarness:
         assert any('no matching runtime skill' in error for error in errors)
 
     def test_plugin_skill_uses_the_central_eval_corpus_and_runtime_snapshot(self):
-        """Plugin skills participate in validation and prepare without leaking evals."""
+        """Plugin skills use hermetic skill snapshots, not plugin installation, in evals."""
         plugin_skill = self._move_skill_into_plugin()
         assert harness.validate_repository(self.repo) == []
         assert harness.resolve_skill_selection(self.repo, ['example']) == ['example']
@@ -326,6 +326,33 @@ class TestHarness:
         ).read_text()
         assert not (snapshot / 'evals').exists()
         assert run['repository']['skill_tree_digests']['example']
+        assert run['installed_copy_steps'] == [
+            {
+                'agent': 'test-agent',
+                'skill_name': 'example',
+                'argv': [
+                    'npx',
+                    'skills',
+                    'add',
+                    str(snapshot),
+                    '--agent',
+                    'test-agent',
+                    '--copy',
+                    '--yes',
+                ],
+            }
+        ]
+        assert run['install_requirements'] == [
+            {
+                'agent': 'test-agent',
+                'skill_name': 'example',
+                'package_manager': 'npx',
+                'package': 'skills',
+                'action': 'add',
+                'source': str(snapshot),
+                'options': {'agent': 'test-agent', 'copy': True, 'yes': True},
+            }
+        ]
 
     def test_duplicate_root_and_plugin_skill_names_are_rejected(self):
         """A skill name must identify exactly one runtime directory."""
