@@ -14,7 +14,10 @@ evals/**/benchmark*.md
 evals/**/review*.html
 
 # Installed-copy smoke output from `npx skills add --copy`
-.agents/
+.agents/*
+!.agents/plugins/
+.agents/plugins/*
+!.agents/plugins/marketplace.json
 skills-lock.json
 
 # Python and tool caches

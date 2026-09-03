@@ -98,6 +98,10 @@ skills/                                           # Specialized workflows
     references/goal-lifecycle-state.md
     scripts/goal_lifecycle.py
     tests/test_goal_lifecycle.py
+plugins/                                          # Codex plugins installed from the repo marketplace
+  pr-review/
+    .codex-plugin/plugin.json
+    skills/pr-review/                             #   Single-entrypoint PR/change-set review
 evals/                                            # Central eval corpus (repository maintenance, never distributed)
   <skill>/evals.json                              #   Functional cases for the matching skills/<skill>/
   <skill>/manifest.json                           #   Case classification manifest (critical/behavior-change/...)
@@ -107,7 +111,7 @@ tools/skill-evals/                                # Provider-neutral eval harnes
 plans/                                            # Planning/execution artifacts for changes to this repo
 ```
 
-**Evals are repository-maintenance assets, not skill content.** Every skill has a matching `evals/<skill>/` directory with functional cases, fixtures, and a classification manifest, but that material lives outside `skills/` and is never distributed: `npx skills add` installs only the runtime skill tree, so an installed copy cannot read its own cases or expected answers. See `tools/skill-evals/README.md` for validation, run preparation, and grading.
+**Evals are repository-maintenance assets, not skill content.** Every root or plugin runtime skill has a matching `evals/<skill>/` directory with functional cases, fixtures, and a classification manifest, but that material lives outside runtime skill directories and is never distributed. An installed skill or plugin therefore cannot read its own cases or expected answers. See `tools/skill-evals/README.md` for validation, run preparation, and grading.
 
 ## Skills
 
@@ -215,6 +219,21 @@ Use when: the user asks about container image vulnerabilities, exact cluster wor
 
 ## Usage
 
+### Installing the PR Review plugin
+
+Add this repository as a Codex marketplace, then install the plugin:
+
+```sh
+codex plugin marketplace add LaChimere/agent-coding --ref main
+codex plugin add pr-review@agent-coding
+```
+
+Start a new thread, then invoke `$pr-review` explicitly or ask Codex to review the current PR,
+branch diff, commit range, or working-tree changes. The plugin is read-only. It uses the complete
+`$codex-security:security-diff-scan` workflow when security review is applicable and that optional
+capability is installed; otherwise it reports the missing security coverage according to whether
+security was automatic or explicitly required.
+
 ### Using the workflow in another repo
 
 1. Install skills through `npx skills add`; source-checkout execution is unsupported.
@@ -230,7 +249,7 @@ Use when: the user asks about container image vulnerabilities, exact cluster wor
 2. If you change cross-skill workflow behavior, update `workflow-orchestrator` first.
 3. If you change a worker skill, keep it aligned with the `workflow-orchestrator` contract.
 4. Put repo-change planning artifacts under `plans/{slug}/`.
-5. Add or change eval cases under `evals/<skill>/`, never inside `skills/<skill>/`; validate with
+5. Add or change eval cases under `evals/<skill>/`, never inside a runtime skill directory; validate with
    `uv run --locked --project tools/skill-evals python tools/skill-evals/skill_evals.py validate --repo .`.
 6. Keep generated eval run artifacts in the ignored `.skill-evals/` workspace.
 

@@ -1,0 +1,20 @@
+{
+  "name": "agent-coding",
+  "interface": {
+    "displayName": "Agent Coding"
+  },
+  "plugins": [
+    {
+      "name": "pr-review",
+      "source": {
+        "source": "local",
+        "path": "./plugins/pr-review"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}

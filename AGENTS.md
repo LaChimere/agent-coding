@@ -15,6 +15,7 @@ It is **not** the portable coordination contract for downstream skills or downst
 ## Repository model
 
 - `skills/` contains the reusable skills shipped by this repo.
+- `plugins/` contains Codex plugins whose runtime skills are installed through the repo marketplace.
 - `evals/` contains the central repository-maintenance corpus; it is never distributed with skills.
 - `tools/skill-evals/` contains the provider-neutral validation, snapshot, grading, aggregation, and suite tooling.
 - `skills/workflow-orchestrator/` is the portable coordination layer and owns the shared workflow contract plus planning templates.
@@ -24,7 +25,8 @@ It is **not** the portable coordination contract for downstream skills or downst
 
 ## Distribution contract
 
-- Users consume `skills/` only through copies installed by `npx skills add`.
+- Users consume root `skills/` through copies installed by `npx skills add`; plugin-owned skills are
+  consumed by installing their Codex plugin from `.agents/plugins/marketplace.json`.
 - Running a skill from the repository source checkout is unsupported.
 - Runtime references, templates, scripts, and platform adapters must be bundled under the skill that uses them and resolved relative to the installed skill directory.
 - Skills documented as standalone must work when installed alone.
@@ -59,6 +61,7 @@ Use the narrowest validation that matches the change:
 - workflow changes: targeted skill/doc consistency review
 - doc-only changes: consistency review of the affected skills/docs
 - distributed skill changes: install the affected skill combinations through `npx skills add` and validate the installed copies
+- Codex plugin changes: validate the plugin, install it from the repo marketplace, and test it in a new thread
 
 ## Practical change map
 
@@ -69,3 +72,4 @@ Use the narrowest validation that matches the change:
 - Changing harness contracts -> update `tools/skill-evals/` and its tests
 - Changing repo contribution guidance -> update this `AGENTS.md`
 - Changing planning artifact formats -> update `skills/workflow-orchestrator/templates/`
+- Changing a Codex plugin -> update `plugins/<plugin>/`, its central `evals/<skill>/` corpus, and marketplace/docs when needed
