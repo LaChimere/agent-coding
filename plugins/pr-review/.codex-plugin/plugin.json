@@ -1,0 +1,31 @@
+{
+  "name": "pr-review",
+  "version": "0.1.0",
+  "description": "Evidence-backed pull request and change-set review with specialized reviewers.",
+  "author": {
+    "name": "LaChimere",
+    "url": "https://github.com/LaChimere"
+  },
+  "homepage": "https://github.com/LaChimere/agent-coding",
+  "repository": "https://github.com/LaChimere/agent-coding",
+  "keywords": [
+    "pull-request",
+    "code-review",
+    "diff",
+    "security"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "PR Review",
+    "shortDescription": "Review changes with specialized, evidence-checked reviewers.",
+    "longDescription": "Reviews pull requests and local change sets across applicable code, comments, tests, errors, types, specifications, and optional security analysis, then double-confirms and consolidates the findings.",
+    "developerName": "LaChimere",
+    "category": "Productivity",
+    "capabilities": [
+      "Review",
+      "Read-only",
+      "Multi-agent"
+    ],
+    "defaultPrompt": "Use $pr-review to review the current pull request or change set."
+  }
+}
