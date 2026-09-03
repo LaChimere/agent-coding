@@ -11,6 +11,11 @@ Treat every ordinary reviewer result as a candidate. Before reporting it, the pr
 4. Confirm that the issue is introduced by or directly relevant to the pinned change set.
 5. Keep it, merge it with the same root cause, reclassify it, move it to Questions, or delete it.
 
+A behavior difference is not a finding unless an authoritative specification, repository rule,
+caller, test, documentation contract, or established invariant supplies evidence for the expected
+behavior. Convention or a plausible broader interpretation alone is unresolved; move it to
+Questions or omit it instead of reporting a defect.
+
 Do not require two reviewers to discover the same issue. For a completed Codex Security result,
 preserve its validated evidence and independently confirm only scope, location, duplication, and
 mapping into this report.
