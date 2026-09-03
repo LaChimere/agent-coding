@@ -3245,6 +3245,190 @@
       ],
       "id": "orchestrator-vs-slop-explicit-scope-check",
       "prompt": "Just check this one diff for scope creep before merging; there's nothing ambiguous about which phase we're in."
+    },
+    {
+      "direction": "should_trigger",
+      "expectations": [
+        "Runs the explicitly invoked PR review skill.",
+        "Keeps the review read-only."
+      ],
+      "expected_skills": ["pr-review"],
+      "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "pr-review"}}],
+      "id": "pr-review-explicit-skill",
+      "prompt": "Use $pr-review to review the current pull request."
+    },
+    {
+      "direction": "should_trigger",
+      "expectations": [
+        "Reviews the current PR change set.",
+        "Selects all applicable review aspects."
+      ],
+      "expected_skills": ["pr-review"],
+      "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "pr-review"}}],
+      "id": "pr-review-current-pr",
+      "prompt": "Review the current PR and tell me what must change before merge."
+    },
+    {
+      "direction": "should_trigger",
+      "expectations": [
+        "Uses the named branch as the review scope.",
+        "Does not turn the request into implementation work."
+      ],
+      "expected_skills": ["pr-review"],
+      "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "pr-review"}}],
+      "id": "pr-review-branch-diff",
+      "prompt": "Review everything on this branch since main; do not fix it."
+    },
+    {
+      "direction": "should_trigger",
+      "expectations": [
+        "Reviews staged, unstaged, and relevant untracked work.",
+        "Reports the resolved local change set."
+      ],
+      "expected_skills": ["pr-review"],
+      "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "pr-review"}}],
+      "id": "pr-review-working-tree",
+      "prompt": "Review my current working-tree changes before I commit them."
+    },
+    {
+      "direction": "should_trigger",
+      "expectations": [
+        "Focuses on the requested tests and error-handling aspects.",
+        "Uses the PR review aggregator for the result."
+      ],
+      "expected_skills": ["pr-review"],
+      "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "pr-review"}}],
+      "id": "pr-review-tests-errors",
+      "prompt": "Review this diff, focusing on tests and silent error handling."
+    },
+    {
+      "direction": "should_trigger",
+      "expectations": [
+        "Compares the change with the supplied specification.",
+        "Checks missing requirements and scope creep."
+      ],
+      "expected_skills": ["pr-review"],
+      "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "pr-review"}}],
+      "id": "pr-review-spec-focus",
+      "prompt": "Review this PR against specs/import-contract.md and flag missing or unrequested behavior."
+    },
+    {
+      "direction": "should_trigger",
+      "expectations": [
+        "Treats design as a review focus without inventing a public design skill.",
+        "Keeps the review scoped to the changed design."
+      ],
+      "expected_skills": ["pr-review"],
+      "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "pr-review"}}],
+      "id": "pr-review-design-focus",
+      "prompt": "Review the design proposed by this PR, especially its interfaces and failure model."
+    },
+    {
+      "direction": "should_trigger",
+      "expectations": [
+        "Runs the comprehensive PR review entrypoint.",
+        "Uses the complete security companion when applicable and available."
+      ],
+      "expected_skills": ["pr-review"],
+      "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "pr-review"}}],
+      "id": "pr-review-comprehensive-security",
+      "prompt": "Run a full PR review, including security, for this authentication change."
+    },
+    {
+      "direction": "should_not_trigger",
+      "expectations": [
+        "Plans a trunk-safe PR decomposition.",
+        "Does not review a change set that does not yet exist."
+      ],
+      "expected_skills": ["decompose-feature"],
+      "forbidden_skills": ["pr-review"],
+      "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "decompose-feature"}}],
+      "id": "pr-review-vs-decompose",
+      "prompt": "Plan how to split this proposed auth, API, migration, and UI feature into PRs."
+    },
+    {
+      "direction": "should_not_trigger",
+      "expectations": [
+        "Assesses whether the existing diff is one atomic unit.",
+        "Does not substitute a general PR quality review."
+      ],
+      "expected_skills": ["ensure-atomic-pr"],
+      "forbidden_skills": ["pr-review"],
+      "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "ensure-atomic-pr"}}],
+      "id": "pr-review-vs-atomicity",
+      "prompt": "Is this diff atomic, or should it be split into separate PRs?"
+    },
+    {
+      "direction": "should_not_trigger",
+      "expectations": [
+        "Plans safe parallel ownership and worktrees.",
+        "Does not perform a PR review."
+      ],
+      "expected_skills": ["plan-parallel-work"],
+      "forbidden_skills": ["pr-review"],
+      "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "plan-parallel-work"}}],
+      "id": "pr-review-vs-parallel-plan",
+      "prompt": "Plan how three agents should implement these approved PR slices in parallel worktrees."
+    },
+    {
+      "direction": "should_not_trigger",
+      "expectations": [
+        "Executes the already approved implementation slice.",
+        "Does not replace implementation with review."
+      ],
+      "expected_skills": ["execute-plan-loop"],
+      "forbidden_skills": ["pr-review"],
+      "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "execute-plan-loop"}}],
+      "id": "pr-review-vs-implementation",
+      "prompt": "Implement the approved parser slice and run its tests; the plan is already accepted."
+    },
+    {
+      "direction": "should_not_trigger",
+      "expectations": [
+        "Updates the explicitly named stale documentation.",
+        "Does not review an implementation diff."
+      ],
+      "expected_skills": ["refresh-related-docs"],
+      "forbidden_skills": ["pr-review"],
+      "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "refresh-related-docs"}}],
+      "id": "pr-review-vs-doc-refresh",
+      "prompt": "Update docs/api-guide.md to match the already completed API behavior."
+    },
+    {
+      "direction": "should_not_trigger",
+      "expectations": [
+        "Routes to exact container-image CVE scanning.",
+        "Does not convert an image scan into source PR review."
+      ],
+      "expected_skills": ["scan-image-vulnerabilities"],
+      "forbidden_skills": ["pr-review"],
+      "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "scan-image-vulnerabilities"}}],
+      "id": "pr-review-vs-image-cve",
+      "prompt": "Scan registry.example.com/payments:4.2 for known container vulnerabilities."
+    },
+    {
+      "direction": "should_not_trigger",
+      "expectations": [
+        "Creates a durable goal lifecycle.",
+        "Does not turn the objective into an immediate review."
+      ],
+      "expected_skills": ["achieve-goal"],
+      "forbidden_skills": ["pr-review"],
+      "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "achieve-goal"}}],
+      "id": "pr-review-vs-goal",
+      "prompt": "/goal Build and ship the new review dashboard over several sessions."
+    },
+    {
+      "direction": "should_not_trigger",
+      "expectations": [
+        "Determines the correct workflow phase before selecting a worker.",
+        "Does not claim there is already a diff to review."
+      ],
+      "expected_skills": ["workflow-orchestrator"],
+      "forbidden_skills": ["pr-review"],
+      "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "workflow-orchestrator"}}],
+      "id": "pr-review-vs-ambiguous-workflow",
+      "prompt": "Help me decide what we should do next for a vague reliability concern; no design or change exists yet."
     }
   ],
   "schema": "skill-evals/trigger-suite-v1",

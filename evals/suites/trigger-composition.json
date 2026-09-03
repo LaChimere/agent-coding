@@ -47,6 +47,29 @@
       "forbidden_skills": ["security-review"],
       "expectations": ["Route directly to read-only image scanning.", "Do not convert an image-CVE request into source security review."],
       "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "scan-image-vulnerabilities"}}]
+    },
+    {
+      "id": "pr-review-with-security-companion",
+      "prompt": "Use $pr-review for the current authentication PR and include security review.",
+      "expected_skills": ["pr-review"],
+      "expectations": ["Keep pr-review as the single public entrypoint.", "Invoke complete diff security as a companion when available."],
+      "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "pr-review"}}]
+    },
+    {
+      "id": "pr-review-vs-image-scan",
+      "prompt": "Scan registry.example.com/payments:4.2 for image CVEs only.",
+      "expected_skills": ["scan-image-vulnerabilities"],
+      "forbidden_skills": ["pr-review"],
+      "expectations": ["Use the image scanner.", "Do not activate PR review for an image-only request."],
+      "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "scan-image-vulnerabilities"}}]
+    },
+    {
+      "id": "pr-review-vs-atomicity",
+      "prompt": "Only assess whether this existing diff is atomic enough for one PR.",
+      "expected_skills": ["ensure-atomic-pr"],
+      "forbidden_skills": ["pr-review"],
+      "expectations": ["Use the atomicity assessment skill.", "Do not substitute general PR review."],
+      "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "ensure-atomic-pr"}}]
     }
   ]
 }
