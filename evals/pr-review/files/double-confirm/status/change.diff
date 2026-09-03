@@ -1,0 +1,7 @@
+diff --git a/src/format-user.js b/src/format-user.js
+--- a/src/format-user.js
++++ b/src/format-user.js
+@@
++export function formatUser(user) {
++  return user.name.trim();
++}

@@ -1,0 +1,7 @@
+diff --git a/src/webhook.js b/src/webhook.js
+--- a/src/webhook.js
++++ b/src/webhook.js
+@@
++export function parseWebhook(body) {
++  return JSON.parse(body);
++}

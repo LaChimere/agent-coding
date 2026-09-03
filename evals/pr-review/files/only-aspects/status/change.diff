@@ -1,0 +1,9 @@
+diff --git a/src/profile.ts b/src/profile.ts
+--- a/src/profile.ts
++++ b/src/profile.ts
+@@
++/** Mutable profile data that is always complete. */
++export type Profile = {
++  id?: string;
++  displayName: string;
++};

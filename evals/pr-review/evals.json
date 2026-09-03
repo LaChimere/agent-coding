@@ -1,0 +1,151 @@
+{
+  "skill_name": "pr-review",
+  "evals": [
+    {
+      "id": 0,
+      "prompt": "Use $pr-review on the supplied change described by `status/change.diff`. Inspect `AGENTS.md`, `specs/auth.md`, the source, and tests. Treat `status/capabilities.md` as the observable capability state for this fixture. Review only; do not modify files. Use the current working directory as the repository root.",
+      "expected_output": "Reviews the pinned auth change with applicable code, tests, errors, spec, and security handling; reports the verified anonymous fallback root cause once, notes the test gap, and accurately reports unavailable full security coverage.",
+      "fixture_prefix": "files/auth-fallback",
+      "files": [
+        "files/auth-fallback/AGENTS.md",
+        "files/auth-fallback/specs/auth.md",
+        "files/auth-fallback/src/auth.js",
+        "files/auth-fallback/test/auth.test.js",
+        "files/auth-fallback/status/change.diff",
+        "files/auth-fallback/status/capabilities.md"
+      ],
+      "expectations": [
+        "Pins and reports the supplied change set instead of inventing another base.",
+        "Selects code, tests, errors, and spec, and recognizes that security is applicable.",
+        "Reports that the complete security aspect was not run because the capability is unavailable, without presenting ordinary review as a security scan.",
+        "Reports the anonymous fallback as one double-confirmed root finding with multiple relevant source labels rather than duplicates.",
+        "Reports the missing denial-path test according to its concrete regression risk.",
+        "Does not modify the fixture files."
+      ]
+    },
+    {
+      "id": 1,
+      "prompt": "Use $pr-review to review the documentation change in `status/change.diff`. Inspect the current implementation and README. No issue, specification, plan, or other authoritative requirements exist for this change. Review only.",
+      "expected_output": "Runs the applicable code/comments review, identifies the inaccurate retry claim, and skips spec with an explicit coverage reason instead of asking for or inventing requirements.",
+      "fixture_prefix": "files/docs-no-spec",
+      "files": [
+        "files/docs-no-spec/src/client.js",
+        "files/docs-no-spec/README.md",
+        "files/docs-no-spec/status/change.diff"
+      ],
+      "expectations": [
+        "Runs comments and the applicable general code review for the documentation change.",
+        "Finds that the README claims three retries while the implementation performs one retry.",
+        "Skips spec and records that no authoritative specification was available.",
+        "Does not ask the user to provide a spec or infer one from the changed prose."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Use $pr-review, but only review comments and types in the supplied patch. Do not run any other aspect. Inspect `status/change.diff` and the changed source.",
+      "expected_output": "Honors the explicit only-selection while still resolving scope, and reports coverage that contains comments and types without running unrelated aspects.",
+      "fixture_prefix": "files/only-aspects",
+      "files": [
+        "files/only-aspects/src/profile.ts",
+        "files/only-aspects/status/change.diff"
+      ],
+      "expectations": [
+        "Runs only comments and types after the minimum scope work.",
+        "Does not silently add code, tests, errors, spec, or security review.",
+        "Reports the selected and skipped aspects in Review Coverage."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Use $pr-review on `status/change.diff`. A preliminary reviewer might suspect that `formatUser` receives null. Independently inspect the caller and tests before deciding whether that is a real finding. Review only.",
+      "expected_output": "Double-confirms the candidate, finds the caller guard and test evidence, and does not report a disproved null-input finding.",
+      "fixture_prefix": "files/double-confirm",
+      "files": [
+        "files/double-confirm/src/format-user.js",
+        "files/double-confirm/src/render-user.js",
+        "files/double-confirm/test/render-user.test.js",
+        "files/double-confirm/status/change.diff"
+      ],
+      "expectations": [
+        "Reads the unchanged caller and relevant test as counterevidence.",
+        "Recognizes that the caller excludes null before invoking formatUser.",
+        "Deletes the disproved candidate instead of downgrading it into a finding.",
+        "Explains the completed review coverage without claiming certainty beyond it."
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "Use $pr-review on `status/change.diff`. The repository's `AGENTS.md` requires `bin/check-tests` for this class of change, so execute that exact check and report its decisive result separately from review judgement. Do not modify files.",
+      "expected_output": "Reviews test quality and executes only the required local test shim, accurately reporting its result in Review Coverage.",
+      "fixture_prefix": "files/required-test",
+      "files": [
+        "files/required-test/AGENTS.md",
+        "files/required-test/bin/check-tests",
+        "files/required-test/src/total.js",
+        "files/required-test/test/total.test.js",
+        "files/required-test/status/change.diff"
+      ],
+      "expectations": [
+        "Runs the exact repository-required bin/check-tests command rather than a broad invented suite.",
+        "Reports the command and its passing output separately from reviewer findings.",
+        "Still assesses behavioral test coverage instead of treating command success as proof that the review is clean.",
+        "Does not alter source, tests, or repository guidance."
+      ],
+      "execution": {
+        "network": "disabled",
+        "path_prepend": ["bin"],
+        "executable_files": ["bin/check-tests"]
+      }
+    },
+    {
+      "id": 5,
+      "prompt": "Use $pr-review and explicitly require a security review of `status/change.diff`. For this fixture, `$codex-security:security-diff-scan` is not installed or otherwise available. Review only.",
+      "expected_output": "Stops and reports the missing required security capability without substituting a lightweight scan or claiming complete PR coverage.",
+      "fixture_prefix": "files/security-required",
+      "files": [
+        "files/security-required/src/webhook.js",
+        "files/security-required/status/change.diff"
+      ],
+      "expectations": [
+        "Recognizes that security was explicitly required and the complete capability is unavailable.",
+        "Stops rather than substituting ordinary code review as completed security review.",
+        "States the missing capability and does not claim the overall PR review is complete."
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "Use $pr-review to review the retry design in `docs/retry-design.md` against `specs/retry.md` and the supplied patch. Focus on design, but keep the public review aspect vocabulary unchanged.",
+      "expected_output": "Treats design as a focus for applicable code, comments, and spec reviewers, identifies the missing idempotency boundary, and does not invent a public design aspect.",
+      "fixture_prefix": "files/design-focus",
+      "files": [
+        "files/design-focus/docs/retry-design.md",
+        "files/design-focus/specs/retry.md",
+        "files/design-focus/status/change.diff"
+      ],
+      "expectations": [
+        "Uses code, comments, and spec as applicable perspectives for the design-focused request.",
+        "Does not introduce or report a separate design aspect.",
+        "Finds that the design omits the specification's idempotency boundary and cites both sources.",
+        "Keeps the review scoped to the proposed retry design."
+      ]
+    },
+    {
+      "id": 7,
+      "prompt": "Use $pr-review on the small clean change in `status/change.diff`. Inspect the implementation and test, double-confirm any candidates, and return the normal final report without modifying files.",
+      "expected_output": "Produces the stable human- and agent-readable Markdown report with zero counts, coverage limits, and a natural-language Recommended Action without inventing findings or a PASS/FAIL verdict.",
+      "fixture_prefix": "files/clean-change",
+      "files": [
+        "files/clean-change/src/slug.js",
+        "files/clean-change/test/slug.test.js",
+        "files/clean-change/status/change.diff"
+      ],
+      "expectations": [
+        "Uses the required Scope, Summary, Spec Coverage, Review Coverage, Questions, and Recommended Action sections.",
+        "Reports zero counts for Blocker, Critical, Major, Minor, and Suggestion without inventing an issue.",
+        "Uses no mechanical PASS or FAIL verdict.",
+        "States that spec was skipped and security was not applicable.",
+        "Does not modify files."
+      ]
+    }
+  ]
+}

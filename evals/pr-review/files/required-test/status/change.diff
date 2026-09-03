@@ -1,0 +1,7 @@
+diff --git a/src/total.js b/src/total.js
+--- a/src/total.js
++++ b/src/total.js
+@@
++export function total(values) {
++  return values.reduce((sum, value) => sum + value, 0);
++}

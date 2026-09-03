@@ -1,0 +1,7 @@
+diff --git a/src/slug.js b/src/slug.js
+--- /dev/null
++++ b/src/slug.js
+@@
++export function normalizeSlug(value) {
++  return value.trim().toLowerCase().replaceAll(' ', '-');
++}

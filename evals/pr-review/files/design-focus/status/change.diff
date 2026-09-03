@@ -1,0 +1,8 @@
+diff --git a/docs/retry-design.md b/docs/retry-design.md
+--- /dev/null
++++ b/docs/retry-design.md
+@@
++# Retry design
++
++Workers retry failed payment requests up to three times. Each retry sends the payment request again
++with a newly generated request identifier.
