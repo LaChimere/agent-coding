@@ -53,6 +53,8 @@ The primary agent coordinates the review.
 - Launch the applicable ordinary reviewers in parallel when concurrency is available. Give each
   the same pinned target, changed-file inventory, relevant diff, repository guidance, authoritative
   spec, and its aspect brief. Reviewers are read-only and must not spawn more agents.
+- If delegation is unavailable, run the same applicable briefs sequentially in the primary agent
+  and record that limitation. Do not wait for agents or handles that were never created.
 - Let each reviewer use the report shape natural to its domain. Its output is a set of candidates,
   not final findings.
 - Keep security separate from ordinary reviewers. When security is applicable and
