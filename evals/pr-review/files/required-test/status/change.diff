@@ -1,7 +1,8 @@
 diff --git a/src/total.js b/src/total.js
---- a/src/total.js
+new file mode 100644
+--- /dev/null
 +++ b/src/total.js
-@@
+@@ -0,0 +1,3 @@
 +export function total(values) {
 +  return values.reduce((sum, value) => sum + value, 0);
 +}

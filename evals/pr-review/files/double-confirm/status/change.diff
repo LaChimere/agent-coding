@@ -1,7 +1,8 @@
 diff --git a/src/format-user.js b/src/format-user.js
---- a/src/format-user.js
+new file mode 100644
+--- /dev/null
 +++ b/src/format-user.js
-@@
+@@ -0,0 +1,3 @@
 +export function formatUser(user) {
 +  return user.name.trim();
 +}

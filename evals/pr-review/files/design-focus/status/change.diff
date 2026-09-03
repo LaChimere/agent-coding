@@ -1,7 +1,8 @@
 diff --git a/docs/retry-design.md b/docs/retry-design.md
+new file mode 100644
 --- /dev/null
 +++ b/docs/retry-design.md
-@@
+@@ -0,0 +1,4 @@
 +# Retry design
 +
 +Workers retry failed payment requests up to three times. Each retry sends the payment request again

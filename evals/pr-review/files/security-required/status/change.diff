@@ -1,7 +1,8 @@
 diff --git a/src/webhook.js b/src/webhook.js
---- a/src/webhook.js
+new file mode 100644
+--- /dev/null
 +++ b/src/webhook.js
-@@
+@@ -0,0 +1,3 @@
 +export function parseWebhook(body) {
 +  return JSON.parse(body);
 +}
