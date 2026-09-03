@@ -1250,7 +1250,7 @@ def resolve_skill_selection(repo: Path, selected: list[str]) -> list[str]:
     """Resolve --skill into a concrete, validated list of real skill names.
 
     Kept independent of behavior-case collection so a --suite-only run can still snapshot
-    and install the exact selected real skills without loading their 108 behavior cases.
+    and install the exact selected real skills without loading their behavior cases.
     """
     all_skills = skill_directory_map(repo)
     names = selected or sorted(all_skills)
@@ -1763,7 +1763,7 @@ def prepare_run(args: argparse.Namespace) -> dict[str, Any]:
         raise ContractError('cannot prepare invalid corpus:\n' + '\n'.join(errors))
     config = prepare_run_config(args)
     selected_skills = resolve_skill_selection(repo, args.skill)
-    # --suite-only skips the (currently 108) real behavior cases so a trigger/composition
+    # --suite-only skips the real behavior cases so a trigger/composition
     # suite can be prepared on its own, but the selected real skills are still snapshotted
     # and installed below exactly as a full run would.
     cases = (

@@ -193,7 +193,7 @@ For a narrowed `--skill` run, `prepare` keeps only cases whose complete positive
 
 ### `--suite-only`: prepare a suite run without the real skills' behavior cases
 
-`--suite-only` skips loading each selected real skill's `evals/<skill>/evals.json` behavior cases (108 cases across the bundled skills today) so a trigger/composition suite can be prepared and run on its own — for example, to iterate quickly on routing behavior without re-running the full behavior corpus every time. It requires at least one `--suite`; `prepare` refuses with `ContractError` otherwise. The selected real skills (via `--skill`, or all skills by default) are still validated, snapshotted, and given `installed_copy_steps` exactly as a full run would — only the behavior cases themselves are omitted from `request.cases`.
+`--suite-only` skips loading each selected real skill's `evals/<skill>/evals.json` behavior cases so a trigger/composition suite can be prepared and run on its own — for example, to iterate quickly on routing behavior without re-running the full behavior corpus every time. It requires at least one `--suite`; `prepare` refuses with `ContractError` otherwise. The selected real skills (via `--skill`, or all skills by default) are still validated, snapshotted, and given `installed_copy_steps` exactly as a full run would — only the behavior cases themselves are omitted from `request.cases`.
 
 ```sh
 uv run --locked --project tools/skill-evals \
