@@ -103,7 +103,7 @@ plugins/                                          # Codex plugins installed from
     .codex-plugin/plugin.json
     skills/pr-review/                             #   Single-entrypoint PR/change-set review
 evals/                                            # Central eval corpus (repository maintenance, never distributed)
-  <skill>/evals.json                              #   Functional cases for the matching skills/<skill>/
+  <skill>/evals.json                              #   Functional cases for the matching runtime skill
   <skill>/manifest.json                           #   Case classification manifest (critical/behavior-change/...)
   <skill>/files/                                  #   Case fixtures
   suites/                                         #   Cross-skill trigger/composition suites
@@ -315,4 +315,4 @@ If your agent platform supports hooks, consider adding them to high-risk skills 
 
 ## Status
 
-Every skill has functional eval definitions and classification metadata in the central `evals/` corpus. The provider-neutral harness has 96 pytest cases; all nine skills pass real isolated `npx skills add --copy` installation without distributing eval material. Final five-model behavior certification improved every model and produced zero critical regressions; trigger/composition gained a net 20 paired passes with documented provider and fixture limitations. Continue refining from real usage evidence rather than adding speculative workflow rules.
+Every runtime skill has functional eval definitions and classification metadata in the central `evals/` corpus. The provider-neutral harness covers both root skills and plugin-owned skills. Root skills are validated through isolated `npx skills add --copy` installation, while plugin-owned skills are validated through the repository marketplace and installed plugin copy. The prior five-model behavior certification covered the original root-skill set; new runtime skills require their own recorded evaluation evidence. Continue refining from real usage evidence rather than adding speculative workflow rules.
