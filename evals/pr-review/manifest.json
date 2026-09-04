@@ -1,19 +1,29 @@
 {
   "skill_name": "pr-review",
   "default_category": "regression_guard",
-  "critical_ids": [0, 3, 4, 5, 8],
+  "critical_ids": [0, 3, 4, 5, 8, 9, 10, 11, 12, 13],
   "critical_expectations": {
     "0": [0, 1, 2, 3, 4],
     "3": [0, 1, 2],
     "4": [0, 1, 2],
     "5": [0, 1, 2],
-    "8": [0, 1, 2, 3, 4]
+    "8": [0, 1, 2, 3, 4],
+    "9": [0, 1, 2, 3, 4],
+    "10": [0, 1, 2, 3],
+    "11": [0, 1, 2, 3, 4],
+    "12": [0, 1, 2, 3],
+    "13": [0, 1, 2, 3]
   },
-  "behavior_change_ids": [8],
+  "behavior_change_ids": [8, 9, 10, 11, 12, 13],
   "redundant_ids": [],
   "deterministic_ids": [],
   "behavior_change_rationale": {
-    "8": "Make partial reviewer launch recovery explicit: defer capacity-blocked aspects, retry no-handle launches once with the inherited current-session model, then fall back to primary sequential review."
+    "8": "Make partial reviewer launch recovery explicit: defer capacity-blocked aspects, retry no-handle launches once with the inherited current-session model, then fall back to primary sequential review.",
+    "9": "Automatically add a Rubber Duck challenge for substantial reviews and disclose primary-model fallback when no contrasting model is available.",
+    "10": "Skip independent challengers for small direct changes unless the user explicitly requests one.",
+    "11": "Run SPAR only on explicit request and keep its unresolved challenges separate from ordinary findings.",
+    "12": "Honor an explicit request to exclude the automatically applicable Rubber Duck pass.",
+    "13": "Preserve cross-model challenge provenance while mapping verified candidates to canonical review aspects."
   },
   "clarification_rationale": {
     "_coverage": "The cases cover routing, evidence quality, aggregation, optional security, command execution, and report shape without duplicating every language-specific review example."

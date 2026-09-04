@@ -170,6 +170,101 @@
         "Does not wait on a missing handle, retry indefinitely, invent reviewer results, or silently omit an aspect from Review Coverage.",
         "Does not modify the fixture files."
       ]
+    },
+    {
+      "id": 9,
+      "prompt": "Use $pr-review on `status/change.diff` against `specs/payments.md`. This public payment-interface change is substantial. Treat `status/capabilities.md` as the observable model and delegation state. Review only and do not modify files.",
+      "expected_output": "Runs the applicable ordinary reviews and automatically performs a Rubber Duck primary-model fallback, reports that challenge coverage honestly, and consolidates the operation-idempotency defect into one verified finding.",
+      "fixture_prefix": "files/challenge-auto",
+      "files": [
+        "files/challenge-auto/src/payments.js",
+        "files/challenge-auto/specs/payments.md",
+        "files/challenge-auto/status/change.diff",
+        "files/challenge-auto/status/capabilities.md"
+      ],
+      "expectations": [
+        "Recognizes that the public payment and idempotency change is substantial and automatically runs Rubber Duck.",
+        "Uses the primary model fallback because no eligible different family or delegation is available, without calling it cross-model.",
+        "Does not run SPAR because the user did not request it.",
+        "Double-confirms the attempt-scoped idempotency key against the operation-scoped specification and reports one root finding.",
+        "Records ordinary aspects, independent challenge, and security coverage separately.",
+        "Does not modify files."
+      ]
+    },
+    {
+      "id": 10,
+      "prompt": "Use $pr-review on the small change in `status/change.diff`. No specification exists. Review only and do not add optional challenge passes that are not applicable.",
+      "expected_output": "Completes the applicable ordinary review, skips SPAR because it was not requested and Rubber Duck because the change is not substantial, and returns the normal zero-finding report.",
+      "fixture_prefix": "files/challenge-small",
+      "files": [
+        "files/challenge-small/src/label.js",
+        "files/challenge-small/test/label.test.js",
+        "files/challenge-small/status/change.diff"
+      ],
+      "expectations": [
+        "Runs the applicable ordinary code and tests review.",
+        "Records SPAR as not requested and Rubber Duck as not applicable.",
+        "Does not launch or simulate an independent challenger for the small direct change.",
+        "Reports zero findings without cosmetic suggestions.",
+        "Does not modify files."
+      ]
+    },
+    {
+      "id": 11,
+      "prompt": "Use $pr-review on the design in `docs/cache-design.md` against `specs/cache.md` and explicitly include $spar. Treat `status/capabilities.md` as the observable model and delegation state. Review only.",
+      "expected_output": "Runs the design-focused ordinary reviews and an explicitly requested SPAR primary-model fallback, keeps SPAR separate from the public aspect vocabulary, and moves its unresolved evidence gap into Questions.",
+      "fixture_prefix": "files/challenge-spar",
+      "files": [
+        "files/challenge-spar/docs/cache-design.md",
+        "files/challenge-spar/specs/cache.md",
+        "files/challenge-spar/status/change.diff",
+        "files/challenge-spar/status/capabilities.md"
+      ],
+      "expectations": [
+        "Runs SPAR only because the user explicitly requested it.",
+        "Uses a primary-model fallback and does not claim cross-model execution.",
+        "Treats SPAR as an independent challenge rather than a new ordinary aspect or source label.",
+        "Keeps the unmeasured invalidation assumption as a Question unless other evidence establishes a defect.",
+        "Reports SPAR and Rubber Duck challenge coverage separately.",
+        "Does not modify files."
+      ]
+    },
+    {
+      "id": 12,
+      "prompt": "Use $pr-review on the substantial payment change in `status/change.diff` against `specs/payments.md`, but explicitly exclude Rubber Duck. Review only.",
+      "expected_output": "Honors the explicit Rubber Duck exclusion while completing ordinary review and reporting the independent challenge exclusion without weakening the verified finding.",
+      "fixture_prefix": "files/challenge-excluded",
+      "files": [
+        "files/challenge-excluded/src/payments.js",
+        "files/challenge-excluded/specs/payments.md",
+        "files/challenge-excluded/status/change.diff"
+      ],
+      "expectations": [
+        "Recognizes the change as substantial but honors the explicit Rubber Duck exclusion.",
+        "Does not run SPAR because it was not requested.",
+        "Reports Rubber Duck as excluded in Independent Challenge coverage.",
+        "Completes ordinary double confirmation and reports the operation-idempotency defect.",
+        "Does not modify files."
+      ]
+    },
+    {
+      "id": 13,
+      "prompt": "Use $pr-review to aggregate the completed substantial review recorded in `status/challenge-state.md`. Treat that file as authoritative observable agent state: do not call collaboration tools or invent a different model. Inspect the source, specification, and patch before deciding whether the Rubber Duck candidate survives.",
+      "expected_output": "Records the completed Rubber Duck pass as cross-model using the named contrasting family, independently confirms its candidate against the source and specification, and reports it with canonical aspect labels rather than a Rubber Duck source label.",
+      "fixture_prefix": "files/challenge-cross-model",
+      "files": [
+        "files/challenge-cross-model/src/payments.js",
+        "files/challenge-cross-model/specs/payments.md",
+        "files/challenge-cross-model/status/change.diff",
+        "files/challenge-cross-model/status/challenge-state.md"
+      ],
+      "expectations": [
+        "Uses the recorded contrasting model family and labels the Rubber Duck pass cross-model.",
+        "Does not run SPAR or invent additional challenger handles.",
+        "Independently confirms the candidate against the operation-scoped idempotency requirement.",
+        "Uses canonical code/spec labels for the final finding and records Rubber Duck only in challenge coverage or evidence.",
+        "Does not expose hidden reasoning or modify files."
+      ]
     }
   ]
 }

@@ -1,0 +1,9 @@
+diff --git a/src/label.js b/src/label.js
+new file mode 100644
+index 0000000..f200001
+--- /dev/null
++++ b/src/label.js
+@@ -0,0 +1,3 @@
++export function label(value) {
++  return value.trim();
++}

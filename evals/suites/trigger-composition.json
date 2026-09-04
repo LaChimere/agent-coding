@@ -71,6 +71,38 @@
       "forbidden_skills": ["pr-review"],
       "expectations": ["Use the atomicity assessment skill.", "Do not substitute general PR review."],
       "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "ensure-atomic-pr"}}]
+    },
+    {
+      "id": "pr-review-auto-rubber-duck",
+      "prompt": "Use $pr-review on this substantial payment API and idempotency change. Review only.",
+      "expected_skills": ["pr-review", "rubber-duck"],
+      "forbidden_skills": ["spar", "code-review"],
+      "expectations": ["Keep pr-review as the public entrypoint.", "Automatically add Rubber Duck because the change affects a public payment interface and persisted behavior.", "Do not add SPAR without an explicit request."],
+      "grading": [{"type": "text_regex", "pattern": "pr-review.*rubber-duck|rubber-duck.*pr-review"}]
+    },
+    {
+      "id": "pr-review-explicit-spar",
+      "prompt": "Use $pr-review on this cache design and explicitly include $spar to challenge its assumptions.",
+      "expected_skills": ["pr-review", "spar"],
+      "forbidden_skills": ["code-review"],
+      "expectations": ["Keep pr-review as the public entrypoint.", "Run SPAR because the user explicitly requested it.", "Keep SPAR challenge output subject to primary confirmation."],
+      "grading": [{"type": "text_regex", "pattern": "pr-review.*spar|spar.*pr-review"}]
+    },
+    {
+      "id": "pr-review-small-change-no-challenger",
+      "prompt": "Use $pr-review on this one-line internal label helper change. Review only.",
+      "expected_skills": ["pr-review"],
+      "forbidden_skills": ["rubber-duck", "spar", "code-review"],
+      "expectations": ["Run the ordinary applicable review.", "Do not add Rubber Duck solely because a review was requested.", "Do not add SPAR without an explicit request."],
+      "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "pr-review"}}]
+    },
+    {
+      "id": "pr-review-explicit-rubber-duck-exclusion",
+      "prompt": "Use $pr-review on this substantial public API migration, but exclude Rubber Duck. Review only.",
+      "expected_skills": ["pr-review"],
+      "forbidden_skills": ["rubber-duck", "spar", "code-review"],
+      "expectations": ["Honor the explicit Rubber Duck exclusion.", "Complete ordinary review without silently replacing the excluded challenge.", "Do not add SPAR without an explicit request."],
+      "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "pr-review"}}]
     }
   ]
 }

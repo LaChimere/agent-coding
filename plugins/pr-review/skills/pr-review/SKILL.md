@@ -1,6 +1,6 @@
 ---
 name: pr-review
-description: "Default general review entrypoint for a pull request, branch diff, commit range, working-tree change set, or requests phrased as review since X. Use applicable code, comment, test, error, type, spec, and optional security reviewers, then aggregate only double-confirmed findings. Use this as the sole review workflow; do not compose it with the separate code-review skill. Do not use for implementing fixes, repository-wide security audits, container-image CVEs, or PR atomicity analysis."
+description: "Default general review entrypoint for a pull request, branch diff, commit range, working-tree change set, or requests phrased as review since X. Use applicable code, comment, test, error, type, spec, independent challenge, and optional security review, then aggregate only double-confirmed findings. Use this as the primary change-set review workflow; do not compose it with the separate code-review skill. Do not use for implementing fixes, repository-wide security audits, container-image CVEs, or PR atomicity analysis."
 ---
 
 # PR Review
@@ -57,7 +57,9 @@ The primary agent coordinates the review.
   [references/reviewers/index.md](references/reviewers/index.md). Launch reviewers in waves within the
   available concurrency. Give each the same pinned target, changed-file inventory, relevant diff,
   repository guidance, authoritative spec, and the complete selected reviewer brief. Reviewers are
-  read-only and must not spawn more agents.
+  read-only and must not spawn more agents. Launch ordinary reviewers without a model override by
+  default so they use the current session model; the primary chooses reasoning effort according to
+  the aspect's scope, complexity, and risk.
 - Track every selected aspect until it is `completed` or `skipped` with an explicit reason. An aspect
   not attempted because capacity is full belongs in a later wave; it is not a failed launch.
 - Enter wait/collect only for returned live handles. When delegation is available but a launch
@@ -69,6 +71,39 @@ The primary agent coordinates the review.
   handle.
 - Let each reviewer use the report shape natural to its domain. Its output is a set of candidates,
   not final findings.
+
+## Independent challenge
+
+The primary session model must perform its own review and make the final judgement. Independent
+challenge adds a separate adversarial perspective; it never replaces ordinary review or primary
+double confirmation.
+
+- Run `$spar` only when the user explicitly asks for SPAR, devil's-advocate analysis, or an
+  assumptions/trade-offs challenge. Never add it automatically or treat it as a public review aspect.
+- Run `$rubber-duck` when the user explicitly requests it, or automatically when the pinned change is
+  substantial: it materially affects security, persisted data, a public interface, compatibility,
+  migration, concurrency, cross-component behavior, complex state transitions, or a plan/design/test
+  whose failure would have major consequences. File count alone does not make a change substantial.
+  Honor an explicit request to exclude Rubber Duck.
+- Give challengers the same pinned target, relevant context, repository guidance, and authoritative
+  specification, but not ordinary reviewer candidates or each other's output. The primary coordinates
+  challenger agents; a challenger must not spawn more agents.
+- Prefer an eligible model from a different user-, repository-, and host-allowed family for each
+  challenger. Do not hard-code a model or reasoning level. The primary chooses reasoning effort based
+  on the challenge's complexity and risk.
+- If no eligible different family is available, use the primary model in an isolated challenger
+  context. If delegation is unavailable, perform a distinct primary-model second pass. If the user
+  requires an actual different family and none exists, report the capability limitation. Never call a
+  primary-model fallback cross-model.
+- Apply the ordinary live-handle, wave, single-retry, and primary fallback rules to challenger
+  dispatch. Track SPAR and Rubber Duck separately until completed, excluded, skipped with reason, or
+  blocked by an explicitly required unavailable capability.
+- Treat challenger output as candidates. A SPAR challenge normally remains a Question unless evidence
+  establishes a defect. Map a verified Rubber Duck candidate to the existing aspect labels and five
+  severity levels; do not mechanically convert its standalone categories.
+- Record whether each pass was cross-model or primary-model fallback and the model/family when known.
+  Do not expose hidden reasoning. A Rubber Duck security concern does not complete the security aspect.
+
 - Keep security separate from ordinary reviewers. When security is applicable and
   `$codex-security:security-diff-scan` is available, invoke that complete workflow from the primary
   agent against the same pinned target. Do not copy or weaken its threat-model, validation,
@@ -105,7 +140,7 @@ or coverage. Delete disproved candidates, merge a shared root cause, and move un
 to Questions.
 
 Return one human- and agent-readable Markdown report sorted by the agreed severity levels, with
-source labels, spec/review coverage, and a natural-language Recommended Action.
+source labels, spec/review/challenge coverage, and a natural-language Recommended Action.
 
 ## Boundaries
 

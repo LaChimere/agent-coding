@@ -89,6 +89,9 @@ Use this stable Markdown shape. Omit empty severity sections, but include all ze
 ## Review Coverage
 - Ran: <aspects>
 - Skipped: <aspect and reason>
+- Independent Challenge:
+  - SPAR: <completed cross-model, completed primary-model fallback, excluded, not requested, or unavailable>
+  - Rubber Duck: <completed cross-model, completed primary-model fallback, excluded, not applicable, or unavailable>
 - Commands executed: <exact command and decisive result, or none>
 - Security: <completed, incomplete, not applicable, or unavailable>
 

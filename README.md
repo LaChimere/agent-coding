@@ -243,6 +243,13 @@ from the diff. The primary agent double-confirms and deduplicates candidates, th
 Blocker, Critical, Major, Minor, or Suggestion findings with source and coverage details. This workflow
 does not invoke or depend on the separate `$code-review` skill.
 
+For substantial changes, `$pr-review` automatically adds a `$rubber-duck` critic unless the user
+excludes it. SPAR is never automatic, but a review request can explicitly include `$spar` to challenge
+the design assumptions and trade-offs. Ordinary reviewers use the current session model by default;
+the primary agent chooses reasoning effort and retains final judgement. When no eligible different
+model family is available for a challenger, the primary model performs an isolated fallback and the
+report states that limitation.
+
 Use `$spar <idea>` for an explicit, one-shot devil's-advocate analysis of an idea, decision, plan,
 design, migration, or optimization. It develops two independent opposing perspectives by default,
 adds a third only when that stakeholder changes the decision, and returns a concise synthesis without

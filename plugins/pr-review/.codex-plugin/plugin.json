@@ -1,7 +1,7 @@
 {
   "name": "pr-review",
   "version": "0.1.0+codex.20260904072339",
-  "description": "Evidence-backed pull request and change-set review with specialized reviewers.",
+  "description": "Evidence-backed change review with specialized reviewers and independent challengers.",
   "author": {
     "name": "LaChimere",
     "url": "https://github.com/LaChimere"
@@ -18,7 +18,7 @@
   "interface": {
     "displayName": "PR Review",
     "shortDescription": "Review changes with specialized, evidence-checked reviewers.",
-    "longDescription": "Reviews pull requests and local change sets across applicable code, comments, tests, errors, types, specifications, and optional security analysis, then double-confirms and consolidates the findings.",
+    "longDescription": "Reviews pull requests and local change sets across applicable code, comments, tests, errors, types, specifications, optional independent SPAR or Rubber Duck challenges, and security analysis, then double-confirms and consolidates the findings.",
     "developerName": "LaChimere",
     "category": "Productivity",
     "capabilities": [
