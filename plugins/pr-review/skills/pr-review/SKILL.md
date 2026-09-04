@@ -120,7 +120,7 @@ double confirmation.
   questions, and challenge coverage into the single PR Review report.
 - Record a pass as cross-model only when its execution ledger contains a returned live handle and the
   collected result confirms a known eligible different model family. Otherwise record the actual
-  isolated or sequential primary-model fallback and its limitation. Do not expose hidden reasoning.
+  distinct primary-model fallback and its limitation. Do not expose hidden reasoning.
   A Rubber Duck security concern does not complete the security aspect.
 
 - Keep security separate from ordinary reviewers. When security is applicable and
