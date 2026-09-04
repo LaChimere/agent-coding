@@ -54,14 +54,19 @@ and `spec` reviewers rather than inventing a separate public aspect.
 The primary agent coordinates the review.
 
 - For each selected ordinary aspect, read only the reviewer file linked from
-  [references/reviewers/index.md](references/reviewers/index.md). Launch those reviewers in parallel
-  when concurrency is available. Give each the same pinned target, changed-file inventory, relevant
-  diff, repository guidance, authoritative spec, and the complete selected reviewer brief.
-  Reviewers are read-only and must not spawn more agents.
-- Enter a wait/collect step only after at least one reviewer launch succeeds and returns a live
-  handle. When zero launches return a live handle, delegation is unavailable: immediately run all
-  selected briefs sequentially in the primary agent and record that limitation. Never call a wait
-  operation without a live reviewer handle.
+  [references/reviewers/index.md](references/reviewers/index.md). Launch reviewers in waves within the
+  available concurrency. Give each the same pinned target, changed-file inventory, relevant diff,
+  repository guidance, authoritative spec, and the complete selected reviewer brief. Reviewers are
+  read-only and must not spawn more agents.
+- Track every selected aspect until it is `completed` or `skipped` with an explicit reason. An aspect
+  not attempted because capacity is full belongs in a later wave; it is not a failed launch.
+- Enter wait/collect only for returned live handles. When delegation is available but a launch
+  returns no live handle, retry that aspect once after capacity is available, without an explicit
+  model override so it uses the current session's inherited/default model. If that retry still
+  returns no handle, or a launched reviewer later fails, run that brief sequentially in the primary
+  agent and record the fallback. When delegation itself is unavailable, skip retry and use the same
+  primary-agent fallback immediately. Never retry an aspect more than once or wait without a live
+  handle.
 - Let each reviewer use the report shape natural to its domain. Its output is a set of candidates,
   not final findings.
 - Keep security separate from ordinary reviewers. When security is applicable and

@@ -1,17 +1,20 @@
 {
   "skill_name": "pr-review",
   "default_category": "regression_guard",
-  "critical_ids": [0, 3, 4, 5],
+  "critical_ids": [0, 3, 4, 5, 8],
   "critical_expectations": {
     "0": [0, 1, 2, 3, 4],
     "3": [0, 1, 2],
     "4": [0, 1, 2],
-    "5": [0, 1, 2]
+    "5": [0, 1, 2],
+    "8": [0, 1, 2, 3, 4]
   },
-  "behavior_change_ids": [],
+  "behavior_change_ids": [8],
   "redundant_ids": [],
   "deterministic_ids": [],
-  "behavior_change_rationale": {},
+  "behavior_change_rationale": {
+    "8": "Make partial reviewer launch recovery explicit: defer capacity-blocked aspects, retry no-handle launches once with the inherited current-session model, then fall back to primary sequential review."
+  },
   "clarification_rationale": {
     "_coverage": "The cases cover routing, evidence quality, aggregation, optional security, command execution, and report shape without duplicating every language-specific review example."
   }

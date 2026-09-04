@@ -151,6 +151,25 @@
         "States that spec was skipped and security was not applicable.",
         "Does not modify files."
       ]
+    },
+    {
+      "id": 8,
+      "prompt": "Use $pr-review to continue the partially completed review recorded in `status/launch-state.md`. Treat that file as the authoritative observable launcher state for this fixture: do not call collaboration tools or invent different handles. Inspect `status/change.diff` and the changed source, finish every selected aspect using the documented retry and fallback rules, and return the normal final report without modifying files.",
+      "expected_output": "Accounts for every selected aspect after a partial first wave: defers the capacity-blocked aspect to a later wave, retries no-handle launches once with the inherited current-session model, falls back to primary sequential review when that retry also returns no handle, and aggregates only after code, tests, errors, and types are complete.",
+      "fixture_prefix": "files/partial-launch",
+      "files": [
+        "files/partial-launch/src/value.js",
+        "files/partial-launch/status/change.diff",
+        "files/partial-launch/status/launch-state.md"
+      ],
+      "expectations": [
+        "Keeps code, tests, errors, and types as the complete selected aspect set and accounts for all four before aggregation.",
+        "Treats types as deferred to a later wave when the first wave filled available capacity rather than counting it as a failed launch.",
+        "Retries each no-handle launch at most once without an explicit model override, using the recorded inherited current-session model outcome.",
+        "Uses the successful inherited-model retry for errors and runs types sequentially in the primary agent after its retry also returns no handle.",
+        "Does not wait on a missing handle, retry indefinitely, invent reviewer results, or silently omit an aspect from Review Coverage.",
+        "Does not modify the fixture files."
+      ]
     }
   ]
 }
