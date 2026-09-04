@@ -3253,6 +3253,7 @@
         "Keeps the review read-only."
       ],
       "expected_skills": ["pr-review"],
+      "forbidden_skills": ["code-review"],
       "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "pr-review"}}],
       "id": "pr-review-explicit-skill",
       "prompt": "Use $pr-review to review the current pull request."
@@ -3264,6 +3265,7 @@
         "Selects all applicable review aspects."
       ],
       "expected_skills": ["pr-review"],
+      "forbidden_skills": ["code-review"],
       "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "pr-review"}}],
       "id": "pr-review-current-pr",
       "prompt": "Review the current PR and tell me what must change before merge."
@@ -3275,6 +3277,7 @@
         "Does not turn the request into implementation work."
       ],
       "expected_skills": ["pr-review"],
+      "forbidden_skills": ["code-review"],
       "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "pr-review"}}],
       "id": "pr-review-branch-diff",
       "prompt": "Review everything on this branch since main; do not fix it."
@@ -3286,6 +3289,7 @@
         "Reports the resolved local change set."
       ],
       "expected_skills": ["pr-review"],
+      "forbidden_skills": ["code-review"],
       "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "pr-review"}}],
       "id": "pr-review-working-tree",
       "prompt": "Review my current working-tree changes before I commit them."
@@ -3297,6 +3301,7 @@
         "Uses the PR review aggregator for the result."
       ],
       "expected_skills": ["pr-review"],
+      "forbidden_skills": ["code-review"],
       "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "pr-review"}}],
       "id": "pr-review-tests-errors",
       "prompt": "Review this diff, focusing on tests and silent error handling."
@@ -3308,6 +3313,7 @@
         "Checks missing requirements and scope creep."
       ],
       "expected_skills": ["pr-review"],
+      "forbidden_skills": ["code-review"],
       "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "pr-review"}}],
       "id": "pr-review-spec-focus",
       "prompt": "Review this PR against specs/import-contract.md and flag missing or unrequested behavior."
@@ -3319,6 +3325,7 @@
         "Keeps the review scoped to the changed design."
       ],
       "expected_skills": ["pr-review"],
+      "forbidden_skills": ["code-review"],
       "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "pr-review"}}],
       "id": "pr-review-design-focus",
       "prompt": "Review the design proposed by this PR, especially its interfaces and failure model."
@@ -3330,6 +3337,7 @@
         "Uses the complete security companion when applicable and available."
       ],
       "expected_skills": ["pr-review"],
+      "forbidden_skills": ["code-review"],
       "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "pr-review"}}],
       "id": "pr-review-comprehensive-security",
       "prompt": "Run a full PR review, including security, for this authentication change."

@@ -1,6 +1,6 @@
 ---
 name: pr-review
-description: "Default general review entrypoint for a pull request, branch diff, commit range, working-tree change set, or requests phrased as review since X. Use applicable code, comment, test, error, type, spec, and optional security reviewers, then aggregate only double-confirmed findings. Do not use for implementing fixes, repository-wide security audits, container-image CVEs, or PR atomicity analysis."
+description: "Default general review entrypoint for a pull request, branch diff, commit range, working-tree change set, or requests phrased as review since X. Use applicable code, comment, test, error, type, spec, and optional security reviewers, then aggregate only double-confirmed findings. Use this as the sole review workflow; do not compose it with the separate code-review skill. Do not use for implementing fixes, repository-wide security audits, container-image CVEs, or PR atomicity analysis."
 ---
 
 # PR Review
@@ -94,6 +94,8 @@ source labels, spec/review coverage, and a natural-language Recommended Action.
 ## Boundaries
 
 - Review only. Do not edit files, implement fixes, simplify code, commit, push, or write externally.
+- Do not invoke or depend on the separate `$code-review` skill; this workflow owns repository
+  standards and specification review internally.
 - Do not invoke or reproduce a code-simplifier.
 - Do not claim security coverage when the complete security workflow did not finish.
 - Do not convert source review into container-image CVE scanning, PR decomposition, or atomicity
