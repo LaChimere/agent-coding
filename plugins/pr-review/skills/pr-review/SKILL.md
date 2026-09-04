@@ -103,7 +103,9 @@ double confirmation.
   blocked by an explicitly required unavailable capability.
 - Treat challenger output as candidates. A SPAR challenge normally remains a Question unless evidence
   establishes a defect. Map a verified Rubber Duck candidate to the existing aspect labels and five
-  severity levels; do not mechanically convert its standalone categories.
+  severity levels; do not mechanically convert its standalone categories. Do not append a standalone
+  SPAR or Rubber Duck report to the final response; integrate only confirmed findings, unresolved
+  questions, and challenge coverage into the single PR Review report.
 - Record whether each pass was cross-model or primary-model fallback and the model/family when known.
   Do not expose hidden reasoning. A Rubber Duck security concern does not complete the security aspect.
 
