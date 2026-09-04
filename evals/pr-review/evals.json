@@ -4,7 +4,7 @@
     {
       "id": 0,
       "prompt": "Use $pr-review on the supplied change described by `status/change.diff`. Inspect `AGENTS.md`, `specs/auth.md`, the source, and tests. Treat `status/capabilities.md` as the observable capability state for this fixture. Review only; do not modify files. Use the current working directory as the repository root.",
-      "expected_output": "Reviews the pinned auth change with applicable code, tests, errors, spec, and security handling; reports the verified anonymous fallback root cause once, notes the test gap, and accurately reports unavailable full security coverage.",
+      "expected_output": "Reviews the pinned auth change with applicable code, tests, errors, spec, and security handling; traces verifier rejection through the catch to a success-shaped guest identity, checks the unchanged tests for denial-path coverage, reports the root cause once, and accurately reports unavailable full security coverage.",
       "fixture_prefix": "files/auth-fallback",
       "files": [
         "files/auth-fallback/AGENTS.md",
@@ -18,15 +18,16 @@
         "Pins and reports the supplied change set instead of inventing another base.",
         "Selects code, tests, errors, and spec, and recognizes that security is applicable.",
         "Reports that the complete security aspect was not run because the capability is unavailable, without presenting ordinary review as a security scan.",
+        "Traces the verifier rejection through the broad catch to the resolved guest identity and explains the caller-visible authentication consequence.",
         "Reports the anonymous fallback as one double-confirmed root finding with multiple relevant source labels rather than duplicates.",
-        "Reports the missing denial-path test according to its concrete regression risk.",
+        "Inspects the unchanged tests for denial-path coverage and reports the missing negative test according to the concrete regression it permits.",
         "Does not modify the fixture files."
       ]
     },
     {
       "id": 1,
       "prompt": "Use $pr-review to review the documentation change in `status/change.diff`. Inspect the current implementation and README. No issue, specification, plan, or other authoritative requirements exist for this change. Review only.",
-      "expected_output": "Runs the applicable code/comments review, identifies the inaccurate retry claim, and skips spec with an explicit coverage reason instead of asking for or inventing requirements.",
+      "expected_output": "Runs the applicable code/comments/errors review, verifies the README's retry and failure claims against the implementation, identifies the inaccurate claim, and skips spec with an explicit coverage reason instead of asking for or inventing requirements.",
       "fixture_prefix": "files/docs-no-spec",
       "files": [
         "files/docs-no-spec/src/client.js",
@@ -34,7 +35,8 @@
         "files/docs-no-spec/status/change.diff"
       ],
       "expectations": [
-        "Runs comments and the applicable general code review for the documentation change.",
+        "Runs comments and the applicable code and errors reviews for the documentation change.",
+        "Checks the README's retry count and failed-request wording against the implementation, including the difference between a non-OK response and a rejected call.",
         "Finds that the README claims three retries while the implementation performs one retry.",
         "Skips spec and records that no authoritative specification was available.",
         "Does not ask the user to provide a spec or infer one from the changed prose."
@@ -43,7 +45,7 @@
     {
       "id": 2,
       "prompt": "Use $pr-review, but only review comments and types in the supplied patch. Do not run any other aspect. Inspect `status/change.diff` and the changed source.",
-      "expected_output": "Honors the explicit only-selection while still resolving scope, and reports coverage that contains comments and types without running unrelated aspects.",
+      "expected_output": "Honors the explicit only-selection, uses the comments reviewer to verify the completeness claim against the type, uses the types reviewer to identify the optional-id invariant gap, and reports coverage without running unrelated aspects.",
       "fixture_prefix": "files/only-aspects",
       "files": [
         "files/only-aspects/src/profile.ts",
@@ -51,6 +53,7 @@
       ],
       "expectations": [
         "Runs only comments and types after the minimum scope work.",
+        "Finds that the always-complete documentation claim conflicts with the optional id field and explains the invalid state the type permits.",
         "Does not silently add code, tests, errors, spec, or security review.",
         "Reports the selected and skipped aspects in Review Coverage."
       ]
@@ -58,7 +61,7 @@
     {
       "id": 3,
       "prompt": "Use $pr-review on `status/change.diff`. A preliminary reviewer might suspect that `formatUser` receives null. Independently inspect the caller and tests before deciding whether that is a real finding. Review only.",
-      "expected_output": "Double-confirms the candidate, finds the caller guard and test evidence, and does not report a disproved null-input finding.",
+      "expected_output": "Double-confirms the candidate by tracing the unchanged caller and test, finds the null guard, distinguishes reachable inputs from theoretical ones, and does not report a disproved null-input finding.",
       "fixture_prefix": "files/double-confirm",
       "files": [
         "files/double-confirm/src/format-user.js",
@@ -69,6 +72,7 @@
       "expectations": [
         "Reads the unchanged caller and relevant test as counterevidence.",
         "Recognizes that the caller excludes null before invoking formatUser.",
+        "Distinguishes the reachable caller contract from a theoretical direct call before deciding whether the candidate is reportable.",
         "Deletes the disproved candidate instead of downgrading it into a finding.",
         "Explains the completed review coverage without claiming certainty beyond it."
       ]
@@ -76,7 +80,7 @@
     {
       "id": 4,
       "prompt": "Use $pr-review on `status/change.diff`. The repository's `AGENTS.md` requires `bin/check-tests` for this class of change, so execute that exact check and report its decisive result separately from review judgement. Do not modify files.",
-      "expected_output": "Reviews test quality and executes only the required local test shim, accurately reporting its result in Review Coverage.",
+      "expected_output": "Reviews the observable arithmetic behavior and assertions, executes only the required local test shim, and keeps the shim's reported success separate from evidence that the test file actually ran.",
       "fixture_prefix": "files/required-test",
       "files": [
         "files/required-test/AGENTS.md",
@@ -88,7 +92,7 @@
       "expectations": [
         "Runs the exact repository-required bin/check-tests command rather than a broad invented suite.",
         "Reports the command and its passing output separately from reviewer findings.",
-        "Still assesses behavioral test coverage instead of treating command success as proof that the review is clean.",
+        "Inspects the actual test assertions and still assesses behavioral coverage instead of treating command success as proof that the test file ran or the review is clean.",
         "Does not alter source, tests, or repository guidance."
       ],
       "execution": {
@@ -115,7 +119,7 @@
     {
       "id": 6,
       "prompt": "Use $pr-review to review the retry design in `docs/retry-design.md` against `specs/retry.md` and the supplied patch. Focus on design, but keep the public review aspect vocabulary unchanged.",
-      "expected_output": "Treats design as a focus for applicable code, comments, and spec reviewers, identifies the missing idempotency boundary, and does not invent a public design aspect.",
+      "expected_output": "Treats design as a focus for applicable code, comments, errors, and spec reviewers, traces the operation-scoped idempotency requirement to the proposed per-retry identifier, identifies the unsafe boundary, and does not invent a public design aspect.",
       "fixture_prefix": "files/design-focus",
       "files": [
         "files/design-focus/docs/retry-design.md",
@@ -123,16 +127,16 @@
         "files/design-focus/status/change.diff"
       ],
       "expectations": [
-        "Uses code, comments, and spec as applicable perspectives for the design-focused request.",
+        "Uses code, comments, errors, and spec as applicable perspectives for the design-focused request.",
         "Does not introduce or report a separate design aspect.",
-        "Finds that the design omits the specification's idempotency boundary and cites both sources.",
+        "Finds that the design omits the specification's operation-scoped idempotency boundary, distinguishes it from a per-attempt request identifier, and cites both sources.",
         "Keeps the review scoped to the proposed retry design."
       ]
     },
     {
       "id": 7,
       "prompt": "Use $pr-review on the small clean change in `status/change.diff`. Inspect the implementation and test, double-confirm any candidates, and return the normal final report without modifying files.",
-      "expected_output": "Produces the stable human- and agent-readable Markdown report with zero counts, coverage limits, and a natural-language Recommended Action without inventing findings or a PASS/FAIL verdict.",
+      "expected_output": "Produces the stable human- and agent-readable Markdown report with zero counts, coverage limits, and a natural-language Recommended Action; treats unestablished whitespace, punctuation, empty-input, and non-string behavior as undefined rather than inventing findings or a PASS/FAIL verdict.",
       "fixture_prefix": "files/clean-change",
       "files": [
         "files/clean-change/src/slug.js",
@@ -142,6 +146,7 @@
       "expectations": [
         "Uses the required Scope, Summary, Spec Coverage, Review Coverage, Questions, and Recommended Action sections.",
         "Reports zero counts for Blocker, Critical, Major, Minor, and Suggestion without inventing an issue.",
+        "Does not turn unestablished behavior for repeated whitespace, tabs, punctuation, empty strings, or non-string inputs into a finding.",
         "Uses no mechanical PASS or FAIL verdict.",
         "States that spec was skipped and security was not applicable.",
         "Does not modify files."
