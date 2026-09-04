@@ -2,6 +2,7 @@
 
 Use this index to decide which aspects apply. After selection, read only the linked ordinary
 reviewer files. `all` means every applicable aspect, not every aspect regardless of evidence.
+Applicability is decided here; do not open files for skipped aspects merely to confirm the skip.
 
 ## Ordinary reviewers
 

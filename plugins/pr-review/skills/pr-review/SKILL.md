@@ -43,6 +43,9 @@ retain its reason for Review Coverage. Apply the aspect criteria as written: for
 `catch`, fallback, retry, or failure default requires `errors`; do not substitute a neighboring
 aspect merely because it can notice the same code.
 
+Make applicability decisions from the index alone. Do not open a reviewer file to decide whether
+its aspect applies, and do not read or dispatch reviewer files for aspects recorded as skipped.
+
 If the user asks to review a design, treat design as a focus for the applicable `code`, `comments`,
 and `spec` reviewers rather than inventing a separate public aspect.
 
@@ -75,6 +78,10 @@ The `tests` aspect reviews behavioral coverage and test quality; it does not run
 Run test, build, lint, or typecheck commands only when the user explicitly requests execution or
 applicable repository guidance requires it. Keep command/result evidence separate from reviewer
 judgement, and never present an unrun check as passing.
+
+Before claiming that an executed command proves tests passed, inspect the command definition or
+configured script and identify the tests or assertions it actually ran. A command that only prints
+success is passing command evidence, not passing test evidence.
 
 A rule requiring tests or coverage to exist does not by itself require command execution. Treat
 repository guidance as an execution requirement only when it explicitly says to run a check or
