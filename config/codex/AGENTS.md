@@ -48,7 +48,8 @@ These are personal defaults for every repository. More specific `AGENTS.md` file
 - Verify every finding against the actual code. Remove findings disproved by the code, merge duplicates, and rank the remainder by correctness, security, design, then clarity.
 - Fix surviving correctness and security findings when implementation is authorized. Fix directly related design and clarity findings when they are cheap. Report every unresolved finding once, with the reason it remains open.
 - Stop review when a round produces no surviving correctness or security findings. Do not exceed three rounds without explicit authorization.
-- Use different model families for independent review when available and useful. If a required capability or model is unavailable, disclose the limitation instead of fabricating availability or silently claiming the intended review.
+- The primary session model must perform its own review and make the final judgment.
+- When review by a different model family is useful, run an eligible non-Gemini model in parallel as an additional independent reviewer, not as a replacement for the primary review. If no eligible model from another family or required capability is available, disclose the limitation instead of claiming that review was completed.
 
 ## Stateful and remote work
 
