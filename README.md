@@ -234,6 +234,13 @@ branch diff, commit range, or working-tree changes. The plugin is read-only. It 
 capability is installed; otherwise it reports the missing security coverage according to whether
 security was automatic or explicitly required.
 
+`$pr-review` selects the applicable code, comments, tests, errors, types, and specification reviewers;
+design is a focus applied through those reviewers rather than a separate public aspect. When no
+authoritative specification exists, it skips specification review instead of inferring requirements
+from the diff. The primary agent double-confirms and deduplicates candidates, then reports them as
+Blocker, Critical, Major, Minor, or Suggestion findings with source and coverage details. This workflow
+does not invoke or depend on the separate `$code-review` skill.
+
 ### Using the workflow in another repo
 
 1. Install skills through `npx skills add`; source-checkout execution is unsupported.
@@ -315,4 +322,4 @@ If your agent platform supports hooks, consider adding them to high-risk skills 
 
 ## Status
 
-Every runtime skill has functional eval definitions and classification metadata in the central `evals/` corpus. The provider-neutral harness evaluates both root and plugin-owned skill content through isolated `npx skills add --copy` snapshot copies. That hermetic behavior check does not validate a plugin manifest, marketplace entry, cache, or Codex discovery. Plugin changes therefore also require the separate marketplace install and installed-copy validation described above. The prior five-model behavior certification covered the original root-skill set; new runtime skills require their own recorded evaluation evidence. Continue refining from real usage evidence rather than adding speculative workflow rules.
+Every runtime skill has functional eval definitions and classification metadata in the central `evals/` corpus. The provider-neutral harness evaluates both root and plugin-owned skill content through isolated `npx skills add --copy` snapshot copies. That hermetic behavior check does not validate a plugin manifest, marketplace entry, cache, or Codex discovery. Plugin changes therefore also require the separate marketplace install and installed-copy validation described in `AGENTS.md` and `tools/skill-evals/README.md`. The prior five-model behavior certification covered the original root-skill set; new runtime skills require their own recorded evaluation evidence. Continue refining from real usage evidence rather than adding speculative workflow rules.
