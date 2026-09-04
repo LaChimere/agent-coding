@@ -33,7 +33,7 @@ Record the source or skip reason in the final coverage section.
 
 ## Select review aspects
 
-Read [references/review-aspects.md](references/review-aspects.md) before dispatch. By default run
+Read [references/reviewers/index.md](references/reviewers/index.md) before dispatch. By default run
 every applicable aspect. Honor requests to add or exclude an aspect; when the user says "only",
 limit the review to the named aspects plus the scope work needed to run them safely. `all` means all
 applicable aspects, not every aspect regardless of evidence.
@@ -50,9 +50,11 @@ and `spec` reviewers rather than inventing a separate public aspect.
 
 The primary agent coordinates the review.
 
-- Launch the applicable ordinary reviewers in parallel when concurrency is available. Give each
-  the same pinned target, changed-file inventory, relevant diff, repository guidance, authoritative
-  spec, and its aspect brief. Reviewers are read-only and must not spawn more agents.
+- For each selected ordinary aspect, read only the reviewer file linked from
+  [references/reviewers/index.md](references/reviewers/index.md). Launch those reviewers in parallel
+  when concurrency is available. Give each the same pinned target, changed-file inventory, relevant
+  diff, repository guidance, authoritative spec, and the complete selected reviewer brief.
+  Reviewers are read-only and must not spawn more agents.
 - If delegation is unavailable, run the same applicable briefs sequentially in the primary agent
   and record that limitation. Do not wait for agents or handles that were never created.
 - Let each reviewer use the report shape natural to its domain. Its output is a set of candidates,
