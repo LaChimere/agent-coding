@@ -6,7 +6,8 @@ description: "Default general review entrypoint for a pull request, branch diff,
 # PR Review
 
 Review one fixed change set without modifying it. The public entrypoint is `$pr-review`;
-review aspects are internal workers, not separate public skills.
+review aspects are internal workers, not separate public skills. SPAR and Rubber Duck are plugin
+skills that this workflow composes when selected; they can also be invoked directly.
 
 ## Scope
 
@@ -79,11 +80,13 @@ challenge adds a separate adversarial perspective; it never replaces ordinary re
 double confirmation.
 
 - Run `$spar` only when the user explicitly asks for SPAR, devil's-advocate analysis, or an
-  assumptions/trade-offs challenge. Never add it automatically or treat it as a public review aspect.
+  assumptions/trade-offs challenge. When selected, read and follow the complete
+  [SPAR skill](../spar/SKILL.md). Never add it automatically or treat it as a public review aspect.
 - Run `$rubber-duck` when the user explicitly requests it, or automatically when the pinned change is
   substantial: it materially affects security, persisted data, a public interface, compatibility,
   migration, concurrency, cross-component behavior, complex state transitions, or a plan/design/test
-  whose failure would have major consequences. File count alone does not make a change substantial.
+  whose failure would have major consequences. When selected, read and follow the complete
+  [Rubber Duck skill](../rubber-duck/SKILL.md). File count alone does not make a change substantial.
   Honor an explicit request to exclude Rubber Duck.
 - Give challengers the same pinned target, relevant context, repository guidance, and authoritative
   specification, but not ordinary reviewer candidates or each other's output. The primary coordinates
