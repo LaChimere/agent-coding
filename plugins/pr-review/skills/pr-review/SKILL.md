@@ -79,6 +79,10 @@ Run test, build, lint, or typecheck commands only when the user explicitly reque
 applicable repository guidance requires it. Keep command/result evidence separate from reviewer
 judgement, and never present an unrun check as passing.
 
+When the user or repository guidance names an exact command or bounded command set, execute only
+those commands. Do not add a broader, substitute, or supplemental test/build/lint/typecheck command
+unless the user or the same guidance separately requires it.
+
 Before claiming that an executed command proves tests passed, inspect the command definition or
 configured script and identify the tests or assertions it actually ran. A command that only prints
 success is passing command evidence, not passing test evidence.
