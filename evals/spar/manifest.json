@@ -1,0 +1,17 @@
+{
+  "skill_name": "spar",
+  "default_category": "regression_guard",
+  "critical_ids": [0, 1, 2],
+  "critical_expectations": {
+    "0": [0, 1, 2, 3],
+    "1": [0, 1, 3],
+    "2": [0, 1, 2, 3]
+  },
+  "behavior_change_ids": [],
+  "redundant_ids": [],
+  "deterministic_ids": [],
+  "behavior_change_rationale": {},
+  "clarification_rationale": {
+    "_coverage": "The cases cover two- and three-role tension framing, capability fallback, evidence gaps, one-shot output, and the read-only boundary."
+  }
+}

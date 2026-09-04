@@ -1,0 +1,61 @@
+{
+  "skill_name": "spar",
+  "evals": [
+    {
+      "id": 0,
+      "prompt": "Use $spar to pressure-test the API direction in `idea.md`. Produce one complete analysis and do not implement either option.",
+      "expected_output": "Frames a concrete product-versus-platform tension, develops two independent perspectives, synthesizes what holds and fails, and ends with one decision-forcing question without implementing the API.",
+      "files": ["files/architecture/idea.md"],
+      "fixture_prefix": "files/architecture",
+      "expectations": [
+        "Uses the required Conflict framing, Roles, role Perspective, Synthesis, The open question, and Execution sections.",
+        "Selects two credible opposing roles instead of producing generic pros and cons.",
+        "Challenges the proposal using the supplied mobile, compatibility, and operations constraints.",
+        "Ends with exactly one open question that materially affects the decision.",
+        "Does not implement an API or modify files."
+      ]
+    },
+    {
+      "id": 1,
+      "prompt": "Use $spar on `plan.md`. Include a third role only if it changes the migration decision. Return a one-shot analysis.",
+      "expected_output": "Recognizes a genuine three-way migration tension among delivery, operations, and regulated-data responsibilities, keeps the roles independent, and synthesizes the conditions required for a safe cutover.",
+      "files": ["files/migration/plan.md"],
+      "fixture_prefix": "files/migration",
+      "expectations": [
+        "Uses three roles because the regulated-data responsibility changes the conclusion rather than duplicating delivery or operations.",
+        "Challenges rollback, dual-write consistency, and customer-impact assumptions from the supplied plan.",
+        "Keeps each perspective independent and concise.",
+        "Produces one synthesis and one open question rather than starting an interview.",
+        "Does not modify the migration plan."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Use $spar on `idea.md`. Treat `status/capabilities.md` as the observable model and delegation state. Do not invent another model or agent.",
+      "expected_output": "Completes the two perspectives with the primary model because no eligible different family or delegation is available, and discloses primary-model fallback without claiming cross-model independence.",
+      "files": ["files/fallback/idea.md", "files/fallback/status/capabilities.md"],
+      "fixture_prefix": "files/fallback",
+      "expectations": [
+        "Completes a useful SPAR analysis despite unavailable delegation.",
+        "Uses the primary model sequentially for the perspectives.",
+        "Labels execution as primary-model fallback and does not claim cross-model review.",
+        "Does not invent handles, models, or hidden reasoning.",
+        "Does not modify files."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Use $spar to challenge `proposal.md`. Distinguish missing evidence from a demonstrated defect and do not turn uncertainty into implementation work.",
+      "expected_output": "Challenges the unsupported performance and adoption assumptions, requests decision-relevant evidence, and avoids declaring the proposal wrong when the available material cannot resolve the tension.",
+      "files": ["files/evidence/proposal.md"],
+      "fixture_prefix": "files/evidence",
+      "expectations": [
+        "Identifies the unsupported performance and adoption assumptions.",
+        "Separates missing evidence from established facts.",
+        "Suggests a bounded experiment or evidence request rather than implementation.",
+        "Does not manufacture a finding, consensus, or extra open questions.",
+        "Does not modify files."
+      ]
+    }
+  ]
+}

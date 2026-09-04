@@ -3437,6 +3437,142 @@
       "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "workflow-orchestrator"}}],
       "id": "pr-review-vs-ambiguous-workflow",
       "prompt": "Help me decide what we should do next for a vague reliability concern; no design or change exists yet."
+    },
+    {
+      "direction": "should_trigger",
+      "expectations": ["Runs the explicitly requested SPAR analysis.", "Returns one adversarial synthesis without implementation."],
+      "expected_skills": ["spar"],
+      "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "spar"}}],
+      "id": "spar-explicit-skill",
+      "prompt": "Use $spar to pressure-test this API idea."
+    },
+    {
+      "direction": "should_trigger",
+      "expectations": ["Challenges the architecture assumptions through opposing perspectives.", "Does not build the architecture."],
+      "expected_skills": ["spar"],
+      "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "spar"}}],
+      "id": "spar-architecture-assumptions",
+      "prompt": "Play devil's advocate on our proposal to replace REST with GraphQL."
+    },
+    {
+      "direction": "should_trigger",
+      "expectations": ["Pressure-tests migration assumptions, rollback, and stakeholder tensions."],
+      "expected_skills": ["spar"],
+      "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "spar"}}],
+      "id": "spar-migration-plan",
+      "prompt": "Give me a SPAR analysis of this database migration plan and its rollback assumptions."
+    },
+    {
+      "direction": "should_trigger",
+      "expectations": ["Compares the implementation options adversarially before a decision."],
+      "expected_skills": ["spar"],
+      "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "spar"}}],
+      "id": "spar-options",
+      "prompt": "Pressure-test whether this service should use synchronous processing or a queue."
+    },
+    {
+      "direction": "should_trigger",
+      "expectations": ["Surfaces the important assumption the user may be underestimating."],
+      "expected_skills": ["spar"],
+      "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "spar"}}],
+      "id": "spar-underestimated-risk",
+      "prompt": "What am I underestimating in this pricing model? Use opposing perspectives and synthesize them."
+    },
+    {
+      "direction": "should_trigger",
+      "expectations": ["Uses independently motivated roles to challenge the decision."],
+      "expected_skills": ["spar"],
+      "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "spar"}}],
+      "id": "spar-organizational-decision",
+      "prompt": "Run a devil's-advocate analysis on hiring a dedicated platform engineer now."
+    },
+    {
+      "direction": "should_trigger",
+      "expectations": ["Challenges whether the optimization's evidence and trade-offs justify it."],
+      "expected_skills": ["spar"],
+      "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "spar"}}],
+      "id": "spar-performance-optimization",
+      "prompt": "SPAR this caching optimization: what assumptions, invalidation risks, and simpler alternatives are we missing?"
+    },
+    {
+      "direction": "should_trigger",
+      "expectations": ["Challenges a product decision without turning it into implementation."],
+      "expected_skills": ["spar"],
+      "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "spar"}}],
+      "id": "spar-product-decision",
+      "prompt": "Produce a one-shot adversarial analysis of removing the free plan."
+    },
+    {
+      "direction": "should_not_trigger",
+      "expectations": ["Runs a normal PR review rather than an idea challenge."],
+      "expected_skills": ["pr-review"],
+      "forbidden_skills": ["spar"],
+      "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "pr-review"}}],
+      "id": "spar-vs-pr-review",
+      "prompt": "Review the current PR for defects before merge."
+    },
+    {
+      "direction": "should_not_trigger",
+      "expectations": ["Plans the required implementation slices rather than challenging an idea."],
+      "expected_skills": ["decompose-feature"],
+      "forbidden_skills": ["spar"],
+      "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "decompose-feature"}}],
+      "id": "spar-vs-decompose",
+      "prompt": "Split this approved auth, API, migration, and UI feature into mergeable PRs."
+    },
+    {
+      "direction": "should_not_trigger",
+      "expectations": ["Plans agent ownership and worktrees rather than adversarial analysis."],
+      "expected_skills": ["plan-parallel-work"],
+      "forbidden_skills": ["spar"],
+      "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "plan-parallel-work"}}],
+      "id": "spar-vs-parallel-plan",
+      "prompt": "Plan how three agents should implement these approved slices in parallel worktrees."
+    },
+    {
+      "direction": "should_not_trigger",
+      "expectations": ["Assesses the atomic boundary of an existing diff."],
+      "expected_skills": ["ensure-atomic-pr"],
+      "forbidden_skills": ["spar"],
+      "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "ensure-atomic-pr"}}],
+      "id": "spar-vs-atomicity",
+      "prompt": "Is this existing diff atomic enough for one PR?"
+    },
+    {
+      "direction": "should_not_trigger",
+      "expectations": ["Executes the approved implementation instead of reopening the decision."],
+      "expected_skills": ["execute-plan-loop"],
+      "forbidden_skills": ["spar"],
+      "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "execute-plan-loop"}}],
+      "id": "spar-vs-execution",
+      "prompt": "Implement the approved parser slice and run its tests."
+    },
+    {
+      "direction": "should_not_trigger",
+      "expectations": ["Updates the explicitly named stale document."],
+      "expected_skills": ["refresh-related-docs"],
+      "forbidden_skills": ["spar"],
+      "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "refresh-related-docs"}}],
+      "id": "spar-vs-doc-refresh",
+      "prompt": "Update docs/api-guide.md to match the completed API behavior."
+    },
+    {
+      "direction": "should_not_trigger",
+      "expectations": ["Creates the explicitly requested durable goal lifecycle."],
+      "expected_skills": ["achieve-goal"],
+      "forbidden_skills": ["spar"],
+      "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "achieve-goal"}}],
+      "id": "spar-vs-goal",
+      "prompt": "/goal Ship the approved review service over several sessions."
+    },
+    {
+      "direction": "should_not_trigger",
+      "expectations": ["Determines the next workflow phase for an underspecified concern."],
+      "expected_skills": ["workflow-orchestrator"],
+      "forbidden_skills": ["spar"],
+      "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "workflow-orchestrator"}}],
+      "id": "spar-vs-workflow-routing",
+      "prompt": "Help decide what workflow phase should come next for a vague reliability concern."
     }
   ],
   "schema": "skill-evals/trigger-suite-v1",

@@ -1,0 +1,4 @@
+interface:
+  display_name: "SPAR"
+  short_description: "Pressure-test an idea through opposing perspectives"
+  default_prompt: "Use $spar to challenge this idea's assumptions and trade-offs."

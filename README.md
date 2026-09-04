@@ -102,6 +102,7 @@ plugins/                                          # Codex plugins installed from
   pr-review/
     .codex-plugin/plugin.json
     skills/pr-review/                             #   Single-entrypoint PR/change-set review
+    skills/spar/                                  #   One-shot adversarial idea analysis
 evals/                                            # Central eval corpus (repository maintenance, never distributed)
   <skill>/evals.json                              #   Functional cases for the matching runtime skill
   <skill>/manifest.json                           #   Case classification manifest (critical/behavior-change/...)
@@ -240,6 +241,11 @@ authoritative specification exists, it skips specification review instead of inf
 from the diff. The primary agent double-confirms and deduplicates candidates, then reports them as
 Blocker, Critical, Major, Minor, or Suggestion findings with source and coverage details. This workflow
 does not invoke or depend on the separate `$code-review` skill.
+
+Use `$spar <idea>` for an explicit, one-shot devil's-advocate analysis of an idea, decision, plan,
+design, migration, or optimization. It develops two independent opposing perspectives by default,
+adds a third only when that stakeholder changes the decision, and returns a concise synthesis without
+implementing the proposal.
 
 ### Using the workflow in another repo
 
