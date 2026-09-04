@@ -247,8 +247,9 @@ For substantial changes, `$pr-review` automatically adds a `$rubber-duck` critic
 excludes it. SPAR is never automatic, but a review request can explicitly include `$spar` to challenge
 the design assumptions and trade-offs. Ordinary reviewers use the current session model by default;
 the primary agent chooses reasoning effort and retains final judgement. When no eligible different
-model family is available for a challenger, the primary model performs an isolated fallback and the
-report states that limitation.
+model family is available for a challenger, the primary model uses an isolated reviewer context when
+delegation permits it, or a distinct/sequential same-session pass otherwise; the report states that
+limitation.
 
 Use `$spar <idea>` for an explicit, one-shot devil's-advocate analysis of an idea, decision, plan,
 design, migration, or optimization. It develops two independent opposing perspectives by default,

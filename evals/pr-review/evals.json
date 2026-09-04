@@ -212,7 +212,7 @@
     {
       "id": 11,
       "prompt": "Use $pr-review on the design in `docs/cache-design.md` against `specs/cache.md` and explicitly include $spar. Treat `status/capabilities.md` as the observable model and delegation state. Review only.",
-      "expected_output": "Runs the design-focused ordinary reviews and an explicitly requested SPAR primary-model fallback, keeps SPAR separate from the public aspect vocabulary, and moves its unresolved evidence gap into Questions.",
+      "expected_output": "Runs the design-focused ordinary reviews and an explicitly requested SPAR primary-model fallback, reports the missing consistency mechanism as a finding, and keeps only the unresolved guarantee boundary in Questions.",
       "fixture_prefix": "files/challenge-spar",
       "files": [
         "files/challenge-spar/docs/cache-design.md",
@@ -224,7 +224,8 @@
         "Runs SPAR only because the user explicitly requested it.",
         "Uses a primary-model fallback and does not claim cross-model execution.",
         "Treats SPAR as an independent challenge rather than a new ordinary aspect or source label.",
-        "Keeps the unmeasured invalidation assumption as a Question unless other evidence establishes a defect.",
+        "Reports the undefined invalidation delivery and failure mechanism as a finding because it leaves the next-read requirement unsatisfied.",
+        "Keeps the unresolved scope of the next-read guarantee as a Question rather than inventing a requirement.",
         "Reports SPAR and Rubber Duck challenge coverage separately.",
         "Does not modify files."
       ]
@@ -264,6 +265,25 @@
         "Independently confirms the candidate against the operation-scoped idempotency requirement.",
         "Uses canonical code/spec labels for the final finding and records Rubber Duck only in challenge coverage or evidence.",
         "Does not expose hidden reasoning or modify files."
+      ]
+    },
+    {
+      "id": 14,
+      "prompt": "Use $pr-review on `status/change.diff` against `specs/payments.md`. Treat `status/capabilities.md` as the observable model and delegation state. Review only and do not modify files.",
+      "expected_output": "Infers from the public payment interface and operation-idempotency contract that the change warrants an automatic Rubber Duck pass, then completes the primary-model fallback and consolidated review without relying on the word substantial.",
+      "fixture_prefix": "files/challenge-auto",
+      "files": [
+        "files/challenge-auto/src/payments.js",
+        "files/challenge-auto/specs/payments.md",
+        "files/challenge-auto/status/change.diff",
+        "files/challenge-auto/status/capabilities.md"
+      ],
+      "expectations": [
+        "Infers substantial impact from the public payment boundary and duplicate-charge risk even though the prompt does not label the change substantial.",
+        "Automatically runs Rubber Duck and does not run SPAR.",
+        "Uses and honestly reports the primary-model fallback from the observable capability state.",
+        "Double-confirms the operation-scoped idempotency defect and maps it to canonical review labels.",
+        "Does not modify files."
       ]
     }
   ]

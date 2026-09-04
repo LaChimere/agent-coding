@@ -1,7 +1,7 @@
 {
   "skill_name": "pr-review",
   "default_category": "regression_guard",
-  "critical_ids": [0, 3, 4, 5, 8, 9, 10, 11, 12, 13],
+  "critical_ids": [0, 3, 4, 5, 8, 9, 10, 11, 12, 13, 14],
   "critical_expectations": {
     "0": [0, 1, 2, 3, 4],
     "3": [0, 1, 2],
@@ -12,9 +12,10 @@
     "10": [0, 1, 2, 3],
     "11": [0, 1, 2, 3, 4],
     "12": [0, 1, 2, 3],
-    "13": [0, 1, 2, 3]
+    "13": [0, 1, 2, 3],
+    "14": [0, 1, 2, 3, 4]
   },
-  "behavior_change_ids": [8, 9, 10, 11, 12, 13],
+  "behavior_change_ids": [8, 9, 10, 11, 12, 13, 14],
   "redundant_ids": [],
   "deterministic_ids": [],
   "behavior_change_rationale": {
@@ -23,7 +24,8 @@
     "10": "Skip independent challengers for small direct changes unless the user explicitly requests one.",
     "11": "Run SPAR only on explicit request and keep its unresolved challenges separate from ordinary findings.",
     "12": "Honor an explicit request to exclude the automatically applicable Rubber Duck pass.",
-    "13": "Preserve cross-model challenge provenance while mapping verified candidates to canonical review aspects."
+    "13": "Preserve cross-model challenge provenance while mapping verified candidates to canonical review aspects.",
+    "14": "Infer automatic Rubber Duck applicability from the changed public payment behavior without relying on an explicit substantial label."
   },
   "clarification_rationale": {
     "_coverage": "The cases cover routing, evidence quality, aggregation, optional security, command execution, and report shape without duplicating every language-specific review example."
