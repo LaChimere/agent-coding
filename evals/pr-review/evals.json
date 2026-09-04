@@ -225,7 +225,8 @@
         "Uses a primary-model fallback and does not claim cross-model execution.",
         "Treats SPAR as an independent challenge rather than a new ordinary aspect or source label.",
         "Reports the undefined invalidation delivery and failure mechanism as a finding because it leaves the next-read requirement unsatisfied.",
-        "Keeps the unresolved scope of the next-read guarantee as a Question rather than inventing a requirement.",
+        "Does not invent an unresolved scope qualification that is absent from the authoritative specification.",
+        "Returns exactly one PR Review report and does not append a standalone SPAR or Rubber Duck report.",
         "Reports SPAR and Rubber Duck challenge coverage separately.",
         "Does not modify files."
       ]

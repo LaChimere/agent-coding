@@ -31,8 +31,10 @@ complexity and risk.
   perspectives. Do not hard-code a model or reasoning level.
 - Give each role the same subject and relevant evidence, but not another role's output. Each role
   makes the strongest credible case from its assigned perspective and must not spawn more agents.
-- Launch roles in parallel when capacity permits, otherwise use waves. Apply the same live-handle,
-  single-retry, and primary fallback discipline used by the calling workflow.
+- Launch roles in parallel when capacity permits, otherwise use waves. Wait only on returned live
+  handles. If a launch returns no handle because capacity is full, defer it to a later wave; otherwise
+  retry one no-handle launch once after capacity is available, then use the primary fallback. If a
+  launched role fails, use the primary fallback without repeatedly relaunching it.
 - If no eligible different family is available, use the primary model in isolated role contexts. If
   delegation is unavailable, the primary performs the perspectives sequentially.
 - When the user explicitly requires an actual different model family and none is available, report
