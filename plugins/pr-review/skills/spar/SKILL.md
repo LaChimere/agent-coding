@@ -29,6 +29,9 @@ complexity and risk.
 
 - Prefer an eligible model from a different user-, repository-, and host-allowed family for the role
   perspectives. Do not hard-code a model or reasoning level.
+- Establish a specific eligible different-family model before launching any role. When none is
+  positively known, keep both perspectives in the primary agent and do not enter the collaboration
+  path; same-family subagents are not the fallback.
 - Give each role the same subject and relevant evidence, but not another role's output. Each role
   makes the strongest credible case from its assigned perspective and must not spawn more agents.
 - Launch roles in parallel when capacity permits, otherwise use waves. Apply a live-handle gate
@@ -41,8 +44,8 @@ complexity and risk.
   launched role fails, use the primary fallback without repeatedly relaunching it.
 - Treat `no thread` and an unavailable collaboration tool as delegation unavailable for that
   invocation and use the primary perspectives immediately.
-- If no eligible different family is available, use the primary model in isolated role contexts. If
-  delegation is unavailable, the primary performs the perspectives sequentially.
+- If no eligible different family is available or delegation is unavailable, the primary performs
+  the perspectives sequentially as distinct passes.
 - When the user explicitly requires an actual different model family and none is available, report
   the capability limitation instead of calling a same-model analysis cross-model.
 

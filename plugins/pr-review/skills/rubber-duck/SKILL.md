@@ -40,11 +40,14 @@ The primary agent chooses reasoning effort according to the work's complexity an
 
 - Prefer one eligible model from a different user-, repository-, and host-allowed family for the
   critic pass. Do not hard-code a model or reasoning level.
+- Establish a specific eligible different-family model before launching the critic. When none is
+  positively known, perform a distinct second pass in the primary agent; same-family subagents are
+  not the fallback.
 - When this skill is already running inside a delegated critic, perform the critique directly and do
   not spawn more agents.
-- When invoked in the primary session, delegate one isolated critic when a suitable model and worker
-  are available. If no eligible different family exists, use the primary model in an isolated
-  reviewer context; if delegation is unavailable, perform a distinct primary-model second pass.
+- When invoked in the primary session, delegate one isolated critic when a suitable different-family
+  model and worker are available. If no eligible different family exists or delegation is
+  unavailable, perform a distinct primary-model second pass.
 - When the user requires an actual different family and none is available, report the capability
   limitation rather than calling the fallback cross-model.
 

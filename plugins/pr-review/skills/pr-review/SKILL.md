@@ -103,8 +103,11 @@ double confirmation.
 - Prefer an eligible model from a different user-, repository-, and host-allowed family for each
   challenger. Do not hard-code a model or reasoning level. The primary chooses reasoning effort based
   on the challenge's complexity and risk.
-- If no eligible different family is available, use the primary model in an isolated challenger
-  context. If delegation is unavailable, perform a distinct primary-model second pass. If the user
+- Establish a specific eligible different-family model before launching a challenger. When none is
+  positively known, keep the challenge in the primary agent and do not enter the collaboration path;
+  same-family subagents are not the fallback.
+- If no eligible different family is available or delegation is unavailable, perform a distinct
+  primary-model second pass. If the user
   requires an actual different family and none exists, report the capability limitation. Never call a
   primary-model fallback cross-model.
 - Apply the ordinary live-handle, wave, single-retry, and primary fallback rules to challenger
