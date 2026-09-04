@@ -212,7 +212,7 @@
     {
       "id": 11,
       "prompt": "Use $pr-review on the design in `docs/cache-design.md` against `specs/cache.md` and explicitly include $spar. Treat `status/capabilities.md` as the observable model and delegation state. Review only.",
-      "expected_output": "Runs the design-focused ordinary reviews and an explicitly requested SPAR primary-model fallback, reports the missing consistency mechanism as a finding, and keeps only the unresolved guarantee boundary in Questions.",
+      "expected_output": "Runs the design-focused ordinary reviews and an explicitly requested SPAR primary-model fallback, reports the missing consistency mechanism as a finding, and does not invent an unresolved guarantee boundary that is absent from the specification.",
       "fixture_prefix": "files/challenge-spar",
       "files": [
         "files/challenge-spar/docs/cache-design.md",
