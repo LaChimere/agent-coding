@@ -74,7 +74,7 @@
     },
     {
       "id": "pr-review-auto-rubber-duck",
-      "prompt": "Use $pr-review on this payment API and idempotency change. Review only.",
+      "prompt": "Use $pr-review on this substantial payment API and idempotency change. Review only.",
       "expected_skills": ["pr-review", "rubber-duck"],
       "forbidden_skills": ["spar", "code-review"],
       "expectations": ["Keep pr-review as the public entrypoint.", "Automatically add Rubber Duck because the change affects a public payment interface and persisted behavior.", "Do not add SPAR without an explicit request."],
