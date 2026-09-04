@@ -55,8 +55,10 @@ The primary agent coordinates the review.
   when concurrency is available. Give each the same pinned target, changed-file inventory, relevant
   diff, repository guidance, authoritative spec, and the complete selected reviewer brief.
   Reviewers are read-only and must not spawn more agents.
-- If delegation is unavailable, run the same applicable briefs sequentially in the primary agent
-  and record that limitation. Do not wait for agents or handles that were never created.
+- Enter a wait/collect step only after at least one reviewer launch succeeds and returns a live
+  handle. When zero launches return a live handle, delegation is unavailable: immediately run all
+  selected briefs sequentially in the primary agent and record that limitation. Never call a wait
+  operation without a live reviewer handle.
 - Let each reviewer use the report shape natural to its domain. Its output is a set of candidates,
   not final findings.
 - Keep security separate from ordinary reviewers. When security is applicable and
