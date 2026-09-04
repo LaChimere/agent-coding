@@ -66,17 +66,18 @@ The primary agent coordinates the review.
 - When continuing from an authoritative recorded launcher state, preserve its execution facts in
   Review Coverage: capacity-deferred aspects, returned handles, each single retry, whether the retry
   inherited the current-session model without an override, and every primary fallback.
-- Treat the returned launcher result as the execution ledger. A launch counts as delegated work only
-  when it returns a live handle; requested roles, model arguments, and intended launches are not
-  execution evidence. Build the wait set only from those returned live handles. If the set is empty,
-  continue with the required primary fallbacks without calling wait/collect.
+- Apply a live-handle gate immediately before every wait/collect call: the receiver set must contain
+  at least one live handle returned by a completed launch call. A tool error, `no thread`, or other
+  no-handle outcome means no delegated work exists to collect and cannot later produce a result.
+  Continue with the required primary fallback when the receiver set is empty. Requested roles, model
+  arguments, intended launches, and failed launch calls are not execution evidence.
 - When delegation is available but a launch
   returns no live handle, retry that aspect once after capacity is available, without an explicit
   model override so it uses the current session's inherited/default model. If that retry still
   returns no handle, or a launched reviewer later fails, run that brief sequentially in the primary
   agent and record the fallback. When delegation itself is unavailable, skip retry and use the same
-  primary-agent fallback immediately. Never retry an aspect more than once or wait without a live
-  handle.
+  primary-agent fallback immediately. Treat `no thread` and an unavailable collaboration tool as
+  delegation unavailable for that invocation. Never retry an aspect more than once.
 - Let each reviewer use the report shape natural to its domain. Its output is a set of candidates,
   not final findings.
 

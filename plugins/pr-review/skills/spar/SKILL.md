@@ -31,13 +31,16 @@ complexity and risk.
   perspectives. Do not hard-code a model or reasoning level.
 - Give each role the same subject and relevant evidence, but not another role's output. Each role
   makes the strongest credible case from its assigned perspective and must not spawn more agents.
-- Launch roles in parallel when capacity permits, otherwise use waves. Treat the returned launcher
-  result as the execution ledger: only a returned live handle proves that a delegated role started.
-  Build the wait set from those handles alone; when it is empty, continue with the required primary
-  perspectives without calling wait. If a launch returns no handle because capacity is full, defer it
-  to a later wave; otherwise
+- Launch roles in parallel when capacity permits, otherwise use waves. Apply a live-handle gate
+  immediately before every wait call: the receiver set must contain at least one live handle returned
+  by a completed launch call. A tool error, `no thread`, or other no-handle outcome means no delegated
+  role exists to collect and cannot later produce a result. Continue with the required primary
+  perspectives when the receiver set is empty. If a launch returns no handle because capacity is
+  full, defer it to a later wave; otherwise
   retry one no-handle launch once after capacity is available, then use the primary fallback. If a
   launched role fails, use the primary fallback without repeatedly relaunching it.
+- Treat `no thread` and an unavailable collaboration tool as delegation unavailable for that
+  invocation and use the primary perspectives immediately.
 - If no eligible different family is available, use the primary model in isolated role contexts. If
   delegation is unavailable, the primary performs the perspectives sequentially.
 - When the user explicitly requires an actual different model family and none is available, report
@@ -45,8 +48,8 @@ complexity and risk.
 
 Record cross-model analysis only when the execution ledger contains a returned live handle and the
 collected role result confirms a known eligible different model family. Requested model arguments,
-role prompts, and intended launches are not execution evidence. Otherwise record the actual
-primary-model fallback. Do not reveal hidden reasoning.
+role prompts, intended launches, and failed launch calls are not execution evidence. Otherwise record
+the actual primary-model fallback. Do not reveal hidden reasoning.
 
 ## Synthesize
 
