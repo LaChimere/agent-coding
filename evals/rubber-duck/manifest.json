@@ -1,0 +1,18 @@
+{
+  "skill_name": "rubber-duck",
+  "default_category": "regression_guard",
+  "critical_ids": [0, 2, 3, 4],
+  "critical_expectations": {
+    "0": [0, 1, 2, 3],
+    "2": [0, 1, 2, 3],
+    "3": [0, 1, 2, 3],
+    "4": [0, 1, 2]
+  },
+  "behavior_change_ids": [],
+  "redundant_ids": [],
+  "deterministic_ids": [],
+  "behavior_change_rationale": {},
+  "clarification_rationale": {
+    "_coverage": "The cases cover consequential implementation, plan and design critique, clean-work restraint, model fallback, and pre-existing issue exclusion."
+  }
+}

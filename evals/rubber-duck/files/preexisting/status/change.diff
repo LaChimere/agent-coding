@@ -1,0 +1,11 @@
+diff --git a/src/client.js b/src/client.js
+index a100001..a100002 100644
+--- a/src/client.js
++++ b/src/client.js
+@@ -1,5 +1,5 @@
+ const legacyDebugToken = 'old-test-token';
+ 
+ export async function request(fetcher, url) {
+-  return fetcher(url, { timeout: 2_000, legacyDebugToken });
++  return fetcher(url, { timeout: 5_000, legacyDebugToken });
+ }

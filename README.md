@@ -103,6 +103,7 @@ plugins/                                          # Codex plugins installed from
     .codex-plugin/plugin.json
     skills/pr-review/                             #   Single-entrypoint PR/change-set review
     skills/spar/                                  #   One-shot adversarial idea analysis
+    skills/rubber-duck/                           #   One-shot substantive critic
 evals/                                            # Central eval corpus (repository maintenance, never distributed)
   <skill>/evals.json                              #   Functional cases for the matching runtime skill
   <skill>/manifest.json                           #   Case classification manifest (critical/behavior-change/...)
@@ -246,6 +247,10 @@ Use `$spar <idea>` for an explicit, one-shot devil's-advocate analysis of an ide
 design, migration, or optimization. It develops two independent opposing perspectives by default,
 adds a third only when that stakeholder changes the decision, and returns a concise synthesis without
 implementing the proposal.
+
+Use `$rubber-duck` for an explicit, one-shot critique of a plan, design, implementation, or tests.
+It reports only consequential blocking, non-blocking, or optional issues, stays read-only, and leaves
+the final decision to the primary agent.
 
 ### Using the workflow in another repo
 

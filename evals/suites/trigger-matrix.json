@@ -3573,6 +3573,142 @@
       "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "workflow-orchestrator"}}],
       "id": "spar-vs-workflow-routing",
       "prompt": "Help decide what workflow phase should come next for a vague reliability concern."
+    },
+    {
+      "direction": "should_trigger",
+      "expectations": ["Runs the explicitly requested Rubber Duck critic.", "Keeps the critique read-only and consequential."],
+      "expected_skills": ["rubber-duck"],
+      "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "rubber-duck"}}],
+      "id": "rubber-duck-explicit-skill",
+      "prompt": "Use $rubber-duck to critique these changes for substantive blind spots."
+    },
+    {
+      "direction": "should_trigger",
+      "expectations": ["Critiques a completed implementation rather than changing it."],
+      "expected_skills": ["rubber-duck"],
+      "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "rubber-duck"}}],
+      "id": "rubber-duck-code",
+      "prompt": "Give me an independent critic's pass over this implementation and focus on bugs that matter."
+    },
+    {
+      "direction": "should_trigger",
+      "expectations": ["Finds consequential blind spots in the supplied plan."],
+      "expected_skills": ["rubber-duck"],
+      "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "rubber-duck"}}],
+      "id": "rubber-duck-plan",
+      "prompt": "Rubber duck this rollout plan and identify what could prevent it from succeeding."
+    },
+    {
+      "direction": "should_trigger",
+      "expectations": ["Critiques the design's interfaces and invariants."],
+      "expected_skills": ["rubber-duck"],
+      "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "rubber-duck"}}],
+      "id": "rubber-duck-design",
+      "prompt": "Use a Rubber Duck critic on this design's ownership and state invariants."
+    },
+    {
+      "direction": "should_trigger",
+      "expectations": ["Checks whether the tests prove the intended contract."],
+      "expected_skills": ["rubber-duck"],
+      "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "rubber-duck"}}],
+      "id": "rubber-duck-tests",
+      "prompt": "Have an independent critic inspect these tests for meaningful blind spots."
+    },
+    {
+      "direction": "should_trigger",
+      "expectations": ["Uses a fresh critic perspective after repeated failed attempts."],
+      "expected_skills": ["rubber-duck"],
+      "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "rubber-duck"}}],
+      "id": "rubber-duck-repeated-failures",
+      "prompt": "We have tried two fixes and still fail. Run a Rubber Duck critique of our approach and evidence."
+    },
+    {
+      "direction": "should_trigger",
+      "expectations": ["Looks across a substantial multi-file change for missed consequential issues."],
+      "expected_skills": ["rubber-duck"],
+      "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "rubber-duck"}}],
+      "id": "rubber-duck-multifile",
+      "prompt": "Critique this substantial multi-file change from an independent outside perspective."
+    },
+    {
+      "direction": "should_trigger",
+      "expectations": ["Challenges whether the work advances the stated goal."],
+      "expected_skills": ["rubber-duck"],
+      "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "rubber-duck"}}],
+      "id": "rubber-duck-goal-progress",
+      "prompt": "Rubber-duck whether this proposal actually moves us toward the stated reliability goal."
+    },
+    {
+      "direction": "should_not_trigger",
+      "expectations": ["Runs an adversarial idea analysis rather than critiquing completed work."],
+      "expected_skills": ["spar"],
+      "forbidden_skills": ["rubber-duck"],
+      "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "spar"}}],
+      "id": "rubber-duck-vs-spar",
+      "prompt": "Use $spar to compare opposing perspectives on REST versus GraphQL."
+    },
+    {
+      "direction": "should_not_trigger",
+      "expectations": ["Runs the normal PR review entrypoint."],
+      "expected_skills": ["pr-review"],
+      "forbidden_skills": ["rubber-duck"],
+      "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "pr-review"}}],
+      "id": "rubber-duck-vs-pr-review",
+      "prompt": "Review the current PR using all applicable review aspects."
+    },
+    {
+      "direction": "should_not_trigger",
+      "expectations": ["Plans mergeable PR slices rather than critiquing completed work."],
+      "expected_skills": ["decompose-feature"],
+      "forbidden_skills": ["rubber-duck"],
+      "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "decompose-feature"}}],
+      "id": "rubber-duck-vs-decompose",
+      "prompt": "Plan the PR sequence for this broad feature before implementation."
+    },
+    {
+      "direction": "should_not_trigger",
+      "expectations": ["Assesses whether the existing diff is atomic."],
+      "expected_skills": ["ensure-atomic-pr"],
+      "forbidden_skills": ["rubber-duck"],
+      "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "ensure-atomic-pr"}}],
+      "id": "rubber-duck-vs-atomicity",
+      "prompt": "Only decide whether this existing diff is one atomic unit."
+    },
+    {
+      "direction": "should_not_trigger",
+      "expectations": ["Executes the approved work rather than reviewing it."],
+      "expected_skills": ["execute-plan-loop"],
+      "forbidden_skills": ["rubber-duck"],
+      "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "execute-plan-loop"}}],
+      "id": "rubber-duck-vs-execution",
+      "prompt": "Implement the approved retry fix and run the required tests."
+    },
+    {
+      "direction": "should_not_trigger",
+      "expectations": ["Updates the named stale documentation."],
+      "expected_skills": ["refresh-related-docs"],
+      "forbidden_skills": ["rubber-duck"],
+      "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "refresh-related-docs"}}],
+      "id": "rubber-duck-vs-doc-refresh",
+      "prompt": "Update README.md to document the already completed command behavior."
+    },
+    {
+      "direction": "should_not_trigger",
+      "expectations": ["Creates the explicit durable goal."],
+      "expected_skills": ["achieve-goal"],
+      "forbidden_skills": ["rubber-duck"],
+      "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "achieve-goal"}}],
+      "id": "rubber-duck-vs-goal",
+      "prompt": "/goal Implement the approved migration over several sessions."
+    },
+    {
+      "direction": "should_not_trigger",
+      "expectations": ["Determines the next workflow phase for an unresolved request."],
+      "expected_skills": ["workflow-orchestrator"],
+      "forbidden_skills": ["rubber-duck"],
+      "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "workflow-orchestrator"}}],
+      "id": "rubber-duck-vs-workflow-routing",
+      "prompt": "Help decide what should happen next for an underspecified reliability concern."
     }
   ],
   "schema": "skill-evals/trigger-suite-v1",
