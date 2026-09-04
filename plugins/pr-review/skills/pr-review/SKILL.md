@@ -63,6 +63,9 @@ The primary agent coordinates the review.
   the aspect's scope, complexity, and risk.
 - Track every selected aspect until it is `completed` or `skipped` with an explicit reason. An aspect
   not attempted because capacity is full belongs in a later wave; it is not a failed launch.
+- When continuing from an authoritative recorded launcher state, preserve its execution facts in
+  Review Coverage: capacity-deferred aspects, returned handles, each single retry, whether the retry
+  inherited the current-session model without an override, and every primary fallback.
 - Enter wait/collect only for returned live handles. When delegation is available but a launch
   returns no live handle, retry that aspect once after capacity is available, without an explicit
   model override so it uses the current session's inherited/default model. If that retry still
@@ -117,6 +120,8 @@ double confirmation.
 - If security was selected automatically but the capability is unavailable, continue and record
   that it was not run. If the user explicitly required security, stop and report the missing
   capability rather than substituting a lightweight scan.
+- Decide security applicability before capability availability. When security is not applicable,
+  report `not applicable`; do not report it as unavailable merely because the workflow is not exposed.
 
 ## Tests and commands
 

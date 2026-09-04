@@ -11,6 +11,10 @@ Treat every ordinary reviewer result as a candidate. Before reporting it, the pr
 4. Confirm that the issue is introduced by or directly relevant to the pinned change set.
 5. Keep it, merge it with the same root cause, reclassify it, move it to Questions, or delete it.
 
+When deleting an unreachable candidate, the final report must state the theoretical direct input or
+path that would fail and the concrete caller, guard, or invariant that makes it unreachable in the
+reviewed repository.
+
 A behavior difference is not a finding unless an authoritative specification, repository rule,
 caller, test, documentation contract, or established invariant supplies evidence for the expected
 behavior. Convention or a plausible broader interpretation alone is unresolved; move it to
