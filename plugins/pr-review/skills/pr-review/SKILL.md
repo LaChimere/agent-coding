@@ -66,7 +66,11 @@ The primary agent coordinates the review.
 - When continuing from an authoritative recorded launcher state, preserve its execution facts in
   Review Coverage: capacity-deferred aspects, returned handles, each single retry, whether the retry
   inherited the current-session model without an override, and every primary fallback.
-- Enter wait/collect only for returned live handles. When delegation is available but a launch
+- Treat the returned launcher result as the execution ledger. A launch counts as delegated work only
+  when it returns a live handle; requested roles, model arguments, and intended launches are not
+  execution evidence. Build the wait set only from those returned live handles. If the set is empty,
+  continue with the required primary fallbacks without calling wait/collect.
+- When delegation is available but a launch
   returns no live handle, retry that aspect once after capacity is available, without an explicit
   model override so it uses the current session's inherited/default model. If that retry still
   returns no handle, or a launched reviewer later fails, run that brief sequentially in the primary
@@ -110,8 +114,10 @@ double confirmation.
   severity levels; do not mechanically convert its standalone categories. Do not append a standalone
   SPAR or Rubber Duck report to the final response; integrate only confirmed findings, unresolved
   questions, and challenge coverage into the single PR Review report.
-- Record whether each pass was cross-model or primary-model fallback and the model/family when known.
-  Do not expose hidden reasoning. A Rubber Duck security concern does not complete the security aspect.
+- Record a pass as cross-model only when its execution ledger contains a returned live handle and the
+  collected result confirms a known eligible different model family. Otherwise record the actual
+  isolated or sequential primary-model fallback and its limitation. Do not expose hidden reasoning.
+  A Rubber Duck security concern does not complete the security aspect.
 
 - Keep security separate from ordinary reviewers. When security is applicable and
   `$codex-security:security-diff-scan` is available, invoke that complete workflow from the primary

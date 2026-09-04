@@ -31,14 +31,19 @@
     },
     {
       "id": 2,
-      "prompt": "Use $spar on `idea.md`. Treat `status/capabilities.md` as the observable model and delegation state. Do not invent another model or agent.",
+      "prompt": "Use $spar on `idea.md`. Treat `status/capabilities.md` and `status/launch-state.md` as the authoritative observable model and launcher state. Do not call collaboration tools or invent another model, handle, or agent.",
       "expected_output": "Completes the two perspectives with the primary model because no eligible different family or delegation is available, and discloses primary-model fallback without claiming cross-model independence.",
-      "files": ["files/fallback/idea.md", "files/fallback/status/capabilities.md"],
+      "files": [
+        "files/fallback/idea.md",
+        "files/fallback/status/capabilities.md",
+        "files/fallback/status/launch-state.md"
+      ],
       "fixture_prefix": "files/fallback",
       "expectations": [
         "Completes a useful SPAR analysis despite unavailable delegation.",
         "Uses the primary model sequentially for the perspectives.",
         "Labels execution as primary-model fallback and does not claim cross-model review.",
+        "Treats the recorded no-handle launch as no delegated execution, does not wait on an empty handle set, and completes both perspectives sequentially.",
         "Does not invent handles, models, or hidden reasoning.",
         "Does not modify files."
       ]

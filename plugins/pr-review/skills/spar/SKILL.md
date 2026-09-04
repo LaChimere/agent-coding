@@ -31,8 +31,11 @@ complexity and risk.
   perspectives. Do not hard-code a model or reasoning level.
 - Give each role the same subject and relevant evidence, but not another role's output. Each role
   makes the strongest credible case from its assigned perspective and must not spawn more agents.
-- Launch roles in parallel when capacity permits, otherwise use waves. Wait only on returned live
-  handles. If a launch returns no handle because capacity is full, defer it to a later wave; otherwise
+- Launch roles in parallel when capacity permits, otherwise use waves. Treat the returned launcher
+  result as the execution ledger: only a returned live handle proves that a delegated role started.
+  Build the wait set from those handles alone; when it is empty, continue with the required primary
+  perspectives without calling wait. If a launch returns no handle because capacity is full, defer it
+  to a later wave; otherwise
   retry one no-handle launch once after capacity is available, then use the primary fallback. If a
   launched role fails, use the primary fallback without repeatedly relaunching it.
 - If no eligible different family is available, use the primary model in isolated role contexts. If
@@ -40,8 +43,10 @@ complexity and risk.
 - When the user explicitly requires an actual different model family and none is available, report
   the capability limitation instead of calling a same-model analysis cross-model.
 
-Record whether the analysis was cross-model or a primary-model fallback. Do not reveal hidden
-reasoning.
+Record cross-model analysis only when the execution ledger contains a returned live handle and the
+collected role result confirms a known eligible different model family. Requested model arguments,
+role prompts, and intended launches are not execution evidence. Otherwise record the actual
+primary-model fallback. Do not reveal hidden reasoning.
 
 ## Synthesize
 
