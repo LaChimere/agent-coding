@@ -42,7 +42,7 @@ NONE_ROUTE = 'none'
 # `forbidden_skills` when the point of the case is that composition must not overreach into
 # them. Never valid in `expected_skills`: a case cannot expect a non-skill capability to be
 # the activated route.
-EXTERNAL_FORBIDDEN_CAPABILITIES = frozenset({'security-review'})
+EXTERNAL_FORBIDDEN_CAPABILITIES = frozenset({'code-review', 'security-review'})
 
 # Evals are repository-maintenance assets: they live in a central corpus outside skills/ so
 # `npx skills add` never distributes cases, fixtures, or expected answers with a skill.
