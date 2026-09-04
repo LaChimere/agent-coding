@@ -4,12 +4,12 @@
     {
       "id": 0,
       "prompt": "Use $spar to pressure-test the API direction in `idea.md`. Produce one complete analysis and do not implement either option.",
-      "expected_output": "Frames a concrete product-versus-platform tension, develops two independent perspectives, synthesizes what holds and fails, and ends with one decision-forcing question without implementing the API.",
+      "expected_output": "Frames a concrete product-versus-platform tension, develops independently motivated perspectives, synthesizes what holds and fails, and ends with one decision-forcing question without implementing the API.",
       "files": ["files/architecture/idea.md"],
       "fixture_prefix": "files/architecture",
       "expectations": [
         "Uses the required Conflict framing, Roles, role Perspective, Synthesis, The open question, and Execution sections.",
-        "Selects two credible opposing roles instead of producing generic pros and cons.",
+        "Uses two roles by default; a third role is allowed only when its independent responsibility materially changes the decision rather than repeating another side.",
         "Challenges the proposal using the supplied mobile, compatibility, and operations constraints.",
         "Ends with exactly one open question that materially affects the decision.",
         "Does not implement an API or modify files."
