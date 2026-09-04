@@ -44,7 +44,10 @@ operators must know degradation occurred.
 
 For retries, establish attempt count, trigger conditions, backoff/deadline behavior, idempotency,
 cancellation, and the final surfaced error. Documentation wording such as “retry” or “failed
-request” must match the actual failure classes handled.
+request” must match the actual failure classes handled. When a contract or document says a request
+"fails," enumerate the representations available at that boundary—such as a resolved non-success
+response, rejection or throw, timeout, and cancellation—and verify which of them actually enter the
+retry or recovery path. Do not let coverage of one representation stand in for the others.
 
 ## Seek counterevidence
 

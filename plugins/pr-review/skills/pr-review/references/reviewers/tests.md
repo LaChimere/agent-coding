@@ -38,6 +38,13 @@ Check whether changed tests:
 Identify tests that only prove a helper ran, a mock was called, or a command exited zero when the
 claimed behavior was never exercised.
 
+When repository guidance requires executing a validation command, inspect the command or its
+configured script before treating its success text as test evidence. State what tests or assertions
+the command actually ran. A wrapper that only prints a success message, skips the relevant test
+file, or cannot be tied to the asserted behavior is passing command evidence but not passing test
+evidence; report that distinction as a candidate when the command is the repository's required
+validation gate.
+
 ## Calibrate missing-test candidates
 
 A missing test is a candidate only when you can name the unprotected behavior and the regression
