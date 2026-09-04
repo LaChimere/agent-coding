@@ -14,7 +14,8 @@ Applicability is decided here; do not open files for skipped aspects merely to c
   requested. Reviews coverage and test quality; it does not execute tests.
 - **errors** — [errors.md](errors.md). Applicable when the change touches exceptions, error values,
   callbacks, retries, fallbacks, failure defaults, optional access that may hide absence, logging,
-  cleanup, or user-facing failures.
+  cleanup, or user-facing failures. It is also applicable when changed documentation makes claims
+  about any of those behaviors.
 - **types** — [types.md](types.md). Applicable when types, schemas, data models, public interfaces,
   state machines, construction rules, or mutation boundaries changed, or when explicitly requested.
 - **spec** — [spec.md](spec.md). Applicable only when the user supplies or the repository contains an

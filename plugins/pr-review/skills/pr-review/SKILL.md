@@ -87,7 +87,8 @@ double confirmation.
   migration, concurrency, cross-component behavior, complex state transitions, or a plan/design/test
   whose failure would have major consequences. When selected, read and follow the complete
   [Rubber Duck skill](../rubber-duck/SKILL.md). File count alone does not make a change substantial.
-  Honor an explicit request to exclude Rubber Duck.
+  Honor an explicit request to exclude Rubber Duck. When the user says to review `only` named
+  ordinary aspects, suppress automatic Rubber Duck unless the user also requests it explicitly.
 - Give challengers the same pinned target, relevant context, repository guidance, and authoritative
   specification, but not ordinary reviewer candidates or each other's output. The primary coordinates
   challenger agents; a challenger must not spawn more agents.
@@ -142,7 +143,8 @@ Read [references/report-format.md](references/report-format.md). The primary age
 double-confirm every candidate against the diff, supporting code, tests, specification, and
 repository rules. Search for counterevidence such as existing guards, caller validation, invariants,
 or coverage. Delete disproved candidates, merge a shared root cause, and move unresolved concerns
-to Questions.
+to Questions. When a candidate is disproved as unreachable, state both the theoretical failing input
+or path and the concrete caller, guard, or invariant that excludes it.
 
 Return one human- and agent-readable Markdown report sorted by the agreed severity levels, with
 source labels, spec/review/challenge coverage, and a natural-language Recommended Action.
