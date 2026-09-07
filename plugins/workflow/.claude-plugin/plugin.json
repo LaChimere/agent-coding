@@ -1,0 +1,9 @@
+{
+  "name": "workflow",
+  "version": "0.1.1",
+  "description": "Coordinated planning, verified execution and focused quality skills with one living plan.",
+  "author": {"name": "LaChimere", "url": "https://github.com/LaChimere"},
+  "homepage": "https://github.com/LaChimere/agent-coding",
+  "repository": "https://github.com/LaChimere/agent-coding",
+  "keywords": ["workflow", "planning", "execution"]
+}

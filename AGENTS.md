@@ -15,7 +15,7 @@ It is **not** the portable coordination contract for downstream skills or downst
 ## Repository model
 
 - `skills/` contains standalone skills; coordinated workflow skills live only under `plugins/workflow/skills/`.
-- `plugins/` contains Codex plugins whose runtime skills are installed through the repo marketplace.
+- `plugins/` contains shared plugin skills with native distribution for Codex CLI, Claude Code and GitHub Copilot CLI.
 - `evals/` contains the central repository-maintenance corpus; it is never distributed with skills.
 - `tools/skill-evals/` contains the provider-neutral validation, snapshot, grading, aggregation, and suite tooling.
 - `plugins/workflow/skills/workflow-orchestrator/` is the portable coordination layer and owns the shared workflow contract plus planning templates.
@@ -26,8 +26,10 @@ It is **not** the portable coordination contract for downstream skills or downst
 ## Distribution contract
 
 - Users consume root `skills/` through copies installed by `npx skills add`; plugin-owned skills are
-  consumed by installing their Codex plugin from `.agents/plugins/marketplace.json`.
-- Running a skill from the repository source checkout is unsupported.
+  consumed as complete plugins. Codex uses `.agents/plugins/marketplace.json`; Claude Code and
+  Copilot CLI share `.claude-plugin/marketplace.json`. Keep one runtime skill tree per plugin and
+  synchronize common metadata and versions across its native manifests.
+- Manually invoking a skill from an unregistered source checkout is unsupported. A native plugin manager may live-load a registered local marketplace; validate that path against an isolated candidate copy.
 - Runtime references, templates, scripts, and platform adapters must be bundled under the skill that uses them and resolved relative to the installed skill directory.
 - Skills documented as standalone must work when installed alone.
 - Workflow-managed dependencies must be explicit and tested in their supported installed combinations.
@@ -61,7 +63,7 @@ Use the narrowest validation that matches the change:
 - workflow changes: targeted skill/doc consistency review
 - doc-only changes: consistency review of the affected skills/docs
 - distributed skill changes: validate installed snapshot copies through `npx skills add`; plugin-owned changes also need actual isolated marketplace installation. Neither structural checks nor snapshot copies prove host discovery.
-- Codex plugin changes: validate the plugin, install the candidate local marketplace in an isolated configuration, and test discovery/invocation in new CLI sessions. App UI compatibility needs separate evidence when claimed; it is not a gate for this repository-only working-tree delivery. Do not switch production installs as part of repository validation.
+- Plugin changes: run `uv run --locked --project tools/skill-evals pytest tools/skill-evals/tests/test_plugin_distribution.py`, validate native manifests, install/update the candidate local marketplace in isolated configurations, and test discovery/invocation in fresh sessions of each supported CLI. Record CLI versions and distinguish installation, discovery, invocation and optional capability coverage. App/IDE/cloud compatibility needs separate evidence when claimed; it is not a gate for this repository-only working-tree delivery. Do not switch production installs or copy credentials as part of validation.
 
 ## Practical change map
 
@@ -72,4 +74,4 @@ Use the narrowest validation that matches the change:
 - Changing harness contracts -> update `tools/skill-evals/` and its tests
 - Changing repo contribution guidance -> update this `AGENTS.md`
 - Changing planning artifact formats -> update `plugins/workflow/skills/workflow-orchestrator/templates/`
-- Changing a Codex plugin -> update `plugins/<plugin>/`, its central `evals/<skill>/` corpus, and marketplace/docs when needed
+- Changing a plugin -> update `plugins/<plugin>/`, its affected central `evals/<skill>/` corpus, and native marketplace/docs when needed

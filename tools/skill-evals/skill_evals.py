@@ -1155,7 +1155,7 @@ def validate_suite(path: Path, universe: set[str] | None = None) -> list[str]:
 
 
 def skill_directories(repo: Path) -> list[Path]:
-    """List real runtime skills from the root and bundled Codex plugins."""
+    """List real runtime skills from the root and bundled plugins."""
     root_skills = [path for path in (repo / 'skills').glob('*/') if path.is_dir()]
     plugin_skills = [
         path for path in (repo / 'plugins').glob('*/skills/*/') if path.is_dir()

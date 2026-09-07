@@ -70,6 +70,7 @@ No evidence = not done.
 AGENTS.md                              # Contributor guidance for this repo
 plugins/workflow/
   .codex-plugin/plugin.json            # Distribution only, no wrapper entrypoint
+  .claude-plugin/plugin.json           # Claude Code + Copilot CLI; same skills
   skills/
     workflow-orchestrator/             # Shared contract, references and templates
     execute-plan-loop/
@@ -80,11 +81,13 @@ plugins/workflow/
     refresh-related-docs/
 plugins/pr-review/                     # Separate review plugin, unchanged
   .codex-plugin/plugin.json
+  .claude-plugin/plugin.json
   skills/pr-review/
   skills/spar/
   skills/rubber-duck/
 skills/scan-image-vulnerabilities/      # Standalone, with bundled script and tests
 .agents/plugins/marketplace.json
+.claude-plugin/marketplace.json        # Claude Code + Copilot CLI marketplace
 evals/<skill>/                         # Central cases, manifests, fixtures; never distributed
 evals/suites/
 tools/skill-evals/                     # Existing provider-neutral harness
@@ -193,14 +196,106 @@ Use when: the user asks about container image vulnerabilities, exact cluster wor
 
 ## Usage
 
-### Installing the PR Review plugin
+### Native plugin installation
 
-Add this repository as a Codex marketplace, then install the plugin:
+The supported CLI targets are Codex, Claude Code and GitHub Copilot CLI. Each host installs
+the same complete plugin skill trees through its own plugin manager. The Claude-format manifests
+are shared by Claude Code and Copilot CLI; Codex keeps its own manifests and marketplace.
+This does not imply support for every host's App, IDE extension or cloud agent.
+
+For a checkout containing this candidate, register its absolute path in place of
+`LaChimere/agent-coding` below. The GitHub commands require a revision containing the corresponding
+marketplace and plugin manifests; local candidate verification does not publish that revision.
+
+**Codex CLI** (terminal):
 
 ```sh
 codex plugin marketplace add LaChimere/agent-coding --ref main
 codex plugin add pr-review@agent-coding
+codex plugin add workflow@agent-coding
 ```
+
+**Claude Code** (terminal):
+
+```sh
+claude plugin marketplace add LaChimere/agent-coding
+claude plugin install pr-review@agent-coding --scope user
+claude plugin install workflow@agent-coding --scope user
+```
+
+**GitHub Copilot CLI** (terminal):
+
+```sh
+copilot plugin marketplace add LaChimere/agent-coding
+copilot plugin install pr-review@agent-coding
+copilot plugin install workflow@agent-coding
+```
+
+Start a fresh session after installation or updates. Codex accepts `$pr-review:pr-review` and
+`$workflow:execute-plan-loop` (the existing short names still work when unambiguous). Claude Code
+uses `/pr-review:pr-review` and `/workflow:execute-plan-loop`. In Copilot, use `/skills` or
+`copilot skill list --json` to inspect the discovered names, then explicitly ask to use the
+`pr-review` or `execute-plan-loop` skill. Natural-language requests remain supported.
+
+For updates, Codex uses `codex plugin marketplace upgrade agent-coding` for Git marketplace
+snapshots, then `codex plugin add <plugin>@agent-coding`. For a local directory source, re-add
+the versioned plugin directly. Claude uses `claude plugin marketplace update agent-coding`, then
+`claude plugin update <plugin>@agent-coding --scope user`. Copilot uses
+`copilot plugin marketplace update agent-coding`, then `copilot plugin update <plugin>@agent-coding`.
+Repeat the plugin update for each installed plugin. Release changes bump both native manifests of
+the affected plugin together; re-open a session and verify the installed version.
+
+#### Capability boundaries
+
+Skills describe actions, not a universal tool API. Use the host's actual invocation, delegation,
+planning and permission mechanisms. Synchronous reviewer results are complete when returned;
+asynchronous tasks need real handles before waiting. Cross-model claims require actual execution
+and model-family evidence, not just a requested model.
+
+Native Plan Mode and `/goal` are optional host capabilities. Without them, explicit chat approval
+can authorize ordinary work, but there is no promised automatic cross-turn continuation. The complete
+Codex Security workflow remains an optional external dependency: report missing automatic coverage;
+if the user explicitly requires it, report the review incomplete rather than substitute a lighter scan.
+Installation does not grant permissions or install optional dependencies.
+
+Plugin-owned skills are supported as complete plugin combinations, not arbitrary standalone subsets.
+In particular, `pr-review` composes sibling `spar` and `rubber-duck` skills. `npx skills add` snapshot
+checks validate skill content, not native plugin installation or independent operation of each sibling.
+
+#### Compatibility evidence
+
+Local `0.1.1` candidate verification on 2026-09-07:
+
+| CLI tested | Native installation and discovery | Actual invocation |
+|---|---|---|
+| Codex CLI 0.153.4 | Both plugins installed; 3 review + 7 workflow skills in the fresh prompt inventory | Read-only review and approved two-label execution passed |
+| Claude Code 2.1.263 | Both plugins registered; 3 + 7 skills in plugin details and session inventory | Read-only review and approved two-label execution passed |
+| Copilot CLI 1.0.83 | Both plugins registered; 3 + 7 plugin skills in the fresh catalog | Read-only review and approved two-label execution passed |
+
+All invocation checks used the existing local gateway with its available `gpt-6-astra` model,
+not native provider login flows or multiple model families. The previously configured Claude model
+was rejected with `model_not_supported`; changing only the isolated test configuration resolved it.
+Review fixtures remained unchanged by the agents; host-generated state is recorded separately.
+Execution checks preserve exports and unchanged tests, and limit edits to the labels and existing plan.
+Copilot's initial execution correctly reported blocked tests when the probe used an unsupported
+permission pattern; a fresh run with its supported `shell(node)` permission completed both checks.
+
+Codex read its installed cache. Claude and Copilot resolved local-marketplace skills to the registered
+candidate directory; Copilot explicitly reports live loading with nothing copied. This supported
+native-manager path is distinct from manually invoking an unregistered source checkout. Same-version
+update/re-add paths were exercised: Codex re-added the plugins, Claude reported latest `0.1.1`, and
+Copilot reported live loading with nothing to update. Remote Git fetches and changed-release upgrades
+remain untested. Tests use isolated configurations, never the daily installation.
+
+The copied-package checks, 10-skill `npx skills add --copy` installation and targeted behavioral
+replays are separate evidence. No native cross-model delegation, complete Codex Security scan,
+Plan Mode/goal lifecycle, or App/IDE/cloud compatibility is claimed. Raw local commands and results
+are retained in `.skill-evals/harness-compatibility/`; that ignored evidence is not distributed.
+
+### Using PR Review in Codex
+
+Install the plugin through the [native installation instructions](#native-plugin-installation).
+The examples in this section use Codex invocation syntax.
 
 Start a new thread, then invoke `$pr-review` explicitly or ask Codex to review the current PR,
 branch diff, commit range, or working-tree changes. The plugin is read-only. It uses the complete
@@ -232,20 +327,16 @@ Use `$rubber-duck` for an explicit, one-shot critique of a plan, design, impleme
 It reports only consequential blocking, non-blocking, or optional issues, stays read-only, and leaves
 the final decision to the primary agent.
 
-### Installing and using the workflow plugin
+### Using the workflow plugin
 
-For a checkout containing the candidate, register that checkout's marketplace and install:
-
-```sh
-codex plugin marketplace add /absolute/path/to/agent-coding
-codex plugin add workflow@agent-coding
-```
+Install the complete plugin through the [native installation instructions](#native-plugin-installation)
+and use the invocation syntax for your host.
 
 The plugin distributes all seven workflow skills and their bundled resources; it adds no `$workflow` wrapper, MCP server, hook or background service. Invoke the appropriate skill directly. General change-set review uses the separately installed `pr-review` plugin. Missing optional coverage is reported; explicitly required independent review remains incomplete if unavailable, not replaced with self-review or automatic installation.
 
-Candidate verification uses an isolated Codex home and this worktree's marketplace, not remote `main`. Installing skill snapshots through `npx skills add --copy` tests instruction content only, not plugin discovery. CLI discovery, native Plan Mode and native goal lifecycle require their own actual evidence. App UI compatibility remains separately unverified unless exercised; it is not a gate for this repository-only working-tree delivery. A new test thread is a discovery check, not a mandatory work phase for ordinary tasks.
+Candidate verification uses isolated configurations for each supported CLI and this worktree's marketplace, not remote `main`. Installing skill snapshots through `npx skills add --copy` tests instruction content only, not plugin discovery. CLI discovery, native Plan Mode and native goal lifecycle require their own actual evidence. App UI compatibility remains separately unverified unless exercised; it is not a gate for this repository-only working-tree delivery. A new test thread is a discovery check, not a mandatory work phase for ordinary tasks.
 
-Install `scan-image-vulnerabilities` separately through `npx skills add` when needed; it still requires bash, python3 and Trivy 0.58.0+, with Docker or kubectl only for their respective discovery modes. Runtime execution from the source checkout remains unsupported.
+Install `scan-image-vulnerabilities` separately through `npx skills add` when needed; it still requires bash, python3 and Trivy 0.58.0+, with Docker or kubectl only for their respective discovery modes. Manually invoking skills from an unregistered source checkout remains unsupported.
 
 ### Switching an existing standalone installation
 

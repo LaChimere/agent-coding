@@ -182,9 +182,23 @@ npx skills add /abs/path/to/<run_id>.skills-snapshot/<skill> --agent <agent> --c
 This is intentionally a skill-content evaluation boundary. A plugin-owned skill uses the same
 standalone snapshot-copy step as a root skill, so the run can evaluate its instructions without
 depending on mutable plugin state. It does **not** prove that the owning plugin manifest,
-marketplace entry, Codex cache, or skill discovery works. Validate those separately by installing
+marketplace entry, host cache, or skill discovery works. Validate those separately by installing
 the plugin through its marketplace, checking the installed cache against the release candidate,
-and invoking it from a new Codex thread.
+and invoking it from a fresh session of each supported CLI: Codex, Claude Code and Copilot CLI.
+Plugin-owned skills are distributed as complete plugins; isolated content snapshots do not establish
+that every skill works alone without its sibling skills.
+
+Run `uv run --locked --project tools/skill-evals pytest tools/skill-evals/tests/test_plugin_distribution.py`
+for native marketplace/manifest agreement and copied-package resource closure. This test does not
+run a host installer. Native validation must additionally record installation, update, discovery,
+actual invocation and optional capability coverage separately. A validator returning an empty
+inventory or a successful `--plugin-dir` inspection is not persistent-install proof.
+
+For Claude use `CLAUDE_CONFIG_DIR`; for Copilot use `COPILOT_HOME` plus separate
+`COPILOT_CACHE_HOME` and `COPILOT_PKG_CACHE_HOME`. Use disposable workspaces and verify the actual
+skill inventory, not just the configured directories. Keep probe scripts outside this repository
+and generated evidence under `.skill-evals/`. Never copy credentials; missing authentication leaves
+model-invocation coverage incomplete without blocking independent installation checks.
 
 An isolated `CODEX_HOME` alone is not proof of isolated skill discovery: Codex may still discover personal `~/.agents/skills` entries. For local candidate validation, use per-process `skills.config` overrides targeting each existing skill's exact `SKILL.md` path, not its directory, without changing the real installation or enablement. Inspect `codex debug prompt-input` from the disposable case workspace with the execution configuration. Resolve its skill-root aliases (such as `r0/...`) before checking the full discovered inventory: no personal or retired entry, and exactly one installed copy of each selected skill. Save the raw prompt and resolved inventory; a full-path substring search alone is not an isolation check. Then check actual tool-read paths during execution. A successful install or a read of the correct candidate does not rescue a run whose prompt also exposed unintended skills. Qualified plugin names can disambiguate explicit invocation; they do not replace the discovery isolation check. Never copy credentials into the test home.
 

@@ -1,0 +1,9 @@
+{
+  "name": "pr-review",
+  "version": "0.1.1",
+  "description": "Evidence-backed change review with specialized reviewers and independent challengers.",
+  "author": {"name": "LaChimere", "url": "https://github.com/LaChimere"},
+  "homepage": "https://github.com/LaChimere/agent-coding",
+  "repository": "https://github.com/LaChimere/agent-coding",
+  "keywords": ["pull-request", "code-review", "diff", "security"]
+}
