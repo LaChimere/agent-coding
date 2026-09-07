@@ -108,8 +108,8 @@
     {
       "direction": "should_trigger",
       "expectations": [
-      "Selects anti-slop for the requested necessity and overbuilding assessment rather than PR decomposition or atomicity planning.",
-      "Does not invent diff-specific findings when the actual change set is unavailable; keeps the response read-only."
+        "Selects anti-slop for the requested necessity and overbuilding assessment rather than PR decomposition or atomicity planning.",
+        "Does not invent diff-specific findings when the actual change set is unavailable; keeps the response read-only."
       ],
       "expected_skills": [
         "anti-slop"
@@ -1563,7 +1563,7 @@
     {
       "direction": "should_not_trigger",
       "expectations": [
-      "Selects execute-plan-loop for the approved single-agent slice without a new planning or approval round; does not claim implementation or tests ran when task files are unavailable.",
+        "Selects execute-plan-loop for the approved single-agent slice without a new planning or approval round; does not claim implementation or tests ran when task files are unavailable.",
         "Does not plan multi-agent coordination when only one agent is involved."
       ],
       "expected_skills": [
@@ -3938,18 +3938,30 @@
           }
         }
       ]
-    }
-    ,{
+    },
+    {
       "direction": "should_not_trigger",
       "id": "scan-image-vulnerabilities-vs-native-goal-status",
       "prompt": "Report the existing host-native goal status only; no container image inspection or implementation is requested.",
-      "expected_skills": ["none"],
-      "forbidden_skills": ["scan-image-vulnerabilities"],
+      "expected_skills": [
+        "none"
+      ],
+      "forbidden_skills": [
+        "scan-image-vulnerabilities"
+      ],
       "expectations": [
         "Leaves lifecycle status to the host native goal capability.",
         "Does not activate image scanning for a status-only request."
       ],
-      "grading": [{"type":"json_shape","path":"response_json","required":{"route":"none"}}]
+      "grading": [
+        {
+          "type": "json_shape",
+          "path": "response_json",
+          "required": {
+            "route": "none"
+          }
+        }
+      ]
     }
   ],
   "schema": "skill-evals/trigger-suite-v1",

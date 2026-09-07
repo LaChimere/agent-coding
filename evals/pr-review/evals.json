@@ -97,8 +97,12 @@
       ],
       "execution": {
         "network": "disabled",
-        "path_prepend": ["bin"],
-        "executable_files": ["bin/check-tests"]
+        "path_prepend": [
+          "bin"
+        ],
+        "executable_files": [
+          "bin/check-tests"
+        ]
       }
     },
     {

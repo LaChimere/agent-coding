@@ -5,7 +5,11 @@
       "id": 0,
       "prompt": "Use $rubber-duck to critique the implementation in `status/change.diff`. Inspect the source and test, stay read-only, and focus only on consequential issues.",
       "expected_output": "Finds that the new authorization branch grants admin access to any non-empty role, explains the reachable privilege impact, and ignores cosmetic feedback.",
-      "files": ["files/code/src/authorize.js", "files/code/test/authorize.test.js", "files/code/status/change.diff"],
+      "files": [
+        "files/code/src/authorize.js",
+        "files/code/test/authorize.test.js",
+        "files/code/status/change.diff"
+      ],
       "fixture_prefix": "files/code",
       "expectations": [
         "Pins the supplied change and its authorization goal.",
@@ -19,7 +23,9 @@
       "id": 1,
       "prompt": "Use $rubber-duck to critique `plan.md`. Identify only blind spots that could prevent the migration goal; do not rewrite or execute the plan.",
       "expected_output": "Identifies the missing reconciliation and rollback semantics as consequential plan risks, ties them to accepted writes during cutover, and recommends bounded plan corrections.",
-      "files": ["files/plan/plan.md"],
+      "files": [
+        "files/plan/plan.md"
+      ],
       "fixture_prefix": "files/plan",
       "expectations": [
         "Reviews the plan against its stated zero-loss migration goal.",
@@ -32,7 +38,11 @@
       "id": 2,
       "prompt": "Use $rubber-duck on the clean change in `status/change.diff`. Inspect the implementation and tests, and do not manufacture feedback.",
       "expected_output": "Reports no substantive issues for the reviewed scope after checking the normalization contract and tests, without adding cosmetic suggestions or a merge recommendation.",
-      "files": ["files/clean/src/normalize.js", "files/clean/test/normalize.test.js", "files/clean/status/change.diff"],
+      "files": [
+        "files/clean/src/normalize.js",
+        "files/clean/test/normalize.test.js",
+        "files/clean/status/change.diff"
+      ],
       "fixture_prefix": "files/clean",
       "expectations": [
         "Checks the changed behavior and relevant tests.",
@@ -46,7 +56,10 @@
       "id": 3,
       "prompt": "Use $rubber-duck to critique `design.md`. Treat `status/capabilities.md` as the observable model and delegation state and do not invent another model.",
       "expected_output": "Performs a distinct primary-model fallback critique, finds the ambiguous idempotency boundary, and discloses that no cross-model critic was available.",
-      "files": ["files/fallback/design.md", "files/fallback/status/capabilities.md"],
+      "files": [
+        "files/fallback/design.md",
+        "files/fallback/status/capabilities.md"
+      ],
       "fixture_prefix": "files/fallback",
       "expectations": [
         "Completes a substantive critique using the primary model fallback.",
@@ -60,7 +73,10 @@
       "id": 4,
       "prompt": "Use $rubber-duck on `status/change.diff`. The file also contains an old unrelated problem; keep the critique scoped to the changed behavior.",
       "expected_output": "Reviews the changed timeout behavior and ignores the explicitly unchanged legacy debug-token issue rather than expanding scope.",
-      "files": ["files/preexisting/src/client.js", "files/preexisting/status/change.diff"],
+      "files": [
+        "files/preexisting/src/client.js",
+        "files/preexisting/status/change.diff"
+      ],
       "fixture_prefix": "files/preexisting",
       "expectations": [
         "Pins the changed timeout line and its caller-visible effect.",

@@ -28,12 +28,26 @@
     {
       "id": "single-step-code-edit",
       "prompt": "In this repository, change the greeting prefix in src/greeting.js from Hello to Hi, preserving interpolation of the supplied name. The existing test/greeting.test.js already expects the new prefix. Make this one change and run node --test test/greeting.test.js. No plan, commit or other behavior change is needed.",
-      "expected_skills": ["none"],
-      "forbidden_skills": ["execute-plan-loop", "workflow-orchestrator", "plan-parallel-work"],
+      "expected_skills": [
+        "none"
+      ],
+      "forbidden_skills": [
+        "execute-plan-loop",
+        "workflow-orchestrator",
+        "plan-parallel-work"
+      ],
       "expectations": [
         "Handle the explicitly authorized one-step repository change directly; do not load an execution workflow merely because implementation and a targeted check are requested."
       ],
-      "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "none"}}]
+      "grading": [
+        {
+          "type": "json_shape",
+          "path": "response_json",
+          "required": {
+            "route": "none"
+          }
+        }
+      ]
     },
     {
       "id": "single-worktree",

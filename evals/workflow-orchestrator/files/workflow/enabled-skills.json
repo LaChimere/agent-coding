@@ -1,5 +1,7 @@
 {
-  "enabled_skills": ["workflow-orchestrator"],
+  "enabled_skills": [
+    "workflow-orchestrator"
+  ],
   "disabled_skills": [
     "execute-plan-loop",
     "anti-slop",

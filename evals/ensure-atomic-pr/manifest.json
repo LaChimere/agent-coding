@@ -1,11 +1,25 @@
 {
   "skill_name": "ensure-atomic-pr",
   "default_category": "regression_guard",
-  "critical_ids": [1],
+  "critical_ids": [
+    1
+  ],
   "critical_expectations": {
-    "1": [0, 1, 2, 3, 4]
+    "1": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ]
   },
-  "behavior_change_ids": [1, 2, 4, 5, 6],
+  "behavior_change_ids": [
+    1,
+    2,
+    4,
+    5,
+    6
+  ],
   "redundant_ids": [],
   "behavior_change_rationale": {
     "1": "The case now supplies status/rename-branch.md and status/rename.diff showing the rename and its coupled semantic tweak as state already committed on the current branch, not a proposal for a future/not-yet-started feature, so the agent evaluates real evidence instead of an abstract description.",

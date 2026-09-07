@@ -5,7 +5,9 @@
       "id": 0,
       "prompt": "Use $spar to pressure-test the API direction in `idea.md`. Produce one complete analysis and do not implement either option.",
       "expected_output": "Frames a concrete product-versus-platform tension, develops independently motivated perspectives, synthesizes what holds and fails, and ends with one decision-forcing question without implementing the API.",
-      "files": ["files/architecture/idea.md"],
+      "files": [
+        "files/architecture/idea.md"
+      ],
       "fixture_prefix": "files/architecture",
       "expectations": [
         "Uses the required Conflict framing, Roles, role Perspective, Synthesis, The open question, and Execution sections.",
@@ -19,7 +21,9 @@
       "id": 1,
       "prompt": "Use $spar on `plan.md`. Include a third role only if it changes the migration decision. Return a one-shot analysis.",
       "expected_output": "Recognizes a genuine three-way migration tension among delivery, operations, and regulated-data responsibilities, keeps the roles independent, and synthesizes the conditions required for a safe cutover.",
-      "files": ["files/migration/plan.md"],
+      "files": [
+        "files/migration/plan.md"
+      ],
       "fixture_prefix": "files/migration",
       "expectations": [
         "Uses three roles because the regulated-data responsibility changes the conclusion rather than duplicating delivery or operations.",
@@ -52,7 +56,9 @@
       "id": 3,
       "prompt": "Use $spar to challenge `proposal.md`. Distinguish missing evidence from a demonstrated defect and do not turn uncertainty into implementation work.",
       "expected_output": "Challenges the unsupported performance and adoption assumptions, requests decision-relevant evidence, and avoids declaring the proposal wrong when the available material cannot resolve the tension.",
-      "files": ["files/evidence/proposal.md"],
+      "files": [
+        "files/evidence/proposal.md"
+      ],
       "fixture_prefix": "files/evidence",
       "expectations": [
         "Identifies the unsupported performance and adoption assumptions.",

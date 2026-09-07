@@ -1,8 +1,16 @@
 {
   "name": "agent-coding",
-  "owner": {"name": "LaChimere"},
+  "owner": {
+    "name": "LaChimere"
+  },
   "plugins": [
-    {"name": "pr-review", "source": "./plugins/pr-review"},
-    {"name": "workflow", "source": "./plugins/workflow"}
+    {
+      "name": "pr-review",
+      "source": "./plugins/pr-review"
+    },
+    {
+      "name": "workflow",
+      "source": "./plugins/workflow"
+    }
   ]
 }

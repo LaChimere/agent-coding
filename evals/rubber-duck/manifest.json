@@ -1,19 +1,52 @@
 {
   "skill_name": "rubber-duck",
   "default_category": "regression_guard",
-  "critical_ids": [0,2,3,4,5],
+  "critical_ids": [
+    0,
+    2,
+    3,
+    4,
+    5
+  ],
   "critical_expectations": {
-    "5": [0,1,2,3],
-    "0": [0, 1, 2, 3],
-    "2": [0, 1, 2, 3],
-    "3": [0, 1, 2, 3],
-    "4": [0, 1, 2]
+    "5": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "0": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "2": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "3": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "4": [
+      0,
+      1,
+      2
+    ]
   },
-  "behavior_change_ids": [5],
+  "behavior_change_ids": [
+    5
+  ],
   "redundant_ids": [],
   "deterministic_ids": [],
   "behavior_change_rationale": {
-    "5": "Accept completed synchronous delegation without weakening asynchronous live-handle or evidence requirements."},
+    "5": "Accept completed synchronous delegation without weakening asynchronous live-handle or evidence requirements."
+  },
   "clarification_rationale": {
     "_coverage": "The cases cover consequential implementation, plan and design critique, clean-work restraint, model fallback, and pre-existing issue exclusion."
   }
