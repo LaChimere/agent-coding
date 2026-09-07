@@ -11,3 +11,9 @@ Normalize CSV column names in the shared parser.
 ## Verification
 
 Run the existing CSV parser tests.
+
+## Execution status
+
+- [ ] Normalize parser column names
+
+Evidence: none recorded.

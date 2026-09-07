@@ -1,0 +1,11 @@
+{
+  "enabled_skills": ["workflow-orchestrator"],
+  "disabled_skills": [
+    "execute-plan-loop",
+    "anti-slop",
+    "decompose-feature",
+    "plan-parallel-work",
+    "ensure-atomic-pr",
+    "refresh-related-docs"
+  ]
+}

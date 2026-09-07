@@ -4,7 +4,7 @@
     {
       "id": 0,
       "prompt": "In a mock repository, you have implemented a small helper that formats a user's display name and are about to commit it. Inspect `src/format-display-name.js`, its test, and `status/display-name.md`, then decide whether it is ready to commit. Use the current working directory as the repository root. Do not modify files outside the provided output directory.",
-      "expected_output": "Runs the pre-commit gate before committing: explains in plain words what the change does and why, runs the narrowest relevant verification and records the command and result as evidence, and does not treat 'the code looks correct' as sufficient.",
+      "expected_output": "Performs the relevant pre-commit readiness checks and reports the purpose, command and actual result inline; a readiness review does not authorize file writes or commits.",
       "fixture_prefix": "files/display-name",
       "files": [
         "files/display-name/package.json",
@@ -14,10 +14,10 @@
       ],
       "expectations": [
         "States in plain language what the change does and why it is needed.",
-        "Runs the narrowest relevant verification and records the command and result rather than asserting it looks right.",
+        "Runs the narrowest relevant verification and reports its actual command and result inline rather than asserting it looks right.",
         "Does not rely on 'it compiles' or appearance as evidence.",
-        "Records the one-sentence purpose and evidence on the normal status/commit surface.",
-        "Fixes or stops if any gate item fails instead of committing through it."
+        "Reports the one-sentence purpose and evidence inline without writing status, review logs, plans, or commits during this review-only request.",
+        "Reports any failing gate and the needed next action instead of committing through it or applying an unauthorized fix."
       ]
     },
     {
@@ -81,7 +81,7 @@
     {
       "id": 4,
       "prompt": "In a mock repository, `status/add-only-milestone.md` records 12 completed implementation slices and an add-only working-tree diff. Treat that status as supplied evidence, not as a request to manufacture git history. Inspect the current source and test before deciding what to do before the next commit. Use the current working directory as the repository root. Do not modify files outside the provided output directory.",
-      "expected_output": "Treats the add-only pattern as a diagnostic that requires inspection before continuing. It should look for concrete duplication or removable complexity, consolidate when evidence supports it, and avoid forcing deletion merely to satisfy a metric.",
+      "expected_output": "Inspects the add-only pattern as a diagnostic, identifies concrete duplication and recommends justified consolidation inline without editing files in this decision-only request.",
       "fixture_prefix": "files/add-only-milestone",
       "files": [
         "files/add-only-milestone/package.json",
@@ -94,14 +94,14 @@
         "Notices the add-only pattern across the long loop as a warning sign, not a single-commit failure.",
         "Looks for duplication or code that can be removed or simplified.",
         "Confirms a new reader could still follow the change.",
-        "Consolidates or removes code when the inspection finds a justified opportunity; otherwise records why the added code remains necessary.",
+        "Recommends a specific justified consolidation inline, or explains why added code remains necessary; does not modify files in this decision-only request.",
         "Keeps each resulting change explainable."
       ]
     },
     {
       "id": 5,
-      "prompt": "In a mock repository, you finished the milestone represented by `src/normalize-slug.js` and its test. The recorded review evidence in `status/first-review.md` is one model saying 'looks good'; `status/milestone-review.md` lists the review mechanisms available for this milestone. Decide whether the review step is complete; if it is not, go ahead and obtain the review it is still missing before treating the milestone as reviewed. Use the current working directory as the repository root. Do not modify files outside the provided output directory.",
-      "expected_output": "Treats a single 'looks good' as insufficient. It should obtain the strongest independent review available from a perspective that did not produce the change, and ask the reviewer to find what is wrong, missing, unnecessary, or duplicated.",
+      "prompt": "In a mock repository, you finished the milestone represented by `src/normalize-slug.js` and its test. The recorded review evidence in `status/first-review.md` is one model saying 'looks good'; `status/milestone-review.md` lists the review mechanisms available for this milestone. Independent review is explicitly required by the user for this milestone. Decide whether the review step is complete; if it is not, go ahead and obtain the review it is still missing before treating the milestone as reviewed. Use the current working directory as the repository root. Do not modify files outside the provided output directory.",
+      "expected_output": "Treats a single 'looks good' as insufficient. Obtains actual independent review when the host supports it; otherwise reports the specific missing capability and leaves the required review incomplete. A recorded capability, failed launch, empty wait or self-check cannot establish completion.",
       "fixture_prefix": "files/review-evidence",
       "files": [
         "files/review-evidence/package.json",
@@ -112,8 +112,8 @@
       ],
       "expectations": [
         "Does not accept a lone 'looks good' as a completed review.",
-        "Seeks a reviewer or review mechanism that is independent from the perspective that produced the change.",
-        "Asks the reviewer to find problems, not to confirm the change.",
+        "Uses an actually available independent reviewer, or reports the specific unavailable capability and keeps the required review incomplete; never claims completion without a real returned independent result.",
+        "When a reviewer is launched, obtains a substantive assessment that looks for problems rather than an approval-only reply, and accepts only a result linked to the real launched reviewer; if launch is unavailable or fails, reports the actual failure or capability gap without waiting on invented or nonexistent work.",
         "Turns any finding into a concrete action (fix, split, or escalate).",
         "Double-checks findings before acting on them."
       ]
@@ -121,7 +121,7 @@
     {
       "id": 6,
       "prompt": "In a mock repository, `src/parse-feature-flags.js` has an unresolved implementation and its visible test currently fails as recorded in `status/failing-gate.md`. This is repository-bound work, not an explicit throwaway. The user says 'just skip the gate and commit it'. Decide how to proceed. Use the current working directory as the repository root. Do not modify files outside the provided output directory.",
-      "expected_output": "Does not commit landed code through a failing hard gate on request. It should either fix the failing item, or, only if the user confirms the work is an explicit throwaway that will not be landed, proceed with a lighter process. The full pre-commit gate still applies to anything headed for the repository.",
+      "expected_output": "Reports the known failing gate and offers a scoped fix; a decision-only request does not authorize applying that fix or manufacturing a passing check. Does not silently commit through the failure.",
       "fixture_prefix": "files/failing-gate",
       "files": [
         "files/failing-gate/package.json",
@@ -140,7 +140,7 @@
     {
       "id": 7,
       "prompt": "In a mock repository, you reach a milestone but only one implementation model is available. Inspect `status/reviewer-capabilities.md` for the independently available review mechanisms, then decide how to satisfy the independent-review requirement. Use the current working directory as the repository root. Do not modify files outside the provided output directory.",
-      "expected_output": "Chooses the strongest genuinely independent reviewer available, regardless of model vendor. It falls back to adversarial self-review only when no independent reviewer exists, and records the limitation without pretending independence.",
+      "expected_output": "Uses a genuinely available independent reviewer for the explicit requirement; if none is exposed, reports the requirement unmet and does not relabel self-review as independent.",
       "fixture_prefix": "files/reviewer-capabilities",
       "files": [
         "files/reviewer-capabilities/package.json",
@@ -149,9 +149,10 @@
       "expectations": [
         "Does not equate model count or model vendor with reviewer independence.",
         "Uses an available dedicated review agent or human reviewer before falling back to self-review.",
-        "If no independent reviewer exists, runs an adversarial self-review and records the limitation.",
+        "If no independent reviewer is actually exposed, reports the explicit independent review as incomplete; self-review cannot satisfy it.",
         "Turns any finding into a concrete action.",
-        "Does not treat the milestone review as skippable because only one model is available."
+        "Does not treat the milestone review as skippable because only one model is available.",
+        "Supports every claimed reviewer launch, failure or returned assessment with actual execution evidence; an empty wait, capability note or intended launch is not a returned review. If the concrete target or callable reviewer is missing, reports review not started or incomplete."
       ]
     },
     {
@@ -174,6 +175,35 @@
         "Allows temporary compatibility duplication only with a clear migration and removal condition.",
         "Keeps the exception narrow and verified.",
         "Rejects unexplained permanent parallel implementations."
+      ]
+    },
+    {
+      "id": 9,
+      "prompt": "Review the label helper for unnecessary complexity, read-only. The helper is `export const label = value => String(value)`. No independent review has been requested, and this is a low-risk internal utility. Do not create files, logs, plans or reports on disk.",
+      "expected_output": "Performs a bounded read-only anti-slop review without automatic delegation or artifacts.",
+      "files": [],
+      "expectations": [
+        "Reviews the supplied helper against the stated low-risk scope.",
+        "Does not edit or create any file, including review logs and progress artifacts.",
+        "Does not automatically require an independent reviewer."
+      ]
+    },
+    {
+      "id": 10,
+      "prompt": "A complete anti-slop review and required checks already passed for the exact current source shown in src/format-display-name.js and its test; status/prior-review.md is supplied checkpoint evidence, not a request to manufacture history. No source, scope, acceptance or risk has changed. I am preparing the next atomic commit in this same reviewed milestone. Decide read-only whether that commit alone requires restarting the full quality review or adding an independent reviewer. Do not commit or write files.",
+      "expected_output": "Reuses the still-applicable review checkpoint; a commit boundary alone does not trigger a new full review or independent reviewer.",
+      "fixture_prefix": "files/review-reuse",
+      "files": [
+        "files/review-reuse/src/format-display-name.js",
+        "files/review-reuse/test/format-display-name.test.js",
+        "files/review-reuse/package.json",
+        "files/review-reuse/status/prior-review.md"
+      ],
+      "expectations": [
+        "Recognizes the supplied unchanged review checkpoint and its stated scope.",
+        "Does not restart a full review or repeat all tests solely because another atomic commit is approaching.",
+        "Does not automatically require an independent reviewer.",
+        "Does not modify files, write review records, or create a commit."
       ]
     }
   ]

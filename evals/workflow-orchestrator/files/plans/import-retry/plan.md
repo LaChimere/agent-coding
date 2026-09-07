@@ -14,3 +14,10 @@ identifier so a retry does not create a second profile.
 ## Verification
 
 Run the existing profile-import tests.
+
+## Execution status
+
+- [ ] Add retry handling for transient queue failures.
+- [ ] Verify completed imports remain idempotent.
+
+Next ready slice: add the transient queue-failure retry path.

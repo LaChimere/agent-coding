@@ -13,3 +13,10 @@ Approved for implementation.
 
 Run `npm run test:password-reset` to verify the password reset expiry fix and
 the billing scope guard.
+
+## Execution status
+
+- [ ] Fix password reset expiry logic
+- [ ] Rename billing helpers
+
+Evidence: none recorded.

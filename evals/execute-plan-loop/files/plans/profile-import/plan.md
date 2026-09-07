@@ -13,3 +13,9 @@ errors from file and database operations.
 
 Run `npm run test:profile-import`. The fixture uses Node's built-in test
 runner and must not require package installation or network access.
+
+## Execution status
+
+- [ ] Improve profile import errors
+
+Evidence: none recorded.

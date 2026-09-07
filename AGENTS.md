@@ -9,7 +9,7 @@ It is **not** the portable coordination contract for downstream skills or downst
 - `skills/workflow-orchestrator/SKILL.md`
 - `skills/workflow-orchestrator/references/approval-gates.md`
 - `skills/workflow-orchestrator/references/worker-routing.md`
-- `skills/workflow-orchestrator/references/workflow-contract.md` (compatibility index)
+- `skills/workflow-orchestrator/references/workflow-contract.md` (navigation index)
 - `skills/workflow-orchestrator/templates/`
 
 ## Repository model
@@ -19,7 +19,7 @@ It is **not** the portable coordination contract for downstream skills or downst
 - `evals/` contains the central repository-maintenance corpus; it is never distributed with skills.
 - `tools/skill-evals/` contains the provider-neutral validation, snapshot, grading, aggregation, and suite tooling.
 - `skills/workflow-orchestrator/` is the portable coordination layer and owns the shared workflow contract plus planning templates.
-- `plans/{slug}/` stores planning/execution artifacts for changes made **to this repository**.
+- This repository does not keep a root `plans/` directory or task slugs. Use the approved conversation for maintenance scope and `.skill-evals/` for generated evaluation evidence. Downstream planning templates and eval fixtures are separate from this repository-maintenance convention.
 - Repo-root `AGENTS.md` is for repo-specific contributor guidance only.
 - Repo-root `templates/` should not exist; reusable templates belong with the skill that uses them.
 
@@ -60,8 +60,8 @@ Use the narrowest validation that matches the change:
 - Python tests: use `uv run --locked --project tools/skill-evals pytest ...` as the primary runner; existing unittest-compatible tests may remain when pytest collects them correctly
 - workflow changes: targeted skill/doc consistency review
 - doc-only changes: consistency review of the affected skills/docs
-- distributed skill changes: install the affected skill combinations through `npx skills add` and validate the installed copies
-- Codex plugin changes: validate the plugin, install it from the repo marketplace, and test it in a new thread
+- distributed skill changes: validate installed snapshot copies through `npx skills add`; plugin-owned changes also need actual isolated marketplace installation. Neither structural checks nor snapshot copies prove host discovery.
+- Codex plugin changes: validate the plugin, install the candidate local marketplace in an isolated configuration, and test discovery/invocation in new CLI sessions. App UI compatibility needs separate evidence when claimed; it is not a gate for this repository-only working-tree delivery. Do not switch production installs as part of repository validation.
 
 ## Practical change map
 

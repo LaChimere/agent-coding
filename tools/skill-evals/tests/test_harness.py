@@ -997,7 +997,6 @@ class TestHarness:
         assert [profile['name'] for profile in profiles] == [
             'orchestrator-contract',
             'execute-anti-slop-checklist',
-            'goal-orchestrator-execute',
         ]
 
     def test_unknown_result_metrics_are_preserved(self):
@@ -1690,23 +1689,23 @@ class TestHarness:
         """Verify skill selection grading pass fail none and universe filtering."""
         check = {
             'type': 'skill_selection',
-            'expected': ['achieve-goal', 'execute-plan-loop'],
+            'expected': ['anti-slop', 'execute-plan-loop'],
             'forbidden': ['workflow-orchestrator'],
-            'universe': ['achieve-goal', 'execute-plan-loop', 'workflow-orchestrator'],
+            'universe': ['anti-slop', 'execute-plan-loop', 'workflow-orchestrator'],
         }
         # Both expected skills activated, nothing forbidden: passes.
         passing = harness.grade(
-            {'activated_skills': ['achieve-goal', 'execute-plan-loop']}, [check]
+            {'activated_skills': ['anti-slop', 'execute-plan-loop']}, [check]
         )
         assert passing['status'] == 'passed'
         # Missing one expected skill: fails (expected is a required subset of activated).
-        missing = harness.grade({'activated_skills': ['achieve-goal']}, [check])
+        missing = harness.grade({'activated_skills': ['anti-slop']}, [check])
         assert missing['status'] == 'failed'
         # A forbidden skill activated alongside every expected skill still fails.
         forbidden_hit = harness.grade(
             {
                 'activated_skills': [
-                    'achieve-goal',
+                    'anti-slop',
                     'execute-plan-loop',
                     'workflow-orchestrator',
                 ]
@@ -1719,7 +1718,7 @@ class TestHarness:
         filtered = harness.grade(
             {
                 'activated_skills': [
-                    'achieve-goal',
+                    'anti-slop',
                     'execute-plan-loop',
                     'some-unrelated-global-skill',
                 ]
@@ -1750,8 +1749,8 @@ class TestHarness:
         none_check = {
             'type': 'skill_selection',
             'expected': ['none'],
-            'forbidden': ['achieve-goal'],
-            'universe': ['achieve-goal', 'execute-plan-loop'],
+            'forbidden': ['anti-slop'],
+            'universe': ['anti-slop', 'execute-plan-loop'],
         }
         # expected == ["none"] passes only when no universe skill activated at all.
         none_passes = harness.grade(
@@ -1763,7 +1762,7 @@ class TestHarness:
         )
         assert none_fails_any_universe_skill['status'] == 'failed'
         none_fails_forbidden = harness.grade(
-            {'activated_skills': ['achieve-goal']}, [none_check]
+            {'activated_skills': ['anti-slop']}, [none_check]
         )
         assert none_fails_forbidden['status'] == 'failed'
 
@@ -1787,9 +1786,9 @@ class TestHarness:
         )
         # A non-list, non-string-entry, or duplicate-entry activated_skills is rejected outright.
         for bad_value in (
-            ['achieve-goal', 'achieve-goal'],
-            'achieve-goal',
-            ['achieve-goal', ''],
+            ['anti-slop', 'anti-slop'],
+            'anti-slop',
+            ['anti-slop', ''],
             [1, 2],
         ):
             result = self._runner_result(baseline)

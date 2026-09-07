@@ -13,13 +13,13 @@ Decide **what PRs should exist** for work that has not been written yet, and in 
 |---|---|
 | Work needing a delivery sequence — including an existing branch when the question is what PRs should exist | this skill |
 | A change set whose atomicity or commit boundaries need assessment/recovery | `ensure-atomic-pr` |
-| A settled PR sequence that now needs branch/worktree/path ownership across agents | `plan-parallel-work` |
+| Concurrent implementers needing isolation, path ownership, and integration decisions | `plan-parallel-work` |
 
 If an existing branch question mixes both concerns, decide the PR sequence here and name `ensure-atomic-pr` only for commit/diff recovery detail.
 
 Skip this skill when the planned change is already narrow and single-purpose.
 
-For workflow-managed delivery, put the split in the active `plans/{slug}` design artifact and follow the recorded approval state. Invoke `workflow-orchestrator` only when phase or approval is unresolved.
+For workflow-managed delivery, put the split in the overall native proposal or existing `plans/{slug}/plan.md` when writing is allowed and authorized. Use existing design constraints without repeating complete option comparisons. Keep execution progress in that living plan alone. Invoke `workflow-orchestrator` only when phase or approval is unresolved. A delivery proposal does not authorize commits, pushes, PR changes, or pipeline triggers.
 
 # Advisory mode
 
@@ -55,7 +55,7 @@ One block per PR: name; goal; likely paths; dependencies; allowed changes; prohi
 If the feature is one indivisible purpose, say so and propose one PR instead of manufacturing a sequence.
 
 ## Parallelization readiness
-Which PRs stay serial, which can fan out after the base lands. Readiness only; `plan-parallel-work` assigns agents, branches, and paths.
+Which PRs stay serial, which may run concurrently from a stable starting point. Readiness only; `plan-parallel-work` fills missing implementation ownership and isolation decisions in the same overall plan. Task parallelism does not require multiple PRs or a new base PR.
 
 ## Risks
 Contract churn, migration hazards, conflict hotspots, rollback considerations.

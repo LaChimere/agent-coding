@@ -12,3 +12,9 @@ The session-handling change is a high-risk security milestone.
 
 - Expired sessions cannot be used without a successful refresh.
 - Session failures are reported rather than treated as authenticated access.
+
+## Execution status
+
+- [x] Implement session hardening
+
+Evidence: implementation verification recorded.

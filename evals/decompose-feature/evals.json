@@ -88,7 +88,7 @@
         "Answers inline.",
         "Does not create planning artifacts.",
         "Does not require Gate 1 before answering.",
-        "Offers materialization as an optional next step.",
+        "May omit materialization entirely; if mentioned, uses at most one factual sentence without an open-ended offer or required next step.",
         "Keeps the advice clearly provisional."
       ]
     }

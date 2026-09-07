@@ -1,21 +1,85 @@
 {
   "skill_name": "refresh-related-docs",
   "default_category": "regression_guard",
-  "critical_ids": [0, 1, 5],
+  "critical_ids": [
+    0,
+    1,
+    2,
+    4,
+    5,
+    7,
+    8
+  ],
   "critical_expectations": {
-    "0": [0, 1, 2, 3],
-    "1": [0, 1, 2, 3, 4],
-    "5": [0, 2, 3, 4]
+    "0": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "1": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "2": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "4": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "5": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "7": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "8": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ]
   },
-  "behavior_change_ids": [3, 4, 5, 6],
+  "behavior_change_ids": [
+    0,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ],
   "redundant_ids": [],
   "behavior_change_rationale": {
-    "3": "Explicitly named document targets are already approved.",
-    "4": "Discover the repository's documentation authority and search from changed public names.",
-    "5": "Ask only for approval of newly discovered or expanded scope.",
-    "6": "Do not trigger a documentation workflow when no documentation can be stale."
+    "0": "User explicitly removed the per-file and repository AGENTS.md approval gate; refresh established workflow documentation directly.",
+    "3": "Named documents need no repeat approval; naming files does not forbid discovering other related documentation unless scope is explicitly closed.",
+    "4": "Inspection-only remains read-only, without the retired routine approval-question ceremony.",
+    "5": "An explicit decline remains binding; do not re-ask about a declined tutorial.",
+    "6": "Do not trigger a documentation workflow when no documentation can be stale.",
+    "7": "Newly discovered documentation of the same completed change is refreshed automatically, without expanding implementation or inventing policy.",
+    "8": "Automatic documentation refresh must not promote an available optional command into a new mandatory contributor policy."
   },
   "clarification_rationale": {
-    "_critical_expectations": "Optional ordinary-doc progress and a newly discovered target whose decline is already present in the prompt are conditional branches; the approval and no-edit safety requirements remain critical."
+    "_critical_expectations": "Automatic refresh applies to related repository documentation. Explicit declines, section limits, inspection-only requests and unchanged implementation remain tested boundaries. Old frozen approval-gate results are historical and must not be regraded against this revised policy."
   }
 }

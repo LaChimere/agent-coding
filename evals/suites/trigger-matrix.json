@@ -3,366 +3,6 @@
     {
       "direction": "should_trigger",
       "expectations": [
-        "Recognizes the explicit /goal command.",
-        "Starts a persistent objective with acceptance criteria."
-      ],
-      "expected_skills": [
-        "achieve-goal"
-      ],
-      "grading": [
-        {
-          "path": "response_json",
-          "required": {
-            "route": "achieve-goal"
-          },
-          "type": "json_shape"
-        }
-      ],
-      "id": "goal-explicit-ship-command",
-      "prompt": "/goal Ship the payments retry feature end to end, tracking status until it's fully done."
-    },
-    {
-      "direction": "should_trigger",
-      "expectations": [
-        "Reports durable goal status.",
-        "Does not silently start new work instead of reporting status."
-      ],
-      "expected_skills": [
-        "achieve-goal"
-      ],
-      "grading": [
-        {
-          "path": "response_json",
-          "required": {
-            "route": "achieve-goal"
-          },
-          "type": "json_shape"
-        }
-      ],
-      "id": "goal-status-query",
-      "prompt": "/goal status"
-    },
-    {
-      "direction": "should_trigger",
-      "expectations": [
-        "Pauses the active goal's lifecycle.",
-        "Preserves resumable state."
-      ],
-      "expected_skills": [
-        "achieve-goal"
-      ],
-      "grading": [
-        {
-          "path": "response_json",
-          "required": {
-            "route": "achieve-goal"
-          },
-          "type": "json_shape"
-        }
-      ],
-      "id": "goal-pause-command",
-      "prompt": "/goal pause"
-    },
-    {
-      "direction": "should_trigger",
-      "expectations": [
-        "Resumes the paused goal.",
-        "Continues from the recorded checkpoint."
-      ],
-      "expected_skills": [
-        "achieve-goal"
-      ],
-      "grading": [
-        {
-          "path": "response_json",
-          "required": {
-            "route": "achieve-goal"
-          },
-          "type": "json_shape"
-        }
-      ],
-      "id": "goal-resume-command",
-      "prompt": "/goal resume"
-    },
-    {
-      "direction": "should_trigger",
-      "expectations": [
-        "Clears the persistent goal state.",
-        "Confirms the objective is no longer tracked."
-      ],
-      "expected_skills": [
-        "achieve-goal"
-      ],
-      "grading": [
-        {
-          "path": "response_json",
-          "required": {
-            "route": "achieve-goal"
-          },
-          "type": "json_shape"
-        }
-      ],
-      "id": "goal-clear-command",
-      "prompt": "/goal clear"
-    },
-    {
-      "direction": "should_trigger",
-      "expectations": [
-        "Recognizes continuation of an existing active goal.",
-        "Keeps durable status instead of restarting from scratch."
-      ],
-      "expected_skills": [
-        "achieve-goal"
-      ],
-      "grading": [
-        {
-          "path": "response_json",
-          "required": {
-            "route": "achieve-goal"
-          },
-          "type": "json_shape"
-        }
-      ],
-      "id": "goal-continue-active-objective",
-      "prompt": "Continue working on the active goal from yesterday about migrating the billing service to the new provider."
-    },
-    {
-      "direction": "should_trigger",
-      "expectations": [
-        "Establishes lifecycle tracking across explicit phases.",
-        "Defines acceptance criteria for the persistent objective."
-      ],
-      "expected_skills": [
-        "achieve-goal"
-      ],
-      "grading": [
-        {
-          "path": "response_json",
-          "required": {
-            "route": "achieve-goal"
-          },
-          "type": "json_shape"
-        }
-      ],
-      "id": "goal-multiphase-tracking",
-      "prompt": "I want to track a persistent objective to eliminate flaky CI across three phases: triage, fix, and verification, checking status periodically."
-    },
-    {
-      "direction": "should_trigger",
-      "expectations": [
-        "Resumes a previously paused persistent goal.",
-        "Reports the recorded state before continuing."
-      ],
-      "expected_skills": [
-        "achieve-goal"
-      ],
-      "grading": [
-        {
-          "path": "response_json",
-          "required": {
-            "route": "achieve-goal"
-          },
-          "type": "json_shape"
-        }
-      ],
-      "id": "goal-resume-paused-onboarding",
-      "prompt": "We paused the onboarding-redesign goal last week for a launch freeze; resume it now and tell me exactly where it left off."
-    },
-    {
-      "direction": "should_not_trigger",
-      "expectations": [
-        "Consumes the already-approved plan step directly.",
-        "Does not wrap a single approved slice in new goal lifecycle state."
-      ],
-      "expected_skills": [
-        "execute-plan-loop"
-      ],
-      "forbidden_skills": [
-        "achieve-goal"
-      ],
-      "grading": [
-        {
-          "path": "response_json",
-          "required": {
-            "route": "execute-plan-loop"
-          },
-          "type": "json_shape"
-        }
-      ],
-      "id": "goal-vs-executor-approved-step",
-      "prompt": "Implement the next step in plans/import-pipeline/plan.md; it's already approved, so there's no need to open a persistent goal for it."
-    },
-    {
-      "direction": "should_not_trigger",
-      "expectations": [
-        "Routes the ambiguous, unplanned request to the front door.",
-        "Does not start persistent goal tracking before a plan exists."
-      ],
-      "expected_skills": [
-        "workflow-orchestrator"
-      ],
-      "forbidden_skills": [
-        "achieve-goal"
-      ],
-      "grading": [
-        {
-          "path": "response_json",
-          "required": {
-            "route": "workflow-orchestrator"
-          },
-          "type": "json_shape"
-        }
-      ],
-      "id": "goal-vs-orchestrator-no-plan-yet",
-      "prompt": "We don't have a plan yet for this request and it's not clear what phase we're even in; figure that out before tracking anything long-term."
-    },
-    {
-      "direction": "should_not_trigger",
-      "expectations": [
-        "Splits the oversized feature into a trunk-safe sequence.",
-        "Does not treat a decomposition request as a lifecycle-tracking request."
-      ],
-      "expected_skills": [
-        "decompose-feature"
-      ],
-      "forbidden_skills": [
-        "achieve-goal"
-      ],
-      "grading": [
-        {
-          "path": "response_json",
-          "required": {
-            "route": "decompose-feature"
-          },
-          "type": "json_shape"
-        }
-      ],
-      "id": "goal-vs-decompose-oversized-feature",
-      "prompt": "This feature is too big for one PR — help me split it into stacked, mergeable slices."
-    },
-    {
-      "direction": "should_not_trigger",
-      "expectations": [
-        "Handles the trivial one-line fix directly.",
-        "Does not open persistent goal state for a single typo."
-      ],
-      "expected_skills": [
-        "none"
-      ],
-      "forbidden_skills": [
-        "achieve-goal"
-      ],
-      "grading": [
-        {
-          "path": "response_json",
-          "required": {
-            "route": "none"
-          },
-          "type": "json_shape"
-        }
-      ],
-      "id": "goal-vs-none-trivial-typo",
-      "prompt": "Just fix this one typo in the README; it's a one-line change."
-    },
-    {
-      "direction": "should_not_trigger",
-      "expectations": [
-        "Answers the definitional question directly.",
-        "Does not start tracking a persistent objective from a curiosity question."
-      ],
-      "expected_skills": [
-        "none"
-      ],
-      "forbidden_skills": [
-        "achieve-goal"
-      ],
-      "grading": [
-        {
-          "path": "response_json",
-          "required": {
-            "route": "none"
-          },
-          "type": "json_shape"
-        }
-      ],
-      "id": "goal-vs-none-definitional-question",
-      "prompt": "What does 'goal' mean in our project vocabulary? Just curious, not asking to track anything right now."
-    },
-    {
-      "direction": "should_not_trigger",
-      "expectations": [
-        "Assesses the commit's atomicity.",
-        "Does not reinterpret an atomicity check as goal tracking."
-      ],
-      "expected_skills": [
-        "ensure-atomic-pr"
-      ],
-      "forbidden_skills": [
-        "achieve-goal"
-      ],
-      "grading": [
-        {
-          "path": "response_json",
-          "required": {
-            "route": "ensure-atomic-pr"
-          },
-          "type": "json_shape"
-        }
-      ],
-      "id": "goal-vs-atomic-review-last-commit",
-      "prompt": "Review my last commit for atomicity, not for any long-term lifecycle tracking."
-    },
-    {
-      "direction": "should_not_trigger",
-      "expectations": [
-        "Answers the one-off status question directly.",
-        "Does not start persistent tracking for a request explicitly scoped as one-off."
-      ],
-      "expected_skills": [
-        "none"
-      ],
-      "forbidden_skills": [
-        "achieve-goal"
-      ],
-      "grading": [
-        {
-          "path": "response_json",
-          "required": {
-            "route": "none"
-          },
-          "type": "json_shape"
-        }
-      ],
-      "id": "goal-vs-none-oneoff-status",
-      "prompt": "Give me a one-off status update on CI test flakiness right now; I don't need this tracked going forward."
-    },
-    {
-      "direction": "should_not_trigger",
-      "expectations": [
-        "Plans worktree and ownership boundaries for the parallel agents.",
-        "Does not substitute goal tracking for parallel-work planning."
-      ],
-      "expected_skills": [
-        "plan-parallel-work"
-      ],
-      "forbidden_skills": [
-        "achieve-goal"
-      ],
-      "grading": [
-        {
-          "path": "response_json",
-          "required": {
-            "route": "plan-parallel-work"
-          },
-          "type": "json_shape"
-        }
-      ],
-      "id": "goal-vs-parallel-worktrees",
-      "prompt": "We have three agents about to work in parallel on this repo; set up their worktrees and ownership boundaries."
-    },
-    {
-      "direction": "should_trigger",
-      "expectations": [
         "Audits the change for scope creep.",
         "Checks whether the performance claim is actually supported by evidence."
       ],
@@ -468,8 +108,8 @@
     {
       "direction": "should_trigger",
       "expectations": [
-        "Questions whether the diff size matches the task.",
-        "Requires justification for the extra file changes."
+      "Selects anti-slop for the requested necessity and overbuilding assessment rather than PR decomposition or atomicity planning.",
+      "Does not invent diff-specific findings when the actual change set is unavailable; keeps the response read-only."
       ],
       "expected_skills": [
         "anti-slop"
@@ -484,7 +124,7 @@
         }
       ],
       "id": "slop-oversized-diff-for-config-change",
-      "prompt": "This PR touches twelve files for what should be a one-line config change — check whether that's actually justified."
+      "prompt": "This PR touches twelve files for what should be a one-line config change. Review whether the added abstractions, duplicate helpers and speculative options are necessary at all, and identify removable complexity. I am asking about necessity and overbuilding, not how to split commits or sequence PRs. Report findings only; do not edit or merge."
     },
     {
       "direction": "should_trigger",
@@ -695,30 +335,6 @@
       ],
       "id": "slop-vs-atomic-is-this-mergeable",
       "prompt": "Is this commit atomic enough to merge as a single PR, given it touches three unrelated modules?"
-    },
-    {
-      "direction": "should_not_trigger",
-      "expectations": [
-        "Starts persistent goal lifecycle tracking.",
-        "Does not use the always-on guard to own multi-session lifecycle state."
-      ],
-      "expected_skills": [
-        "achieve-goal"
-      ],
-      "forbidden_skills": [
-        "anti-slop"
-      ],
-      "grading": [
-        {
-          "path": "response_json",
-          "required": {
-            "route": "achieve-goal"
-          },
-          "type": "json_shape"
-        }
-      ],
-      "id": "slop-vs-goal-longterm-tracking",
-      "prompt": "Track this modernization effort as a persistent goal across multiple sessions and report status periodically."
     },
     {
       "direction": "should_trigger",
@@ -987,7 +603,7 @@
     {
       "direction": "should_not_trigger",
       "expectations": [
-        "Refactors the single function directly.",
+        "Returns the small inline refactor directly in the primary session.",
         "Does not invoke PR-splitting for a small, self-contained change."
       ],
       "expected_skills": [
@@ -1006,7 +622,7 @@
         }
       ],
       "id": "decompose-vs-none-single-function-refactor",
-      "prompt": "Just refactor this one function for clarity; nothing here needs splitting across PRs."
+      "prompt": "In this snippet, rename the local parameter n to value for clarity: function double(n) { return n * 2; }. Return the revised snippet inline. This is the complete task; no repository edits, planning, review or Git operations are requested."
     },
     {
       "direction": "should_not_trigger",
@@ -1035,7 +651,7 @@
     {
       "direction": "should_not_trigger",
       "expectations": [
-        "Implements the small feature directly.",
+        "Returns the fully specified one-attribute HTML change directly.",
         "Does not force decomposition on work that already fits one PR."
       ],
       "expected_skills": [
@@ -1054,7 +670,7 @@
         }
       ],
       "id": "decompose-vs-none-small-enough-feature",
-      "prompt": "This feature is small enough for one PR — just implement it directly, no need to plan slices."
+      "prompt": "Add the native tooltip title=\"Save changes\" to this button: <button>Save</button>. Return only the revised HTML inline; no JavaScript or other feature is needed. There is no repository work or delivery plan to manage."
     },
     {
       "direction": "should_not_trigger",
@@ -1395,8 +1011,8 @@
     {
       "direction": "should_not_trigger",
       "expectations": [
-        "Merges the trivial one-line fix directly.",
-        "Does not run an atomicity assessment on a single-line typo."
+        "Acknowledges the supplied completed merge without performing another Git operation.",
+        "Does not run planning or review for a status-only report of an already verified typo fix."
       ],
       "expected_skills": [
         "none"
@@ -1414,31 +1030,7 @@
         }
       ],
       "id": "atomic-vs-none-oneline-typo-merge",
-      "prompt": "This is a one-line typo fix — just merge it, there's nothing to assess."
-    },
-    {
-      "direction": "should_not_trigger",
-      "expectations": [
-        "Starts persistent goal tracking for the migration.",
-        "Does not substitute a single-diff atomicity check for multi-week lifecycle tracking."
-      ],
-      "expected_skills": [
-        "achieve-goal"
-      ],
-      "forbidden_skills": [
-        "ensure-atomic-pr"
-      ],
-      "grading": [
-        {
-          "path": "response_json",
-          "required": {
-            "route": "achieve-goal"
-          },
-          "type": "json_shape"
-        }
-      ],
-      "id": "atomic-vs-goal-longrunning-migration",
-      "prompt": "Track long-term progress on this multi-week migration as a persistent goal, not a single-PR question."
+      "prompt": "The one-line typo fix has already been reviewed, verified and merged. Acknowledge that supplied completion status only; do not repeat planning, review, implementation or any Git operation."
     },
     {
       "direction": "should_trigger",
@@ -1607,30 +1199,6 @@
       ],
       "id": "executor-turn-approved-design-into-code",
       "prompt": "Take this approved design and turn it into working, tested code slice by slice."
-    },
-    {
-      "direction": "should_not_trigger",
-      "expectations": [
-        "Starts persistent goal lifecycle tracking with pause/resume.",
-        "Does not treat a multi-session lifecycle request as a single execution slice."
-      ],
-      "expected_skills": [
-        "achieve-goal"
-      ],
-      "forbidden_skills": [
-        "execute-plan-loop"
-      ],
-      "grading": [
-        {
-          "path": "response_json",
-          "required": {
-            "route": "achieve-goal"
-          },
-          "type": "json_shape"
-        }
-      ],
-      "id": "executor-vs-goal-track-multiweek-migration",
-      "prompt": "Use /goal to track this multi-week migration with pause and resume support across sessions."
     },
     {
       "direction": "should_not_trigger",
@@ -1995,7 +1563,7 @@
     {
       "direction": "should_not_trigger",
       "expectations": [
-        "Executes the single-agent slice directly.",
+      "Selects execute-plan-loop for the approved single-agent slice without a new planning or approval round; does not claim implementation or tests ran when task files are unavailable.",
         "Does not plan multi-agent coordination when only one agent is involved."
       ],
       "expected_skills": [
@@ -2014,7 +1582,7 @@
         }
       ],
       "id": "parallel-vs-executor-single-agent-only",
-      "prompt": "Just one agent will implement the next approved slice — no other agents are involved."
+      "prompt": "Execute this approved slice now: update the retry helper to accept only integer attempt counts from 1 through 5, add boundary and invalid-input tests, and run the existing retry tests. That is the complete approved scope; stop after this slice. One agent must perform the implementation sequentially; no other implementers, worktrees or PR planning are needed. Keep changes in the working tree."
     },
     {
       "direction": "should_not_trigger",
@@ -2067,11 +1635,11 @@
     {
       "direction": "should_not_trigger",
       "expectations": [
-        "Implements the fix directly.",
+        "Routes the explicit approved implementation scope to execute-plan-loop.",
         "Does not plan multi-agent worktrees for solo work."
       ],
       "expected_skills": [
-        "none"
+        "execute-plan-loop"
       ],
       "forbidden_skills": [
         "plan-parallel-work"
@@ -2080,37 +1648,13 @@
         {
           "path": "response_json",
           "required": {
-            "route": "none"
+            "route": "execute-plan-loop"
           },
           "type": "json_shape"
         }
       ],
-      "id": "parallel-vs-none-solo-repo-work",
-      "prompt": "I'm the only person touching this repo today; just implement the fix."
-    },
-    {
-      "direction": "should_not_trigger",
-      "expectations": [
-        "Starts persistent goal tracking for the modernization effort.",
-        "Does not substitute worktree planning for multi-month lifecycle tracking."
-      ],
-      "expected_skills": [
-        "achieve-goal"
-      ],
-      "forbidden_skills": [
-        "plan-parallel-work"
-      ],
-      "grading": [
-        {
-          "path": "response_json",
-          "required": {
-            "route": "achieve-goal"
-          },
-          "type": "json_shape"
-        }
-      ],
-      "id": "parallel-vs-goal-longrunning-modernization",
-      "prompt": "Track a long-running persistent goal to modernize our test suite over the next several months."
+      "id": "parallel-vs-executor-solo-repo-work",
+      "prompt": "Implement the approved fix now: reject an expired session token at the authentication boundary, retain acceptance of valid tokens, and add regression coverage for both paths. I am the sole implementer in this repository; do not plan parallel workers or split PRs. Verify the fix and report working-tree changes without committing."
     },
     {
       "direction": "should_not_trigger",
@@ -2817,30 +2361,6 @@
     {
       "direction": "should_not_trigger",
       "expectations": [
-        "Starts persistent goal tracking for the hardening effort.",
-        "Does not substitute a single scan run for multi-quarter lifecycle tracking."
-      ],
-      "expected_skills": [
-        "achieve-goal"
-      ],
-      "forbidden_skills": [
-        "scan-image-vulnerabilities"
-      ],
-      "grading": [
-        {
-          "path": "response_json",
-          "required": {
-            "route": "achieve-goal"
-          },
-          "type": "json_shape"
-        }
-      ],
-      "id": "image-vs-goal-hardening-over-quarters",
-      "prompt": "Track long-term progress on hardening our container supply chain as a persistent goal across quarters."
-    },
-    {
-      "direction": "should_not_trigger",
-      "expectations": [
         "Plans worktree and ownership boundaries for the two teams.",
         "Does not run a vulnerability scan when the request is about coordinating teams."
       ],
@@ -3201,30 +2721,6 @@
     {
       "direction": "should_not_trigger",
       "expectations": [
-        "Starts persistent goal tracking directly from the explicit command.",
-        "Does not route an explicit /goal command through phase determination."
-      ],
-      "expected_skills": [
-        "achieve-goal"
-      ],
-      "forbidden_skills": [
-        "workflow-orchestrator"
-      ],
-      "grading": [
-        {
-          "path": "response_json",
-          "required": {
-            "route": "achieve-goal"
-          },
-          "type": "json_shape"
-        }
-      ],
-      "id": "orchestrator-vs-goal-explicit-command",
-      "prompt": "Use /goal to track this multi-week objective with pause and resume support; the command is explicit."
-    },
-    {
-      "direction": "should_not_trigger",
-      "expectations": [
         "Runs the scope-creep audit directly.",
         "Does not route an explicit, unambiguous quality-guard request through the front door."
       ],
@@ -3252,9 +2748,21 @@
         "Runs the explicitly invoked PR review skill.",
         "Keeps the review read-only."
       ],
-      "expected_skills": ["pr-review"],
-      "forbidden_skills": ["code-review"],
-      "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "pr-review"}}],
+      "expected_skills": [
+        "pr-review"
+      ],
+      "forbidden_skills": [
+        "code-review"
+      ],
+      "grading": [
+        {
+          "type": "json_shape",
+          "path": "response_json",
+          "required": {
+            "route": "pr-review"
+          }
+        }
+      ],
       "id": "pr-review-explicit-skill",
       "prompt": "Use $pr-review to review the current pull request."
     },
@@ -3264,9 +2772,21 @@
         "Reviews the current PR change set.",
         "Selects all applicable review aspects."
       ],
-      "expected_skills": ["pr-review"],
-      "forbidden_skills": ["code-review"],
-      "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "pr-review"}}],
+      "expected_skills": [
+        "pr-review"
+      ],
+      "forbidden_skills": [
+        "code-review"
+      ],
+      "grading": [
+        {
+          "type": "json_shape",
+          "path": "response_json",
+          "required": {
+            "route": "pr-review"
+          }
+        }
+      ],
       "id": "pr-review-current-pr",
       "prompt": "Review the current PR and tell me what must change before merge."
     },
@@ -3276,9 +2796,21 @@
         "Uses the named branch as the review scope.",
         "Does not turn the request into implementation work."
       ],
-      "expected_skills": ["pr-review"],
-      "forbidden_skills": ["code-review"],
-      "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "pr-review"}}],
+      "expected_skills": [
+        "pr-review"
+      ],
+      "forbidden_skills": [
+        "code-review"
+      ],
+      "grading": [
+        {
+          "type": "json_shape",
+          "path": "response_json",
+          "required": {
+            "route": "pr-review"
+          }
+        }
+      ],
       "id": "pr-review-branch-diff",
       "prompt": "Review everything on this branch since main; do not fix it."
     },
@@ -3288,9 +2820,21 @@
         "Reviews staged, unstaged, and relevant untracked work.",
         "Reports the resolved local change set."
       ],
-      "expected_skills": ["pr-review"],
-      "forbidden_skills": ["code-review"],
-      "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "pr-review"}}],
+      "expected_skills": [
+        "pr-review"
+      ],
+      "forbidden_skills": [
+        "code-review"
+      ],
+      "grading": [
+        {
+          "type": "json_shape",
+          "path": "response_json",
+          "required": {
+            "route": "pr-review"
+          }
+        }
+      ],
       "id": "pr-review-working-tree",
       "prompt": "Review my current working-tree changes before I commit them."
     },
@@ -3300,9 +2844,21 @@
         "Focuses on the requested tests and error-handling aspects.",
         "Uses the PR review aggregator for the result."
       ],
-      "expected_skills": ["pr-review"],
-      "forbidden_skills": ["code-review"],
-      "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "pr-review"}}],
+      "expected_skills": [
+        "pr-review"
+      ],
+      "forbidden_skills": [
+        "code-review"
+      ],
+      "grading": [
+        {
+          "type": "json_shape",
+          "path": "response_json",
+          "required": {
+            "route": "pr-review"
+          }
+        }
+      ],
       "id": "pr-review-tests-errors",
       "prompt": "Review this diff, focusing on tests and silent error handling."
     },
@@ -3312,9 +2868,21 @@
         "Compares the change with the supplied specification.",
         "Checks missing requirements and scope creep."
       ],
-      "expected_skills": ["pr-review"],
-      "forbidden_skills": ["code-review"],
-      "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "pr-review"}}],
+      "expected_skills": [
+        "pr-review"
+      ],
+      "forbidden_skills": [
+        "code-review"
+      ],
+      "grading": [
+        {
+          "type": "json_shape",
+          "path": "response_json",
+          "required": {
+            "route": "pr-review"
+          }
+        }
+      ],
       "id": "pr-review-spec-focus",
       "prompt": "Review this PR against specs/import-contract.md and flag missing or unrequested behavior."
     },
@@ -3324,9 +2892,21 @@
         "Treats design as a review focus without inventing a public design skill.",
         "Keeps the review scoped to the changed design."
       ],
-      "expected_skills": ["pr-review"],
-      "forbidden_skills": ["code-review"],
-      "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "pr-review"}}],
+      "expected_skills": [
+        "pr-review"
+      ],
+      "forbidden_skills": [
+        "code-review"
+      ],
+      "grading": [
+        {
+          "type": "json_shape",
+          "path": "response_json",
+          "required": {
+            "route": "pr-review"
+          }
+        }
+      ],
       "id": "pr-review-design-focus",
       "prompt": "Review the design proposed by this PR, especially its interfaces and failure model."
     },
@@ -3336,9 +2916,21 @@
         "Runs the comprehensive PR review entrypoint.",
         "Uses the complete security companion when applicable and available."
       ],
-      "expected_skills": ["pr-review"],
-      "forbidden_skills": ["code-review"],
-      "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "pr-review"}}],
+      "expected_skills": [
+        "pr-review"
+      ],
+      "forbidden_skills": [
+        "code-review"
+      ],
+      "grading": [
+        {
+          "type": "json_shape",
+          "path": "response_json",
+          "required": {
+            "route": "pr-review"
+          }
+        }
+      ],
       "id": "pr-review-comprehensive-security",
       "prompt": "Run a full PR review, including security, for this authentication change."
     },
@@ -3348,9 +2940,21 @@
         "Plans a trunk-safe PR decomposition.",
         "Does not review a change set that does not yet exist."
       ],
-      "expected_skills": ["decompose-feature"],
-      "forbidden_skills": ["pr-review"],
-      "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "decompose-feature"}}],
+      "expected_skills": [
+        "decompose-feature"
+      ],
+      "forbidden_skills": [
+        "pr-review"
+      ],
+      "grading": [
+        {
+          "type": "json_shape",
+          "path": "response_json",
+          "required": {
+            "route": "decompose-feature"
+          }
+        }
+      ],
       "id": "pr-review-vs-decompose",
       "prompt": "Plan how to split this proposed auth, API, migration, and UI feature into PRs."
     },
@@ -3360,9 +2964,21 @@
         "Assesses whether the existing diff is one atomic unit.",
         "Does not substitute a general PR quality review."
       ],
-      "expected_skills": ["ensure-atomic-pr"],
-      "forbidden_skills": ["pr-review"],
-      "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "ensure-atomic-pr"}}],
+      "expected_skills": [
+        "ensure-atomic-pr"
+      ],
+      "forbidden_skills": [
+        "pr-review"
+      ],
+      "grading": [
+        {
+          "type": "json_shape",
+          "path": "response_json",
+          "required": {
+            "route": "ensure-atomic-pr"
+          }
+        }
+      ],
       "id": "pr-review-vs-atomicity",
       "prompt": "Is this diff atomic, or should it be split into separate PRs?"
     },
@@ -3372,9 +2988,21 @@
         "Plans safe parallel ownership and worktrees.",
         "Does not perform a PR review."
       ],
-      "expected_skills": ["plan-parallel-work"],
-      "forbidden_skills": ["pr-review"],
-      "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "plan-parallel-work"}}],
+      "expected_skills": [
+        "plan-parallel-work"
+      ],
+      "forbidden_skills": [
+        "pr-review"
+      ],
+      "grading": [
+        {
+          "type": "json_shape",
+          "path": "response_json",
+          "required": {
+            "route": "plan-parallel-work"
+          }
+        }
+      ],
       "id": "pr-review-vs-parallel-plan",
       "prompt": "Plan how three agents should implement these approved PR slices in parallel worktrees."
     },
@@ -3384,9 +3012,21 @@
         "Executes the already approved implementation slice.",
         "Does not replace implementation with review."
       ],
-      "expected_skills": ["execute-plan-loop"],
-      "forbidden_skills": ["pr-review"],
-      "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "execute-plan-loop"}}],
+      "expected_skills": [
+        "execute-plan-loop"
+      ],
+      "forbidden_skills": [
+        "pr-review"
+      ],
+      "grading": [
+        {
+          "type": "json_shape",
+          "path": "response_json",
+          "required": {
+            "route": "execute-plan-loop"
+          }
+        }
+      ],
       "id": "pr-review-vs-implementation",
       "prompt": "Implement the approved parser slice and run its tests; the plan is already accepted."
     },
@@ -3396,9 +3036,21 @@
         "Updates the explicitly named stale documentation.",
         "Does not review an implementation diff."
       ],
-      "expected_skills": ["refresh-related-docs"],
-      "forbidden_skills": ["pr-review"],
-      "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "refresh-related-docs"}}],
+      "expected_skills": [
+        "refresh-related-docs"
+      ],
+      "forbidden_skills": [
+        "pr-review"
+      ],
+      "grading": [
+        {
+          "type": "json_shape",
+          "path": "response_json",
+          "required": {
+            "route": "refresh-related-docs"
+          }
+        }
+      ],
       "id": "pr-review-vs-doc-refresh",
       "prompt": "Update docs/api-guide.md to match the already completed API behavior."
     },
@@ -3408,23 +3060,23 @@
         "Routes to exact container-image CVE scanning.",
         "Does not convert an image scan into source PR review."
       ],
-      "expected_skills": ["scan-image-vulnerabilities"],
-      "forbidden_skills": ["pr-review"],
-      "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "scan-image-vulnerabilities"}}],
+      "expected_skills": [
+        "scan-image-vulnerabilities"
+      ],
+      "forbidden_skills": [
+        "pr-review"
+      ],
+      "grading": [
+        {
+          "type": "json_shape",
+          "path": "response_json",
+          "required": {
+            "route": "scan-image-vulnerabilities"
+          }
+        }
+      ],
       "id": "pr-review-vs-image-cve",
       "prompt": "Scan registry.example.com/payments:4.2 for known container vulnerabilities."
-    },
-    {
-      "direction": "should_not_trigger",
-      "expectations": [
-        "Creates a durable goal lifecycle.",
-        "Does not turn the objective into an immediate review."
-      ],
-      "expected_skills": ["achieve-goal"],
-      "forbidden_skills": ["pr-review"],
-      "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "achieve-goal"}}],
-      "id": "pr-review-vs-goal",
-      "prompt": "/goal Build and ship the new review dashboard over several sessions."
     },
     {
       "direction": "should_not_trigger",
@@ -3432,283 +3084,872 @@
         "Determines the correct workflow phase before selecting a worker.",
         "Does not claim there is already a diff to review."
       ],
-      "expected_skills": ["workflow-orchestrator"],
-      "forbidden_skills": ["pr-review"],
-      "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "workflow-orchestrator"}}],
+      "expected_skills": [
+        "workflow-orchestrator"
+      ],
+      "forbidden_skills": [
+        "pr-review"
+      ],
+      "grading": [
+        {
+          "type": "json_shape",
+          "path": "response_json",
+          "required": {
+            "route": "workflow-orchestrator"
+          }
+        }
+      ],
       "id": "pr-review-vs-ambiguous-workflow",
       "prompt": "Help me decide what we should do next for a vague reliability concern; no design or change exists yet."
     },
     {
       "direction": "should_trigger",
-      "expectations": ["Runs the explicitly requested SPAR analysis.", "Returns one adversarial synthesis without implementation."],
-      "expected_skills": ["spar"],
-      "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "spar"}}],
+      "expectations": [
+        "Runs the explicitly requested SPAR analysis.",
+        "Returns one adversarial synthesis without implementation."
+      ],
+      "expected_skills": [
+        "spar"
+      ],
+      "grading": [
+        {
+          "type": "json_shape",
+          "path": "response_json",
+          "required": {
+            "route": "spar"
+          }
+        }
+      ],
       "id": "spar-explicit-skill",
       "prompt": "Use $spar to pressure-test this API idea."
     },
     {
       "direction": "should_trigger",
-      "expectations": ["Challenges the architecture assumptions through opposing perspectives.", "Does not build the architecture."],
-      "expected_skills": ["spar"],
-      "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "spar"}}],
+      "expectations": [
+        "Challenges the architecture assumptions through opposing perspectives.",
+        "Does not build the architecture."
+      ],
+      "expected_skills": [
+        "spar"
+      ],
+      "grading": [
+        {
+          "type": "json_shape",
+          "path": "response_json",
+          "required": {
+            "route": "spar"
+          }
+        }
+      ],
       "id": "spar-architecture-assumptions",
       "prompt": "Play devil's advocate on our proposal to replace REST with GraphQL."
     },
     {
       "direction": "should_trigger",
-      "expectations": ["Pressure-tests migration assumptions, rollback, and stakeholder tensions."],
-      "expected_skills": ["spar"],
-      "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "spar"}}],
+      "expectations": [
+        "Pressure-tests migration assumptions, rollback, and stakeholder tensions."
+      ],
+      "expected_skills": [
+        "spar"
+      ],
+      "grading": [
+        {
+          "type": "json_shape",
+          "path": "response_json",
+          "required": {
+            "route": "spar"
+          }
+        }
+      ],
       "id": "spar-migration-plan",
       "prompt": "Give me a SPAR analysis of this database migration plan and its rollback assumptions."
     },
     {
       "direction": "should_trigger",
-      "expectations": ["Compares the implementation options adversarially before a decision."],
-      "expected_skills": ["spar"],
-      "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "spar"}}],
+      "expectations": [
+        "Compares the implementation options adversarially before a decision."
+      ],
+      "expected_skills": [
+        "spar"
+      ],
+      "grading": [
+        {
+          "type": "json_shape",
+          "path": "response_json",
+          "required": {
+            "route": "spar"
+          }
+        }
+      ],
       "id": "spar-options",
       "prompt": "Pressure-test whether this service should use synchronous processing or a queue."
     },
     {
       "direction": "should_trigger",
-      "expectations": ["Surfaces the important assumption the user may be underestimating."],
-      "expected_skills": ["spar"],
-      "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "spar"}}],
+      "expectations": [
+        "Surfaces the important assumption the user may be underestimating."
+      ],
+      "expected_skills": [
+        "spar"
+      ],
+      "grading": [
+        {
+          "type": "json_shape",
+          "path": "response_json",
+          "required": {
+            "route": "spar"
+          }
+        }
+      ],
       "id": "spar-underestimated-risk",
       "prompt": "What am I underestimating in this pricing model? Use opposing perspectives and synthesize them."
     },
     {
       "direction": "should_trigger",
-      "expectations": ["Uses independently motivated roles to challenge the decision."],
-      "expected_skills": ["spar"],
-      "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "spar"}}],
+      "expectations": [
+        "Uses independently motivated roles to challenge the decision."
+      ],
+      "expected_skills": [
+        "spar"
+      ],
+      "grading": [
+        {
+          "type": "json_shape",
+          "path": "response_json",
+          "required": {
+            "route": "spar"
+          }
+        }
+      ],
       "id": "spar-organizational-decision",
       "prompt": "Run a devil's-advocate analysis on hiring a dedicated platform engineer now."
     },
     {
       "direction": "should_trigger",
-      "expectations": ["Challenges whether the optimization's evidence and trade-offs justify it."],
-      "expected_skills": ["spar"],
-      "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "spar"}}],
+      "expectations": [
+        "Challenges whether the optimization's evidence and trade-offs justify it."
+      ],
+      "expected_skills": [
+        "spar"
+      ],
+      "grading": [
+        {
+          "type": "json_shape",
+          "path": "response_json",
+          "required": {
+            "route": "spar"
+          }
+        }
+      ],
       "id": "spar-performance-optimization",
       "prompt": "SPAR this caching optimization: what assumptions, invalidation risks, and simpler alternatives are we missing?"
     },
     {
       "direction": "should_trigger",
-      "expectations": ["Challenges a product decision without turning it into implementation."],
-      "expected_skills": ["spar"],
-      "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "spar"}}],
+      "expectations": [
+        "Challenges a product decision without turning it into implementation."
+      ],
+      "expected_skills": [
+        "spar"
+      ],
+      "grading": [
+        {
+          "type": "json_shape",
+          "path": "response_json",
+          "required": {
+            "route": "spar"
+          }
+        }
+      ],
       "id": "spar-product-decision",
       "prompt": "Produce a one-shot adversarial analysis of removing the free plan."
     },
     {
       "direction": "should_not_trigger",
-      "expectations": ["Runs a normal PR review rather than an idea challenge."],
-      "expected_skills": ["pr-review"],
-      "forbidden_skills": ["spar"],
-      "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "pr-review"}}],
+      "expectations": [
+        "Runs a normal PR review rather than an idea challenge."
+      ],
+      "expected_skills": [
+        "pr-review"
+      ],
+      "forbidden_skills": [
+        "spar"
+      ],
+      "grading": [
+        {
+          "type": "json_shape",
+          "path": "response_json",
+          "required": {
+            "route": "pr-review"
+          }
+        }
+      ],
       "id": "spar-vs-pr-review",
       "prompt": "Review the current PR for defects before merge."
     },
     {
       "direction": "should_not_trigger",
-      "expectations": ["Plans the required implementation slices rather than challenging an idea."],
-      "expected_skills": ["decompose-feature"],
-      "forbidden_skills": ["spar"],
-      "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "decompose-feature"}}],
+      "expectations": [
+        "Plans the required implementation slices rather than challenging an idea."
+      ],
+      "expected_skills": [
+        "decompose-feature"
+      ],
+      "forbidden_skills": [
+        "spar"
+      ],
+      "grading": [
+        {
+          "type": "json_shape",
+          "path": "response_json",
+          "required": {
+            "route": "decompose-feature"
+          }
+        }
+      ],
       "id": "spar-vs-decompose",
       "prompt": "Split this approved auth, API, migration, and UI feature into mergeable PRs."
     },
     {
       "direction": "should_not_trigger",
-      "expectations": ["Plans agent ownership and worktrees rather than adversarial analysis."],
-      "expected_skills": ["plan-parallel-work"],
-      "forbidden_skills": ["spar"],
-      "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "plan-parallel-work"}}],
+      "expectations": [
+        "Plans agent ownership and worktrees rather than adversarial analysis."
+      ],
+      "expected_skills": [
+        "plan-parallel-work"
+      ],
+      "forbidden_skills": [
+        "spar"
+      ],
+      "grading": [
+        {
+          "type": "json_shape",
+          "path": "response_json",
+          "required": {
+            "route": "plan-parallel-work"
+          }
+        }
+      ],
       "id": "spar-vs-parallel-plan",
       "prompt": "Plan how three agents should implement these approved slices in parallel worktrees."
     },
     {
       "direction": "should_not_trigger",
-      "expectations": ["Assesses the atomic boundary of an existing diff."],
-      "expected_skills": ["ensure-atomic-pr"],
-      "forbidden_skills": ["spar"],
-      "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "ensure-atomic-pr"}}],
+      "expectations": [
+        "Assesses the atomic boundary of an existing diff."
+      ],
+      "expected_skills": [
+        "ensure-atomic-pr"
+      ],
+      "forbidden_skills": [
+        "spar"
+      ],
+      "grading": [
+        {
+          "type": "json_shape",
+          "path": "response_json",
+          "required": {
+            "route": "ensure-atomic-pr"
+          }
+        }
+      ],
       "id": "spar-vs-atomicity",
       "prompt": "Is this existing diff atomic enough for one PR?"
     },
     {
       "direction": "should_not_trigger",
-      "expectations": ["Executes the approved implementation instead of reopening the decision."],
-      "expected_skills": ["execute-plan-loop"],
-      "forbidden_skills": ["spar"],
-      "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "execute-plan-loop"}}],
+      "expectations": [
+        "Executes the approved implementation instead of reopening the decision."
+      ],
+      "expected_skills": [
+        "execute-plan-loop"
+      ],
+      "forbidden_skills": [
+        "spar"
+      ],
+      "grading": [
+        {
+          "type": "json_shape",
+          "path": "response_json",
+          "required": {
+            "route": "execute-plan-loop"
+          }
+        }
+      ],
       "id": "spar-vs-execution",
       "prompt": "Implement the approved parser slice and run its tests."
     },
     {
       "direction": "should_not_trigger",
-      "expectations": ["Updates the explicitly named stale document."],
-      "expected_skills": ["refresh-related-docs"],
-      "forbidden_skills": ["spar"],
-      "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "refresh-related-docs"}}],
+      "expectations": [
+        "Updates the explicitly named stale document."
+      ],
+      "expected_skills": [
+        "refresh-related-docs"
+      ],
+      "forbidden_skills": [
+        "spar"
+      ],
+      "grading": [
+        {
+          "type": "json_shape",
+          "path": "response_json",
+          "required": {
+            "route": "refresh-related-docs"
+          }
+        }
+      ],
       "id": "spar-vs-doc-refresh",
       "prompt": "Update docs/api-guide.md to match the completed API behavior."
     },
     {
       "direction": "should_not_trigger",
-      "expectations": ["Creates the explicitly requested durable goal lifecycle."],
-      "expected_skills": ["achieve-goal"],
-      "forbidden_skills": ["spar"],
-      "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "achieve-goal"}}],
-      "id": "spar-vs-goal",
-      "prompt": "/goal Ship the approved review service over several sessions."
-    },
-    {
-      "direction": "should_not_trigger",
-      "expectations": ["Determines the next workflow phase for an underspecified concern."],
-      "expected_skills": ["workflow-orchestrator"],
-      "forbidden_skills": ["spar"],
-      "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "workflow-orchestrator"}}],
+      "expectations": [
+        "Determines the next workflow phase for an underspecified concern."
+      ],
+      "expected_skills": [
+        "workflow-orchestrator"
+      ],
+      "forbidden_skills": [
+        "spar"
+      ],
+      "grading": [
+        {
+          "type": "json_shape",
+          "path": "response_json",
+          "required": {
+            "route": "workflow-orchestrator"
+          }
+        }
+      ],
       "id": "spar-vs-workflow-routing",
       "prompt": "Help decide what workflow phase should come next for a vague reliability concern."
     },
     {
       "direction": "should_trigger",
-      "expectations": ["Runs the explicitly requested Rubber Duck critic.", "Keeps the critique read-only and consequential."],
-      "expected_skills": ["rubber-duck"],
-      "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "rubber-duck"}}],
+      "expectations": [
+        "Runs the explicitly requested Rubber Duck critic.",
+        "Keeps the critique read-only and consequential."
+      ],
+      "expected_skills": [
+        "rubber-duck"
+      ],
+      "grading": [
+        {
+          "type": "json_shape",
+          "path": "response_json",
+          "required": {
+            "route": "rubber-duck"
+          }
+        }
+      ],
       "id": "rubber-duck-explicit-skill",
       "prompt": "Use $rubber-duck to critique these changes for substantive blind spots."
     },
     {
       "direction": "should_trigger",
-      "expectations": ["Critiques a completed implementation rather than changing it."],
-      "expected_skills": ["rubber-duck"],
-      "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "rubber-duck"}}],
+      "expectations": [
+        "Critiques a completed implementation rather than changing it."
+      ],
+      "expected_skills": [
+        "rubber-duck"
+      ],
+      "grading": [
+        {
+          "type": "json_shape",
+          "path": "response_json",
+          "required": {
+            "route": "rubber-duck"
+          }
+        }
+      ],
       "id": "rubber-duck-code",
       "prompt": "Give me an independent critic's pass over this implementation and focus on bugs that matter."
     },
     {
       "direction": "should_trigger",
-      "expectations": ["Finds consequential blind spots in the supplied plan."],
-      "expected_skills": ["rubber-duck"],
-      "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "rubber-duck"}}],
+      "expectations": [
+        "Finds consequential blind spots in the supplied plan."
+      ],
+      "expected_skills": [
+        "rubber-duck"
+      ],
+      "grading": [
+        {
+          "type": "json_shape",
+          "path": "response_json",
+          "required": {
+            "route": "rubber-duck"
+          }
+        }
+      ],
       "id": "rubber-duck-plan",
       "prompt": "Rubber duck this rollout plan and identify what could prevent it from succeeding."
     },
     {
       "direction": "should_trigger",
-      "expectations": ["Critiques the design's interfaces and invariants."],
-      "expected_skills": ["rubber-duck"],
-      "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "rubber-duck"}}],
+      "expectations": [
+        "Critiques the design's interfaces and invariants."
+      ],
+      "expected_skills": [
+        "rubber-duck"
+      ],
+      "grading": [
+        {
+          "type": "json_shape",
+          "path": "response_json",
+          "required": {
+            "route": "rubber-duck"
+          }
+        }
+      ],
       "id": "rubber-duck-design",
       "prompt": "Use a Rubber Duck critic on this design's ownership and state invariants."
     },
     {
       "direction": "should_trigger",
-      "expectations": ["Checks whether the tests prove the intended contract."],
-      "expected_skills": ["rubber-duck"],
-      "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "rubber-duck"}}],
+      "expectations": [
+        "Checks whether the tests prove the intended contract."
+      ],
+      "expected_skills": [
+        "rubber-duck"
+      ],
+      "grading": [
+        {
+          "type": "json_shape",
+          "path": "response_json",
+          "required": {
+            "route": "rubber-duck"
+          }
+        }
+      ],
       "id": "rubber-duck-tests",
       "prompt": "Have an independent critic inspect these tests for meaningful blind spots."
     },
     {
       "direction": "should_trigger",
-      "expectations": ["Uses a fresh critic perspective after repeated failed attempts."],
-      "expected_skills": ["rubber-duck"],
-      "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "rubber-duck"}}],
+      "expectations": [
+        "Uses a fresh critic perspective after repeated failed attempts."
+      ],
+      "expected_skills": [
+        "rubber-duck"
+      ],
+      "grading": [
+        {
+          "type": "json_shape",
+          "path": "response_json",
+          "required": {
+            "route": "rubber-duck"
+          }
+        }
+      ],
       "id": "rubber-duck-repeated-failures",
       "prompt": "We have tried two fixes and still fail. Run a Rubber Duck critique of our approach and evidence."
     },
     {
       "direction": "should_trigger",
-      "expectations": ["Looks across a substantial multi-file change for missed consequential issues."],
-      "expected_skills": ["rubber-duck"],
-      "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "rubber-duck"}}],
+      "expectations": [
+        "Looks across a substantial multi-file change for missed consequential issues."
+      ],
+      "expected_skills": [
+        "rubber-duck"
+      ],
+      "grading": [
+        {
+          "type": "json_shape",
+          "path": "response_json",
+          "required": {
+            "route": "rubber-duck"
+          }
+        }
+      ],
       "id": "rubber-duck-multifile",
       "prompt": "Critique this substantial multi-file change from an independent outside perspective."
     },
     {
       "direction": "should_trigger",
-      "expectations": ["Challenges whether the work advances the stated goal."],
-      "expected_skills": ["rubber-duck"],
-      "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "rubber-duck"}}],
+      "expectations": [
+        "Challenges whether the work advances the stated goal."
+      ],
+      "expected_skills": [
+        "rubber-duck"
+      ],
+      "grading": [
+        {
+          "type": "json_shape",
+          "path": "response_json",
+          "required": {
+            "route": "rubber-duck"
+          }
+        }
+      ],
       "id": "rubber-duck-goal-progress",
       "prompt": "Rubber-duck whether this proposal actually moves us toward the stated reliability goal."
     },
     {
       "direction": "should_not_trigger",
-      "expectations": ["Runs an adversarial idea analysis rather than critiquing completed work."],
-      "expected_skills": ["spar"],
-      "forbidden_skills": ["rubber-duck"],
-      "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "spar"}}],
+      "expectations": [
+        "Runs an adversarial idea analysis rather than critiquing completed work."
+      ],
+      "expected_skills": [
+        "spar"
+      ],
+      "forbidden_skills": [
+        "rubber-duck"
+      ],
+      "grading": [
+        {
+          "type": "json_shape",
+          "path": "response_json",
+          "required": {
+            "route": "spar"
+          }
+        }
+      ],
       "id": "rubber-duck-vs-spar",
       "prompt": "Use $spar to compare opposing perspectives on REST versus GraphQL."
     },
     {
       "direction": "should_not_trigger",
-      "expectations": ["Runs the normal PR review entrypoint."],
-      "expected_skills": ["pr-review"],
-      "forbidden_skills": ["rubber-duck"],
-      "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "pr-review"}}],
+      "expectations": [
+        "Runs the normal PR review entrypoint."
+      ],
+      "expected_skills": [
+        "pr-review"
+      ],
+      "forbidden_skills": [
+        "rubber-duck"
+      ],
+      "grading": [
+        {
+          "type": "json_shape",
+          "path": "response_json",
+          "required": {
+            "route": "pr-review"
+          }
+        }
+      ],
       "id": "rubber-duck-vs-pr-review",
       "prompt": "Review the current PR using all applicable review aspects."
     },
     {
       "direction": "should_not_trigger",
-      "expectations": ["Plans mergeable PR slices rather than critiquing completed work."],
-      "expected_skills": ["decompose-feature"],
-      "forbidden_skills": ["rubber-duck"],
-      "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "decompose-feature"}}],
+      "expectations": [
+        "Plans mergeable PR slices rather than critiquing completed work."
+      ],
+      "expected_skills": [
+        "decompose-feature"
+      ],
+      "forbidden_skills": [
+        "rubber-duck"
+      ],
+      "grading": [
+        {
+          "type": "json_shape",
+          "path": "response_json",
+          "required": {
+            "route": "decompose-feature"
+          }
+        }
+      ],
       "id": "rubber-duck-vs-decompose",
       "prompt": "Plan the PR sequence for this broad feature before implementation."
     },
     {
       "direction": "should_not_trigger",
-      "expectations": ["Assesses whether the existing diff is atomic."],
-      "expected_skills": ["ensure-atomic-pr"],
-      "forbidden_skills": ["rubber-duck"],
-      "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "ensure-atomic-pr"}}],
+      "expectations": [
+        "Assesses whether the existing diff is atomic."
+      ],
+      "expected_skills": [
+        "ensure-atomic-pr"
+      ],
+      "forbidden_skills": [
+        "rubber-duck"
+      ],
+      "grading": [
+        {
+          "type": "json_shape",
+          "path": "response_json",
+          "required": {
+            "route": "ensure-atomic-pr"
+          }
+        }
+      ],
       "id": "rubber-duck-vs-atomicity",
       "prompt": "Only decide whether this existing diff is one atomic unit."
     },
     {
       "direction": "should_not_trigger",
-      "expectations": ["Executes the approved work rather than reviewing it."],
-      "expected_skills": ["execute-plan-loop"],
-      "forbidden_skills": ["rubber-duck"],
-      "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "execute-plan-loop"}}],
+      "expectations": [
+        "Executes the approved work rather than reviewing it."
+      ],
+      "expected_skills": [
+        "execute-plan-loop"
+      ],
+      "forbidden_skills": [
+        "rubber-duck"
+      ],
+      "grading": [
+        {
+          "type": "json_shape",
+          "path": "response_json",
+          "required": {
+            "route": "execute-plan-loop"
+          }
+        }
+      ],
       "id": "rubber-duck-vs-execution",
       "prompt": "Implement the approved retry fix and run the required tests."
     },
     {
       "direction": "should_not_trigger",
-      "expectations": ["Updates the named stale documentation."],
-      "expected_skills": ["refresh-related-docs"],
-      "forbidden_skills": ["rubber-duck"],
-      "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "refresh-related-docs"}}],
+      "expectations": [
+        "Updates the named stale documentation."
+      ],
+      "expected_skills": [
+        "refresh-related-docs"
+      ],
+      "forbidden_skills": [
+        "rubber-duck"
+      ],
+      "grading": [
+        {
+          "type": "json_shape",
+          "path": "response_json",
+          "required": {
+            "route": "refresh-related-docs"
+          }
+        }
+      ],
       "id": "rubber-duck-vs-doc-refresh",
       "prompt": "Update README.md to document the already completed command behavior."
     },
     {
       "direction": "should_not_trigger",
-      "expectations": ["Creates the explicit durable goal."],
-      "expected_skills": ["achieve-goal"],
-      "forbidden_skills": ["rubber-duck"],
-      "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "achieve-goal"}}],
-      "id": "rubber-duck-vs-goal",
-      "prompt": "/goal Implement the approved migration over several sessions."
+      "expectations": [
+        "Determines the next workflow phase for an unresolved request."
+      ],
+      "expected_skills": [
+        "workflow-orchestrator"
+      ],
+      "forbidden_skills": [
+        "rubber-duck"
+      ],
+      "grading": [
+        {
+          "type": "json_shape",
+          "path": "response_json",
+          "required": {
+            "route": "workflow-orchestrator"
+          }
+        }
+      ],
+      "id": "rubber-duck-vs-workflow-routing",
+      "prompt": "Help decide what should happen next for an underspecified reliability concern."
     },
     {
       "direction": "should_not_trigger",
-      "expectations": ["Determines the next workflow phase for an unresolved request."],
-      "expected_skills": ["workflow-orchestrator"],
-      "forbidden_skills": ["rubber-duck"],
-      "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "workflow-orchestrator"}}],
-      "id": "rubber-duck-vs-workflow-routing",
-      "prompt": "Help decide what should happen next for an underspecified reliability concern."
+      "id": "pr-review-vs-native-goal-status",
+      "prompt": "Report the existing host-native goal status only; do not start implementation or any review.",
+      "expected_skills": [
+        "none"
+      ],
+      "forbidden_skills": [
+        "pr-review"
+      ],
+      "expectations": [
+        "Leaves lifecycle status to the host native goal capability.",
+        "Does not activate pr-review for a status-only request."
+      ],
+      "grading": [
+        {
+          "type": "json_shape",
+          "path": "response_json",
+          "required": {
+            "route": "none"
+          }
+        }
+      ]
+    },
+    {
+      "direction": "should_not_trigger",
+      "id": "spar-vs-native-goal-status",
+      "prompt": "Report the existing host-native goal status only; do not start implementation or any review.",
+      "expected_skills": [
+        "none"
+      ],
+      "forbidden_skills": [
+        "spar"
+      ],
+      "expectations": [
+        "Leaves lifecycle status to the host native goal capability.",
+        "Does not activate spar for a status-only request."
+      ],
+      "grading": [
+        {
+          "type": "json_shape",
+          "path": "response_json",
+          "required": {
+            "route": "none"
+          }
+        }
+      ]
+    },
+    {
+      "direction": "should_not_trigger",
+      "id": "rubber-duck-vs-native-goal-status",
+      "prompt": "Report the existing host-native goal status only; do not start implementation or any review.",
+      "expected_skills": [
+        "none"
+      ],
+      "forbidden_skills": [
+        "rubber-duck"
+      ],
+      "expectations": [
+        "Leaves lifecycle status to the host native goal capability.",
+        "Does not activate rubber-duck for a status-only request."
+      ],
+      "grading": [
+        {
+          "type": "json_shape",
+          "path": "response_json",
+          "required": {
+            "route": "none"
+          }
+        }
+      ]
+    },
+    {
+      "direction": "should_not_trigger",
+      "id": "anti-slop-vs-native-goal-status",
+      "prompt": "Report the existing host-native goal status only; do not start implementation, planning or review.",
+      "expected_skills": [
+        "none"
+      ],
+      "forbidden_skills": [
+        "anti-slop"
+      ],
+      "expectations": [
+        "Leaves lifecycle status to the host native goal capability.",
+        "Does not activate anti-slop for a status-only request."
+      ],
+      "grading": [
+        {
+          "type": "json_shape",
+          "path": "response_json",
+          "required": {
+            "route": "none"
+          }
+        }
+      ]
+    },
+    {
+      "direction": "should_not_trigger",
+      "id": "ensure-atomic-pr-vs-native-goal-status",
+      "prompt": "Report the existing host-native goal status only; do not start implementation, planning or review.",
+      "expected_skills": [
+        "none"
+      ],
+      "forbidden_skills": [
+        "ensure-atomic-pr"
+      ],
+      "expectations": [
+        "Leaves lifecycle status to the host native goal capability.",
+        "Does not activate ensure-atomic-pr for a status-only request."
+      ],
+      "grading": [
+        {
+          "type": "json_shape",
+          "path": "response_json",
+          "required": {
+            "route": "none"
+          }
+        }
+      ]
+    },
+    {
+      "direction": "should_not_trigger",
+      "id": "execute-plan-loop-vs-native-goal-status",
+      "prompt": "Report the existing host-native goal status only; do not start implementation, planning or review.",
+      "expected_skills": [
+        "none"
+      ],
+      "forbidden_skills": [
+        "execute-plan-loop"
+      ],
+      "expectations": [
+        "Leaves lifecycle status to the host native goal capability.",
+        "Does not activate execute-plan-loop for a status-only request."
+      ],
+      "grading": [
+        {
+          "type": "json_shape",
+          "path": "response_json",
+          "required": {
+            "route": "none"
+          }
+        }
+      ]
+    },
+    {
+      "direction": "should_not_trigger",
+      "id": "plan-parallel-work-vs-native-goal-status",
+      "prompt": "Report the existing host-native goal status only; do not start implementation, planning or review.",
+      "expected_skills": [
+        "none"
+      ],
+      "forbidden_skills": [
+        "plan-parallel-work"
+      ],
+      "expectations": [
+        "Leaves lifecycle status to the host native goal capability.",
+        "Does not activate plan-parallel-work for a status-only request."
+      ],
+      "grading": [
+        {
+          "type": "json_shape",
+          "path": "response_json",
+          "required": {
+            "route": "none"
+          }
+        }
+      ]
+    },
+    {
+      "direction": "should_not_trigger",
+      "id": "workflow-orchestrator-vs-native-goal-status",
+      "prompt": "Report the existing host-native goal status only; do not start implementation, planning or review.",
+      "expected_skills": [
+        "none"
+      ],
+      "forbidden_skills": [
+        "workflow-orchestrator"
+      ],
+      "expectations": [
+        "Leaves lifecycle status to the host native goal capability.",
+        "Does not activate workflow-orchestrator for a status-only request."
+      ],
+      "grading": [
+        {
+          "type": "json_shape",
+          "path": "response_json",
+          "required": {
+            "route": "none"
+          }
+        }
+      ]
+    }
+    ,{
+      "direction": "should_not_trigger",
+      "id": "scan-image-vulnerabilities-vs-native-goal-status",
+      "prompt": "Report the existing host-native goal status only; no container image inspection or implementation is requested.",
+      "expected_skills": ["none"],
+      "forbidden_skills": ["scan-image-vulnerabilities"],
+      "expectations": [
+        "Leaves lifecycle status to the host native goal capability.",
+        "Does not activate image scanning for a status-only request."
+      ],
+      "grading": [{"type":"json_shape","path":"response_json","required":{"route":"none"}}]
     }
   ],
   "schema": "skill-evals/trigger-suite-v1",

@@ -79,7 +79,7 @@
         "Keeps the coupled doc with behavior.",
         "Does not create tests-only or docs-only units.",
         "Frames the unit by logical purpose.",
-        "Adds acceptance criteria and validation."
+        "Uses proportionate validation for the coupled behavior, tests and documentation without requiring a proposed-split or new acceptance-criteria block for an already atomic change."
       ]
     },
     {
@@ -97,9 +97,12 @@
     },
     {
       "id": 6,
-      "prompt": "Finalize a proposed three-unit split of a large change.",
-      "expected_output": "Adds acceptance criteria, validation, dependencies, and healthy intermediate-state evidence to every unit.",
-      "files": [],
+      "prompt": "Finalize the existing proposed three-unit split documented in status/proposed-split.md. That file is the authoritative supplied description of an already-authored mixed change and its current proposal; it is not a request to design a new feature or a new delivery sequence. The application source, diff and Git history are intentionally not present in this isolated workspace: assess only the recorded facts, without claiming to inspect missing code. For each proposed unit, provide its purpose, included/excluded concerns, genuine dependencies, concrete acceptance criteria, validation method and evidence or conditions for a healthy intermediate state. Give bounded recovery advice only. Answer inline; do not create files, run tests, stage, commit, create branches or contact external systems.",
+      "expected_output": "Finalizes the three supplied recovery units with concrete acceptance, existing validation methods, genuine independence and justified intermediate-health conditions, without inventing inspected source or passing tests.",
+      "fixture_prefix": "files/proposed-split",
+      "files": [
+        "files/proposed-split/status/proposed-split.md"
+      ],
       "expectations": [
         "Every unit has concrete acceptance criteria.",
         "Every unit has validation.",

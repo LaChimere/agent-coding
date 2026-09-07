@@ -11,7 +11,7 @@ Judge whether an existing change is atomic, and when it is not, recover it into 
 
 This skill owns atomicity: whether a planned change is one coherent PR, and how to recover the boundaries of a working-tree diff, commit, branch, or open PR that mixes concerns. `decompose-feature` owns the different question of what PR sequence should deliver the work, including when an existing branch is being reorganized into a delivery stack.
 
-It applies during design, during execution, or as post-hoc recovery. A plain assessment is delivered directly, with no plan artifacts or approval gates. Record a split in the active `plans/{slug}` artifacts and follow the recorded approval state only when it changes the execution strategy for future work; invoke `workflow-orchestrator` only when phase or approval is unresolved.
+It applies during design, during execution, or as post-hoc recovery. A plain assessment is delivered directly, with no file writes or approval gates. If the split changes future execution strategy, include it in the overall native proposal or existing `plans/{slug}/plan.md` when writing is allowed and authorized; execution progress stays in that living plan alone. Invoke `workflow-orchestrator` only when phase or approval is unresolved. Assessment or recovery advice does not authorize staging, commits, history rewriting, or remote changes.
 
 # Atomicity standard
 
@@ -35,6 +35,8 @@ An indivisible change stays one PR. A rename across 50 files cannot be halved by
 Tests stay with the behavior they verify unless the test infrastructure is large and independently useful. Unrelated cleanup or dependency bumps get their own unit and must not block the feature. Do not over-split into trivially small units, and do not invent a split for a change that is already atomic.
 
 Validation is proportionate: a mechanical unit needs only the check proving behavior is unchanged; a behavioral unit needs tests demonstrating the new behavior.
+
+Validation units need not equal commit units. Reuse relevant evidence across directly related commits; commit and publication authority remain separate from implementation approval.
 
 # Required output
 

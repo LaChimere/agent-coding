@@ -1,72 +1,53 @@
 # Plan
 
-> Purpose: a reviewable plan that can be annotated. Do not implement until Gate 2 approval when the active workflow contract requires that gate.
+> Living plan: approved scope and acceptance above; current execution evidence below. Populate only relevant sections. An approved native proposal plus revisions is sufficient input; save only when authorized and allowed by the host. Saving adds no approval gate.
 
-## Objective
-- What outcome we want (1–2 sentences):
-- Landing mode: `working_tree` | `commits`
+## Approved scope
 
-## Constraints
-- Compatibility constraints:
-- Performance constraints:
-- Security/safety constraints:
-- Timeline/rollout constraints (if any):
+- Objective and user-visible outcome:
+- Approval source and explicit revisions (or pending approval):
+- Requested return boundary: whole scope / named phase / named step
+- Landing mode: `working_tree` (default) | `commits` (explicitly authorized)
+- Non-goals:
 
-## Assumptions
-Mark each as **Verified** or **Unverified**.
-- [ ] (Verified/Unverified) A1:
-- [ ] (Verified/Unverified) A2:
+## Design constraints and assumptions
 
-## Options Considered (if applicable)
-### Option A
-- Summary:
-- Pros:
-- Cons:
-- Why chosen / rejected:
+- Existing design reference, if needed (do not repeat full options):
+- Required behavior, interfaces, safety/state constraints:
+- Consequential assumptions and supporting evidence or uncertainty:
 
-### Option B
-- Summary:
-- Pros:
-- Cons:
-- Why chosen / rejected:
+## Delivery slices and acceptance
 
-## Proposed Approach (checklist)
-- [ ] Step 1:
-  - Acceptance criteria:
-- [ ] Step 2:
-  - Acceptance criteria:
-- [ ] Step 3:
-  - Acceptance criteria:
+| Slice | Purpose / allowed changes | Dependencies | Observable acceptance | Validation |
+|---|---|---|---|---|
+| 1 | | | | |
 
-## Touch Surface
-- Key files/modules likely to change:
-  - `...`
-- Public API / schema impacts:
-- Data impacts:
+## Parallel execution (only when needed)
 
-## Verification Plan (Done = Evidence)
-### Target verification level
-- [ ] L1
-- [ ] L2
-- [ ] L3
+Embed the installed `plan-parallel-work` section here if simultaneous implementation needs ownership/isolation decisions. Retain complete decisions from the native proposal; fill only gaps. No separate plan or approval.
 
-### Evidence to produce
-- [ ] Tests to run (exact commands):
-- [ ] Before/after behavior proof:
-- [ ] Logs/traces/metrics to capture:
+## Verification and recovery
 
-## Rollback / Recovery (if applicable)
-- Rollback plan:
-- Data safety notes:
-- Feature flag / config toggles:
+- Requested behavior and affected existing behavior to check:
+- Exact available commands or evidence method:
+- Necessary review and host/capability coverage:
+- Material risks and recovery, if applicable:
 
-## Risks / Non-goals
-- Risks:
-- Explicit non-goals (out of scope):
+## Execution progress
 
-## Review Notes / Annotations
-(Place for inline user comments. Agent should incorporate these into the plan before coding.)
+Update this section without changing the approved scope. Slices are checkpoints; continue to the requested return boundary. No independent TODO or goal lifecycle record.
 
-## Approval
-- [ ] Plan approved by:
-- Date:
+| Slice / acceptance item | Status | Command and decisive result / evidence location | Blocker |
+|---|---|---|---|
+| 1 | pending | | |
+
+- Current next step:
+- Decisions needed (only material changes or missing authority):
+
+## Final result
+
+- Original requirements met, with evidence:
+- Deviations, extra implementation and disposition:
+- Required checks/reviews completed:
+- Unverified or failed items and what would resolve them:
+- Outcome: complete / implementation complete, verification incomplete / blocked

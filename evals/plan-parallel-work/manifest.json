@@ -1,15 +1,134 @@
 {
   "skill_name": "plan-parallel-work",
   "default_category": "regression_guard",
-  "critical_ids": [0],
+  "critical_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ],
   "critical_expectations": {
-    "0": [0, 1, 2, 3, 4]
+    "0": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "1": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "2": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "3": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "4": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "5": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "6": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "7": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "8": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "9": [
+      0,
+      1,
+      2
+    ],
+    "10": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+    ]
   },
-  "behavior_change_ids": [4, 5, 6],
+  "behavior_change_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10
+  ],
   "redundant_ids": [],
   "behavior_change_rationale": {
-    "4": "Plans pin a base ref, acceptance criteria, handoff payload, and convergence validation.",
-    "5": "Task blocks repeat to match the actual number of work streams.",
-    "6": "Isolation is capability-based; worktrees are a default, not a universal requirement."
+    "0": "Workflow refinement: native approval, living-plan state, bounded review, or embedded parallel planning as specified by this case.",
+    "1": "Workflow refinement: native approval, living-plan state, bounded review, or embedded parallel planning as specified by this case.",
+    "2": "Workflow refinement: native approval, living-plan state, bounded review, or embedded parallel planning as specified by this case.",
+    "3": "Workflow refinement: native approval, living-plan state, bounded review, or embedded parallel planning as specified by this case.",
+    "4": "Workflow refinement: native approval, living-plan state, bounded review, or embedded parallel planning as specified by this case.",
+    "5": "Workflow refinement: native approval, living-plan state, bounded review, or embedded parallel planning as specified by this case.",
+    "6": "Workflow refinement: native approval, living-plan state, bounded review, or embedded parallel planning as specified by this case.",
+    "7": "Workflow refinement: native approval, living-plan state, bounded review, or embedded parallel planning as specified by this case.",
+    "8": "Workflow refinement: native approval, living-plan state, bounded review, or embedded parallel planning as specified by this case.",
+    "9": "Workflow refinement: native approval, living-plan state, bounded review, or embedded parallel planning as specified by this case.",
+    "10": "Embedded parallel planning from an existing stable base. Runtime evidence exposed a section-only plan file when the overall native plan was not materialized; the added expectation checks inline supplementation in that state. Earlier frozen runs remain separate evidence, not silently regraded passes."
   }
 }

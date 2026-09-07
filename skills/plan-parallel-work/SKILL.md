@@ -1,28 +1,32 @@
 ---
 name: plan-parallel-work
-description: Plan safe parallel work for multiple agents on one repository by defining a base PR, branch/worktree boundaries, path ownership, dependencies, validation, and merge order. Also trigger when the user mentions multiple agents, parallel tasks, worktrees, simultaneous work streams, or needs to coordinate who works where on which branch.
+description: Plan isolation, ownership, dependencies, and integration for multiple implementers preparing to edit code concurrently, or when the user explicitly asks to assess parallel implementation. Fill gaps in the overall plan; do not trigger for parallel research or review, a single worktree, or one agent working sequentially.
 ---
 
 # Purpose
 
-Decide **who works where, on which branch and working copy, and in what order the work merges**. It does not re-decide the PR sequence; `decompose-feature` owns that while the sequence is unclear.
+Complete the overall plan's **Parallel execution** section: who may edit which code concurrently, how their work is isolated, and how it is integrated and verified. This is a planning specialty, not a separate plan, approval gate, or progress tracker. Task parallelism does not imply multiple PRs; use `decompose-feature` only when the delivery sequence itself needs design.
 
 # Use this skill when
 
-- Multiple agents need to work on the same feature, or the user asks how to parallelize safely
-- A base PR should land before fan-out work
-- Shared contracts or schemas require controlled ownership
-- A PR sequence already exists, but ownership boundaries and merge order do not
+- Multiple implementers are preparing to modify code concurrently and need isolation or ownership decisions.
+- The user explicitly asks to assess parallel implementation.
+
+Parallel research or review, creating a single worktree, and sequential execution by one agent do not trigger this skill.
 
 Decline fan-out when the task is small enough for one agent, the work overlaps heavily in the same hot files, or shared contracts are still changing rapidly with no stable base. When declining, name the rebase and coordination cost and the exact condition that would make parallel work safe.
 
-Record the design in the active `plans/{slug}` artifacts and follow the recorded approval state. Invoke `workflow-orchestrator` only when phase, approval, or the PR sequence is unresolved.
+Consume the existing objective, task split, and native plan or `plans/{slug}/plan.md`. If the parallel arrangements are sufficient, report that directly; otherwise fill only the missing decisions. Do not repeat settled questions or rewrite the overall plan. Invoke `workflow-orchestrator` only for unresolved phase or approval, not as a prerequisite.
+
+Keep the result in the native proposal's `Parallel execution` section until file writes are allowed and authorized, then in the same living `plan.md` (the single execution-progress source). This skill does not create an independent parallel-plan file. Approval of the overall execution plan covers its parallel arrangements without another gate. Routine assignments and non-conflicting branch names can be chosen during authorized execution; changes to concurrency semantics, interface ownership, isolation, or integration risk require renewed alignment.
+
+If the overall plan has not been materialized, return the supplemental section inline with the native proposal. Do not create a new `plan.md` containing only parallel arrangements. When explicitly authorized to save the overall plan, preserve its accepted scope and acceptance criteria together with the supplemental section; missing file scaffolding does not require another planning round or approval.
 
 # Safety rules
 
 - One task owner, one branch, one isolated working copy. A branch name alone is not isolation: a worktree is the default, and an isolated clone or sandbox is equally acceptable when it provides the same guarantee. Never share a working directory.
 - Every task states both owned and forbidden paths. Directory-level ownership is the default; use file-level ownership only when a single hot file genuinely needs a designated owner.
-- Shared contracts change only in the base PR unless explicitly allowed.
+- Stabilize shared contracts in a serial prerequisite, or assign their changes to an explicit owner.
 - Files everyone touches — dependency manifests, lockfiles, CI matrices, generated output — get one named owner or a serial phase. Directory ownership does not protect them.
 - Generated artifacts are regenerated after convergence, not merged between branches.
 - Fan out only from a stable base; an unstable base makes every branch rebase.
@@ -30,22 +34,24 @@ Record the design in the active `plans/{slug}` artifacts and follow the recorded
 
 # Procedure
 
-1. Identify the serial prerequisite base: the exact base ref or commit, plus the contract, schema, interface, feature flag, or abstraction that must stabilize first.
-2. Separate the work into serial prerequisites, parallel fan-out tasks, and serial convergence/cleanup.
-3. Define every parallel task and the merge strategy in the output below.
+1. Check the existing plan against the fields below and identify only its gaps. If one shared file lacks an owner, resolve that owner rather than rebuilding the task split.
+2. Identify the stable starting ref or commit and any genuine serial prerequisite. An existing stable ref is sufficient; a new base PR is not required.
+3. Complete the missing serial/parallel boundaries, ownership, isolation, acceptance, and integration decisions in the same plan.
 
-# Required output
+Planning records intended roles and arrangements. Creating branches or worktrees and dispatching implementation tasks belong to authorized execution; do not perform or claim those actions while only planning.
 
-## Base prerequisite
-Name; exact base ref or commit; why it must be serial; what must stabilize first.
+# Parallel execution section
+
+## Starting point and serial work
+Exact stable base ref or commit; any prerequisite and why it must be serial; work that must remain serial.
 
 ## Parallel task blocks
-One block per real task — as many as the work has, never padded or collapsed to a fixed count — with identical fields: task name; owner; branch name; isolated working copy; owns; must not touch; depends on; acceptance criteria; validation commands and implementation-owned tests; handoff payload; expected merge order.
+One block per real parallel task: task name; intended owner; planned branch and isolated working copy; allowed and forbidden paths; dependencies; acceptance criteria; validation and implementation-owned tests; handoff evidence. Reference existing task acceptance where sufficient rather than copying it or its progress.
 
-## Merge strategy
-Rebase order; likely conflict hotspots; convergence owner; final cleanup owner; final convergence validation.
+## Integration strategy
+Integration order; reconciliation method; shared-file owners or serial phases; likely conflict hotspots; integration and final cleanup owner; final validation.
 
-`templates/parallel-task-plan-template.md` is available for a written artifact; the structure above stands on its own.
+Use `templates/parallel-task-plan-template.md` as an embeddable section, not a separate artifact. Existing sufficient plans need no template rewrite.
 
 # Strong preferences
 

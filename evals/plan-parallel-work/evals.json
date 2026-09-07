@@ -11,7 +11,9 @@
         "Does not approve concurrent edits to it.",
         "Uses serial work or one owner.",
         "Explains why directory ownership is insufficient.",
-        "States the safe fallback."
+        "States the safe fallback.",
+        "Produces an embeddable Parallel execution section, not a separate parallel plan or copied progress state.",
+        "Does not claim to create branches/worktrees or dispatch implementation during planning."
       ]
     },
     {
@@ -24,7 +26,9 @@
         "Defines owned and forbidden paths.",
         "Confirms the base is stable.",
         "Keeps tests with implementation owners.",
-        "Does not redesign the PR sequence."
+        "Does not redesign the PR sequence.",
+        "Produces an embeddable Parallel execution section, not a separate parallel plan or copied progress state.",
+        "Does not claim to create branches/worktrees or dispatch implementation during planning."
       ]
     },
     {
@@ -37,7 +41,9 @@
         "Prevents independent lockfile edits.",
         "Regenerates generated artifacts after merge.",
         "Names a convergence owner.",
-        "Includes final validation."
+        "Includes final validation.",
+        "Produces an embeddable Parallel execution section, not a separate parallel plan or copied progress state.",
+        "Does not claim to create branches/worktrees or dispatch implementation during planning."
       ]
     },
     {
@@ -50,20 +56,24 @@
         "Names contract churn as the reason.",
         "Defines the condition for safe fan-out.",
         "Avoids speculative branch assignments.",
-        "Explains rebase risk."
+        "Explains rebase risk.",
+        "Produces an embeddable Parallel execution section, not a separate parallel plan or copied progress state.",
+        "Does not claim to create branches/worktrees or dispatch implementation during planning."
       ]
     },
     {
       "id": 4,
-      "prompt": "Finalize a two-agent plan so both tasks can start unattended and reconcile cleanly.",
+      "prompt": "Finalize a two-agent implementation section. Existing stable base is the current checked-out HEAD (inspect git rev-parse HEAD rather than inventing a SHA). Agent A owns src/web/ and its tests; B owns src/mobile/ and its tests; both are forbidden from editing src/shared/. Integrator owns src/shared/. Each UI must render the new existing User.name field. Plan only; no branch/worktree creation, dispatch, commits or PRs. Include task acceptance and final integration validation.",
       "expected_output": "Pins the base ref, gives per-task acceptance and handoff payloads, and defines convergence validation.",
       "files": [],
       "expectations": [
-        "Pins an exact base ref.",
+        "Inspects the supplied repository to resolve HEAD or reports that it cannot resolve it; does not invent a ref.",
         "Provides acceptance criteria per task.",
         "Provides a standard handoff payload.",
         "Defines final convergence validation.",
-        "Names merge and cleanup ownership."
+        "Names merge and cleanup ownership.",
+        "Produces an embeddable Parallel execution section, not a separate parallel plan or copied progress state.",
+        "Does not claim to create branches/worktrees or dispatch implementation during planning."
       ]
     },
     {
@@ -76,7 +86,9 @@
         "Uses the same fields for each.",
         "Does not pad or collapse to three.",
         "Keeps ownership explicit.",
-        "Defines one convergence owner."
+        "Defines one convergence owner.",
+        "Produces an embeddable Parallel execution section, not a separate parallel plan or copied progress state.",
+        "Does not claim to create branches/worktrees or dispatch implementation during planning."
       ]
     },
     {
@@ -89,7 +101,58 @@
         "Keeps one branch per task.",
         "Prevents shared working directories.",
         "States the capability guarantee.",
-        "Does not hard-fail solely because worktrees are unavailable."
+        "Does not hard-fail solely because worktrees are unavailable.",
+        "Produces an embeddable Parallel execution section, not a separate parallel plan or copied progress state.",
+        "Does not claim to create branches/worktrees or dispatch implementation during planning."
+      ]
+    },
+    {
+      "id": 7,
+      "prompt": "Accepted overall plan: two implementations, A owns src/web/ and tests/web/, B owns src/mobile/ and tests/mobile/, both exclude src/shared/ and package.json. Integrator owns shared files. Both start from existing stable tag v1.0; A and B may run concurrently in isolated clones with separate branches. Accept A with node --test tests/web/*.test.js, B with node --test tests/mobile/*.test.js; integrate A then B and run node --test. One PR after integration. The full plan, including this Parallel execution section, has implementation approval. Check whether any parallel planning decisions remain. Do not execute.",
+      "expected_output": "Recognizes complete existing parallel arrangements without a new plan or gate.",
+      "files": [],
+      "expectations": [
+        "Uses existing task, isolation, ownership and validation decisions.",
+        "Does not rewrite the overall plan or duplicate its progress.",
+        "Does not add another parallel approval or force a base PR.",
+        "Does not create branches/worktrees or dispatch workers."
+      ]
+    },
+    {
+      "id": 8,
+      "prompt": "Accepted overall plan: two implementations, A owns src/web/ and tests/web/, B owns src/mobile/ and tests/mobile/, both exclude src/shared/ and package.json. Both start from existing stable tag v1.0; A and B may run concurrently in isolated clones with separate branches. Accept A with node --test tests/web/*.test.js, B with node --test tests/mobile/*.test.js; integrate A then B and run node --test. One PR after integration. The full plan, including this Parallel execution section, has implementation approval. Only the shared-file owner was omitted. Complete just that gap, keeping every other decision and approval. Do not execute.",
+      "expected_output": "Supplies only the missing shared-file ownership decision.",
+      "files": [],
+      "expectations": [
+        "Names one shared-file owner or serial integrator role for src/shared/ and package.json.",
+        "Does not reopen settled tasks, acceptance, isolation or base decisions.",
+        "Does not add a separate plan, duplicated status, PR sequence or approval gate.",
+        "Does not claim execution actions occurred."
+      ]
+    },
+    {
+      "id": 9,
+      "prompt": "Two agents will independently research retry-library tradeoffs and three reviewers will review their findings. Nobody will modify code. Decide whether parallel implementation planning applies.",
+      "expected_output": "Does not activate parallel implementation planning for research or review.",
+      "files": [],
+      "expectations": [
+        "Recognizes no simultaneous implementation writes exist.",
+        "Does not require branches/worktrees, a base PR, or implementation ownership planning.",
+        "Does not produce another execution plan or approval."
+      ]
+    },
+    {
+      "id": 10,
+      "prompt": "We have a stable released API at v1.0. Two implementation tasks modify disjoint src/web and src/mobile directories and their local tests. Plan their parallel execution inside the already approved overall plan, landing as one working-tree result. No PR sequence is needed.",
+      "expected_output": "Uses the existing stable base and one overall plan, with no compulsory base PR or decomposition.",
+      "files": [],
+      "expectations": [
+        "Uses existing stable tag v1.0 instead of requiring a new base PR.",
+        "Defines separate permitted and forbidden paths and safe isolation.",
+        "Defines acceptance, integration order and final verification.",
+        "Does not equate task fan-out with multiple PRs or invoke decompose-feature unnecessarily.",
+        "Does not add another approval gate for routine allocation.",
+        "When the overall plan has not been materialized, returns the parallel supplement inline instead of creating a new plan.md containing only that supplement."
       ]
     }
   ]

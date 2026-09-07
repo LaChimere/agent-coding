@@ -23,7 +23,8 @@ This repository turns those failure modes into reusable skills and a portable or
 |---|---|---|
 | `AGENTS.md` | Repo-specific contributor guidance for this repository | Maintainer guide |
 | `skills/workflow-orchestrator/` | Portable workflow coordination contract + planning templates | Conductor |
-| Other `skills/` | Specialized worker workflows for specific scenarios | Specialists |
+| `skills/` | Coordinated worker skills | Specialists |
+| `skills/scan-image-vulnerabilities/` | Standalone image inspection | Inspector |
 
 ### Core workflow
 
@@ -35,16 +36,19 @@ Discover if needed → Design if needed → Plan if needed → Execute → Verif
 Fast path (urgent):  Execute → Verify → Lessons (backfill)
 ```
 
-`workflow-orchestrator` decides which conditional phase applies, which installed worker owns the next step, and whether a companion or direct read-only inspection skill should also run.
+Clear small tasks run directly in the primary session. `workflow-orchestrator` resolves genuine phase, authorization or worker ambiguity; installing the skills does not make it a mandatory entrypoint.
+
+Native Plan Mode owns exploration and the overall proposal. An approved proposal plus explicit revisions can pass straight to execution; save it to a living `plan.md` when authorized and permitted by the host. Saving adds no approval gate. `plan.md` is the only execution progress source, with approved scope separate from changing status and evidence. Optional `design.md`, `research.md` and `lessons.md` serve design decisions, gathered evidence and earned lessons. New tasks have no independent TODO or custom goal file; historical task files are left alone.
 
 ### Approval gates
 
 | Gate | When | What gets reviewed |
 |---|---|---|
-| **Gate 1** | After research + design | Is the direction right? Is the approach sound? |
-| **Gate 2** | After plan + todo | Are the execution steps reasonable? |
+| **Gate 1** | When consequential design needs alignment | Approve direction and further planning, not implementation |
+| **Gate 2** | When implementation scope needs approval | Approve the overall plan, including any parallel section; an explicitly approved native proposal suffices |
 | **Gate 3** | After execution for high-risk changes, plan deviations, or explicit reviewer request | Does the actual diff match the plan? |
-| **Fast path** | Production down / urgent | Skip gates, still verify, backfill lessons |
+| **Lightweight path** | Clear, low-risk task | Direct authorized work and relevant checks, no mandatory artifacts |
+| **Fast path** | Genuinely urgent, authorized repair | Shorten discussion, still verify; urgency grants no extra authority |
 
 ### Acceptance criteria
 
@@ -54,63 +58,31 @@ Every planned step or PR defines concrete acceptance criteria. Before proposing 
 
 | Level | Scope | Used for |
 |---|---|---|
-| **L1** | Lint + typecheck + unit tests | Refactors, no behavior change |
+| **L1** | Relevant local/static/unit checks | Low-risk changes; docs use consistency review |
 | **L2** | Integration tests or before/after proof | Bug fixes, behavior changes |
-| **L3** | E2E / staging validation | Infra, security, data migration |
+| **L3** | E2E / production-like validation where needed and feasible | High-impact behavior |
 
 No evidence = not done.
 
 ## Project structure
 
-```
-AGENTS.md                                         # Repo-specific maintainer guidance for this repository
-skills/                                           # Specialized workflows
-  workflow-orchestrator/                         #   Portable coordination layer + bundled planning templates
-    SKILL.md
-    references/approval-gates.md
-    references/worker-routing.md
-    references/workflow-contract.md               #   Compatibility index only; rules live in SKILL.md + the two references above
-    templates/
-  decompose-feature/                              #   Split large features into small PRs
-    SKILL.md
-    templates/feature-plan-template.md
-  plan-parallel-work/                             #   Coordinate multi-agent parallel work
-    SKILL.md
-    templates/parallel-task-plan-template.md
-  ensure-atomic-pr/                               #   Assess and fix PR atomicity
-    SKILL.md
-    templates/atomic-pr-checklist.md
-  execute-plan-loop/                              #   Execute approved work in atomic long-loop increments
-    SKILL.md
-  anti-slop/                                      #   Quality guard that keeps code changes free of AI slop
-    SKILL.md
-    templates/pre-commit-slop-gate.md
-    references/agents-md-block.md
-  refresh-related-docs/                            #   Refresh stale docs after code changes
-    SKILL.md
-  scan-image-vulnerabilities/                     #   Scan container images for vulnerabilities
-    SKILL.md
-    references/scanner-contract.md
-    scripts/trivy_latest_scan.sh
-    tests/test_trivy_latest_scan.sh
-  achieve-goal/                                   #   Persist and pursue long-running goals
-    SKILL.md
-    references/goal-lifecycle-state.md
-    scripts/goal_lifecycle.py
-    tests/test_goal_lifecycle.py
-plugins/                                          # Codex plugins installed from the repo marketplace
-  pr-review/
-    .codex-plugin/plugin.json
-    skills/pr-review/                             #   Single-entrypoint PR/change-set review
-    skills/spar/                                  #   One-shot adversarial idea analysis
-    skills/rubber-duck/                           #   One-shot substantive critic
-evals/                                            # Central eval corpus (repository maintenance, never distributed)
-  <skill>/evals.json                              #   Functional cases for the matching runtime skill
-  <skill>/manifest.json                           #   Case classification manifest (critical/behavior-change/...)
-  <skill>/files/                                  #   Case fixtures
-  suites/                                         #   Cross-skill trigger/composition suites
-tools/skill-evals/                                # Provider-neutral eval harness, configuration, and tests
-plans/                                            # Planning/execution artifacts for changes to this repo
+```text
+AGENTS.md                              # Contributor guidance for this repo
+skills/
+  workflow-orchestrator/               # Shared contract, references and templates
+  execute-plan-loop/
+  anti-slop/
+  decompose-feature/
+  plan-parallel-work/                  # Embedded Parallel execution template
+  ensure-atomic-pr/
+  refresh-related-docs/
+  scan-image-vulnerabilities/          # Standalone, with bundled script and tests
+plugins/pr-review/                    # Separate review plugin, unchanged
+.agents/plugins/marketplace.json
+evals/<skill>/                        # Central cases, manifests, fixtures; never distributed
+evals/suites/
+tools/skill-evals/                    # Existing provider-neutral harness
+.skill-evals/                         # Ignored immutable evaluation evidence
 ```
 
 **Evals are repository-maintenance assets, not skill content.** Every root or plugin runtime skill has a matching `evals/<skill>/` directory with functional cases, fixtures, and a classification manifest, but that material lives outside runtime skill directories and is never distributed. An installed skill or plugin therefore cannot read its own cases or expected answers. See `tools/skill-evals/README.md` for validation, run preparation, and grading.
@@ -127,7 +99,7 @@ Vertical slice A → Vertical slice B → Vertical slice C
 Shared base → independent fan-out slices → required cleanup
 ```
 
-Use when: evidence shows the work is too large for one reviewable PR, stacked PRs are requested, or staged rollout is needed. Advisory requests can stay inline; workflow artifacts are materialized only when delivery begins.
+Use when: evidence shows the work is too large for one reviewable PR, stacked PRs are requested, or staged rollout is needed. Advisory requests can stay inline; save planning artifacts only when authorized and permitted by the host. Saving a plan does not begin implementation.
 
 ### plan-parallel-work
 
@@ -139,7 +111,7 @@ Base ref ─┼── Task B (isolated working copy, owned paths)
         └── Task C (isolated working copy, owned paths)
 ```
 
-Use when: multiple agents need to work simultaneously, branch/path ownership must be explicit, or the PR sequence already exists. It pins a base ref, task acceptance, handoff payloads, merge order, and final convergence validation.
+Use when preparing concurrent code edits requires ownership/isolation decisions, or when the user explicitly requests parallel implementation planning. It fills only gaps in the overall native proposal's `Parallel execution` section, then the same `plan.md` when writing is allowed. Existing stable refs suffice; tasks need not become multiple PRs. Parallel research/review, one worktree, or one sequential implementer do not trigger it. Planning describes intended roles; worktree creation and dispatch belong to execution.
 
 ### ensure-atomic-pr
 
@@ -153,23 +125,23 @@ Use when: a PR is too large, mixes concerns, or needs post-hoc recovery.
 
 ### workflow-orchestrator
 
-Acts as the workflow front door and coordinates the worker skills:
+Resolves real phase, authorization or worker ambiguity:
 
 ```
-classify request → derive slug → create/update plans/{slug} → choose next worker skill → keep state aligned
+resolve phase or approval ambiguity → choose the appropriate worker → retain existing scope and evidence
 ```
 
-Use when: the user wants one skill to decide how work should proceed end-to-end, wants the right slug docs created before execution, or wants the existing workflow skills to cooperate as one system. This skill decides **which phase applies next and which worker skill should take over**.
+Use when: the next phase, approval or worker is genuinely unresolved, or phase coordination is explicitly requested. Clear tasks and approved native plans do not need a new handoff or planning round.
 
 ### execute-plan-loop
 
 Executes approved implementation work in a disciplined long-running loop:
 
 ```
-pick next atomic slice → implement → update status → run checks → land or report → milestone review
+pick coherent slice → implement → verify → update living plan → continue approved scope → final audit
 ```
 
-Use when: the user wants the agent to carry out an approved implementation scope with verified slices and progress updates. It creates commits only when the recorded landing mode is `commits`.
+Use when: the user wants the agent to carry out an approved implementation scope with verified slices and progress updates. A slice is a checkpoint: it continues through the whole approved scope unless the user limited the request to a step/phase or a real blocker remains. It creates commits only when the recorded landing mode is `commits`.
 
 ### anti-slop
 
@@ -179,27 +151,21 @@ Keeps code changes free of AI slop — output that looks polished but is unneces
 explain it → support correctness claims → only what's needed → justify duplication → inspect complexity → milestone review
 ```
 
-Use for explicit or ongoing anti-slop guarding, pre-commit readiness, visible-test hard-coding, scope/add-only/fix-on-fix signals, or meaningful/high-risk milestones. Routine edits keep compact quality invariants in the executor instead of loading a second review loop.
+Use for explicit or ongoing anti-slop guarding, pre-commit readiness, visible-test hard-coding, scope/add-only/fix-on-fix signals, or meaningful/high-risk milestones. Routine edits keep compact quality invariants in the executor instead of loading a second review loop. Read-only review never writes files. A full anti-slop check does not automatically add an independent reviewer or restart for each commit.
 
-### achieve-goal
+### Native goal lifecycle
 
-Persists a user-provided long-running goal and keeps working toward it until a stop condition:
-
-```
-register goal -> re-anchor -> execute one verified slice -> update state -> continue or stop
-```
-
-Use when: the user explicitly creates a persistent objective with `/goal`, continues an existing active goal, or wants pause/resume/clear and cross-phase completion auditing. Generic execution continuation routes to `execute-plan-loop`.
+Use the host's native `/goal` only for an explicit persistent objective. The host owns continuation, pause/resume, budgets and completion; the executor implements and verifies, and the living plan records scope and evidence. Goals do not expand commit, external-write, purchase or destructive-action authority. A host without native goal support can still execute ordinary tasks but cannot promise automatic cross-turn continuation. The retired `achieve-goal` skill and lifecycle script are no longer distributed.
 
 ### refresh-related-docs
 
 Refreshes documentation that has become stale after code changes:
 
 ```
-detect evidence of staleness → discover documentation authority → use named approvals / ask for expanded scope → update minimally → report
+detect evidence of staleness → discover documentation authority → refresh related docs directly → verify consistency → report
 ```
 
-Use when confirmed behavior, configuration, interfaces, or maintenance workflow make Markdown stale. Explicitly named targets are already approved; newly discovered or expanded scope still requires approval.
+Use when confirmed behavior, configuration, interfaces, or maintenance workflow make Markdown stale. Refresh related files directly, including newly discovered documents and repository `AGENTS.md`, without per-file approval. Preserve explicit file/section exclusions and read-only requests; do not invent new policy or synchronize global configuration as part of a repository refresh.
 
 ### scan-image-vulnerabilities
 
@@ -267,25 +233,26 @@ the final decision to the primary agent.
 3. Install standalone inspection skills independently when needed.
 4. Use the target repo's own `AGENTS.md` only for project-specific rules.
 5. Keep every installed skill's bundled references, templates, and scripts intact.
-6. Check a skill's `compatibility` frontmatter field before relying on its bundled script: `achieve-goal` requires python3 3.9+, and `scan-image-vulnerabilities` requires bash, python3, and Trivy 0.58.0+ (Docker/`kubectl` only for local-daemon or cluster discovery).
+6. Check a skill's `compatibility` frontmatter before relying on its script: `scan-image-vulnerabilities` requires bash, python3 and Trivy 0.58.0+ (Docker or kubectl only for their respective discovery modes).
 
 ### Working on this repo
 
 1. Repo-root `AGENTS.md` applies only to this repository.
 2. If you change cross-skill workflow behavior, update `workflow-orchestrator` first.
 3. If you change a worker skill, keep it aligned with the `workflow-orchestrator` contract.
-4. Put repo-change planning artifacts under `plans/{slug}/`.
+4. Keep repository-maintenance scope in the approved conversation; do not create a root `plans/` directory or task slugs. Generated evaluation evidence belongs in `.skill-evals/`. The optional downstream living-plan templates and their fixtures remain supported.
 5. Add or change eval cases under `evals/<skill>/`, never inside a runtime skill directory; validate with
    `uv run --locked --project tools/skill-evals python tools/skill-evals/skill_evals.py validate --repo .`.
 6. Keep generated eval run artifacts in the ignored `.skill-evals/` workspace.
 
 ### What the agent does at runtime
 
-1. Uses `workflow-orchestrator` as the front door for workflow-managed skills when the next workflow phase is not already obvious.
-2. Lets `workflow-orchestrator` classify the task, derive the slug, and create/update the needed `plans/{slug}` artifacts from its bundled templates.
-3. Hands off to a narrower worker skill when the phase is clear (`decompose-feature`, `plan-parallel-work`, `execute-plan-loop`, and so on).
-4. A workflow-managed worker consumes an existing installed `workflow-orchestrator` handoff or invokes that skill when phase or approval is unresolved. Read-only inspection skills can remain outside this contract when their operating context says so.
-5. Verifies the resulting work at the appropriate level before proposing completion.
+1. Uses the user's request, native proposal and explicit revisions or existing plan to resolve scope and authority.
+2. Chooses direct work or the relevant installed specialist. Orchestration is only for real ambiguity.
+3. Saves only authorized, necessary records when the host permits writing. Save-only does not begin implementation.
+4. Executes the approved boundary, fixing ordinary implementation-caused check failures and recording evidence in the living plan.
+5. Re-aligns material behavior, contract, architecture, state, risk, cost or scope changes, not routine progress edits.
+6. Audits original requirements, deviations and evidence at completion. Missing required verification is reported as incomplete.
 
 ## Customization
 
@@ -320,7 +287,7 @@ This framework ships with governance and CI/CD skills. When adopting it for a re
 
 - **Gotchas section**: The highest-signal content in any skill. Build it up from real failure patterns over time.
 - **Progressive disclosure**: Keep `SKILL.md` focused on decision logic. Put detailed reference material (CLI commands, API signatures, examples) in `references/` files.
-- **Config persistence**: If a skill needs setup info (credentials, project IDs), store it in a `config.json` within the skill directory so the agent does not re-ask every session.
+- **Config persistence**: Keep non-secret project settings in the consuming project's documented configuration. Store credentials in the host credential store or environment, never inside a distributed skill or committed fixture.
 - **Description field**: This is a trigger mechanism, not a summary. Be explicit about when the skill should activate, including edge cases and alternative phrasings.
 
 ### On-demand safety hooks
@@ -336,9 +303,9 @@ If your agent platform supports hooks, consider adding them to high-risk skills 
 ### Adjusting strictness
 
 - **More strict**: Require Gate 1 for all plan-mode tasks (remove "Design required?" conditional).
-- **Less strict**: Use the fast path more broadly, or skip Gate 2 for low-risk planned changes.
+- **Less strict**: Use the lightweight path for clear low-risk changes; keep urgent fast path limited to genuine urgency and existing authority.
 - **Per-project**: Put project-specific contributor rules in that repo's own `AGENTS.md` / `CLAUDE.md`, while keeping shared workflow coordination in `workflow-orchestrator`.
 
 ## Status
 
-Every runtime skill has functional eval definitions and classification metadata in the central `evals/` corpus. The provider-neutral harness evaluates both root and plugin-owned skill content through isolated `npx skills add --copy` snapshot copies. That hermetic behavior check does not validate a plugin manifest, marketplace entry, cache, or Codex discovery. Plugin changes therefore also require the separate marketplace install and installed-copy validation described in `AGENTS.md` and `tools/skill-evals/README.md`. The prior five-model behavior certification covered the original root-skill set; new runtime skills require their own recorded evaluation evidence. Continue refining from real usage evidence rather than adding speculative workflow rules.
+Every runtime skill has functional eval definitions and classification metadata in the central `evals/` corpus. The provider-neutral harness evaluates both root and plugin-owned skill content through isolated `npx skills add --copy` snapshot copies. That hermetic behavior check does not validate a plugin manifest, marketplace entry, cache, or Codex discovery. Plugin changes therefore also require the separate marketplace install and installed-copy validation described in `AGENTS.md` and `tools/skill-evals/README.md`. Historical certification is not certification of this workflow candidate. Each result must identify its runtime snapshot, frozen corpus, model/settings and actual execution evidence; unrun, ungraded and failed checks are not passes. Continue refining from real usage evidence rather than adding speculative workflow rules.

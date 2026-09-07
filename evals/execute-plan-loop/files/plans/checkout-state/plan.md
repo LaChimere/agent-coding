@@ -11,3 +11,9 @@ Simplify internal checkout state handling without changing the request boundary.
 ## Verification
 
 Run the existing checkout state tests.
+
+## Execution status
+
+- [ ] Simplify checkout state handling
+
+Evidence: none recorded.

@@ -1,74 +1,50 @@
-# Approval gates and verification
+# Approval, recovery and verification
 
-Read when a gate, approval, landing mode, fast path, or verification level is unclear. Not required for routine routing.
+## Conditional gates
 
-## Plan-mode triggers
+Gate 1 approves design direction and permits planning, not implementation. Use design alignment for public interfaces, schemas, security, concurrency, data transformations or consequential alternatives. Component count and multiple checks alone do not demand a design exercise.
 
-| Trigger | Design gate required? |
+Gate 2 approves implementation scope and its constraints, including necessary execution order, ownership and recovery decisions. A clear implementation request or explicit approval of a native proposal can supply this authority directly; neither a particular file nor a formatted handoff is required. Low-risk small tasks can execute directly.
+
+Gate 3 is post-execution review for high-impact work (security, persisted data, public contracts, infrastructure), material deviations or an explicit review requirement. Review depth follows affected risk rather than commit count.
+
+## Native planning handoff
+
+- Native Plan Mode is for exploration, discussion and the overall proposal. Consume that proposal and explicit revisions rather than repeating the design process.
+- Host write restrictions still apply. A template is not permission to write in Plan Mode.
+- “Save the plan, do not implement” permits only document writes when the host allows them. “Implement the plan” authorizes that scope and necessary progress records; leaving Plan Mode alone does not.
+- Record the user's actual approval source, not a fabricated approver or unchecked template field. A native plan already approved needs no new approval when saved.
+- Incorporate parallel decisions in the overall proposal and the same living plan. Its approval covers that section; filling routine allocation details adds no gate.
+
+## Two short paths
+
+**Lightweight path:** clear, low-risk tasks are handled directly by the primary session with relevant checks; no mandatory files, orchestrator or formal gates.
+
+**Urgent fast path:** for a genuinely urgent, authorized repair, state why discussion is shortened, perform the minimum relevant verification and record any earned lesson afterward. Urgency does not grant authority to implement, commit, deploy or take destructive actions, and cannot waive a host restriction or an explicit user approval requirement.
+
+## Scope and landing
+
+Default to `working_tree`. Only explicit commit authorization (including an approved plan's `commits` landing mode) permits atomic commits. Pushes, PR changes, pipeline triggers, deployments, destructive changes and other external mutations require their own authorization. A native goal never expands these permissions.
+
+Routine internal choices, evidence updates, progress records and equivalent execution refinements preserve approval. Re-align before changing user-visible behavior, a public contract, important architecture, state/concurrency semantics, safety, cost or scope. Do not reset approval merely because a plan's progress or validation command was updated.
+
+## Evidence scaled to risk
+
+Verify the requested behavior and the existing behavior affected by the change. Choose the smallest decisive checks and required repository gates; a documentation-only change needs consistency review, not invented code tests.
+
+| Evidence level | Meaning |
 |---|---|
-| Public API / interface / schema change | Yes |
-| Auth / security / concurrency / correctness-critical logic | Yes |
-| Data migration / backfill / transformation | Yes |
-| Needs comparing more than one design | Yes |
-| Spans multiple components or directories | No |
-| Needs multiple verification steps beyond one build/test pass | No |
-| Dependency add/upgrade | No |
-| Performance-sensitive change | No |
+| L1 | Targeted local/static/unit checks appropriate to the change |
+| L2 | Integration/contract test or reproducible before/after behavior proof |
+| L3 | End-to-end or production-like validation where risk requires it and the environment permits it |
 
-Trivial low-risk work can execute directly.
+Behavioral changes generally need L2 evidence; high-impact changes need recovery reasoning and L3 where feasible. Performance claims require measurements and a method. Levels describe evidence, not a universal command checklist. Never substitute structural checks for behavioral or host validation.
 
-## Gate model
+## Recovery and stopping
 
-Conditional transitions, not mandatory ceremony:
+1. Fix an implementation-caused, safely repairable validation failure and rerun affected checks under the existing approval.
+2. Update progress/evidence and equivalent execution detail without reapproval. Broaden checks only for failures, changes or a concrete unresolved risk.
+3. If the approved design or scope must materially change, explain the evidence and ask for the relevant design or implementation decision before proceeding across that boundary.
+4. If a necessary capability is missing, the failure cannot be safely resolved, or new authority is needed, finish independent authorized work and report the exact blocker and missing evidence.
 
-`Discover if needed -> Design if needed -> Plan if needed -> Execute -> Verify -> Review if needed -> Record lessons if earned`
-
-- **Gate 1 (design)** when the trigger table requires design or the user asks for a design review.
-- **Gate 2 (plan)** when the work spans multiple slices or commits, when execution/migration order, ownership, or rollback needs review, or when the user or active design asks for plan approval. Low-risk work with clear scope may skip it.
-- **Gate 3 (post-execution review)** for high-risk changes (auth, security, data migration, infra, public contracts), when implementation deviated from the approved plan, or when a reviewer asked for a diff review.
-
-**Fast path** bypasses Gates 1-3 only for genuine urgency such as production down or a hotfix that cannot wait. Say fast path is being used and why, still run the minimum relevant verification, and backfill `plans/{slug}/lessons.md` when the incident reveals a reusable process gap.
-
-## What counts as approval
-
-Explicit affirmative language: `approved`, `proceed`, `LGTM`, `可以开始`. Silence, acknowledgement, or the mere existence of an artifact is not approval.
-
-## Landing authorization
-
-- Authorization to implement is not authorization to commit.
-- Record the mode as `working_tree` or `commits`; absent a record, default to `working_tree`.
-- Use `commits` only under explicit user or approved-workflow authorization. Words like "implement", "fix", or "continue" do not change the mode.
-- Destructive or externally visible actions (history rewrites, force pushes, deletes, deploys, remote or third-party mutations) need their own explicit approval even when implementation is approved.
-
-## Verification
-
-Before proposing completion: acceptance criteria met with evidence, diff matches the approved scope, appropriate verification run, related docs not stale.
-
-| Level | Scope |
-|---|---|
-| L1 | lint/typecheck + unit or targeted test |
-| L2 | integration/contract test or reproducible before/after check |
-| L3 | e2e/staging/production-like validation when feasible |
-
-| Change type | Minimum |
-|---|---|
-| Refactor / no behavior change | L1 |
-| Bug fix / behavior change | L2 |
-| Infra / CI / deploy / security / data migration | L2 + rollback, L3 when feasible |
-| Performance-related | numbers + method |
-
-When no named command exists, use the closest existing evidence that verifies the changed behavior and record the limitation. Do not invent a command or treat missing tooling as a pass.
-
-## Recovery when a criterion fails
-
-1. **Fix directly** when the gap is a straightforward implementation issue, then re-verify.
-2. **Update `plan.md`** and re-submit for Gate 2 when the approved path is incomplete or infeasible.
-3. **Update `design.md`** and re-submit for Gate 1, then Gate 2, when the design is invalidated.
-4. **Escalate** with what was attempted, what failed, and the remaining decision.
-
-## Escalate immediately when
-
-- the next action would cross a gate without approval
-- the approved plan or design no longer matches reality
-- a required verification step is missing or failing
-- the orchestration contract and repo-local policy conflict materially
+A slice is a checkpoint, not the end of a whole-plan request. Return at the user's requested whole-scope, phase or step boundary. Completion requires an audit against the original request: acceptance evidence, affected regression checks, required reviews, actual scope/deviations and no unresolved in-scope blocking issue. Label missing validation as incomplete, not passed.

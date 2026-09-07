@@ -1,0 +1,174 @@
+{
+  "schema": "skill-evals/trigger-suite-v1",
+  "suite_name": "workflow-refinement",
+  "cases": [
+    {
+      "id": "small-edit",
+      "prompt": "Fix this one obvious typo in the named README line; no plan or commit.",
+      "expected_skills": [
+        "none"
+      ],
+      "forbidden_skills": [
+        "workflow-orchestrator",
+        "plan-parallel-work"
+      ],
+      "expectations": [
+        "Use only the route required by the stated task; no custom goal, extra gate or implementation outside scope."
+      ],
+      "grading": [
+        {
+          "type": "json_shape",
+          "path": "response_json",
+          "required": {
+            "route": "none"
+          }
+        }
+      ]
+    },
+    {
+      "id": "single-step-code-edit",
+      "prompt": "In this repository, change the greeting prefix in src/greeting.js from Hello to Hi, preserving interpolation of the supplied name. The existing test/greeting.test.js already expects the new prefix. Make this one change and run node --test test/greeting.test.js. No plan, commit or other behavior change is needed.",
+      "expected_skills": ["none"],
+      "forbidden_skills": ["execute-plan-loop", "workflow-orchestrator", "plan-parallel-work"],
+      "expectations": [
+        "Handle the explicitly authorized one-step repository change directly; do not load an execution workflow merely because implementation and a targeted check are requested."
+      ],
+      "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "none"}}]
+    },
+    {
+      "id": "single-worktree",
+      "prompt": "Create one local worktree and branch from the current HEAD, do not implement anything.",
+      "expected_skills": [
+        "none"
+      ],
+      "forbidden_skills": [
+        "workflow-orchestrator",
+        "plan-parallel-work"
+      ],
+      "expectations": [
+        "Use only the route required by the stated task; no custom goal, extra gate or implementation outside scope."
+      ],
+      "grading": [
+        {
+          "type": "json_shape",
+          "path": "response_json",
+          "required": {
+            "route": "none"
+          }
+        }
+      ]
+    },
+    {
+      "id": "parallel-research",
+      "prompt": "Run independent research and review in parallel; no implementation writes are planned.",
+      "expected_skills": [
+        "none"
+      ],
+      "forbidden_skills": [
+        "plan-parallel-work"
+      ],
+      "expectations": [
+        "Use only the route required by the stated task; no custom goal, extra gate or implementation outside scope."
+      ],
+      "grading": [
+        {
+          "type": "json_shape",
+          "path": "response_json",
+          "required": {
+            "route": "none"
+          }
+        }
+      ]
+    },
+    {
+      "id": "approved-native-implementation",
+      "prompt": "Implement the native proposal I just approved; its scope, acceptance and working_tree landing are clear, but no handoff file exists.",
+      "expected_skills": [
+        "execute-plan-loop"
+      ],
+      "forbidden_skills": [
+        "workflow-orchestrator"
+      ],
+      "expectations": [
+        "Use only the route required by the stated task; no custom goal, extra gate or implementation outside scope."
+      ],
+      "grading": [
+        {
+          "type": "json_shape",
+          "path": "response_json",
+          "required": {
+            "route": "execute-plan-loop"
+          }
+        }
+      ]
+    },
+    {
+      "id": "parallel-gap",
+      "prompt": "Two simultaneous implementation tasks are agreed. Supplement only missing shared-file ownership in the overall approved plan.",
+      "expected_skills": [
+        "plan-parallel-work"
+      ],
+      "forbidden_skills": [
+        "decompose-feature",
+        "workflow-orchestrator"
+      ],
+      "expectations": [
+        "Use only the route required by the stated task; no custom goal, extra gate or implementation outside scope."
+      ],
+      "grading": [
+        {
+          "type": "json_shape",
+          "path": "response_json",
+          "required": {
+            "route": "plan-parallel-work"
+          }
+        }
+      ]
+    },
+    {
+      "id": "native-goal-status",
+      "prompt": "Report the current host-native goal status only, without modifying repository files.",
+      "expected_skills": [
+        "none"
+      ],
+      "forbidden_skills": [
+        "execute-plan-loop",
+        "workflow-orchestrator"
+      ],
+      "expectations": [
+        "Use only the route required by the stated task; no custom goal, extra gate or implementation outside scope."
+      ],
+      "grading": [
+        {
+          "type": "json_shape",
+          "path": "response_json",
+          "required": {
+            "route": "none"
+          }
+        }
+      ]
+    },
+    {
+      "id": "parallel-one-result",
+      "prompt": "Plan isolated simultaneous work for two disjoint tasks from existing stable tag v1.0, integrating into one PR; no delivery decomposition needed.",
+      "expected_skills": [
+        "plan-parallel-work"
+      ],
+      "forbidden_skills": [
+        "decompose-feature"
+      ],
+      "expectations": [
+        "Use only the route required by the stated task; no custom goal, extra gate or implementation outside scope."
+      ],
+      "grading": [
+        {
+          "type": "json_shape",
+          "path": "response_json",
+          "required": {
+            "route": "plan-parallel-work"
+          }
+        }
+      ]
+    }
+  ]
+}

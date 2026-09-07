@@ -1,67 +1,38 @@
-# Design Document
+# Design
 
-> Purpose: document the solution design for review and approval before execution planning.
-> Do not proceed to plan/execution until this design is approved.
+> Record consequential design decisions when needed. Native discussion/proposals are valid sources; write only when authorized and allowed by the host. Design approval permits planning, not implementation.
 
-## Objective
-- What problem are we solving (1–2 sentences):
-- Link to research: `plans/{slug}/research.md`
+## Objective and behavior
 
-## Architecture / Approach
-- High-level approach:
-- Key components / layers involved:
-- Interaction / data flow (describe or diagram):
+- Problem and intended observable behavior:
+- Non-goals:
+- Evidence/research reference, if any:
 
-## Interface / API / Schema Design
-- New or changed interfaces:
-- New or changed API endpoints:
-- New or changed data models / schemas:
-- Contract compatibility notes:
+## Key constraints
 
-## Trade-off Analysis
-### Option A (chosen)
-- Summary:
-- Pros:
-- Cons:
-- Why chosen:
+- Compatibility/public contracts:
+- State, concurrency, security and data safety:
+- Cost, performance or operational constraints that matter:
 
-### Option B (rejected)
-- Summary:
-- Pros:
-- Cons:
-- Why rejected:
+## Approach and decisions
 
-### Option C (rejected, if applicable)
-- Summary:
-- Pros:
-- Cons:
-- Why rejected:
+- Chosen approach and why:
+- Consequential alternatives/trade-offs, only where useful:
+- Affected components and consumers:
 
-## Key Design Decisions
-- Decision 1:
-  - Context:
-  - Choice:
-  - Rationale:
+## Program Shape (when useful)
 
-- Decision 2:
-  - Context:
-  - Choice:
-  - Rationale:
+Program Shape describes how responsibilities and execution fit together, not full implementation pseudocode.
 
-## Impact Assessment
-- Affected modules / services:
-- Public API / schema compatibility:
-- Data migration needs:
-- Performance implications:
-- Security considerations:
+- Responsibility boundaries:
+- Important interfaces and primary call path:
+- For complex state: owners, transitions, transaction boundaries and error propagation:
 
-## Open Questions
-- Q1:
-- Q2:
+## Discussion exit conditions
 
-## Review Notes / Annotations
-(Place for reviewer comments. Agent must incorporate feedback and re-submit for approval before proceeding to plan.)
+- Objective, scope, behavior, constraints and observable acceptance are sufficient to plan:
+- Material unknowns resolved or explicitly bounded:
+- Remaining assumptions and risks:
+- Approval source and revisions, or the specific decision still needed:
 
-## Approval
-- [ ] Design approved by:
-- Date:
+Stop extending the questionnaire once these conditions hold; state assumptions and proceed to planning when approved.

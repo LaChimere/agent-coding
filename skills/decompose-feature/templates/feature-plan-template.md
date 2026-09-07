@@ -25,7 +25,7 @@ Repeat the PR block for each real slice. Add a cleanup PR only when temporary co
 
 ## Parallelization readiness
 Must stay serial:
-Can fan out after base:
+Can run concurrently from the stable starting point:
 
 ## Risks
 - [risk]

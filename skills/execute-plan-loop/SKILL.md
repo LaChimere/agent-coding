@@ -1,33 +1,35 @@
 ---
 name: execute-plan-loop
-description: Execute an approved implementation scope in small verified slices while keeping plan and status artifacts accurate. Use for an approved `plans/{slug}` step, an explicitly scoped implementation request, or continuation of execution that needs atomic changes and milestone review. This skill does not create persistent goal lifecycle state.
+description: Execute approved plans or resume implementation that needs verified slices and progress tracking. Clear one-step changes stay in the primary session unless this skill is explicitly requested.
 ---
 
 # Purpose
 
-Carry an approved implementation scope forward in small, reviewable, verified slices until the requested milestone is done. This is an execution skill, not a planning shortcut.
+Carry the entire approved implementation scope forward in small, reviewable, verified slices until the user's requested return boundary is reached. A slice is a checkpoint, not the end of a whole-plan request. This is an execution skill, not a planning shortcut or a persistent goal lifecycle.
 
 # Boundaries
 
-Use it for an approved `plans/{slug}` step, an explicitly scoped task too small for plan mode, or continuation of started execution.
+Use it for an approved plan or step, implementation that needs verified slices and progress tracking, or an explicit request for this skill. Handle clear one-step changes directly in the primary session; being too small for Plan Mode does not itself call for an execution loop.
 
-Route elsewhere when the work is still discovery or design (refresh the artifact and stop at its gate), when a feature needs a PR sequence (`decompose-feature`), when agents need ownership boundaries (`plan-parallel-work`), when an existing diff mixes concerns (`ensure-atomic-pr`), or when docs beyond this slice may be stale (`refresh-related-docs`).
+Route elsewhere when the work is still discovery or design (refresh an artifact only when writing is allowed and authorized, then stop at any required gate), when a feature needs a PR sequence (`decompose-feature`), when simultaneous code implementers need missing isolation or ownership decisions (`plan-parallel-work`), when an existing diff mixes concerns (`ensure-atomic-pr`), or when docs beyond this slice may be stale (`refresh-related-docs`). Parallel research/review and a single worktree do not need parallel implementation planning.
 
 Add `anti-slop` only on signal: an explicit quality request, pre-commit readiness, scope creep, repeatedly add-only work, a fix-on-fix loop, or a meaningful/high-risk milestone. Routine slices rely on the compact invariants below.
 
 # 1) Resolve the contract before coding
 
-Read the structured handoff recorded by `workflow-orchestrator` or `achieve-goal` and use its fields directly: phase, scope, approval, landing, acceptance, primary worker.
+Resolve phase, scope, approval, landing, acceptance and return boundary from the user's request, accepted native Plan Mode proposal and explicit revisions, or existing living `plan.md`. A formatted handoff and a plan file are not prerequisites. Use an existing handoff if helpful; do not repeat planning or approval merely to produce one.
 
 - Recorded and unchanged: that is the active contract. Execute it. Do not route the same decision back through the orchestrator or create a routing loop.
-- Phase, approval, scope, or worker missing or unresolved: invoke the installed `workflow-orchestrator` and wait for its handoff. If it is not installed, report the missing dependency instead of assuming approval.
+- Real phase, approval, scope or worker ambiguity: consult the installed `workflow-orchestrator` if available. If unavailable, report the missing capability and resolve only what can safely be decided from existing authority; never assume missing approval. Clear small tasks stay in the primary session.
 - Landing authorization is separate from implementation approval. `commits` allows atomic commits after checks pass; anything else, including the default `working_tree`, means verify in the working tree and report. "Implement", "fix", "finish", and "keep going" never imply commit permission.
 
-Read only the artifacts this slice depends on: `plan.md` for approved steps and acceptance criteria, `todo.md` for the current progress truth, `design.md` or `research.md` when correctness depends on them. Honor a single-phase or single-step boundary exactly.
+Read only the artifacts the scope depends on: `plan.md` for approved scope, acceptance and current progress; `design.md` or `research.md` when correctness depends on them. Save an approved native proposal only when authorized and the host allows writing; saving adds no Gate 2 approval. A save-only request does not authorize implementation, and leaving Plan Mode alone does not grant approval. Honor a single-phase or single-step boundary exactly.
+
+The native host `/goal`, when explicitly requested and available, owns persistence, pause/resume, budgets and completion state. Ordinary implementation creates no goal. Do not create independent TODO or custom goal state, call retired lifecycle scripts, add old-format compatibility, or modify historical task files. Without a native goal, execute ordinary authorized work without promising automatic cross-turn continuation. Goal intent never expands side-effect authority.
 
 # 2) Pick one atomic slice
 
-Choose the smallest next step that advances the approved plan, leaves the repository valid, is verifiable with existing checks, and has one purpose you can state in a sentence. Split anything larger before coding. Unrelated ready items stay untouched and are recorded as deferred.
+Choose the smallest coherent next step that advances the approved scope, leaves the repository valid and is verifiable. Unrelated ready items stay untouched. Validation units need not equal commit units; avoid splitting directly coupled behavior/tests/docs just to make the checklist longer. Consume existing parallel ownership decisions rather than invoking another planning round; actual allocation belongs to authorized execution.
 
 # 3) Implement it
 
@@ -43,22 +45,23 @@ Choose the smallest next step that advances the approved plan, leaves the reposi
 - If a documented command no longer exists, inspect the repository's scripts and config for the closest real one, then update the plan/status with that evidence or escalate if the plan is stale. Never report an unrun or invented pass.
 - Boundary and error-handling work needs evidence for invalid-data behavior and for each relevant operational-failure class.
 - Evidence is a command and its result. "Double-checked" is not verification.
+- Fix safely repairable failures caused by this implementation and rerun affected checks without asking again. Complete independent authorized work if a required capability is missing; report exact limits instead of a pass. Broaden checks only for a change, failure or concrete unresolved risk.
 
 # 5) Update the progress truth
 
-Before landing or reporting, update `todo.md` checklist state and evidence, `lessons.md` after a material correction, and any other slug-local status the repository treats as truth. Touch `plan.md` or `design.md` only when the approved path genuinely changed — then stop for the required gate instead of building on unapproved drift.
+When a plan is used, update its execution progress, commands/results, blockers and next step at each meaningful checkpoint. Keep approved scope separate from dynamic status. Routine internal choices, evidence updates and equivalent execution refinements do not reset approval. Record `lessons.md` only after a material correction. Re-align before changing external behavior, public contracts, important architecture, state/concurrency semantics, security, cost or scope; do not silently revise the approved section to match an unapproved implementation.
 
 # 6) Land or report
 
 Under `commits`, commit only this slice's files after checks pass: one implementation step plus its tests, or one status/doc update tied to what just landed. Never bundle unrelated checklist items, opportunistic cleanup, or broad rewrites.
 
-Under `working_tree`, create no commit, leave the verified change in the tree, and report:
+Under `working_tree`, create no commit. After each slice, continue to the next approved slice unless the requested phase/step boundary or a real blocker is reached. At the return boundary, report:
 
 ```text
-Slice purpose: <one sentence>
+Scope completed: <whole scope or explicitly requested phase/step>
 Files changed: <paths>
 Verification: <command> -> <result>
-Ready to commit: <yes|no>
+Completion: <complete|implementation complete, verification incomplete|blocked>
 Deferred / blockers: <out-of-scope items and blockers, or none>
 ```
 
@@ -66,18 +69,18 @@ Deferred / blockers: <out-of-scope items and blockers, or none>
 
 Update the documentation and status inseparable from the slice you just landed — slug-local status, plus the document describing the behavior, config, or interface this slice changed. Running this loop covers those.
 
-When broader Markdown may be stale (`README.md`, `AGENTS.md`, canonical design docs or runbooks, multi-file sweeps), hand off to `refresh-related-docs` and let its approval rule govern. Do not restate or pre-empt its procedure.
+When broader related Markdown may be stale (`README.md`, `AGENTS.md`, canonical design docs or runbooks, multi-file sweeps), use `refresh-related-docs` to update it directly within the task's documentation scope. No additional per-file approval is needed; explicit user exclusions and read-only boundaries still apply.
 
 # Milestone review
 
-Review deeply when a coherent milestone completes, before or after a high-risk slice, or at the cadence the user or active contract set. Commit count is not a trigger. Routine slices need no verifier subagent; use an independent reviewer only for an explicit request or a genuinely high-risk milestone.
+Review deeply when a coherent milestone completes, before or after a high-risk slice, or at the cadence the user or active contract set. Commit count is not a trigger. Routine slices need no verifier subagent. Use the installed `pr-review` for general change-set review, without chaining community review workflows. Missing optional capability is a coverage limit; required independent review remains incomplete if unavailable, never replaced by self-review or an automatic install. Reviewers are read-only; the primary executor consolidates findings before fixes.
 
 Compare the actual diff against the approved plan and acceptance criteria, checking correctness, missing tests, scope creep, stale docs, and lost atomicity. Every finding takes one explicit action:
 
 - implementation gap -> fix it in the next slice and re-run checks
 - diff no longer atomic -> split it, using `ensure-atomic-pr` when boundaries are hard to recover
-- approved plan wrong or incomplete -> update `plan.md` and stop for its gate
-- approved design invalidated -> update `design.md` and stop for its gate
+- equivalent execution refinement -> update plan detail/evidence and continue
+- approved scope or consequential plan/design decision invalidated -> explain evidence and stop for the relevant decision before crossing that boundary
 - risky or unclear finding -> stop and surface the trade-off with evidence
 
 Fix at the root cause, not with the smallest patch that silences the comment.
@@ -88,12 +91,12 @@ After two materially similar failed attempts with no new evidence, stop the fix-
 
 # Done when
 
-The approved slice is implemented, acceptance criteria have evidence, required checks passed, status artifacts match reality, coupled docs are updated or explicitly deferred, and review findings are resolved, deferred, or escalated.
+Audit the original request at the requested return boundary: the entire authorized scope (or explicitly limited step/phase) is implemented; acceptance and affected regression checks have evidence; required reviews passed; plan progress and coupled docs match reality; deviations and extra implementation have been checked; no known in-scope blocking finding remains. Unrun, ungraded or failed required verification is incomplete, not success. Stop adding checks once this evidence is sufficient.
 
 # Gotchas
 
 - Drifting off the approved objective into "while I'm here" work.
-- Letting `todo.md` lag the code so the next session decides from stale state.
+- Letting the living plan lag the code so the next session decides from stale state.
 - Treating milestone review as ceremony, or answering findings cosmetically.
 - Coding through an approval boundary after discovering plan or design drift.
 - Test-fitting: hard-coded fixture values or a throwaway workaround script behind a green test.

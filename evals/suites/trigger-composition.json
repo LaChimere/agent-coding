@@ -5,104 +5,268 @@
     {
       "id": "orchestrator-vs-direct-worker",
       "prompt": "An approved plan asks for one implementation slice. Which skill owns it?",
-      "expected_skills": ["execute-plan-loop"],
-      "forbidden_skills": ["workflow-orchestrator"],
-      "expectations": ["Consume the approved handoff directly.", "Do not create an orchestrator loop."],
-      "grading": [{"type": "text_contains", "value": "execute-plan-loop"}]
-    },
-    {
-      "id": "goal-vs-executor",
-      "prompt": "Use /goal to ship an approved import plan and preserve long-lived goal status.",
-      "expected_skills": ["achieve-goal", "execute-plan-loop"],
-      "expectations": ["Goal owns lifecycle state.", "Executor owns one verified implementation slice."],
-      "grading": [{"type": "text_regex", "pattern": "achieve-goal.*execute-plan-loop|execute-plan-loop.*achieve-goal"}]
+      "expected_skills": [
+        "execute-plan-loop"
+      ],
+      "forbidden_skills": [
+        "workflow-orchestrator"
+      ],
+      "expectations": [
+        "Consume clear approval from the conversation or living plan directly.",
+        "Do not create an orchestrator loop."
+      ],
+      "grading": [
+        {
+          "type": "text_contains",
+          "value": "execute-plan-loop"
+        }
+      ]
     },
     {
       "id": "decompose-vs-atomic",
-      "prompt": "A broad feature spans auth, API, migrations, and UI; decide whether to split it before implementation.",
-      "expected_skills": ["decompose-feature"],
-      "related_skills": ["ensure-atomic-pr"],
-      "expectations": ["Create trunk-safe PR slices.", "Use atomicity assessment for an already mixed diff."],
-      "grading": [{"type": "text_contains", "value": "decompose-feature"}]
+      "prompt": "A broad feature spans auth, API, migrations, and UI. Plan which PRs should deliver it and their trunk-safe landing order before implementation; retain one PR if the components cannot merge safely separately.",
+      "expected_skills": [
+        "decompose-feature"
+      ],
+      "related_skills": [
+        "ensure-atomic-pr"
+      ],
+      "expectations": [
+        "Plan trunk-safe PR boundaries and landing order, retaining one PR when the feature is indivisible.",
+        "Distinguish delivery-sequence planning from assessing whether a planned or existing change is atomic."
+      ],
+      "grading": [
+        {
+          "type": "text_contains",
+          "value": "decompose-feature"
+        }
+      ]
     },
     {
       "id": "decompose-vs-parallel",
       "prompt": "The approved PR slices have independent owners and worktrees. Plan safe simultaneous work.",
-      "expected_skills": ["plan-parallel-work"],
-      "related_skills": ["decompose-feature"],
-      "expectations": ["Specify ownership and dependencies.", "Do not use decomposition merely because agents are parallel."],
-      "grading": [{"type": "text_contains", "value": "plan-parallel-work"}]
+      "expected_skills": [
+        "plan-parallel-work"
+      ],
+      "related_skills": [
+        "decompose-feature"
+      ],
+      "expectations": [
+        "Specify ownership and dependencies.",
+        "Do not use decomposition merely because agents are parallel."
+      ],
+      "grading": [
+        {
+          "type": "text_contains",
+          "value": "plan-parallel-work"
+        }
+      ]
     },
     {
       "id": "docs-direct-vs-broad-refresh",
       "prompt": "Update the explicitly named API guide, then assess whether newly discovered docs are stale.",
-      "expected_skills": ["refresh-related-docs"],
-      "expectations": ["The named guide is directly approved.", "Request approval before broad discovered-document expansion."],
-      "grading": [{"type": "text_contains", "value": "refresh-related-docs"}]
+      "expected_skills": [
+        "refresh-related-docs"
+      ],
+      "expectations": [
+        "The named guide is directly approved.",
+        "Keep the requested assessment of other docs read-only; report staleness without a routine approval question."
+      ],
+      "grading": [
+        {
+          "type": "text_contains",
+          "value": "refresh-related-docs"
+        }
+      ]
     },
     {
       "id": "image-scan-vs-source-security",
       "prompt": "Scan registry.example.com/payments:4.2 for CVEs; do not audit source code.",
-      "expected_skills": ["scan-image-vulnerabilities"],
-      "forbidden_skills": ["security-review"],
-      "expectations": ["Route directly to read-only image scanning.", "Do not convert an image-CVE request into source security review."],
-      "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "scan-image-vulnerabilities"}}]
+      "expected_skills": [
+        "scan-image-vulnerabilities"
+      ],
+      "forbidden_skills": [
+        "security-review"
+      ],
+      "expectations": [
+        "Route directly to read-only image scanning.",
+        "Do not convert an image-CVE request into source security review."
+      ],
+      "grading": [
+        {
+          "type": "json_shape",
+          "path": "response_json",
+          "required": {
+            "route": "scan-image-vulnerabilities"
+          }
+        }
+      ]
     },
     {
       "id": "pr-review-with-security-companion",
       "prompt": "Use $pr-review for the current authentication PR and include security review.",
-      "expected_skills": ["pr-review"],
-      "forbidden_skills": ["code-review"],
-      "expectations": ["Keep pr-review as the single public entrypoint.", "Invoke complete diff security as a companion when available."],
-      "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "pr-review"}}]
+      "expected_skills": [
+        "pr-review"
+      ],
+      "forbidden_skills": [
+        "code-review"
+      ],
+      "expectations": [
+        "Keep pr-review as the single public entrypoint.",
+        "Invoke complete diff security as a companion when available."
+      ],
+      "grading": [
+        {
+          "type": "json_shape",
+          "path": "response_json",
+          "required": {
+            "route": "pr-review"
+          }
+        }
+      ]
     },
     {
       "id": "pr-review-vs-image-scan",
       "prompt": "Scan registry.example.com/payments:4.2 for image CVEs only.",
-      "expected_skills": ["scan-image-vulnerabilities"],
-      "forbidden_skills": ["pr-review"],
-      "expectations": ["Use the image scanner.", "Do not activate PR review for an image-only request."],
-      "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "scan-image-vulnerabilities"}}]
+      "expected_skills": [
+        "scan-image-vulnerabilities"
+      ],
+      "forbidden_skills": [
+        "pr-review"
+      ],
+      "expectations": [
+        "Use the image scanner.",
+        "Do not activate PR review for an image-only request."
+      ],
+      "grading": [
+        {
+          "type": "json_shape",
+          "path": "response_json",
+          "required": {
+            "route": "scan-image-vulnerabilities"
+          }
+        }
+      ]
     },
     {
       "id": "pr-review-vs-atomicity",
       "prompt": "Only assess whether this existing diff is atomic enough for one PR.",
-      "expected_skills": ["ensure-atomic-pr"],
-      "forbidden_skills": ["pr-review"],
-      "expectations": ["Use the atomicity assessment skill.", "Do not substitute general PR review."],
-      "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "ensure-atomic-pr"}}]
+      "expected_skills": [
+        "ensure-atomic-pr"
+      ],
+      "forbidden_skills": [
+        "pr-review"
+      ],
+      "expectations": [
+        "Use the atomicity assessment skill.",
+        "Do not substitute general PR review."
+      ],
+      "grading": [
+        {
+          "type": "json_shape",
+          "path": "response_json",
+          "required": {
+            "route": "ensure-atomic-pr"
+          }
+        }
+      ]
     },
     {
       "id": "pr-review-auto-rubber-duck",
       "prompt": "Use $pr-review on this substantial payment API and idempotency change. Review only.",
-      "expected_skills": ["pr-review", "rubber-duck"],
-      "forbidden_skills": ["spar", "code-review"],
-      "expectations": ["Keep pr-review as the public entrypoint.", "Automatically add Rubber Duck because the change affects a public payment interface and persisted behavior.", "Do not add SPAR without an explicit request."],
-      "grading": [{"type": "text_regex", "pattern": "pr-review.*rubber-duck|rubber-duck.*pr-review"}]
+      "expected_skills": [
+        "pr-review",
+        "rubber-duck"
+      ],
+      "forbidden_skills": [
+        "spar",
+        "code-review"
+      ],
+      "expectations": [
+        "Keep pr-review as the public entrypoint.",
+        "Automatically add Rubber Duck because the change affects a public payment interface and persisted behavior.",
+        "Do not add SPAR without an explicit request."
+      ],
+      "grading": [
+        {
+          "type": "text_regex",
+          "pattern": "pr-review.*rubber-duck|rubber-duck.*pr-review"
+        }
+      ]
     },
     {
       "id": "pr-review-explicit-spar",
       "prompt": "Use $pr-review on this cache design and explicitly include $spar to challenge its assumptions.",
-      "expected_skills": ["pr-review", "spar"],
-      "forbidden_skills": ["code-review"],
-      "expectations": ["Keep pr-review as the public entrypoint.", "Run SPAR because the user explicitly requested it.", "Keep SPAR challenge output subject to primary confirmation."],
-      "grading": [{"type": "text_regex", "pattern": "pr-review.*spar|spar.*pr-review"}]
+      "expected_skills": [
+        "pr-review",
+        "spar"
+      ],
+      "forbidden_skills": [
+        "code-review"
+      ],
+      "expectations": [
+        "Keep pr-review as the public entrypoint.",
+        "Run SPAR because the user explicitly requested it.",
+        "Keep SPAR challenge output subject to primary confirmation."
+      ],
+      "grading": [
+        {
+          "type": "text_regex",
+          "pattern": "pr-review.*spar|spar.*pr-review"
+        }
+      ]
     },
     {
       "id": "pr-review-small-change-no-challenger",
       "prompt": "Use $pr-review on this one-line internal label helper change. Review only.",
-      "expected_skills": ["pr-review"],
-      "forbidden_skills": ["rubber-duck", "spar", "code-review"],
-      "expectations": ["Run the ordinary applicable review.", "Do not add Rubber Duck solely because a review was requested.", "Do not add SPAR without an explicit request."],
-      "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "pr-review"}}]
+      "expected_skills": [
+        "pr-review"
+      ],
+      "forbidden_skills": [
+        "rubber-duck",
+        "spar",
+        "code-review"
+      ],
+      "expectations": [
+        "Run the ordinary applicable review.",
+        "Do not add Rubber Duck solely because a review was requested.",
+        "Do not add SPAR without an explicit request."
+      ],
+      "grading": [
+        {
+          "type": "json_shape",
+          "path": "response_json",
+          "required": {
+            "route": "pr-review"
+          }
+        }
+      ]
     },
     {
       "id": "pr-review-explicit-rubber-duck-exclusion",
       "prompt": "Use $pr-review on this substantial public API migration, but exclude Rubber Duck. Review only.",
-      "expected_skills": ["pr-review"],
-      "forbidden_skills": ["rubber-duck", "spar", "code-review"],
-      "expectations": ["Honor the explicit Rubber Duck exclusion.", "Complete ordinary review without silently replacing the excluded challenge.", "Do not add SPAR without an explicit request."],
-      "grading": [{"type": "json_shape", "path": "response_json", "required": {"route": "pr-review"}}]
+      "expected_skills": [
+        "pr-review"
+      ],
+      "forbidden_skills": [
+        "rubber-duck",
+        "spar",
+        "code-review"
+      ],
+      "expectations": [
+        "Honor the explicit Rubber Duck exclusion.",
+        "Complete ordinary review without silently replacing the excluded challenge.",
+        "Do not add SPAR without an explicit request."
+      ],
+      "grading": [
+        {
+          "type": "json_shape",
+          "path": "response_json",
+          "required": {
+            "route": "pr-review"
+          }
+        }
+      ]
     }
   ]
 }

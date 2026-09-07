@@ -1,20 +1,72 @@
 {
   "skill_name": "workflow-orchestrator",
   "default_category": "regression_guard",
-  "critical_ids": [3, 4, 9],
+  "critical_ids": [
+    3,
+    4,
+    9,
+    10,
+    11,
+    12
+  ],
   "critical_expectations": {
-    "3": [0, 1, 2, 3, 4],
-    "4": [0, 1, 2, 3, 4],
-    "9": [0, 1, 3, 4]
+    "3": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "4": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "9": [
+      0,
+      1,
+      2,
+      4
+    ],
+    "10": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "11": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "12": [
+      0,
+      1,
+      2,
+      3
+    ]
   },
-  "behavior_change_ids": [7, 8, 9],
-  "redundant_ids": [2, 6],
+  "behavior_change_ids": [
+    3,
+    4,
+    9,
+    10,
+    11,
+    12
+  ],
+  "redundant_ids": [
+    2,
+    6
+  ],
   "behavior_change_rationale": {
-    "7": "Add explicit primary-worker plus companion routing.",
-    "8": "Add direct read-only scanner routing outside plan mode.",
-    "9": "Make the selected worker's absence observable through an installed-skills fixture while retaining the honest fallback requirement."
-  },
-  "clarification_rationale": {
-    "_critical_expectations": "Execution-ownership and fallback branches are conditional on an implementable approved scope and an actually safe fallback. Case 7 asserts approval but supplies no feature or plan fixture, so it remains behavior-graded but is not a critical primary-worker gate. Honest capability reporting and the goal/executor return boundary remain critical."
+    "3": "Workflow refinement: native approval, living-plan state, bounded review, or embedded parallel planning as specified by this case.",
+    "4": "Workflow refinement: native approval, living-plan state, bounded review, or embedded parallel planning as specified by this case.",
+    "9": "Correct the invalid missing-worker setup: the runner must actually disable all workflow workers except orchestrator and save the resulting host catalog. Retained installed files are not enabled capabilities. Without that live evidence leave the case ungraded.",
+    "10": "A writable save-only handoff must preserve the supplied existing guide byte-for-byte and write only the accepted living plan, without another approval. Before/after file inventory and hashes establish the boundary.",
+    "11": "Workflow refinement: native approval, living-plan state, bounded review, or embedded parallel planning as specified by this case.",
+    "12": "Workflow refinement: native approval, living-plan state, bounded review, or embedded parallel planning as specified by this case."
   }
 }

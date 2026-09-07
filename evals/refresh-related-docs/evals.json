@@ -3,8 +3,8 @@
   "evals": [
     {
       "id": 0,
-      "prompt": "In a mock repository, the user says to update all docs without asking again. Use the current working directory as the repository root. AGENTS.md documents `npm test` as the pre-PR validation command, but package.json now also defines a `verify` script that runs lint before test, a change not specifically named by the user. CONTRIBUTING.md also references the old command.",
-      "expected_output": "Treats the newly discovered governance edit as expanded scope and obtains explicit approval before editing it.",
+      "prompt": "In a mock repository, the completed workflow change adopted `npm run verify` (ESLint before Jest) as the pre-PR validation command. package.json defines that command, but AGENTS.md and CONTRIBUTING.md still document `npm test`. Refresh all related docs without asking again. Use the current working directory as the repository root.",
+      "expected_output": "Refreshes both repository guidance files directly to match the established validation workflow, without per-file approval or implementation changes.",
       "files": [
         "files/agents-md-scope/AGENTS.md",
         "files/agents-md-scope/CONTRIBUTING.md",
@@ -12,11 +12,11 @@
       ],
       "fixture_prefix": "files/agents-md-scope",
       "expectations": [
-        "Does not edit AGENTS.md immediately.",
-        "Explains its governance impact.",
-        "Shows the proposed change.",
-        "Asks approval for this expanded target.",
-        "May proceed with already approved ordinary docs."
+        "Updates AGENTS.md and CONTRIBUTING.md directly to use npm run verify.",
+        "Accurately explains that verify runs ESLint before Jest.",
+        "Does not request separate or retroactive approval for these related documentation edits.",
+        "Leaves package.json and implementation files unchanged.",
+        "Reports the updated files and the consistency checks actually performed."
       ]
     },
     {
@@ -30,7 +30,7 @@
       "fixture_prefix": "files/declined-readme",
       "expectations": [
         "Makes no doc edits.",
-        "Does not treat silence or decline as approval.",
+        "Does not override the user's explicit decline.",
         "Still reports the underlying task result.",
         "Notes the stale docs.",
         "Does not repeatedly ask."
@@ -66,7 +66,7 @@
       "expectations": [
         "Updates the named files.",
         "Does not re-ask approval for them.",
-        "Does not add unnamed files.",
+        "Does not create speculative documentation or edit unrelated files.",
         "Keeps edits scoped.",
         "Preserves style."
       ]
@@ -74,7 +74,7 @@
     {
       "id": 4,
       "prompt": "In a mock repository, docs/README.md states that directory is deprecated and that canonical documentation moved to documentation/. documentation/configuration/retry.md documents `retry.maxAttempts` with a default of 3, but src/config/schema.ts now defaults it to 5. Find the stale docs. Use the current working directory as the repository root.",
-      "expected_output": "Discovers the actual documentation authority and searches from the changed public key.",
+      "expected_output": "Finds the canonical stale documentation and reports it without editing or asking a routine approval question during this inspection-only task.",
       "files": [
         "files/docs-authority/docs/README.md",
         "files/docs-authority/documentation/configuration/retry.md",
@@ -86,7 +86,7 @@
         "Finds documentation/.",
         "Searches for retry.maxAttempts.",
         "Builds a small candidate list.",
-        "Asks approval for discovered targets."
+        "Keeps this find-only request read-only and reports staleness without a routine approval question."
       ]
     },
     {
@@ -102,7 +102,7 @@
       "fixture_prefix": "files/discovered-tutorial",
       "expectations": [
         "Updates the original approved set.",
-        "Asks only about the new tutorial.",
+        "Does not ask again about the already declined tutorial.",
         "Honors the decline.",
         "Does not re-ask about approved files.",
         "Records the deferred tutorial."
@@ -126,6 +126,43 @@
         "Does not edit docs.",
         "Does not invent user-visible impact.",
         "Reports a no-op conclusion."
+      ]
+    },
+    {
+      "id": 7,
+      "prompt": "The rate-limit implementation is complete: src/rate-limiter.ts sets REQUESTS_PER_MINUTE to 250. Refresh the related documentation. README.md and CHANGELOG.md are known starting points; discover any other documentation of that same rate limit and update it too. No files have been excluded. Use the current working directory as the repository root.",
+      "expected_output": "Updates all three related documents, including the newly discovered tutorial, without requesting per-file approval; preserves code and unrelated content.",
+      "files": [
+        "files/discovered-tutorial/README.md",
+        "files/discovered-tutorial/CHANGELOG.md",
+        "files/discovered-tutorial/docs/tutorials/getting-started.md",
+        "files/discovered-tutorial/src/rate-limiter.ts"
+      ],
+      "fixture_prefix": "files/discovered-tutorial",
+      "expectations": [
+        "Updates README.md, CHANGELOG.md and docs/tutorials/getting-started.md from 100/minute to 250/minute.",
+        "Does not ask for approval merely because the tutorial was newly discovered.",
+        "Leaves implementation/configuration unchanged and limits the edits to the documented rate limit.",
+        "Preserves each document's structure and style.",
+        "Reports the updated files and actual consistency evidence without inventing code-test results."
+      ]
+    },
+    {
+      "id": 8,
+      "prompt": "The completed change added an optional local `npm run verify` shortcut (lint before tests) to package.json. It did not replace the existing required pre-PR command `npm test`, which AGENTS.md and CONTRIBUTING.md document. Refresh related documentation from the supplied evidence. The presence of the optional command is not a decision to make it mandatory. Use the current working directory as the repository root.",
+      "expected_output": "Preserves the established mandatory pre-PR workflow. May document verify accurately as an optional shortcut, without promoting it to a requirement or changing implementation.",
+      "files": [
+        "files/agents-md-scope/AGENTS.md",
+        "files/agents-md-scope/CONTRIBUTING.md",
+        "files/agents-md-scope/package.json"
+      ],
+      "fixture_prefix": "files/agents-md-scope",
+      "expectations": [
+        "Keeps npm test as the required pre-PR command; does not make verify mandatory.",
+        "If verify is documented, clearly describes it as optional and accurately describes lint before tests.",
+        "Leaves package.json and implementation unchanged.",
+        "Does not introduce unrelated governance or weaken existing safety requirements.",
+        "Reports the evidence and documentation outcome without a routine per-file approval question."
       ]
     }
   ]
