@@ -1,0 +1,19 @@
+{
+  "name": "workflow",
+  "version": "0.1.0",
+  "description": "Coordinated planning, verified execution and focused quality skills with one living plan.",
+  "author": {"name": "LaChimere", "url": "https://github.com/LaChimere"},
+  "homepage": "https://github.com/LaChimere/agent-coding",
+  "repository": "https://github.com/LaChimere/agent-coding",
+  "keywords": ["workflow", "planning", "execution"],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Workflow",
+    "shortDescription": "Plan and execute approved work with verified evidence.",
+    "longDescription": "Seven focused skills for conditional coordination, living plans, verified execution, parallel implementation planning, PR decomposition, atomicity, quality checks and documentation refresh. No wrapper entrypoint or custom goal lifecycle.",
+    "developerName": "LaChimere",
+    "category": "Productivity",
+    "capabilities": ["Planning", "Execution"],
+    "defaultPrompt": "Help resolve the next step for my task; use the relevant workflow skill only when needed."
+  }
+}

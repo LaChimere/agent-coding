@@ -4,16 +4,16 @@
     {
       "name": "orchestrator-contract",
       "files": [
-        "skills/workflow-orchestrator/SKILL.md",
-        "skills/workflow-orchestrator/references/workflow-contract.md"
+        "plugins/workflow/skills/workflow-orchestrator/SKILL.md",
+        "plugins/workflow/skills/workflow-orchestrator/references/workflow-contract.md"
       ]
     },
     {
       "name": "execute-anti-slop-checklist",
       "files": [
-        "skills/execute-plan-loop/SKILL.md",
-        "skills/anti-slop/SKILL.md",
-        "skills/anti-slop/templates/pre-commit-slop-gate.md"
+        "plugins/workflow/skills/execute-plan-loop/SKILL.md",
+        "plugins/workflow/skills/anti-slop/SKILL.md",
+        "plugins/workflow/skills/anti-slop/templates/pre-commit-slop-gate.md"
       ]
     }
   ]

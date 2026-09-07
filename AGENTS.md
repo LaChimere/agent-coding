@@ -6,19 +6,19 @@ This file governs contributions to the **`agent-coding` repository itself**.
 
 It is **not** the portable coordination contract for downstream skills or downstream repositories. Cross-skill workflow coordination now lives in:
 
-- `skills/workflow-orchestrator/SKILL.md`
-- `skills/workflow-orchestrator/references/approval-gates.md`
-- `skills/workflow-orchestrator/references/worker-routing.md`
-- `skills/workflow-orchestrator/references/workflow-contract.md` (navigation index)
-- `skills/workflow-orchestrator/templates/`
+- `plugins/workflow/skills/workflow-orchestrator/SKILL.md`
+- `plugins/workflow/skills/workflow-orchestrator/references/approval-gates.md`
+- `plugins/workflow/skills/workflow-orchestrator/references/worker-routing.md`
+- `plugins/workflow/skills/workflow-orchestrator/references/workflow-contract.md` (navigation index)
+- `plugins/workflow/skills/workflow-orchestrator/templates/`
 
 ## Repository model
 
-- `skills/` contains the reusable skills shipped by this repo.
+- `skills/` contains standalone skills; coordinated workflow skills live only under `plugins/workflow/skills/`.
 - `plugins/` contains Codex plugins whose runtime skills are installed through the repo marketplace.
 - `evals/` contains the central repository-maintenance corpus; it is never distributed with skills.
 - `tools/skill-evals/` contains the provider-neutral validation, snapshot, grading, aggregation, and suite tooling.
-- `skills/workflow-orchestrator/` is the portable coordination layer and owns the shared workflow contract plus planning templates.
+- `plugins/workflow/skills/workflow-orchestrator/` is the portable coordination layer and owns the shared workflow contract plus planning templates.
 - This repository does not keep a root `plans/` directory or task slugs. Use the approved conversation for maintenance scope and `.skill-evals/` for generated evaluation evidence. Downstream planning templates and eval fixtures are separate from this repository-maintenance convention.
 - Repo-root `AGENTS.md` is for repo-specific contributor guidance only.
 - Repo-root `templates/` should not exist; reusable templates belong with the skill that uses them.
@@ -65,11 +65,11 @@ Use the narrowest validation that matches the change:
 
 ## Practical change map
 
-- Changing cross-skill routing or approval/gate behavior -> update `skills/workflow-orchestrator/`
+- Changing cross-skill routing or approval/gate behavior -> update `plugins/workflow/skills/workflow-orchestrator/`
 - Changing a worker skill's narrow behavior -> update that skill and keep it aligned with `workflow-orchestrator`
 - Changing eval cases, fixtures, or classifications -> update `evals/<skill>/`, never `skills/<skill>/evals/`
 - Changing trigger/composition suites -> update `evals/suites/`
 - Changing harness contracts -> update `tools/skill-evals/` and its tests
 - Changing repo contribution guidance -> update this `AGENTS.md`
-- Changing planning artifact formats -> update `skills/workflow-orchestrator/templates/`
+- Changing planning artifact formats -> update `plugins/workflow/skills/workflow-orchestrator/templates/`
 - Changing a Codex plugin -> update `plugins/<plugin>/`, its central `evals/<skill>/` corpus, and marketplace/docs when needed

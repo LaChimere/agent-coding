@@ -1,6 +1,6 @@
 # Agent Coding Skills
 
-A repository of reusable workflow skills for disciplined AI coding. The portable coordination layer now lives inside `skills/workflow-orchestrator/`; the repo-root `AGENTS.md` is only for maintaining this repository.
+A repository of reusable workflow skills for disciplined AI coding. The portable coordination layer now lives inside `plugins/workflow/skills/workflow-orchestrator/`; the repo-root `AGENTS.md` is only for maintaining this repository.
 
 ## Problem
 
@@ -22,8 +22,8 @@ This repository turns those failure modes into reusable skills and a portable or
 | Layer | Role | Analogy |
 |---|---|---|
 | `AGENTS.md` | Repo-specific contributor guidance for this repository | Maintainer guide |
-| `skills/workflow-orchestrator/` | Portable workflow coordination contract + planning templates | Conductor |
-| `skills/` | Coordinated worker skills | Specialists |
+| `plugins/workflow/skills/workflow-orchestrator/` | Portable workflow coordination contract + planning templates | Conductor |
+| `plugins/workflow/skills/` | Seven coordinated skills, distributed together | Specialists |
 | `skills/scan-image-vulnerabilities/` | Standalone image inspection | Inspector |
 
 ### Core workflow
@@ -36,7 +36,7 @@ Discover if needed → Design if needed → Plan if needed → Execute → Verif
 Fast path (urgent):  Execute → Verify → Lessons (backfill)
 ```
 
-Clear small tasks run directly in the primary session. `workflow-orchestrator` resolves genuine phase, authorization or worker ambiguity; installing the skills does not make it a mandatory entrypoint.
+Clear small tasks run directly in the primary session. `workflow-orchestrator` resolves genuine phase, authorization or worker ambiguity; installing the plugin does not make it a mandatory entrypoint.
 
 Native Plan Mode owns exploration and the overall proposal. An approved proposal plus explicit revisions can pass straight to execution; save it to a living `plan.md` when authorized and permitted by the host. Saving adds no approval gate. `plan.md` is the only execution progress source, with approved scope separate from changing status and evidence. Optional `design.md`, `research.md` and `lessons.md` serve design decisions, gathered evidence and earned lessons. New tasks have no independent TODO or custom goal file; historical task files are left alone.
 
@@ -68,21 +68,27 @@ No evidence = not done.
 
 ```text
 AGENTS.md                              # Contributor guidance for this repo
-skills/
-  workflow-orchestrator/               # Shared contract, references and templates
-  execute-plan-loop/
-  anti-slop/
-  decompose-feature/
-  plan-parallel-work/                  # Embedded Parallel execution template
-  ensure-atomic-pr/
-  refresh-related-docs/
-  scan-image-vulnerabilities/          # Standalone, with bundled script and tests
-plugins/pr-review/                    # Separate review plugin, unchanged
+plugins/workflow/
+  .codex-plugin/plugin.json            # Distribution only, no wrapper entrypoint
+  skills/
+    workflow-orchestrator/             # Shared contract, references and templates
+    execute-plan-loop/
+    anti-slop/
+    decompose-feature/
+    plan-parallel-work/                # Embedded Parallel execution template
+    ensure-atomic-pr/
+    refresh-related-docs/
+plugins/pr-review/                     # Separate review plugin, unchanged
+  .codex-plugin/plugin.json
+  skills/pr-review/
+  skills/spar/
+  skills/rubber-duck/
+skills/scan-image-vulnerabilities/      # Standalone, with bundled script and tests
 .agents/plugins/marketplace.json
-evals/<skill>/                        # Central cases, manifests, fixtures; never distributed
+evals/<skill>/                         # Central cases, manifests, fixtures; never distributed
 evals/suites/
-tools/skill-evals/                    # Existing provider-neutral harness
-.skill-evals/                         # Ignored immutable evaluation evidence
+tools/skill-evals/                     # Existing provider-neutral harness
+.skill-evals/                          # Ignored immutable evaluation evidence
 ```
 
 **Evals are repository-maintenance assets, not skill content.** Every root or plugin runtime skill has a matching `evals/<skill>/` directory with functional cases, fixtures, and a classification manifest, but that material lives outside runtime skill directories and is never distributed. An installed skill or plugin therefore cannot read its own cases or expected answers. See `tools/skill-evals/README.md` for validation, run preparation, and grading.
@@ -226,14 +232,28 @@ Use `$rubber-duck` for an explicit, one-shot critique of a plan, design, impleme
 It reports only consequential blocking, non-blocking, or optional issues, stays read-only, and leaves
 the final decision to the primary agent.
 
-### Using the workflow in another repo
+### Installing and using the workflow plugin
 
-1. Install skills through `npx skills add`; source-checkout execution is unsupported.
-2. Install `workflow-orchestrator` with each workflow-managed worker combination you intend to use.
-3. Install standalone inspection skills independently when needed.
-4. Use the target repo's own `AGENTS.md` only for project-specific rules.
-5. Keep every installed skill's bundled references, templates, and scripts intact.
-6. Check a skill's `compatibility` frontmatter before relying on its script: `scan-image-vulnerabilities` requires bash, python3 and Trivy 0.58.0+ (Docker or kubectl only for their respective discovery modes).
+For a checkout containing the candidate, register that checkout's marketplace and install:
+
+```sh
+codex plugin marketplace add /absolute/path/to/agent-coding
+codex plugin add workflow@agent-coding
+```
+
+The plugin distributes all seven workflow skills and their bundled resources; it adds no `$workflow` wrapper, MCP server, hook or background service. Invoke the appropriate skill directly. General change-set review uses the separately installed `pr-review` plugin. Missing optional coverage is reported; explicitly required independent review remains incomplete if unavailable, not replaced with self-review or automatic installation.
+
+Candidate verification uses an isolated Codex home and this worktree's marketplace, not remote `main`. Installing skill snapshots through `npx skills add --copy` tests instruction content only, not plugin discovery. CLI discovery, native Plan Mode and native goal lifecycle require their own actual evidence. App UI compatibility remains separately unverified unless exercised; it is not a gate for this repository-only working-tree delivery. A new test thread is a discovery check, not a mandatory work phase for ordinary tasks.
+
+Install `scan-image-vulnerabilities` separately through `npx skills add` when needed; it still requires bash, python3 and Trivy 0.58.0+, with Docker or kubectl only for their respective discovery modes. Runtime execution from the source checkout remains unsupported.
+
+### Switching an existing standalone installation
+
+Formal local switching is separate from repository edits and isolated validation. Do not change the current installation or synchronize global configuration without explicit authorization.
+
+After authorization, resolve the actual installed entries and preserve recoverable copies outside skill discovery paths. Deactivate the seven old standalone entries (`workflow-orchestrator`, `execute-plan-loop`, `anti-slop`, `decompose-feature`, `plan-parallel-work`, `ensure-atomic-pr`, `refresh-related-docs`) and the retired `achieve-goal` entry before enabling the workflow plugin. Do not delete guessed cache directories or migrate historical task files. Leave community skills, standalone image scanning and the separate review plugin unchanged.
+
+Register the reviewed local candidate marketplace and install `workflow@agent-coding` using the commands above. Verify unique skill discovery and bundled resources in fresh CLI and App test sessions where available. If separately authorized, compare `config/codex/AGENTS.md` with the global instruction file before synchronizing it, preserving unrelated changes. If verification fails, restore the recorded installation/configuration from recoverable copies. None of these steps authorizes a commit, push or deployment.
 
 ### Working on this repo
 
@@ -258,7 +278,7 @@ the final decision to the primary agent.
 
 ### Adding a new skill
 
-Create a directory under `skills/` with a `SKILL.md`:
+For standalone skills, create a directory under `skills/` with a `SKILL.md`; workflow-plugin skills belong under `plugins/workflow/skills/` with the same bundled-resource layout:
 
 ```
 skills/

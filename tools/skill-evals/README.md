@@ -378,7 +378,7 @@ Use `--profile name` repeatedly to measure selected profiles. Profile paths are 
 
 ## Workflow refinement acceptance
 
-The workflow corpus uses living `plan.md` fixtures; custom goal skill cases and their script tests are retired. Host-native goal lifecycle checks are host acceptance, not simulated custom goal state. `workflow-refinement.json` adds routing boundaries; semantic approval, completion, read-only and embedded-parallel expectations remain independently rubric-graded behavior cases.
+The workflow plugin corpus uses living `plan.md` fixtures; custom goal skill cases and their script tests are retired. Host-native goal lifecycle checks are host acceptance, not simulated custom goal state. `workflow-refinement.json` adds routing boundaries; semantic approval, completion, read-only and embedded-parallel expectations remain independently rubric-graded behavior cases.
 
 For this change, freeze one corpus, suite set, model identifier and effective configuration before comparing baseline, refined standalone, and packaged candidate snapshots. Manifest `behavior_change_ids` identify intentional new contracts; baseline disagreement on those cases is not itself a regression. Preservation cases still require paired regression review. Run critical authorization, completion and repeated-approval cases three times in separate contexts, and every other required case at least once. A prepared request is not an agent run. Capture actual skill reads/tool calls, file and Git changes and command results; never derive activation solely from the final answer. Do not copy credentials into workspaces, snapshots or result files; use the already configured execution endpoint.
 
