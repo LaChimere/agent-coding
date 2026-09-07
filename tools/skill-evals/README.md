@@ -36,7 +36,7 @@ uv run --locked --project tools/skill-evals \
 
 ```
 skills/<skill>/            # standalone runtime skill, distributed by `npx skills add`
-plugins/*/skills/<skill>/  # runtime skill bundled in a Codex plugin
+plugins/*/skills/<skill>/  # shared runtime skill bundled for supported CLI hosts
 evals/<skill>/             # central eval corpus: evals.json, manifest.json, files/ fixtures — never distributed
 evals/<skill>/outputs/     # generated grading/run artifacts (git-ignored, excluded from digests and snapshots)
 evals/suites/              # cross-skill trigger/composition suites
@@ -371,9 +371,14 @@ The suite covers the central-corpus contract directly: repository validation of 
 It further covers the reviewed harness hardening: `deterministic_ids` rejecting a case with no `grading` checks; a `not_run` result's coverage-preserving, always-`ungraded`, separately-counted behavior through `grade`, `combine_grade`, and `summary`, including that `exit_status` checks never pass a `not_run` result; the `execution_honored` deep-equal requirement and the `not_run`-with-`refusal_reason` escape hatch for any case with a resolved `execution` hint; that a fixture or execution-hint path pointing into a top-level `outputs/` directory or matching a generated-artifact filename glob is rejected, while a same-named nested directory that is not top-level is not; that a missing snapshot fixture raises `ContractError` rather than an unhandled `OSError`; suite `expected_skills`/`forbidden_skills` validation against the full repository universe, including the `"none"` route and the `EXTERNAL_FORBIDDEN_CAPABILITIES` allowlist; unknown-key rejection for both case and manifest documents (including an `execution` typo and the recognized `clarification_rationale`/`default_category`/meta-key exceptions); that a `prepare` failure cleans up only the snapshot directories it created itself, not a pre-existing one; and that `install_requirements` is emitted alongside `installed_copy_steps` with matching entries, without changing the existing `argv` contract. Run the real installer at least once when changing snapshot or install behavior:
 
 ```sh
-HOME="$PWD/.skill-evals/install-smoke-home" \
-  npx skills add /abs/path/to/<run_id>.skills-snapshot/<skill> --agent copilot --copy --yes
+cd /abs/path/to/disposable-case-workspace &&
+  npx skills add /abs/path/to/<run_id>.skills-snapshot/<skill> --agent github-copilot --copy --yes
 ```
+
+Use a disposable project directory and omit `--global`; do not replace `HOME`. The installer agent
+identifier is `github-copilot`, not `copilot`. When invoking a host afterward, use the separate
+configuration/cache directories and discovery checks described in
+[Installed copies stay hermetic](#installed-copies-stay-hermetic).
 
 ## Static context footprints
 

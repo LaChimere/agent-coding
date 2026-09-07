@@ -79,7 +79,7 @@ plugins/workflow/
     plan-parallel-work/                # Embedded Parallel execution template
     ensure-atomic-pr/
     refresh-related-docs/
-plugins/pr-review/                     # Separate review plugin, unchanged
+plugins/pr-review/                     # Separate review plugin
   .codex-plugin/plugin.json
   .claude-plugin/plugin.json
   skills/pr-review/
@@ -284,8 +284,16 @@ Codex read its installed cache. Claude and Copilot resolved local-marketplace sk
 candidate directory; Copilot explicitly reports live loading with nothing copied. This supported
 native-manager path is distinct from manually invoking an unregistered source checkout. Same-version
 update/re-add paths were exercised: Codex re-added the plugins, Claude reported latest `0.1.1`, and
-Copilot reported live loading with nothing to update. Remote Git fetches and changed-release upgrades
-remain untested. Tests use isolated configurations, never the daily installation.
+Copilot reported live loading with nothing to update. This candidate phase used isolated configurations
+and did not test remote Git fetches or changed-release upgrades.
+
+After publication on 2026-09-07, all three CLIs installed the GitHub release at commit
+`de2b214d08fc2f163920b0b618d247aeb921beb8`. All six installed plugin trees matched the published
+content. Codex was upgraded from `0.1.0` to `0.1.1`; Claude and Copilot received fresh `0.1.1`
+installations, not cross-version upgrade tests. Removing the eight old standalone skills and their
+all-host installation records resolved Copilot's old-skill shadowing. Unrelated plugin state was
+preserved. These publication checks establish remote installation and package identity; the actual
+invocation evidence above remains from the isolated candidate tests.
 
 The copied-package checks, 10-skill `npx skills add --copy` installation and targeted behavioral
 replays are separate evidence. No native cross-model delegation, complete Codex Security scan,
@@ -342,9 +350,27 @@ Install `scan-image-vulnerabilities` separately through `npx skills add` when ne
 
 Formal local switching is separate from repository edits and isolated validation. Do not change the current installation or synchronize global configuration without explicit authorization.
 
-After authorization, resolve the actual installed entries and preserve recoverable copies outside skill discovery paths. Deactivate the seven old standalone entries (`workflow-orchestrator`, `execute-plan-loop`, `anti-slop`, `decompose-feature`, `plan-parallel-work`, `ensure-atomic-pr`, `refresh-related-docs`) and the retired `achieve-goal` entry before enabling the workflow plugin. Do not delete guessed cache directories or migrate historical task files. Leave community skills, standalone image scanning and the separate review plugin unchanged.
+After authorization, resolve the actual installed entries and preserve recoverable copies outside
+skill discovery paths. Replace the seven old standalone entries (`workflow-orchestrator`,
+`execute-plan-loop`, `anti-slop`, `decompose-feature`, `plan-parallel-work`, `ensure-atomic-pr`,
+`refresh-related-docs`) and remove the retired `achieve-goal` entry. Confirm their installation
+records identify this repository before removing them. Leave community skills, standalone image
+scanning and the separate review plugin unchanged; do not delete guessed caches or migrate task files.
 
-Register the reviewed local candidate marketplace and install `workflow@agent-coding` using the commands above. Verify unique skill discovery and bundled resources in fresh CLI and App test sessions where available. If separately authorized, compare `config/codex/AGENTS.md` with the global instruction file before synchronizing it, preserving unrelated changes. If verification fails, restore the recorded installation/configuration from recoverable copies. None of these steps authorizes a commit, push or deployment.
+Shared copies under `~/.agents/skills/` can take precedence over plugin skills. Removing links for
+selected agents may leave that shared directory and its installation record intact because other
+harnesses still use it. Resolve those consumers and obtain approval for the all-host impact before
+removing the shared installation. With that approval, use the native skills manager to remove only
+the eight named skills and their links; never use an all-skills removal option. Verify both directory
+removal and the actual discovered skill sources, not just the removal command's success message.
+
+Use the GitHub marketplace in the [native installation instructions](#native-plugin-installation)
+for the formal switch, then verify that `workflow@agent-coding` supplies the seven skills without
+old standalone shadowing in each target CLI. A local candidate marketplace is only for explicitly
+requested development/testing. Check installed versions and bundled resources in fresh processes;
+App compatibility still needs separate evidence. Synchronizing global instruction files requires
+separate authorization. If verification fails, restore the recorded installation from its backup.
+None of these steps authorizes a commit, push or deployment.
 
 ### Working on this repo
 
@@ -413,7 +439,7 @@ If your agent platform supports hooks, consider adding them to high-risk skills 
 
 ### Adjusting strictness
 
-- **More strict**: Require Gate 1 for all plan-mode tasks (remove "Design required?" conditional).
+- **More strict**: Add a project-specific rule requiring Gate 1 design alignment for every planned task, rather than only consequential design decisions. This is an opt-in override of the default conditional gate.
 - **Less strict**: Use the lightweight path for clear low-risk changes; keep urgent fast path limited to genuine urgency and existing authority.
 - **Per-project**: Put project-specific contributor rules in that repo's own `AGENTS.md` / `CLAUDE.md`, while keeping shared workflow coordination in `workflow-orchestrator`.
 
