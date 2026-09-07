@@ -1000,6 +1000,42 @@ class TestHarness:
             'goal-orchestrator-execute',
         ]
 
+    def test_unknown_result_metrics_are_preserved(self):
+        """Unknown telemetry must not be fabricated as numeric zero."""
+        metrics = {
+            'input_tokens': None,
+            'output_tokens': None,
+            'duration_ms': 12,
+            'tool_calls': 2,
+            'subagent_calls': None,
+        }
+        result = {
+            'status': 'completed',
+            'exit_status': 0,
+            'response_text': 'Observed result; token telemetry unavailable.',
+            'metrics': metrics,
+        }
+        harness.validate_result_payload(result)
+        assert harness.metric_totals([result]) == metrics
+        known = {'metrics': dict.fromkeys(metrics, 3)}
+        totals = harness.metric_totals([result, known])
+        assert totals['input_tokens'] is None
+        assert totals['subagent_calls'] is None
+        assert totals['duration_ms'] == 15
+        assert totals['tool_calls'] == 5
+
+    def test_missing_metric_key_is_still_rejected(self):
+        """Runners must explicitly distinguish unknown from an omitted metric."""
+        with pytest.raises(harness.ContractError):
+            harness.validate_result_payload(
+                {
+                    'status': 'completed',
+                    'exit_status': 0,
+                    'response_text': 'Missing metric fields.',
+                    'metrics': {},
+                }
+            )
+
     def test_invalid_result_metric_is_rejected(self):
         """Verify invalid result metric is rejected."""
         baseline_path = self.repo / 'baseline.json'
@@ -2511,7 +2547,8 @@ class TestHarness:
             assert group['failed'] == 0
             assert group['ungraded'] == 1
 
-    def test_import_grades_and_aggregate_pairs(self):
+    @pytest.mark.parametrize('candidate_duration', [7, None])
+    def test_import_grades_and_aggregate_pairs(self, candidate_duration: int | None):
         """Verify import grades and aggregate pairs."""
         baseline_path = self.repo / 'baseline.json'
         baseline = self._prepare('baseline', baseline_path)
@@ -2526,9 +2563,9 @@ class TestHarness:
         base_input.write_text(
             json.dumps(self._runner_result(baseline, duration=10)), encoding='utf-8'
         )
-        candidate_input.write_text(
-            json.dumps(self._runner_result(candidate, duration=7)), encoding='utf-8'
-        )
+        candidate_result = self._runner_result(candidate, duration=7)
+        candidate_result['results'][0]['metrics']['duration_ms'] = candidate_duration
+        candidate_input.write_text(json.dumps(candidate_result), encoding='utf-8')
         base_rubric = self.repo / 'base-rubric.json'
         base_rubric.write_text(
             json.dumps(self._rubric_document(baseline, passed=True)), encoding='utf-8'
@@ -2579,7 +2616,9 @@ class TestHarness:
         assert len(aggregate['groups']) == 2
         assert aggregate['paired_deltas'][0]['matched_cases'] == 1
         assert aggregate['paired_deltas'][0]['graded_pairs'] == 1
-        assert aggregate['paired_deltas'][0]['metric_deltas']['duration_ms'] == -3
+        assert aggregate['paired_deltas'][0]['metric_deltas']['duration_ms'] == (
+            -3 if candidate_duration is not None else None
+        )
         assert aggregate['paired_deltas'][0]['pass_rate_delta'] == 0
 
     def _import_run(

@@ -2264,6 +2264,8 @@ def validate_result_payload(result: dict[str, Any]) -> None:
         'subagent_calls',
     ):
         value = result['metrics'].get(metric)
+        if metric in result['metrics'] and value is None:
+            continue
         if (
             metric not in result['metrics']
             or not isinstance(value, (int, float))
@@ -2463,8 +2465,8 @@ def import_results(args: argparse.Namespace) -> dict[str, Any]:
     return document
 
 
-def metric_totals(results: list[dict[str, Any]]) -> dict[str, float]:
-    """Sum every reported runner metric across `results`."""
+def metric_totals(results: list[dict[str, Any]]) -> dict[str, float | None]:
+    """Sum known metrics; an unknown value makes the total unknown, not zero."""
     names = (
         'input_tokens',
         'output_tokens',
@@ -2473,7 +2475,11 @@ def metric_totals(results: list[dict[str, Any]]) -> dict[str, float]:
         'subagent_calls',
     )
     return {
-        name: sum(result.get('metrics', {}).get(name, 0) for result in results)
+        name: (
+            None
+            if any(result.get('metrics', {}).get(name) is None for result in results)
+            else sum(result['metrics'][name] for result in results)
+        )
         for name in names
     }
 
@@ -2736,7 +2742,15 @@ def paired_delta(
         if graded_keys
         else None,
         'metric_deltas': {
-            name: cand_metrics[name] - base_metrics[name] for name in base_metrics
+            name: (
+                candidate_total - baseline_total
+                if candidate_total is not None and baseline_total is not None
+                else None
+            )
+            for name in base_metrics
+            for candidate_total, baseline_total in [
+                (cand_metrics[name], base_metrics[name])
+            ]
         },
         'critical_gate_passed': (
             not any(check['regression'] for check in critical_checks)

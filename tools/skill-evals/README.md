@@ -228,7 +228,7 @@ The harness does not run installation and does not require network access. Keep 
 
 ### Runner result (`skill-evals/run-result-v1`)
 
-A runner supplies every requested agent/case pair (skill and suite cases alike). The five `metrics` fields are required non-negative numbers; use `0` when an adapter made no calls of that kind. `status` is one of `"completed"`, `"failed"`, or `"not_run"`.
+A runner supplies every requested agent/case pair (skill and suite cases alike). All five `metrics` keys are required, with non-negative numeric values or explicit `null` for unreported telemetry; use `0` only for known absence of work of that kind. `status` is one of `"completed"`, `"failed"`, or `"not_run"`.
 
 `"not_run"` reports a case the adapter deliberately did not exercise -- most commonly a hermetic-execution refusal (see above), but also any other case an adapter cannot safely or meaningfully attempt. A `not_run` result is **coverage-preserving**: it still counts as one of the run's cases (`summary`'s `cases` total includes it) so it is never silently dropped from a report, but it can never be counted as a deterministic or rubric pass or fail. `grade` forces any `exit_status` check to fail outright and forces the overall deterministic status to `"ungraded"`; `combine_grade` forces the case's final `status` to `"ungraded"` regardless of what any deterministic check or submitted rubric reports (guarding against a stale or inconsistent rubric submission claiming a verdict for a case that never ran); and `summary`/`aggregate` tally `not_run` in its own counter, disjoint from `ungraded`, `passed`, and `failed`, so a report never conflates "not run" with "ran but inconclusive."
 
@@ -248,6 +248,8 @@ A runner supplies every requested agent/case pair (skill and suite cases alike).
   }]
 }
 ```
+
+All five metric keys are required, but their values may be `null` when the execution endpoint did not report them. Never substitute zero for missing telemetry. Aggregated totals and paired deltas remain `null` whenever an input metric is unknown; an entirely unexecuted case may report zero actual work with its `not_run` status and refusal reason.
 
 `import-results` validates case identity and metric types, grades it, and writes immutable `skill-evals/imported-results-v1` output:
 
