@@ -19,6 +19,9 @@ Add `anti-slop` only on signal: an explicit quality request, pre-commit readines
 
 Resolve phase, scope, approval, landing, acceptance and return boundary from the user's request, accepted native Plan Mode proposal and explicit revisions, or existing living `plan.md`. A formatted handoff and a plan file are not prerequisites. Use an existing handoff if helpful; do not repeat planning or approval merely to produce one.
 
+A host without native Plan Mode can accept the user's explicitly approved conversational proposal.
+Use the host's actual skill and execution tools; this skill does not require a particular CLI syntax.
+
 - Recorded and unchanged: that is the active contract. Execute it. Do not route the same decision back through the orchestrator or create a routing loop.
 - Real phase, approval, scope or worker ambiguity: consult the installed `workflow-orchestrator` if available. If unavailable, report the missing capability and resolve only what can safely be decided from existing authority; never assume missing approval. Clear small tasks stay in the primary session.
 - Landing authorization is separate from implementation approval. `commits` allows atomic commits after checks pass; anything else, including the default `working_tree`, means verify in the working tree and report. "Implement", "fix", "finish", and "keep going" never imply commit permission.

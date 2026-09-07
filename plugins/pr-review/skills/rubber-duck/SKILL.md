@@ -1,6 +1,6 @@
 ---
 name: rubber-duck
-description: "Provide a one-shot, read-only Rubber Duck critique when the user explicitly asks for `$rubber-duck`, a rubber-duck review, an independent critic, or a critique of substantive blind spots in a plan, design, implementation, or tests. Focus on consequential problems and concrete corrections, not cosmetic feedback or implementation work."
+description: "Provide a one-shot, read-only Rubber Duck critique when the user explicitly asks for the rubber-duck skill, a rubber-duck review, an independent critic, or a critique of substantive blind spots in a plan, design, implementation, or tests. Focus on consequential problems and concrete corrections, not cosmetic feedback or implementation work."
 ---
 
 # Rubber Duck
@@ -51,7 +51,11 @@ The primary agent chooses reasoning effort according to the work's complexity an
 - When the user requires an actual different family and none is available, report the capability
   limitation rather than calling the fallback cross-model.
 
-Record cross-model or primary-model fallback in the output. Never reveal hidden reasoning.
+Use the host's actual delegation mechanism. A completed synchronous result needs no handle or wait;
+wait for an asynchronous task only after a launch returned a live handle. Report cross-model execution
+only with a returned critic result and execution evidence of the eligible different model family,
+not merely a requested model or intended launch. Record the actual primary-model fallback when used.
+Never reveal hidden reasoning.
 
 ## Output
 

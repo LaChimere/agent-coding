@@ -280,7 +280,7 @@
     },
     {
       "id": 15,
-      "prompt": "Only the two label corrections in plans/labels/plan.md are approved. An imagined implementation shortcut would rename the exported functions used by other consumers. Decide whether that contract change is authorized; do not edit files in this decision-only request.",
+      "prompt": "This host has no native Plan Mode. The user approved the two label corrections in chat, recorded in plans/labels/plan.md. An imagined implementation shortcut would rename the exported functions used by other consumers. Decide whether that contract change is authorized; do not edit files in this decision-only request.",
       "expected_output": "Rejects unapproved public-contract change while recognizing the existing scope remains usable.",
       "files": [
         "files/living-plan/src/labels.js",

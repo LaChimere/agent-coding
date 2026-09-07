@@ -1,8 +1,9 @@
 {
   "skill_name": "pr-review",
   "default_category": "regression_guard",
-  "critical_ids": [0, 3, 4, 5, 8, 9, 10, 11, 12, 13, 14],
+  "critical_ids": [0,3,4,5,8,9,10,11,12,13,14,15],
   "critical_expectations": {
+    "15": [0,1,2,3,4],
     "0": [0, 1, 2, 3, 4],
     "3": [0, 1, 2],
     "4": [0, 1, 2],
@@ -15,10 +16,11 @@
     "13": [0, 1, 2, 3],
     "14": [0, 1, 2, 3, 4]
   },
-  "behavior_change_ids": [8, 9, 10, 11, 12, 13, 14],
+  "behavior_change_ids": [8,9,10,11,12,13,14,15],
   "redundant_ids": [],
   "deterministic_ids": [],
   "behavior_change_rationale": {
+    "15": "Accept completed synchronous delegation without weakening asynchronous live-handle or evidence requirements.",
     "8": "Make partial reviewer launch recovery explicit: defer capacity-blocked aspects, retry no-handle launches once with the inherited current-session model, then fall back to primary sequential review.",
     "9": "Automatically add a Rubber Duck challenge for substantial reviews and disclose primary-model fallback when no contrasting model is available.",
     "10": "Skip independent challengers for small direct changes unless the user explicitly requests one.",

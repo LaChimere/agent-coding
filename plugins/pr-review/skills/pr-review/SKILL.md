@@ -5,7 +5,7 @@ description: "Default general review entrypoint for a pull request, branch diff,
 
 # PR Review
 
-Review one fixed change set without modifying it. The public entrypoint is `$pr-review`;
+Review one fixed change set without modifying it. The public entrypoint is the `pr-review` skill;
 review aspects are internal workers, not separate public skills. SPAR and Rubber Duck are plugin
 skills that this workflow composes when selected; they can also be invoked directly.
 
@@ -66,13 +66,15 @@ The primary agent coordinates the review.
 - When continuing from an authoritative recorded launcher state, preserve its execution facts in
   Review Coverage: capacity-deferred aspects, returned handles, each single retry, whether the retry
   inherited the current-session model without an override, and every primary fallback.
-- Apply a live-handle gate immediately before every wait/collect call: the receiver set must contain
+- Use the host's actual delegation mechanism. A synchronous call that returns a completed reviewer
+  result needs no task handle or later wait; record the returned result as execution evidence.
+  For asynchronous launches, apply a live-handle gate before every wait/collect call: the receiver set must contain
   at least one live handle returned by a completed launch call. A tool error, `no thread`, or other
-  no-handle outcome means no delegated work exists to collect and cannot later produce a result.
+  no-handle outcome without a completed result means no delegated work exists to collect and cannot later produce a result.
   Continue with the required primary fallback when the receiver set is empty. Requested roles, model
   arguments, intended launches, and failed launch calls are not execution evidence.
-- When delegation is available but a launch
-  returns no live handle, retry that aspect once after capacity is available, without an explicit
+- When delegation is available but an asynchronous launch returns neither a live handle nor a
+  completed result, retry that aspect once after capacity is available, without an explicit
   model override so it uses the current session's inherited/default model. If that retry still
   returns no handle, or a launched reviewer later fails, run that brief sequentially in the primary
   agent and record the fallback. When delegation itself is unavailable, skip retry and use the same
@@ -87,10 +89,10 @@ The primary session model must perform its own review and make the final judgeme
 challenge adds a separate adversarial perspective; it never replaces ordinary review or primary
 double confirmation.
 
-- Run `$spar` only when the user explicitly asks for SPAR, devil's-advocate analysis, or an
+- Run `spar` only when the user explicitly asks for SPAR, devil's-advocate analysis, or an
   assumptions/trade-offs challenge. When selected, read and follow the complete
   [SPAR skill](../spar/SKILL.md). Never add it automatically or treat it as a public review aspect.
-- Run `$rubber-duck` when the user explicitly requests it, or automatically when the pinned change is
+- Run `rubber-duck` when the user explicitly requests it, or automatically when the pinned change is
   substantial: it materially affects security, persisted data, a public interface, compatibility,
   migration, concurrency, cross-component behavior, complex state transitions, or a plan/design/test
   whose failure would have major consequences. When selected, read and follow the complete
@@ -118,13 +120,15 @@ double confirmation.
   severity levels; do not mechanically convert its standalone categories. Do not append a standalone
   SPAR or Rubber Duck report to the final response; integrate only confirmed findings, unresolved
   questions, and challenge coverage into the single PR Review report.
-- Record a pass as cross-model only when its execution ledger contains a returned live handle and the
-  collected result confirms a known eligible different model family. Otherwise record the actual
+- Record a pass as cross-model only with an actual delegated result (returned synchronously or
+  collected through a live handle) and execution evidence confirming a known eligible different
+  model family. Otherwise record the actual
   distinct primary-model fallback and its limitation. Do not expose hidden reasoning.
   A Rubber Duck security concern does not complete the security aspect.
 
 - Keep security separate from ordinary reviewers. When security is applicable and
-  `$codex-security:security-diff-scan` is available, invoke that complete workflow from the primary
+  `codex-security:security-diff-scan` is available, invoke that complete workflow using the host's
+  supported skill invocation from the primary
   agent against the same pinned target. Do not copy or weaken its threat-model, validation,
   attack-path, coverage, report, or SARIF lifecycle.
 - If security was selected automatically but the capability is unavailable, continue and record

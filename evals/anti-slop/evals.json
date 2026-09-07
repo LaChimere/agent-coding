@@ -205,6 +205,18 @@
         "Does not automatically require an independent reviewer.",
         "Does not modify files, write review records, or create a commit."
       ]
+    },
+    {
+      "files": [],
+      "id": 11,
+      "prompt": "Use the anti-slop skill to finish a read-only review of this exact helper: `export const label = value => String(value)`. Its contract is JavaScript String conversion. Treat this as authoritative recorded execution evidence for this fixture: the explicitly requested independent reviewer completed synchronously and returned 'No unnecessary complexity or contract issue found for this helper.' The call succeeded and returned that assessment directly, with no asynchronous task handle. Check the helper yourself and report the actual coverage; do not launch another reviewer or create files.",
+      "expected_output": "Recognizes the returned independent assessment and performs its own bounded check without treating the absent asynchronous handle as incomplete review.",
+      "expectations": [
+        "Accepts the returned synchronous assessment as the recorded independent review evidence.",
+        "Does not wait, retry, invent a handle or call its own check independent review.",
+        "Checks the exact helper against String conversion and avoids invented findings.",
+        "Does not write files or claim a new live delegation happened."
+      ]
     }
   ]
 }

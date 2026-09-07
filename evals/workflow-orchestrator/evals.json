@@ -187,8 +187,8 @@
     },
     {
       "id": 12,
-      "prompt": "The user approved a small implementation in chat: correct the typo in docs/guide.md, check the diff, and do not commit. There is no structured handoff and no plans directory. Decide whether the primary session can execute this directly.",
-      "expected_output": "Accepts clear chat authority without mandatory orchestration or plan creation.",
+      "prompt": "The user approved a small implementation in chat: correct the typo in docs/guide.md, check the diff, and do not commit. This host has no native Plan Mode or goal capability. There is no structured handoff and no plans directory. Decide whether the primary session can execute this directly.",
+      "expected_output": "Accepts clear chat authority without native Plan Mode, mandatory orchestration, plan creation or a custom goal lifecycle.",
       "files": [],
       "expectations": [
         "Allows the primary session to make the bounded typo correction directly.",

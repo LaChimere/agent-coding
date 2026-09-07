@@ -1,6 +1,6 @@
 ---
 name: spar
-description: "Produce a one-shot SPAR analysis when the user explicitly asks for `$spar`, a SPAR, devil's-advocate analysis, or adversarial pressure-testing of an idea, decision, plan, design, migration, or optimization. Challenge assumptions and trade-offs without implementing the proposal or turning the request into a multi-round interview."
+description: "Produce a one-shot SPAR analysis when the user explicitly asks for the spar skill, a SPAR, devil's-advocate analysis, or adversarial pressure-testing of an idea, decision, plan, design, migration, or optimization. Challenge assumptions and trade-offs without implementing the proposal or turning the request into a multi-round interview."
 ---
 
 # SPAR
@@ -34,9 +34,11 @@ complexity and risk.
   path; same-family subagents are not the fallback.
 - Give each role the same subject and relevant evidence, but not another role's output. Each role
   makes the strongest credible case from its assigned perspective and must not spawn more agents.
-- Launch roles in parallel when capacity permits, otherwise use waves. Apply a live-handle gate
+- Launch roles through the host's actual delegation mechanism, in parallel when capacity permits,
+  otherwise in waves. A synchronous call returning a completed role result needs no handle or wait.
+  For asynchronous launches, apply a live-handle gate
   immediately before every wait call: the receiver set must contain at least one live handle returned
-  by a completed launch call. A tool error, `no thread`, or other no-handle outcome means no delegated
+  by a completed launch call. A tool error, `no thread`, or other no-handle outcome without a completed result means no delegated
   role exists to collect and cannot later produce a result. Continue with the required primary
   perspectives when the receiver set is empty. If a launch returns no handle because capacity is
   full, defer it to a later wave; otherwise
@@ -49,8 +51,8 @@ complexity and risk.
 - When the user explicitly requires an actual different model family and none is available, report
   the capability limitation instead of calling a same-model analysis cross-model.
 
-Record cross-model analysis only when the execution ledger contains a returned live handle and the
-collected role result confirms a known eligible different model family. Requested model arguments,
+Record cross-model analysis only with an actual delegated result (returned synchronously or collected
+through a live handle) and execution evidence confirming a known eligible different model family. Requested model arguments,
 role prompts, intended launches, and failed launch calls are not execution evidence. Otherwise record
 the actual primary-model fallback. Do not reveal hidden reasoning.
 

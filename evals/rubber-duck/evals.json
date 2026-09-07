@@ -68,6 +68,24 @@
         "Avoids scope-expanding cleanup or best-practice suggestions.",
         "Does not modify files or make a release decision."
       ]
+    },
+    {
+      "id": 5,
+      "prompt": "Use the rubber-duck skill on status/change.diff. Treat status/synchronous-state.md as authoritative recorded execution evidence for this fixture: an independent critic already completed synchronously. Check its concern against the source and tests without launching another critic or inventing a handle.",
+      "expected_output": "Uses the recorded synchronous critic result and verifies the authorization defect without treating a missing asynchronous handle as a failure.",
+      "files": [
+        "files/code/src/authorize.js",
+        "files/code/test/authorize.test.js",
+        "files/code/status/change.diff",
+        "files/code/status/synchronous-state.md"
+      ],
+      "fixture_prefix": "files/code",
+      "expectations": [
+        "Independently confirms the non-empty-role authorization defect against source and tests.",
+        "Accepts a completed synchronous critic result without waiting or retrying.",
+        "Reports the contrasting family supported by the recorded execution metadata, not a new live delegation claim.",
+        "Does not modify files or recommend merging."
+      ]
     }
   ]
 }

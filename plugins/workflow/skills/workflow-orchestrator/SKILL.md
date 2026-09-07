@@ -49,4 +49,10 @@ The host's native `/goal` owns persistent lifecycle; the executor owns implement
 
 # Missing capabilities
 
+Use the host's native planning mode when available; otherwise discuss the proposal without
+implementation until authorized. Resolve skill invocation and delegation through the host's exposed
+capabilities, not another harness's command syntax. A synchronous delegated result is completed work;
+an asynchronous launch needs a returned live task handle before waiting. Neither a requested role nor
+a failed launch is evidence of execution. Keep required independence and approval boundaries intact.
+
 Use installed skills and actually exposed host capabilities. Do not claim a missing invocation occurred or automatically install it. Continue independent authorized work; report what cannot be checked. Optional review coverage can be reported as absent; explicitly required independent review remains incomplete until a real reviewer is available, not satisfied by self-review.

@@ -37,6 +37,6 @@ permissions, storage, network boundaries, webhooks, sensitive data, dependencies
 deployment, infrastructure permissions, or controls named by `SECURITY.md`.
 
 Security is not an ordinary reviewer file. Invoke the complete
-`$codex-security:security-diff-scan` workflow from the primary agent against the same pinned target.
+`codex-security:security-diff-scan` workflow through the host's supported invocation from the primary agent against the same pinned target.
 An ordinary reviewer may identify a correctness issue with security impact, but that does not
 complete the security aspect.

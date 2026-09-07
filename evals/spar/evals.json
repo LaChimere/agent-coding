@@ -61,6 +61,23 @@
         "Does not manufacture a finding, consensus, or extra open questions.",
         "Does not modify files."
       ]
+    },
+    {
+      "id": 4,
+      "prompt": "Use the spar skill on idea.md. Treat status/synchronous-state.md as authoritative recorded execution evidence for this fixture: both independent perspectives already completed synchronously. Synthesize them without launching agents or inventing task handles.",
+      "expected_output": "Uses both completed synchronous perspectives, checks their arguments against the proposal and records cross-model evidence without waiting or repeating work.",
+      "files": [
+        "files/architecture/idea.md",
+        "files/architecture/status/synchronous-state.md"
+      ],
+      "fixture_prefix": "files/architecture",
+      "expectations": [
+        "Uses both recorded opposing perspectives and checks them against idea.md.",
+        "Does not require task handles, wait or relaunch the completed synchronous calls.",
+        "Records the contrasting family supported by the fixture's execution metadata, not a new live delegation claim.",
+        "Returns the standard SPAR sections and exactly one open question.",
+        "Does not modify files."
+      ]
     }
   ]
 }

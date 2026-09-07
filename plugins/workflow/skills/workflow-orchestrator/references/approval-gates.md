@@ -10,7 +10,7 @@ Gate 3 is post-execution review for high-impact work (security, persisted data, 
 
 ## Native planning handoff
 
-- Native Plan Mode is for exploration, discussion and the overall proposal. Consume that proposal and explicit revisions rather than repeating the design process.
+- Use native Plan Mode, when available, for exploration, discussion and the overall proposal. Without it, discuss the proposal without implementing it until authorized. Consume the proposal and explicit revisions rather than repeating the design process.
 - Host write restrictions still apply. A template is not permission to write in Plan Mode.
 - “Save the plan, do not implement” permits only document writes when the host allows them. “Implement the plan” authorizes that scope and necessary progress records; leaving Plan Mode alone does not.
 - Record the user's actual approval source, not a fabricated approver or unchecked template field. A native plan already approved needs no new approval when saved.

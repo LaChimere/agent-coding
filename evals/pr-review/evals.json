@@ -286,6 +286,25 @@
         "The final report independently substantiates the operation-scoped idempotency defect and maps it to canonical review labels; challenge coverage need not repeat the full evidence.",
         "Does not modify files."
       ]
+    },
+    {
+      "id": 15,
+      "prompt": "Use the pr-review skill to aggregate status/synchronous-state.md as authoritative recorded execution evidence for this fixture. Do not launch agents or invent task handles. Inspect the source, specification and patch before accepting the completed synchronous Rubber Duck result.",
+      "expected_output": "Accepts the synchronous result without a handle, confirms its candidate, and reports cross-model evidence from the recorded execution metadata without relaunching or waiting.",
+      "fixture_prefix": "files/challenge-cross-model",
+      "files": [
+        "files/challenge-cross-model/src/payments.js",
+        "files/challenge-cross-model/specs/payments.md",
+        "files/challenge-cross-model/status/change.diff",
+        "files/challenge-cross-model/status/synchronous-state.md"
+      ],
+      "expectations": [
+        "Accepts the completed synchronous result as execution evidence without requiring an asynchronous handle.",
+        "Does not wait, retry or invent a task for the already completed reviewer.",
+        "Independently confirms the operation-scoped idempotency defect and uses canonical finding labels.",
+        "Reports the recorded contrasting family as cross-model, without claiming a new live reviewer was run in this replay.",
+        "Does not modify files."
+      ]
     }
   ]
 }

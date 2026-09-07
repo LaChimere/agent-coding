@@ -8,9 +8,11 @@
     9,
     0,
     4,
-    10
+    10,
+    11
   ],
   "critical_expectations": {
+    "11": [0,1,2,3],
     "0": [
       0,
       1,
@@ -65,10 +67,12 @@
     6,
     7,
     9,
-    10
+    10,
+    11
   ],
   "redundant_ids": [],
   "behavior_change_rationale": {
+    "11": "Accept completed synchronous delegation without weakening asynchronous live-handle or evidence requirements.",
     "0": "Workflow refinement: read-only evidence and review reuse or living-plan progress and approval as specified by this case.",
     "4": "Workflow refinement: read-only evidence and review reuse or living-plan progress and approval as specified by this case.",
     "5": "Required independent review needs actual launch/result evidence; nominal availability or a failed launch must leave review incomplete, never replaced by empty waits or self-checks.",
