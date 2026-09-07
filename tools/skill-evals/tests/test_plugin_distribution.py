@@ -29,6 +29,15 @@ def read_json(path: Path) -> dict:
     return json.loads(path.read_text(encoding='utf-8'))
 
 
+def test_workflow_default_prompts_follow_codex_contract() -> None:
+    """Keep workflow starter prompts within Codex's documented UI limits."""
+    manifest = read_json(REPO / 'plugins/workflow/.codex-plugin/plugin.json')
+    prompts = manifest['interface']['defaultPrompt']
+    assert isinstance(prompts, list)
+    assert 1 <= len(prompts) <= 3
+    assert all(isinstance(prompt, str) and prompt.strip() and len(prompt) <= 128 for prompt in prompts)
+
+
 def test_marketplaces_share_plugin_roots() -> None:
     """Resolve both native catalogs to the same plugin directories."""
     codex = read_json(REPO / '.agents/plugins/marketplace.json')

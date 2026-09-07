@@ -238,12 +238,30 @@ uses `/pr-review:pr-review` and `/workflow:execute-plan-loop`. In Copilot, use `
 `pr-review` or `execute-plan-loop` skill. Natural-language requests remain supported.
 
 For updates, Codex uses `codex plugin marketplace upgrade agent-coding` for Git marketplace
-snapshots, then `codex plugin add <plugin>@agent-coding`. For a local directory source, re-add
-the versioned plugin directly. Claude uses `claude plugin marketplace update agent-coding`, then
+snapshots, then `codex plugin add <plugin>@agent-coding`. Claude uses
+`claude plugin marketplace update agent-coding`, then
 `claude plugin update <plugin>@agent-coding --scope user`. Copilot uses
 `copilot plugin marketplace update agent-coding`, then `copilot plugin update <plugin>@agent-coding`.
 Repeat the plugin update for each installed plugin. Release changes bump both native manifests of
 the affected plugin together; re-open a session and verify the installed version.
+
+For Codex local development, use an isolated candidate copy and configuration. Confirm with
+`codex plugin list` that the selected marketplace points to that local candidate, not a Git
+snapshot or another checkout. If that explicit local marketplace is not registered, run
+`codex plugin marketplace add <absolute-candidate-repo-root>` in the isolated configuration first.
+From the installed `plugin-creator` skill directory, run:
+
+```sh
+python3 scripts/read_marketplace_name.py --marketplace-path <absolute-candidate-repo-root>/.agents/plugins/marketplace.json
+python3 scripts/update_plugin_cachebuster.py <absolute-candidate-repo-root>/plugins/workflow
+```
+
+Stop if either helper fails. Reinstall using `codex plugin add workflow@<validated-marketplace-name>`
+in the same isolated configuration, then start a fresh thread and verify the installed version.
+The cachebuster is a `+codex.<timestamp>` version suffix that refreshes the development cache;
+use the helper's default rather than bumping release numbers or hand-editing marketplace/config files.
+Keep that suffix in the disposable Codex candidate only; published native manifests retain matching
+release versions. Do not switch production installations or copy credentials for this check.
 
 #### Capability boundaries
 
