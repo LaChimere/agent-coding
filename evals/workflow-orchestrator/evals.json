@@ -196,6 +196,35 @@
         "Does not require design.md, plan.md, TODO, or goal state.",
         "Preserves no-commit authority."
       ]
+    },
+    {
+      "id": 13,
+      "prompt": "Use workflow-orchestrator and its bundled DESIGN.md template to write plans/empty-search/design.md in English. This is a writable session and I authorize saving this design only. Treat these facts as the complete design brief: our desktop app filters an in-memory list of saved bookmarks by title as the user types; when a query matches nothing it currently shows a blank list, which testers mistake for lost bookmarks. We agreed to show 'No bookmarks match your search' only for a nonempty query with zero matches, using the existing results view's filtered-count and query values. Clearing the query restores the current list; the initial empty-library message, filtering rules and storage remain unchanged. Success is the message appearing for a no-match query and disappearing when the query is cleared or matches exist. I approved this direction in this message, with no revisions, and all needed decisions are supplied. Keep the document proportionate and finish the requested save without further design questions. Do not implement or write an execution plan.",
+      "expected_output": "Writes a concrete, standalone design from the installed template, tailoring its depth to a view-only change and completing the authorized save. Grade meaning, scope and convergence, not heading count or prompt completion.",
+      "files": [],
+      "expectations": [
+        "Actual tool reads resolve workflow-orchestrator and templates/DESIGN.md from the installed candidate; only plans/empty-search/design.md is created or changed.",
+        "The saved English design explains the blank-results problem, affected bookmark users, intended message behavior and observable success with a concrete query/clear or match example, without requiring chat context.",
+        "Explains the existing results view responsibility and use of query and filtered count; preserves empty-library behavior, filtering and storage without adding unrelated architecture, state machinery, dependencies or fabricated metrics.",
+        "Replaces template guidance with content and tailors depth to the simple design; omitting or merging sections is acceptable, and headings alone do not establish quality.",
+        "Explains why reusing the existing view is sufficient and any relevant limitation without inventing a quota of alternatives or repeating trade-offs.",
+        "Records the supplied design approval and absence of revisions accurately, completes the save without more questions or an approval gate, and does not implement, write a plan or create extra RFC/ADR/TODO/goal documents."
+      ]
+    },
+    {
+      "id": 14,
+      "prompt": "Use workflow-orchestrator and its bundled DESIGN.md template to write an English draft at plans/preferences-v2/design.md, then identify the one decision needed before execution planning. This is a writable session; I authorize that draft only, and the design is not yet approved. Known facts: a desktop app stores preferences in a local JSON file. V1 readers require a flat object with theme and fontSize, reject a versioned envelope, and V1 writers replace the whole file. V2 needs named profiles and proposes an envelope with schemaVersion, activeProfile and profiles. PreferencesStore owns disk reads and writes; the UI uses its load/save interface. We have agreed that the new loader recognizes both shapes, maps V1 values to a default profile in memory, and validates before exposing state to the UI. Saves use a temporary sibling file and atomic replacement on the same filesystem; the in-memory saved state advances only after replacement succeeds. Validation or disk failures must reach the caller and preserve the last valid saved file; corrupt input must not be silently replaced by defaults. The existing single-process writer assumption remains; cloud sync and concurrent writers are out of scope. Success means V2 reads an existing V1 file without losing its values, round-trips named profiles, and reports a failed save without claiming persistence. The sole unresolved decision is whether users must still be able to open and edit preferences using V1 after their first V2 save. Product has not answered, and the current envelope proposal breaks V1 reads. Capture the known responsibilities, read/save flow, failure behavior, compatibility trade-off and migration direction. You may recommend an option, but do not decide backward write compatibility for us or invent an approved migration. Do not implement, write an execution plan or ask unrelated questions.",
+      "expected_output": "Writes a reviewable, standalone draft that explains persistence and failure semantics, contrasts credible compatibility approaches, and isolates V1 edit compatibility as a planning blocker. Grade content and honest uncertainty rather than six headings or exhaustive template filling.",
+      "files": [],
+      "expectations": [
+        "Actual tool reads resolve workflow-orchestrator and templates/DESIGN.md from the installed candidate; only plans/preferences-v2/design.md is created or changed.",
+        "The saved English draft explains the existing V1 format, named-profile goal, relevant constraints and observable success, with a concrete V1-to-V2 behavior example before detailed mechanism explanations in the proposed design.",
+        "Explains PreferencesStore ownership, the UI load/save boundary, recognition and validation of both input shapes, and mapping V1 values to a default profile without claiming that reading migrates the saved file.",
+        "Explains temporary-file and atomic-replacement boundaries, memory advancing only after a successful save, and caller-visible validation/disk errors that preserve the last valid saved file; keeps single-process ownership and excludes cloud sync/concurrent writers.",
+        "Explains why the envelope conflicts with V1 readers and whole-file writers, compares a credible alternative or deferral with its drawbacks, and labels any compatibility recommendation or migration direction as conditional.",
+        "Marks design approval as pending and V1 read/edit compatibility after a V2 save as the one material planning blocker; asks for that decision without inventing its answer or using an assumption to bypass it.",
+        "Replaces guidance with coherent standalone content, scales detail to persistence and compatibility, and avoids unrelated questions, implementation steps, extra plan/RFC/ADR/TODO/goal files or implementation."
+      ]
     }
   ]
 }

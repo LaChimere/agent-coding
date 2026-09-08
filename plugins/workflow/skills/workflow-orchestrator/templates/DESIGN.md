@@ -1,38 +1,29 @@
-# Design
+# <Specific design title>
 
-> Record consequential design decisions when needed. Native discussion/proposals are valid sources; write only when authorized and allowed by the host. Design approval permits planning, not implementation.
+> Replace this note with the design approval source and any explicit revisions; state honestly when approval is pending.
 
-## Objective and behavior
+Replace the guidance below with connected prose that stands on its own. Merge or omit sections when appropriate, and scale the depth to the consequential choices in this design. Use examples, diagrams and interface sketches where they help the reader understand or assess the proposal.
 
-- Problem and intended observable behavior:
-- Non-goals:
-- Evidence/research reference, if any:
+## Background and problem
 
-## Key constraints
+Explain the current system or behavior, the concrete problem, who is affected and why a change is needed. Cite facts or research that support the problem statement, and provide enough context for a reader who has not seen the discussion.
 
-- Compatibility/public contracts:
-- State, concurrency, security and data safety:
-- Cost, performance or operational constraints that matter:
+## Goals and non-goals
 
-## Approach and decisions
+Describe the intended outcomes, observable success criteria and scope explicitly excluded. A short scenario can make the behavior change concrete. Use measurable targets when evidence supports them rather than inventing numbers.
 
-- Chosen approach and why:
-- Consequential alternatives/trade-offs, only where useful:
-- Affected components and consumers:
+## Constraints
 
-## Program Shape (when useful)
+Explain the established conditions that shape the design, such as compatibility commitments, data safety requirements or resource limits. Distinguish requirements the proposal must satisfy from choices still to be made.
 
-Program Shape describes how responsibilities and execution fit together, not full implementation pseudocode.
+## Proposed design
 
-- Responsibility boundaries:
-- Important interfaces and primary call path:
-- For complex state: owners, transitions, transaction boundaries and error propagation:
+Introduce the overall approach, then walk through a concrete example from input or trigger to observable outcome before explaining implementation mechanisms. Use that example to connect the main flow, responsibility boundaries and important interfaces. Where relevant, explain state ownership and transitions, concurrency and transaction boundaries, error propagation and recovery. Include migration or rollout direction when it affects the design's viability; leave delivery steps, verification procedures and execution evidence to the plan.
 
-## Discussion exit conditions
+## Decisions and trade-offs
 
-- Objective, scope, behavior, constraints and observable acceptance are sufficient to plan:
-- Material unknowns resolved or explicitly bounded:
-- Remaining assumptions and risks:
-- Approval source and revisions, or the specific decision still needed:
+Explain the reasons for consequential choices, credible alternatives and accepted drawbacks. Compare keeping the current behavior when useful, without requiring a quota of alternatives. Keep trade-offs beside the relevant design details when that reads better, and avoid repeating them here.
 
-Stop extending the questionnaire once these conditions hold; state assumptions and proceed to planning when approved.
+## Risks and open questions
+
+Identify remaining risks and assumptions that need validation, and explain their impact. Distinguish questions that must be resolved before planning from those that can wait under explicit assumptions. Include mitigations or a direction for validation when known.
