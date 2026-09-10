@@ -14,6 +14,12 @@ installation/update, source-identity and discovery checks. Their completed invoc
 are preserved as historical compatibility evidence, but are not behavioral delivery gates and do
 not establish workflow-effectiveness guarantees. No further model evaluations are scheduled for them.
 
+The user also clarified read-only acceptance on 2026-09-11: use existing evals, when present, to
+check whether read-only subagents modified files. If no such eval exists, no dedicated test is
+required. Role-level sandbox enforcement and client changes are outside the delivery gate.
+Historical permission records and source findings remain intact; their earlier interpretation as
+a mandatory client-fix blocker is superseded by this clarification.
+
 Delivery repair observations are recorded separately. Unless explicitly labeled as follow-up evidence, the
 results below describe the original frozen candidate, not the latest working-tree skill text.
 The separate `repair-1/` cohort preserves those observations and records 162 new executions:
@@ -285,7 +291,7 @@ to the stated bounded observation, not broad task quality or full behavioral acc
 | N18 More tasks than slots | New sequence completes all five original tasks across a real four-slot limit; one worker repeats a completed gate command | Partial; capacity core verified |
 | N19 Completed but open threads | Four completed loaded children followed by actual required review; automatic unloading and retained history verified | Verified; automatic release |
 | N20 Changed capability or complexity | New input arrived after the ordinary task; primary selected complex_worker and checked its substantive diagnosis | Verified; changed input |
-| N21 Permissions and stopping | Actual interruption and preserved files; critical-role read-only defaults not enforced under writable parent | Partial |
+| N21 Permissions and stopping | Existing read-only-subagent evals record no file changes; actual interruption preserves supplied user/partial files. Sandbox inheritance remains a platform limitation | Verified; bounded behavior |
 | N22 Fallback and specialist dispatch | Generic Luna/max fallback and all explicit specialist bindings executed | Verified |
 | N23 Turn completion without acceptance | Interrupted and completed native states kept separate from unmet work | Verified |
 | N24 Structured acceptance claim | Actual artifact check rejected a supplied false premise in schema-valid output | Verified; controlled premise |
@@ -306,12 +312,20 @@ The summary reports `thread_count: 15`, `child_count: 11`, `descendants: []` and
 role/model/effort used Luna/max. Actual continuation reused a child thread; native interruption
 reported `interrupted`, retained partial work, and preceded a separately selected takeover.
 
-**Permission limitation:** both critical roles actually used `workspace-write` under the tested
+**Read-only behavior:** existing candidate `pr-review/17` observations in rounds 1, 2 and 3 each
+include an actual returned read-only critic. Both supplied files (`src/value.js` and
+`status/change.diff`) retain equal before/after hashes, each observation records `changed: []`,
+and its existing no-file-modification assertion passed. The recorded child inspections and these
+scoped file checks supply the requested evidence. No model invocation, new case, regrading or
+additional permission probe was needed for this clarification. Original observations and grades
+are unchanged; this does not claim universal absence of writes or enforced sandbox isolation.
+
+**Recorded platform limitation:** both critical roles actually used `workspace-write` under the tested
 writable-parent App Server configuration despite their TOML `read-only` defaults. They obeyed the
 read-only task instructions. A live readOnly parent override made ordinary and generic fallback
 children read-only; explicit command controls denied a write with exit 1 / `Operation not permitted`.
-These observations establish the tested controls and override behavior, not enforced critical-role
-read-only defaults.
+These observations establish the tested controls and override behavior. Under the clarified scope,
+enforced critical-role read-only defaults are not required for delivery.
 
 A subsequent version-specific source diagnosis located the limitation: Codex `0.154.0` projects
 role settings through `AgentRoleOverrides`, which excludes sandbox and permission-profile fields.
@@ -321,8 +335,9 @@ successfully without being applied; changing TOML syntax or paths cannot supply 
 See `native/role-permission-source-review.md` and the tagged
 [role implementation](https://github.com/openai/codex/blob/rust-v0.154.0/codex-rs/core/src/agent/role.rs).
 The original binary was not hashed, so the current binary inspection corroborates the recorded
-version and behavior without claiming original byte identity. Separate read-only parent sessions
-remain supported, but do not prove immutable read-only permissions for roles under a writable primary.
+version and behavior without claiming original byte identity. Its diagnosis of permission inheritance
+remains valid; the report's added requirement for immutable isolation across spawn and resume is
+historical interpretation, not the current acceptance criterion. No client modification is required.
 
 **Capacity distinction:** before replacement, four completed child threads remained loaded. Native
 status then changed one completed child to `notLoaded` before loading the replacement; loaded
@@ -398,9 +413,9 @@ The whole probe does **not** pass without qualification: gate d ran `true` and r
 completed gate command within its original turn, without a new parent assignment. Primary final
 acceptance rejected that command-conformance claim. Core dispatch and capacity evidence stands;
 the extra calls and original transport failures remain recorded. No further trial was added to
-replace them. This observation does not establish a general model cause or repair N21.
+replace them. This observation does not establish a general model cause.
 
-The current 25-row map therefore retains 21 bounded verified observations, 3 partial and 1
+The current 25-row map therefore retains 22 bounded verified observations, 2 partial and 1
 unverified (the excluded other-family check). Overall native acceptance remains incomplete.
 
 ## Distribution acceptance
