@@ -2,13 +2,13 @@
 
 | Item | Value |
 | --- | --- |
-| Status | Repository delivery complete within the agreed scope and recorded evidence limits; experimental configuration |
+| Status | Delivered configuration revised to four roles and eight worker slots; experimental configuration |
 | Last updated | 2026-09-11 |
 | Runtime foundation | Native Codex harness: the existing agent execution runtime beneath the primary and workers |
 | Personal configuration scope | Repository `config/codex` represents the target `~/.codex` configuration |
 | Shared plugin scope | Process contracts in `workflow`; review methods and constraints in `pr-review`, `rubber-duck`, and `spar`; no plugin-owned model or effort policy |
 | Plugin dependencies | `workflow` and `pr-review` are recommended installations, used on demand rather than required for every task |
-| Validation status | Five role mappings, 962 original/follow-up behavior and route contexts, and 24 A/B trials recorded; no adoption advantage established; failures and native limits in [validation.md](validation.md) |
+| Validation status | Revised native checks, six new portable contexts and 24 new A/B trials are complete. Unchanged plugin behavior reuses preceding evidence; results and limits are recorded in [validation.md](validation.md) |
 
 ## 1. Design decision
 
@@ -18,11 +18,14 @@ Build on the native Codex harness for the agent loop, conversation state, tools,
 
 The primary uses `workflow` for process constraints, standards, and procedures: phase and authority boundaries, planning, bounded execution, progress, recovery, and completion. It uses `pr-review` for review angles, constraints, standards, and capabilities. The primary remains the actor making decisions and organizing work; neither plugin becomes another coordinator.
 
-Model and reasoning-effort policy belongs to personal orchestration configuration. Both plugins remain model-agnostic and usable across clients without the five personal roles. They can require adequate evidence and necessary risk coverage without prescribing a model or effort level.
+Model and reasoning-effort policy belongs to personal orchestration configuration. Both plugins remain model-agnostic and usable across clients without the personal roles. They can require adequate evidence and necessary risk coverage without prescribing a model or effort level.
 
 The recommended installation includes both plugins, but core orchestration can perform simple direct work and ordinary native delegation without them. A plugin becomes a dependency when the task needs its capabilities. Report a missing required capability, leave the dependent work incomplete, and continue unaffected authorized work. Do not recreate the missing plugin workflow or claim its work was completed.
 
-Keep five semantic roles in v0.1, with an initial model and reasoning-effort mapping for each. A task need not pass through every role. Actual use and evals determine whether roles or mappings should change; the initial combination is not assumed to be optimal.
+Keep four semantic roles in v0.1, with a model and reasoning-effort mapping for each. Complex work
+and takeover after an evidenced ordinary reasoning limitation both use `complex_worker` at Sol/high.
+This merges the former separate takeover role at the user's request. A task need not pass through
+every role; the current combination is not assumed to be optimal.
 
 This document consolidates the agreed design and defines the implementation contract. Current execution evidence, acceptance limits and delivery status are recorded in [validation.md](validation.md); design statements alone are not runtime proof.
 
@@ -82,7 +85,7 @@ The sources below and the official Codex interface documentation linked througho
 
 | Source | Design influence | Limit retained |
 | --- | --- | --- |
-| [Codex as a platform](https://developers.openai.com/blog/codex-as-a-platform) | Reuse Codex's harness; keep task context, policy, and acceptance with the caller; choose a native interface to fit the actual need | The article motivates the runtime boundary, not our five roles or model mappings; its examples do not verify this configuration |
+| [Codex as a platform](https://developers.openai.com/blog/codex-as-a-platform) | Reuse Codex's harness; keep task context, policy, and acceptance with the caller; choose a native interface to fit the actual need | The article motivates the runtime boundary, not our role count or model mappings; its examples do not verify this configuration |
 | [Grok Bot](https://x.ai/news/designing-grok-bot) | Give the user one accountable owner; keep context with the relevant responsibility and project | Do not mix unrelated project history into generic roles or equate subthreads with persistent Bots |
 | [Grok Build Workflows](https://x.ai/news/workflows) | Preserve execution evidence and identify completed work before resuming | Thread continuation and plan records do not provide deterministic replay or exactly-once external actions |
 | [HydraFusion](https://github.blog/ai-and-ml/github-copilot/project-hydrafusion-frontier-quality-via-multi-model-orchestration/) | Select direct execution, conditional escalation, or critique and revision according to the task | Its reported quality/cost trade-offs do not validate this initial role combination |
@@ -132,15 +135,14 @@ Cross-family critique is an optional technique. The agreed Codex policy permits 
               Small / clear / low risk                         |
                      |                                         v
                      |      +--------------------------------------------+
-                     |      | WORKER POOL - initial role/model mapping   |
+                     |      | WORKER POOL - current role/model mapping   |
                      |      |                                            |
                      |      | ordinary_worker        -> Luna  / max      |
-                     |      | takeover_worker        -> Sol   / medium   |
                      |      | complex_worker         -> Sol   / high     |
                      |      | critical_reviewer      -> Astra / high     |
                      |      | deep_critical_reviewer -> Astra / xhigh    |
                      |      |                                            |
-                     |      | Max 4 open worker threads                  |
+                     |      | Max 8 open worker threads                  |
                      |      | No worker-to-worker delegation             |
                      |      | Review tasks remain read-only              |
                      |      +----------------------+---------------------+
@@ -246,21 +248,20 @@ Repository state, approved decisions, task records, and tool-owned data remain t
 
 The primary may directly complete and validate small, clear, low-risk tasks. Delegate when isolating substantial exploration or logs, executing independent work in parallel, or using a particular capability improves the outcome.
 
-Judge quality and complete delivery efficiency. Do not dispatch mechanically by file count, line count, or the number of available agent slots. Four workers is a limit, not a quota.
+Judge quality and complete delivery efficiency. Do not dispatch mechanically by file count, line count, or the number of available agent slots. The configured worker limit is not a quota.
 
-### 6.2 Initial model mapping
+### 6.2 Current model mapping
 
-| Semantic role | Initial model | Effort | Purpose |
+| Semantic role | Model | Effort | Purpose |
 | --- | --- | --- | --- |
 | `ordinary_worker` | `gpt-5.6-luna` | `max` | Clear, local implementation, fixes, tests, scoped research, and routine review |
-| `takeover_worker` | `gpt-5.6-sol` | `medium` | Takeover of an ordinary task after a demonstrated reasoning limitation |
-| `complex_worker` | `gpt-5.6-sol` | `high` | Complex implementation, difficult diagnosis, synthesis, and difficult review |
+| `complex_worker` | `gpt-5.6-sol` | `high` | Complex implementation, difficult diagnosis, synthesis, difficult review, and takeover after a demonstrated ordinary reasoning limitation |
 | `critical_reviewer` | `gpt-6-astra` | `high` | Read-only analysis and review of security, critical correctness, and major architectural trade-offs |
 | `deep_critical_reviewer` | `gpt-6-astra` | `xhigh` | Read-only analysis of a concrete critical issue left unresolved by the preceding reasoning pass |
 
-The mapping unit is always model plus effort. `medium`, `high`, and `max` are not a common capability ladder across different models. Policy refers to semantic roles and task needs; concrete model identifiers live in personal configuration.
+The mapping unit is always model plus effort. `high`, `xhigh`, and `max` are not a common capability ladder across different models. Policy refers to semantic roles and task needs; concrete model identifiers live in personal configuration.
 
-These five roles are initial candidates that may change through actual use and evals. Defining a role does not require invoking it on every task. Distinct GPT models or roles also do not establish cross-family review.
+These four roles may change through actual use and evals. Defining a role does not require invoking it on every task. Distinct GPT models or roles also do not establish cross-family review.
 
 ### 6.3 Separate complexity, risk, and review
 
@@ -272,7 +273,7 @@ The primary can first commission critical analysis to establish safety boundarie
 
 ### 6.4 Execution patterns
 
-For each task, the primary chooses among direct work, one delegated worker, parallel independent work, necessary critique and revision, and targeted failure handling. There is no fixed ordinary-to-takeover-to-complex-to-critical-to-deep pipeline.
+For each task, the primary chooses among direct work, one delegated worker, parallel independent work, necessary critique and revision, and targeted failure handling. There is no fixed ordinary-to-complex-to-critical-to-deep pipeline.
 
 Escalation is conditional. Importance, a single mistake, a failed test, or a desire for extra reassurance does not automatically justify it. `deep_critical_reviewer` addresses the identified unresolved issue rather than reopening all settled decisions.
 
@@ -387,7 +388,7 @@ PRIMARY classifies
   |
   +-- Incorrect scope ------------> Re-plan / split task
   |
-  +-- Ordinary capability limit --> takeover_worker
+  +-- Ordinary capability limit --> complex_worker
   |
   +-- Actually complex -----------> complex_worker
   |
@@ -412,11 +413,19 @@ Tool retries, launch failures, capacity waits, and implementation repairs are di
 
 Evidence for a capability limitation should identify the necessary constraint being repeatedly misunderstood, whether context was supplied, why targeted correction failed, and whether the task actually needs reclassification. Prefer changing context, decomposition, environment, or strategy before changing models.
 
-`takeover_worker` inspects the previous attempt and evidence, preserves correct work, and makes the necessary correction. `deep_critical_reviewer` analyzes only the concrete unresolved critical issue. Importance or extra reassurance alone cannot trigger it.
+When taking over ordinary work, `complex_worker` first confirms the previous implementer has stopped,
+inspects its diff and failure evidence, and preserves correct partial work. The same task's repair
+history and budget carry forward; an exhausted budget returns to primary re-planning before further
+patching. `deep_critical_reviewer` analyzes only the concrete unresolved critical issue. Importance
+or extra reassurance alone cannot trigger it.
 
 ### 9.3 Concurrency, takeover, and cancellation
 
-Keep at most four worker threads open, excluding the primary. The primary decides whether to continue or close completed threads. Wait on, continue, or close only actual handles returned by successful launches; a failed launch does not establish an existing worker.
+Keep at most eight worker threads open, excluding the primary. The primary decides whether to continue or close completed threads. Wait on, continue, or close only actual handles returned by successful launches; a failed launch does not establish an existing worker.
+
+Eight replaces the original limit of four at the user's request, allowing more independent work
+to remain open. It is a ceiling for work selected on its merits, not a target dispatch count.
+The earlier four-slot evaluation does not establish a speed or stability advantage at eight.
 
 Continue the actual worker thread through the host's supported continuation or steering mechanism. Spawning another `ordinary_worker` selects the same role but does not reuse the previous thread's context. Thread identity, an individual turn's status, and the task's acceptance status are separate facts. Codex's native lifecycle distinguishes threads, turns, and work items. [App Server lifecycle](https://developers.openai.com/codex/app-server)
 
@@ -442,7 +451,6 @@ config/codex/                  -> ~/.codex/
 |-- config.toml                   |-- config.toml
 `-- agents/                       `-- agents/
     |-- ordinary_worker.toml          |-- ordinary_worker.toml
-    |-- takeover_worker.toml          |-- takeover_worker.toml
     |-- complex_worker.toml           |-- complex_worker.toml
     |-- critical_reviewer.toml        |-- critical_reviewer.toml
     `-- deep_critical_reviewer.toml   `-- deep_critical_reviewer.toml
@@ -450,7 +458,7 @@ config/codex/                  -> ~/.codex/
 
 Merge orchestration principles into `AGENTS.md` while preserving existing communication, authority, scope, verification, Git, and capability boundaries. `config.toml` supplies runtime configuration; `agents/*.toml` supplies role implementations. This document is repository design material, not a runtime dependency for distributed skills.
 
-Install `workflow` and `pr-review` through the host's native plugin mechanism when authorized; they are the recommended companion capabilities, not files copied into the role definitions. Their portable skill trees contain no personal five-role mapping or required reasoning-effort values.
+Install `workflow` and `pr-review` through the host's native plugin mechanism when authorized; they are the recommended companion capabilities, not files copied into the role definitions. Their portable skill trees contain no personal role mapping or required reasoning-effort values.
 
 ### 10.2 Global configuration fragment
 
@@ -459,7 +467,7 @@ The following retains the draft's intended settings. It is not a complete replac
 ```toml
 [agents]
 enabled = true
-max_concurrent_threads_per_session = 4
+max_concurrent_threads_per_session = 8
 default_subagent_model = "gpt-5.6-luna"
 default_subagent_reasoning_effort = "max"
 ```
@@ -472,7 +480,7 @@ In particular, omitting `model` cannot simultaneously mean "use the global ordin
 
 Each agent TOML defines `name`, `description`, and `developer_instructions`, plus the role's model, effort, and default permissions. Its instructions must fully describe the role's behavior without depending on repository-root paths or an unimplemented shared-instruction loader.
 
-The first three roles can perform authorized implementation and default to `workspace-write`. The two critical roles remain `read-only`. When the first three roles perform review or pure analysis, they must also respect the read-only task boundary; possessing write capability does not grant authority to use it.
+`ordinary_worker` and `complex_worker` can perform authorized implementation and default to `workspace-write`. The two critical roles remain `read-only`. When either implementation role performs review or pure analysis, it must also respect the read-only task boundary; possessing write capability does not grant authority to use it.
 
 Verify the chosen role, model and effort through the required execution evidence. Record effective
 permission settings when exposed by those runs; a field in a file alone does not establish a runtime
@@ -501,11 +509,11 @@ The primary can continue its own inspection, but must distinguish it from a sepa
 
 A model release does not directly change routing. Evaluate the candidate against existing roles for quality, instruction following, tool use, scope discipline, repair rate, complete task latency, and total cost before replacing a mapping.
 
-For ordinary work, prioritize reliable completion of clear tasks. For takeover, examine use of prior failure evidence and restraint. For complex work, examine root-cause reasoning and cross-component invariants. For critical review, examine consequential errors, counterexamples, and uncertainty. For deep critical analysis, examine whether it resolves the specific issue left by the preceding pass.
+For ordinary work, prioritize reliable completion of clear tasks. For complex work, examine root-cause reasoning and cross-component invariants, plus use of prior failure evidence and restraint when taking over. For critical review, examine consequential errors, counterexamples, and uncertainty. For deep critical analysis, examine whether it resolves the specific issue left by the preceding pass.
 
 Normally, replace a role mapping in its TOML. If the global fallback is also intended to follow the ordinary role, update `default_subagent_*` accordingly. Do not retain duplicated values while promising that every model replacement changes only one file. Evaluate model and effort together.
 
-Adding a role requires evidence of distinct task semantics, behavior, or verification needs, not merely a new model. Roles may also be merged or removed, for example when takeover no longer provides independent value. Keep all five initially and use actual work and evals to decide.
+Adding a role requires evidence of distinct task semantics, behavior, or verification needs, not merely a new model. Takeover now belongs to `complex_worker`; retain its handoff and repair-history requirements without a separate role. Further role changes should follow actual work and evals.
 
 Architecture changes should address repeated observed failures. Remove support mechanisms when they stop providing value. Do not introduce new services, layers, or persistence because of one anomaly or a new model release.
 
@@ -543,7 +551,7 @@ These are the acceptance targets. See [validation.md](validation.md) for execute
 | Two targeted repairs are exhausted, even though each produced new evidence | Stop patching and return to primary failure classification and re-planning. Preserve the task's attempt history across worker or thread changes; no automatic budget reset. Verify this separately from earlier reassessment after repeated failure without new evidence |
 | Tool, environment, or capacity issue | Do not treat it as insufficient reasoning; repair, wait, or run in waves |
 | More independent tasks than available worker slots | Preserve the task set and schedule in waves; the plugin does not hard-code the personal concurrency limit |
-| Four workers have completed but their threads remain open, and a required reviewer is pending | Preserve returned evidence and context needed for continuation, close completed threads as needed, confirm capacity is released, and launch the pending review within the four-open-thread limit. Do not assume completion frees a slot, wait indefinitely, or drop the pending task |
+| Completed workers occupy the configured thread limit and a required reviewer is pending | Preserve returned evidence and context needed for continuation, close completed threads as needed, confirm capacity is released, and launch the pending review within that limit. Do not assume completion frees a slot, wait indefinitely, or drop the pending task |
 | Ordinary capability limit or changed complexity | Require evidence for takeover or reclassification; do not endlessly restart the task |
 | Permissions and stopping | Reuse existing read-only-subagent evals to check for file modifications; add no dedicated eval if absent. Preserve user work during cancellation and takeover, and manage only actual handles. Role-level sandbox enforcement is outside this delivery gate |
 | Global fallback alongside specialist review | Explicit dispatch matches the primary's choice rather than relying on ambiguous inheritance |
@@ -561,7 +569,7 @@ Behavioral evaluation, native orchestration acceptance and effect claims are sco
 Claude Code and Copilot CLI remain distribution targets: verify native manifests, isolated
 installation/update, source identity and discovery, without requiring model evaluations or
 guaranteeing workflow effectiveness on those clients. Previously recorded invocations remain
-historical observations, not effect-acceptance gates. The five personal model mappings belong to
+historical observations, not effect-acceptance gates. The personal model mappings belong to
 Codex. Claim App or other host compatibility only with corresponding evidence.
 
 ### 12.3 Actual tasks and model comparisons
@@ -578,15 +586,15 @@ Adoption first requires acceptable quality and satisfied boundaries. Compare spe
 
 ## 13. Implemented state and delivery boundaries
 
-The repository now contains the configuration fragment, all five role files, the primary-owned
+The repository now contains the configuration fragment, four role files, the primary-owned
 workflow contracts and the flexible review/critic contracts. Workflow is `0.1.3`; pr-review is
 `0.1.2`, with synchronized native manifests and unchanged marketplace identities and paths.
 
 | Location | Implemented state | Verification and limits |
 | --- | --- | --- |
-| `config/codex` | Mergeable fragment, preserved primary model, five model/effort mappings, implementation and intended read-only role defaults | All five mappings executed. Existing read-only-subagent evals record no file modifications. Codex 0.154.0 inherits parent permissions; that platform limitation is recorded rather than treated as a delivery blocker. Production activation is not authorized. |
+| `config/codex` | Mergeable fragment, preserved primary model, four role mappings, eight worker slots, implementation and intended read-only role defaults | Native loading, eight-active-worker capacity/refusal, completed-context release and pending review passed bounded checks. Later same-handle Sol/high takeover and exhausted-budget handoff passed independent audit; earlier failures remain. The new 24-trial A/B establishes no speed or monetary-cost advantage. Production activation is not authorized. |
 | `workflow-orchestrator` and responsibilities | Process skills separated from runtime workers; primary coordination and on-demand dependencies explicit | Behavioral and portable regression results are recorded separately. |
-| `execute-plan-loop` | Bounded worker assignments, primary progress and acceptance, caller repair budget, thread evidence and cancellation boundaries | Native continuation, interruption, preserved partial work and prescribed two-repair exhaustion/handoff observed; behavioral results remain separate. |
+| `execute-plan-loop` | Bounded worker assignments, primary progress and acceptance, caller repair budget, thread evidence and cancellation boundaries | Preceding evidence is retained. Revised native checks confirm interruption, preserved partial work, same-handle complex takeover and a separate exhausted-task refusal without budget reset. Behavioral results remain separate. |
 | `pr-review` | Primary-selected aspects and allocation, combined methods, explicit dispatch recovery, incomplete independence reported | Independent source review completed; behavior regression remains separate. |
 | Rubber Duck and SPAR | Same-family independent contexts permitted, other families optional, SPAR still explicitly triggered | No cross-family certification is claimed. |
 | Anti-slop and other workflow skills | Scope-exclusion and process-override reports clarified; other worker/template behavior retained | Anti-slop guards and related suite routes remain in regression scope. |
@@ -598,9 +606,9 @@ The coupled corpus preserves the 59 prior affected-skill cases and 12 anti-slop 
 Baseline and candidate use the same frozen revised corpus. Recorded lifecycle fixtures establish
 decisions only; native evidence establishes the controls actually exercised.
 
-The design's initial role/model combination, four-worker setting and ordinary fallback are not
-measured optima. Repository delivery is complete under the agreed Codex evaluation and existing
-read-only-behavior-check scope. The 24 A/B trials establish no adoption advantage. Historical
+The current role/model combination, eight-worker setting and ordinary fallback are not measured
+optima. The preceding repository delivery completed under the agreed Codex evaluation and existing
+read-only-behavior-check scope. Its 24 A/B trials establish no adoption advantage. Historical
 failures, four exact-name route misses and additional probe limitations remain recorded rather
 than relabeled as passes. [validation.md](validation.md) maps the required deliverables to evidence
 without treating configuration text or a comparison gate as acceptance.
