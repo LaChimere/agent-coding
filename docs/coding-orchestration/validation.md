@@ -1,11 +1,208 @@
 # Coding orchestration v0.1 validation
 
+## Current configuration revision
+
+On 2026-09-11 the user merged takeover into `complex_worker` at Sol/high and selected eight open
+worker threads. The current personal configuration has four roles. The complex role retains the
+stopped-implementer prerequisite, prior evidence, correct partial work and the same task's repair
+budget when taking over. Portable plugin files are unchanged. Workflow-orchestrator case 17 removes
+the obsolete role count from one expectation, with a manifest clarification; all assertions and
+critical expectation indexes remain intact.
+
+The revised configuration, design and coupled case clarification are recorded in `82ed76b`.
+
+The revised required native checks and the new fixed A/B have completed. Acceptance is bounded
+to the recorded Codex executions and explicitly reused evidence below. The configuration remains
+experimental: the comparison does not establish a quality, speed or monetary-cost advantage.
+No production configuration or installation is activated by this repository delivery.
+
+Completed checks for this revision:
+
+- `python3 /private/tmp/coding-orchestration-config-revision-check.py`: isolated Codex `0.154.0`
+  App Server with `--strict-config`, then `config/read`, accepted limit 8 and the existing Luna/max
+  fallback. Native `debug prompt-input` rendered nine available slots including the primary and
+  the updated four-role policy, with no `takeover_worker` mention. Policy mentions do not independently
+  establish custom-role discovery or invocation.
+- TOML readback parsed `config.toml` and all four role files. It confirmed Sol/high for the merged
+  complex role and retained the other model/effort and intended permission defaults.
+- `git diff --check` passed. The existing corpus validation command returned `VALID`;
+  the plugin distribution tests returned `6 passed in 0.03s`.
+- Workflow-orchestrator case 17 completed six new isolated contexts, three per condition,
+  independent grading, import and aggregation. Both conditions passed all four expectations
+  in all three rounds: 24/24 expectations. Normal preparation retained 114 unscheduled rows as
+  `not_run`; the whole-request critical gates remain false because other critical cases were not
+  scheduled. This result covers case 17 only. Portable runs intentionally load no personal roles
+  and retain the matched four-slot evaluation setting; they do not test the new eight-slot policy.
+- Native capacity checks established eight simultaneously active Luna/max workers and refusal of
+  a ninth launch. All eight gate commands finished successfully; one worker's final model response
+  failed afterward. A separate continuation retained the same primary and eight worker handles,
+  issued one evidence-only readout per original child, loaded all eight completed contexts,
+  then observed an old context unload and the pending
+  Astra/high reviewer launch. The reviewer completed a substantive review and the primary confirmed
+  its finding. Independent audit confirmed the retained history, source identity and capacity
+  evidence. The original final-response failure remains recorded.
+- Independent source review covered code, comments, tests, errors and design conformance. Two
+  stale documentation statements were corrected and rechecked; no runtime defect was reported.
+
+Evidence is under `.skill-evals/coding-orchestration/config-revision-2/`, with isolated configuration
+copies, source hashes, effective configuration and native prompt output. The first check's successful
+config read and unsupported `--strict-config` argument to `codex debug` remain in `config-revision-1/`;
+the corrected debug command omits that flag. Those configuration-only checks started no model turn.
+The subsequent behavioral evidence is under `revision-2/portable-case17/` and `revision-2/native/`.
+The limit is headroom for independent tasks selected by the primary, not a requirement to fill
+every slot or evidence of a performance advantage.
+
+The merged-role takeover passed its independent native audit. The ordinary worker made a real
+partial edit and its actual handle was interrupted before complex dispatch. Four turns on the
+original complex handle failed before tools; a distinct fresh exhausted-handoff context also
+failed. Those five failures remain unchanged. After A/B execution ended, one separately recorded
+continuation of the original complex handle actually ran Sol/high and repaired `money.py`.
+The worker, primary and collector each ran the four existing baseline/precision/negative/fraction
+checks: all returned exit 0 and `CHECK_OK:*`. `precision.py` stayed byte-identical; the primary
+retained history and recorded one repair used, one remaining and final acceptance true.
+The capability classification was supplied controlled input, not observed ordinary inability.
+
+A final read-only continuation reused the existing exhausted-handoff handle at Sol/high. It read
+the actual historical repair evidence, ran the still-failing fractional-cent check, explicitly
+declined a third patch and returned the required decision. The primary independently retained
+deferral at two repairs used, zero remaining and final acceptance false. The already-accepted
+main parser kept its separate one/one/true state. All 14 current task files were unchanged.
+Independent audit confirmed both continuations, exact handles/models, source identities and old
+history prefixes. No role-level sandbox enforcement or new dedicated read-only test was added.
+
+Both continuations used the existing client's process-scoped SSE trace logging. Metadata and
+successful native execution were captured without new errors. This establishes those later task
+results; it neither explains the earlier failures nor proves that logging fixed transport. The
+earlier five turns reached HTTP 200/SSE before their streams failed. Their upstream cause remains
+unknown; an uncorrelated gateway encrypted-output error is only a retained clue. The error-frame
+retention branch was not exercised by these successful continuations.
+
+`revision-2/native/acceptance-delta.md` maps current evidence and reuse to N01–N25. The preceding
+other-family exclusion remains. Unchanged methods, three-CLI distribution and read-only file-change
+checks reuse their prior bounded evidence; new role and capacity claims use the new native runs.
+All 37 portable plugin files match `24a0cac`; all six current personal source files match the new
+frozen source inputs. The removed takeover file accounts for the change from 44 to 43 runtime and
+configuration source files. No harness implementation or dependency changed.
+
+### Revised fixed A/B
+
+The new cohort `v2-20260910T190125Z-a0064d65` is under `revision-2/ab/`. Its frozen input hash is
+`27610b3dfab6d171efb58e13c2fa32c56463f1358ec1008da1217cad95668915`.
+The same twelve tasks, prompts, starts, acceptance criteria, primary Astra/xhigh and 20/60/30-minute
+task limits were retained. A uses the original baseline process; B uses the current four-role,
+eight-slot policy and plugins. The known scanner-mock flag-order correction and workspace-local
+scratch/cache settings apply to both conditions. Their full configurations intentionally differ;
+this descriptive A/B report does not fake a common `config_id` for harness aggregation.
+
+All 24 trials have results, final snapshots and independently graded frozen packets. They used
+24 actual primary thread IDs and 26 driver `turn/start` requests: the two extra requests were
+environment continuations on the original handles. There are 23 confirmed completed native turns;
+01-A has contradictory transient readbacks and no matching terminal notification before cleanup.
+Its raw `interrupted` label remains, with audited native status `uncertain`.
+
+| Result | A: baseline | B: revised candidate |
+| --- | --- | --- |
+| Final functional and authority acceptance | 11 passed, 1 failed captured artifact | 12 passed |
+| Observed authority boundary | 12 passed | 12 passed |
+| First completed-attempt acceptance | 11 passed, 1 unknown | 10 passed, 2 unknown |
+| Direct human actor interventions | 0 | 0 |
+| Driver environment recoveries | 1 | 1 |
+| Graded repair episodes | 3 | 2 |
+| Graded review episodes, including explicit primary reviews | 32 | 22 |
+
+The failed captured artifact is 01-A, where the collector ended observation prematurely. This
+does not establish inferior baseline model quality. Both sides passed the eleven pairs with
+completed, accepted task evidence. First-pass remains unknown where an initial completed-attempt
+boundary is missing; early parallel review or the first observed test snapshot is not such a
+boundary. Review counts retain their explicit per-grade definitions and do not equal unique agents.
+
+| Timing scope | Pairs | A seconds | B seconds | B relative change |
+| --- | ---: | ---: | ---: | ---: |
+| Recorded actor observation duration, including failed/uncertain results | 12 | 3293.55 | 3396.91 | +3.14% |
+| All accepted pairs, including recorded environment recovery | 11 | 2220.59 | 3351.02 | +50.91% |
+| Accepted pairs without environment recovery on either side | 10 | 2132.02 | 2166.09 | +1.60% |
+
+The final row is the usable comparison for uninterrupted execution in this cohort. The other
+rows retain observed time and interventions; 01-A's duration ends at premature collection, not
+successful task completion. Native workflow timing starts at the first `turn/start` and includes
+primary/worker work, reviews, retries and validation. Benchmark preparation, final collection and
+independent grading are separately recorded. In-run observation and snapshot overhead remain within
+the reported elapsed span. No speed advantage is demonstrated. These ten fixed pairs do not isolate
+the effect of the concurrency limit or a model.
+Monetary cost remains unknown. Reported token counters and their thread coverage are retained;
+complete observed-thread totals exist for 11 A trials and all 12 B trials, without extrapolating
+the missing A trial or substituting public API prices for gateway billing.
+
+Independent grading reports 2733 seconds across 14 recorded grading windows, including a
+70-second scanner supplement. The windows overlap; their overall span is 2682 seconds and includes
+gaps. `grading-overhead.json` retains each source/hash and interval. Grader usage/cost and unrecorded
+primary review overhead remain unknown; none is included in the native workflow timing above.
+
+Preserved collection and grading limitations:
+
+- An unsupported empty-thread read occurred before any model turn. The setup attempt and fix are
+  retained; both original empty IDs were resumed. Subsequent actor turns were separately blocked
+  by the outer sandbox's local-gateway connection denial. Approval review initially rejected the
+  network-enabled launch for missing visible payload/destination authorization; the original user
+  plan and fixed gateway/input evidence resolved that rejection through the same entry point.
+- Both affected threads retained their original absolute deadlines during the one allowed
+  environment continuation. 02-B completed within its deadline. 01-A was prematurely collected
+  after a transient readback contradicted the subsequent in-progress state. No replacement trial
+  was run. Its uncertainty, failed artifact and all earlier network errors remain explicit.
+- The scanner's private checker required a literal 0.58.0 diagnostic absent from the frozen task.
+  Read-only audit and independent supplemental grading corrected that interpretation and an
+  over-broad demand for prohibited live Trivy execution. Both scanner raw check failures remain;
+  later private assertions did not run. The original A grade remains `ungraded`, alongside the
+  explicitly selected bounded pass and source hashes. No real Trivy/configuration guarantee is
+  claimed. The common evaluator clarification was applied to both conditions without exposing
+  their solutions to each other or modifying any actor input.
+- Raw environment-intervention counts incorrectly called driver activity human activity. Sidecars
+  preserve and distinguish direct human 0 / driver 1. One grader rewrote and reconstructed that
+  field's representation before preservation was clarified; the first grade's original byte hash
+  is unknown. Its unchanged failed quality verdict and the reconstruction history are disclosed.
+  All published packet input bytes are verified unchanged.
+
+The result supports retaining this configuration as an experiment, not an adoption or optimization
+claim. `ab-quality-summary.json`, `ab-quality-report.md`, `collection-complete.json`, the independent
+grades, explicit supplement selection and raw runs retain the underlying evidence.
+
+Temporary reproduction entry points for the current revision are:
+
+```sh
+python3 /private/tmp/coding-orchestration-v2-case17-prepare.py freeze
+python3 /private/tmp/coding-orchestration-v2-case17-execute.py install
+python3 /private/tmp/coding-orchestration-v2-case17-execute.py execute --run-id coding-orchestration-v2-case17-behavior-baseline-r1 --primary-go-ahead --repair-batch-idle
+python3 /private/tmp/coding-orchestration-v2-case17-evidence.py packets
+python3 /private/tmp/coding-orchestration-v2-case17-evidence.py import
+python3 -B /private/tmp/coding-orchestration-v2-native-takeover.py run
+python3 -B /private/tmp/coding-orchestration-v2-native-capacity.py run
+python3 -B /private/tmp/coding-orchestration-v2-native-takeover-continuation.py run
+python3 -B /private/tmp/coding-orchestration-v2-native-capacity-continuation.py run
+python3 -B /private/tmp/coding-orchestration-v2-native-exhausted-handoff.py run
+python3 -B /private/tmp/coding-orchestration-v2-native-sol-sse-continuation.py prepare
+python3 -B /private/tmp/coding-orchestration-v2-native-sol-sse-continuation.py run
+python3 -B /private/tmp/coding-orchestration-v2-native-exhausted-continuation.py prepare
+python3 -B /private/tmp/coding-orchestration-v2-native-exhausted-continuation.py run
+python3 -B /private/tmp/coding-orchestration-v2-ab-run.py --run --resume
+python3 -B /private/tmp/coding-orchestration-v2-ab-packets.py
+python3 -B /private/tmp/coding-orchestration-v2-ab-summary.py
+```
+
+The case 17 execution line illustrates one of the six recorded run IDs; baseline and candidate
+each have rounds 1–3. Independent grading follows packet collection and precedes import. These
+are task-specific, frozen scripts with saved input identities and receipts; they are not
+distributed tooling. Existing runs and native continuations must retain their original state.
+
+The remaining sections record the preceding five-role/four-slot delivery at `24a0cac` and its
+frozen sources. Their results, including the 44-file identity check and native map, are historical
+evidence for that configuration; they are not certification of this subsequent revision.
+
 ## Delivery status
 
-Repository delivery is complete within the agreed scope and the bounded evidence below. The
+The preceding repository delivery completed within its agreed scope and the bounded evidence below. The
 candidate remains experimental; the results do not establish an adoption advantage. This document
-records delivery against
-[design.md](design.md) and baseline `120a1b4f311851f1fa5ebb40a6fba89809ab7bad`.
+records that delivery against the design at `24a0cac` and baseline
+`120a1b4f311851f1fa5ebb40a6fba89809ab7bad`; [design.md](design.md) now includes the subsequent revision.
 Completion does not mean every recorded trial passed. No production Codex configuration,
 plugin installation, remote branch or pull request is changed by this work.
 
@@ -615,7 +812,7 @@ issue or missing required execution. These audits did not start a fourth source-
 
 | Required deliverable | Final evidence and limits |
 | --- | --- |
-| Portable contracts and personal roles | Both plugin versions/manifests, five TOMLs and primary policy are implemented. All 44 runtime/configuration files match the evaluated repair freeze. |
+| Portable contracts and personal roles | Both plugin versions/manifests, five TOMLs and primary policy were implemented at `24a0cac`. All 44 delivered runtime/configuration files matched the evaluated repair freeze. |
 | Behavior and routing regression | Original 59 cases, anti-slop guards, appended cases and relevant suite cases were executed as scheduled. The 200 original candidate behavior slots have documented fresh or unaffected evidence; all 19 original failed/ungraded candidate slots have matching fresh successes. Repair cohorts have no candidate critical failures or missing critical evidence. Four exact-name routing misses remain explained limitations, with their grades unchanged. |
 | Native orchestration | All 24 required scenarios have bounded native evidence. Optional other-family execution remains unverified. Existing read-only file-change checks satisfy the revised requirement. |
 | Distribution | Three CLI combinations, updates, source identity and discovery are recorded. Every affected skill has actual Codex invocation evidence; prior transport failures are retained. Claude/Copilot have no effectiveness guarantee. |
