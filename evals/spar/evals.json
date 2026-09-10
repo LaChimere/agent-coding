@@ -84,6 +84,22 @@
         "Returns the standard SPAR sections and exactly one open question.",
         "Does not modify files."
       ]
+    },
+    {
+      "id": 5,
+      "prompt": "Use spar to pressure-test idea.md. Only models from the primary model family are permitted. Use independent role contexts through actual delegation if available; report actual evidence and missing capabilities. Read-only.",
+      "expected_output": "Develops opposing perspectives in independent same-family contexts when possible and synthesizes without inventing family diversity.",
+      "fixture_prefix": "files/same-family",
+      "files": [
+        "files/same-family/idea.md"
+      ],
+      "expectations": [
+        "Frames two distinct stakeholder perspectives and permits independent same-family execution rather than requiring another family.",
+        "Uses actual delegation when exposed with no shared role answers or worker descendants; otherwise reports independent coverage incomplete.",
+        "Tests the consistency versus availability conflict against the supplied proposal and returns exactly one open question.",
+        "Reports actual context/model/effort/family evidence or unverified facts; primary fallback is non-independent.",
+        "Does not implement, modify files or turn the analysis into a multi-round interview."
+      ]
     }
   ]
 }

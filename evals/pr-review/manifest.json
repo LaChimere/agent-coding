@@ -13,32 +13,34 @@
     12,
     13,
     14,
-    15
+    15,
+    16,
+    17,
+    18,
+    19
   ],
   "critical_expectations": {
-    "15": [
-      0,
-      1,
-      2,
-      3,
-      4
-    ],
     "0": [
       0,
       1,
       2,
       3,
-      4
+      4,
+      5,
+      6
     ],
     "3": [
       0,
       1,
-      2
+      2,
+      3,
+      4
     ],
     "4": [
       0,
       1,
-      2
+      2,
+      3
     ],
     "5": [
       0,
@@ -50,41 +52,82 @@
       1,
       2,
       3,
-      4
+      4,
+      5
     ],
     "9": [
       0,
       1,
       2,
       3,
-      4
+      4,
+      5
     ],
     "10": [
-      0,
-      1,
-      2,
-      3
-    ],
-    "11": [
       0,
       1,
       2,
       3,
       4
     ],
+    "11": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
     "12": [
       0,
       1,
       2,
-      3
+      3,
+      4
     ],
     "13": [
       0,
       1,
       2,
-      3
+      3,
+      4
     ],
     "14": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "15": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "16": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "17": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "18": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "19": [
       0,
       1,
       2,
@@ -93,26 +136,28 @@
     ]
   },
   "behavior_change_ids": [
+    2,
     8,
     9,
-    10,
     11,
-    12,
-    13,
     14,
-    15
+    16,
+    17,
+    18,
+    19
   ],
   "redundant_ids": [],
   "deterministic_ids": [],
   "behavior_change_rationale": {
-    "15": "Accept completed synchronous delegation without weakening asynchronous live-handle or evidence requirements.",
-    "8": "Make partial reviewer launch recovery explicit: defer capacity-blocked aspects, retry no-handle launches once with the inherited current-session model, then fall back to primary sequential review.",
-    "9": "Automatically add a Rubber Duck challenge for substantial reviews and disclose primary-model fallback when no contrasting model is available.",
-    "10": "Skip independent challengers for small direct changes unless the user explicitly requests one.",
-    "11": "Run SPAR only on explicit request and keep its unresolved challenges separate from ordinary findings.",
-    "12": "Honor an explicit request to exclude the automatically applicable Rubber Duck pass.",
-    "13": "Preserve cross-model challenge provenance while mapping verified candidates to canonical review aspects.",
-    "14": "Infer automatic Rubber Duck applicability from the changed public payment behavior without relying on an explicit substantial label."
+    "2": "Coding orchestration: aspects may share a reviewer without dropping their methods.",
+    "8": "Coding orchestration: launch recovery preserves explicit caller choice, not assumed inheritance.",
+    "9": "Coding orchestration: primary selects optional critique and reports fallback independence accurately.",
+    "11": "Coding orchestration: explicit SPAR trigger retained and non-independent fallback labeled.",
+    "14": "Coding orchestration: necessary risk checking is retained without mandatory automatic Rubber Duck.",
+    "16": "Coding orchestration: combined aspect methods retain individual coverage and evidence.",
+    "17": "Coding orchestration: independent same-family criticism is permitted.",
+    "18": "Coding orchestration: explicit reviewer launch failure cannot be downgraded into unverified completion.",
+    "19": "Coding orchestration: completed open threads require evidence retention and capacity release before pending review."
   },
   "clarification_rationale": {
     "_coverage": "The cases cover routing, evidence quality, aggregation, optional security, command execution, and report shape without duplicating every language-specific review example."

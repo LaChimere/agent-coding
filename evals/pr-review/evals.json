@@ -45,7 +45,7 @@
     {
       "id": 2,
       "prompt": "Use $pr-review, but only review comments and types in the supplied patch. Do not run any other aspect. Inspect `status/change.diff` and the changed source.",
-      "expected_output": "Honors the explicit only-selection, uses the comments reviewer to verify the completeness claim against the type, uses the types reviewer to identify the optional-id invariant gap, and reports coverage without running unrelated aspects.",
+      "expected_output": "Honors only comments and types, permits one reviewer to apply both complete methods, and reports their evidence separately without adding other aspects.",
       "fixture_prefix": "files/only-aspects",
       "files": [
         "files/only-aspects/src/profile.ts",
@@ -159,7 +159,7 @@
     {
       "id": 8,
       "prompt": "Use $pr-review to continue the partially completed review recorded in `status/launch-state.md`. Treat that file as the authoritative observable launcher state for this fixture: do not call collaboration tools or invent different handles. Inspect `status/change.diff` and the changed source, finish every selected aspect using the documented retry and fallback rules, and return the normal final report without modifying files.",
-      "expected_output": "Accounts for every selected aspect after a partial first wave: defers the capacity-blocked aspect to a later wave, retries no-handle launches once with the inherited current-session model, falls back to primary sequential review when that retry also returns no handle, and aggregates only after code, tests, errors, and types are complete.",
+      "expected_output": "Preserves primary-selected recovery and actual effective configuration evidence. Accounts for capacity deferral, one retry per assignment and primary fallback without treating fallback as independent.",
       "fixture_prefix": "files/partial-launch",
       "files": [
         "files/partial-launch/src/value.js",
@@ -169,8 +169,8 @@
       "expectations": [
         "Keeps code, tests, errors, and types as the complete selected aspect set and accounts for all four before aggregation.",
         "Treats types as deferred to a later wave when the first wave filled available capacity rather than counting it as a failed launch.",
-        "Retries each no-handle launch at most once without an explicit model override, using the recorded inherited current-session model outcome.",
-        "Uses the successful inherited-model retry for errors and runs types sequentially in the primary agent after its retry also returns no handle.",
+        "Records each at-most-once retry and the explicitly selected alternative; does not assume dropping a model argument preserves the primary choice.",
+        "Uses the recorded effective alternative-model errors result and runs types in the primary after its retry fails, disclosing the fallback as non-independent.",
         "Does not wait on a missing handle, retry indefinitely, invent reviewer results, or silently omit an aspect from Review Coverage.",
         "Does not modify the fixture files."
       ]
@@ -178,7 +178,7 @@
     {
       "id": 9,
       "prompt": "Use $pr-review on `status/change.diff` against `specs/payments.md`. This public payment-interface change is substantial. Treat `status/capabilities.md` as the observable model and delegation state. Review only and do not modify files.",
-      "expected_output": "Runs the applicable ordinary reviews and automatically performs a Rubber Duck primary-model fallback, reports that challenge coverage honestly, and consolidates the operation-idempotency defect into one verified correctness finding while allowing a separate test-coverage finding.",
+      "expected_output": "Recognizes substantive payment risk, chooses and explains necessary review coverage and optional Rubber Duck use, reports any primary fallback as non-independent, and confirms the operation-idempotency defect.",
       "fixture_prefix": "files/challenge-auto",
       "files": [
         "files/challenge-auto/src/payments.js",
@@ -187,8 +187,8 @@
         "files/challenge-auto/status/capabilities.md"
       ],
       "expectations": [
-        "Recognizes that the public payment and idempotency change is substantial and automatically runs Rubber Duck.",
-        "Uses the primary model fallback because no eligible different family or delegation is available, without calling it cross-model.",
+        "Recognizes the payment/idempotency risk and explicitly decides whether Rubber Duck adds necessary coverage rather than treating it as an automatic extra stage.",
+        "Accurately reports delegation unavailable and either a selected non-independent primary critique or Rubber Duck not selected; preserves any unmet independent-review requirement.",
         "Does not run SPAR because the user did not request it.",
         "Double-confirms the attempt-scoped idempotency key against the operation-scoped specification and reports one root correctness finding; a separately evidenced missing-test finding is not a duplicate.",
         "Records ordinary aspects, independent challenge, and security coverage separately.",
@@ -226,8 +226,8 @@
       ],
       "expectations": [
         "Runs SPAR only because the user explicitly requested it.",
-        "Uses a primary-model fallback and does not claim cross-model execution.",
-        "Treats SPAR as an independent challenge rather than a new ordinary aspect or source label.",
+        "Reports primary-model fallback as non-independent and leaves any required independent-context coverage incomplete.",
+        "Treats SPAR as a challenge capability rather than a new ordinary aspect or source label, without calling its primary fallback independent.",
         "Reports the undefined invalidation delivery and failure mechanism as a finding because it leaves the next-read requirement unsatisfied.",
         "Does not question whether the next-read guarantee applies across application instances; SPAR may still examine implementation trade-offs such as availability and failure behavior.",
         "Returns exactly one PR Review report and does not append a standalone SPAR or Rubber Duck report.",
@@ -275,7 +275,7 @@
     {
       "id": 14,
       "prompt": "Use $pr-review on `status/change.diff` against `specs/payments.md`. Treat `status/capabilities.md` as the observable model and delegation state. Review only and do not modify files.",
-      "expected_output": "Infers from the public payment interface and operation-idempotency contract that the change warrants an automatic Rubber Duck pass, then completes the primary-model fallback and consolidated review without relying on the word substantial.",
+      "expected_output": "Infers the material public-payment risk, makes an explicit primary decision on Rubber Duck while retaining necessary checking, and consolidates evidenced findings without claiming a primary fallback is independent.",
       "fixture_prefix": "files/challenge-auto",
       "files": [
         "files/challenge-auto/src/payments.js",
@@ -285,8 +285,8 @@
       ],
       "expectations": [
         "Infers substantial impact from the public payment boundary and duplicate-charge risk even though the prompt does not label the change substantial.",
-        "Automatically runs Rubber Duck and does not run SPAR.",
-        "Uses and honestly reports the primary-model fallback from the observable capability state.",
+        "Explicitly decides whether to select Rubber Duck with a risk-based reason, preserves necessary review methods, and does not run unrequested SPAR.",
+        "Honestly reports the unavailable delegation and any primary fallback as non-independent; unmet independent coverage remains incomplete.",
         "The final report independently substantiates the operation-scoped idempotency defect and maps it to canonical review labels; challenge coverage need not repeat the full evidence.",
         "Does not modify files."
       ]
@@ -308,6 +308,76 @@
         "Independently confirms the operation-scoped idempotency defect and uses canonical finding labels.",
         "Reports the recorded contrasting family as cross-model, without claiming a new live reviewer was run in this replay.",
         "Does not modify files."
+      ]
+    },
+    {
+      "id": 16,
+      "prompt": "Use pr-review only for code, tests and errors in status/change.diff. The primary has assigned all three aspects to one independent reviewer as recorded in status/review.md. Verify its candidates and report each aspect separately; do not launch another reviewer or run test/build/lint checks. Read-only inspection commands are permitted.",
+      "expected_output": "Uses all three methods from a single returned reviewer, verifies candidates, and keeps per-aspect coverage.",
+      "fixture_prefix": "files/combined-aspects",
+      "files": [
+        "files/combined-aspects/src/import.js",
+        "files/combined-aspects/test/import.test.js",
+        "files/combined-aspects/status/change.diff",
+        "files/combined-aspects/status/review.md"
+      ],
+      "expectations": [
+        "Reads and applies code, tests and errors briefs without requiring one agent per aspect.",
+        "Confirms parse failure is swallowed as a success-shaped empty import, and the visible test checks only valid input.",
+        "Reports each selected aspect and the one recorded independent reviewer accurately, with actual model/effort/family limited to supplied evidence.",
+        "Does not add excluded aspects, launch agents, execute test/build/lint checks, modify files or invent evidence; read-only inspection commands are permitted."
+      ]
+    },
+    {
+      "id": 17,
+      "prompt": "Use pr-review on status/change.diff and explicitly include rubber-duck. Only models from the current primary model family are permitted for this fixture. Delegate an independent critic if the actual host supports it; do not replace a missing other family with a primary-only pass. Review only.",
+      "expected_output": "Uses a same-family independent context when available, confirms the defect and reports actual model/family evidence; missing native delegation stays incomplete.",
+      "fixture_prefix": "files/same-family",
+      "files": [
+        "files/same-family/src/value.js",
+        "files/same-family/status/change.diff"
+      ],
+      "expectations": [
+        "Permits a same-family independent critic and does not require another model family before dispatch.",
+        "Uses actual delegation when exposed, with a fixed read-only target and no worker descendants; otherwise reports independent coverage incomplete.",
+        "Confirms invalid input is swallowed by the new fallback rather than claiming comprehensive specialist security coverage.",
+        "Reports independent context, actual model/effort/family or unverified facts separately; does not invent handles or tests.",
+        "Does not modify files or run unrequested SPAR."
+      ]
+    },
+    {
+      "id": 18,
+      "prompt": "Use pr-review to complete the recorded review state in status/launch.md. Do not call collaboration tools or invent execution. Inspect the patch, perform useful primary checks and state acceptance limits. Read-only.",
+      "expected_output": "Does not treat an unverified fallback model as the explicit chosen reviewer or complete required independent coverage.",
+      "fixture_prefix": "files/explicit-recovery",
+      "files": [
+        "files/explicit-recovery/src/value.js",
+        "files/explicit-recovery/status/change.diff",
+        "files/explicit-recovery/status/launch.md"
+      ],
+      "expectations": [
+        "Preserves the selected specialist/high/read-only decision across recovery rather than assuming omitted arguments inherit it.",
+        "Identifies the retry mismatch and missing independent result; does not accept an unauthorized workspace-write fallback as the requested reviewer.",
+        "Performs bounded primary inspection while leaving required independent review incomplete.",
+        "Never waits on missing handles, invents a result, adds another retry, modifies files or labels primary inspection independent."
+      ]
+    },
+    {
+      "id": 19,
+      "prompt": "Use pr-review to decide the next action from status/capacity.md. This fixture records lifecycle decisions, not native execution: do not call tools to launch, close or wait, and do not fabricate results. Return the pending review status without editing files.",
+      "expected_output": "Preserves completed evidence, closes open threads through supported controls before required review, and never assumes turn completion released capacity.",
+      "fixture_prefix": "files/open-capacity",
+      "files": [
+        "files/open-capacity/status/capacity.md",
+        "files/open-capacity/status/report-1.md",
+        "files/open-capacity/status/report-2.md"
+      ],
+      "expectations": [
+        "Recognizes both caller-provided worker slots remain occupied by completed but open threads.",
+        "Preserves the returned reports and useful continuation context before proposing closure of actual handles.",
+        "Requires confirmation of released capacity and then dispatches the pending required reviewer in the proposed sequence.",
+        "Does not wait indefinitely, discard the pending task, hard-code a personal concurrency limit, or claim the unlaunched review complete.",
+        "Labels lifecycle evidence recorded only and performs no writes or invented native calls."
       ]
     }
   ]
