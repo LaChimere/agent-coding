@@ -5,7 +5,9 @@ description: Execute approved plans or resume implementation that needs verified
 
 # Purpose
 
-Carry the entire approved implementation scope forward in small, reviewable, verified slices until the user's requested return boundary is reached. A slice is a checkpoint, not the end of a whole-plan request. This is an execution skill, not a planning shortcut or a persistent goal lifecycle.
+The primary session carries the entire approved implementation scope forward in small, reviewable, verified slices until the user's requested return boundary is reached. A slice is a checkpoint, not the end of a whole-plan request. This skill supplies execution methods; the primary owns coordination, integration and final acceptance, including when it delegates a slice.
+
+A worker follows only its assigned scope, constraints and acceptance criteria. The larger plan is context, not authority to execute other steps. Return the slice's result, changed files, actual validation commands and decisive output, uncertainty, acceptance status and any repair history to the primary. Workers do not spawn agents, maintain overall progress or choose the next plan step. The primary decides direct execution versus delegation and the runtime role, model and effort under caller policy; this portable skill imposes none of those mappings.
 
 # Boundaries
 
@@ -32,7 +34,7 @@ The native host `/goal`, when explicitly requested and available, owns persisten
 
 # 2) Pick one atomic slice
 
-Choose the smallest coherent next step that advances the approved scope, leaves the repository valid and is verifiable. Unrelated ready items stay untouched. Validation units need not equal commit units; avoid splitting directly coupled behavior/tests/docs just to make the checklist longer. Consume existing parallel ownership decisions rather than invoking another planning round; actual allocation belongs to authorized execution.
+The primary chooses the smallest coherent next step that advances the approved scope, leaves the repository valid and is verifiable. Unrelated ready items stay untouched. Validation units need not equal commit units; avoid splitting directly coupled behavior/tests/docs just to make the checklist longer. Consume existing parallel ownership decisions rather than invoking another planning round; actual allocation belongs to authorized execution. A delegate completes that assigned slice and returns, even when other plan steps are ready.
 
 # 3) Implement it
 
@@ -52,7 +54,7 @@ Choose the smallest coherent next step that advances the approved scope, leaves 
 
 # 5) Update the progress truth
 
-When a plan is used, update its execution progress, commands/results, blockers and next step at each meaningful checkpoint. Keep approved scope separate from dynamic status. Routine internal choices, evidence updates and equivalent execution refinements do not reset approval. Record `lessons.md` only after a material correction. Re-align before changing external behavior, public contracts, important architecture, state/concurrency semantics, security, cost or scope; do not silently revise the approved section to match an unapproved implementation.
+When a plan is used, the primary updates its execution progress, commands/results, blockers and next step at each meaningful checkpoint, after inspecting delegated results. Keep approved scope separate from dynamic status and retain one progress source. Routine internal choices, evidence updates and equivalent execution refinements do not reset approval. Record `lessons.md` only after a material correction. Re-align before changing external behavior, public contracts, important architecture, state/concurrency semantics, security, cost or scope; do not silently revise the approved section to match an unapproved implementation.
 
 # 6) Land or report
 
@@ -90,11 +92,17 @@ Fix at the root cause, not with the smallest patch that silences the comment.
 
 # Repeated failure
 
+The primary classifies implementation mistakes, missing context, tool/environment failures, capacity, scope errors and demonstrated reasoning limitations separately. Continue a useful worker thread through the host's actual continuation mechanism for targeted repair or added context. A new worker with the same role is a different thread. Tool retries and capacity waits are not implementation repairs or evidence for model escalation.
+
+Honor any caller-supplied repair limit. Preserve the task's attempts, hypotheses and evidence across re-dispatch or re-planning; neither automatically resets that limit. At exhaustion return to primary classification and re-planning, even when each repair produced new evidence. This portable skill supplies no fixed cross-platform repair count or replacement model.
+
 After two materially similar failed attempts with no new evidence, stop the fix-on-fix loop: record what was tried and what each result disproved, reassess the assumption and path, update plan or design through the required gate if the path changed, and escalate when safe replanning is not possible.
+
+Manage only actual handles returned by successful launches. Schedule required tasks in waves when capacity is full. If finished threads still occupy slots, preserve their results and continuation context, close them as needed using the host's supported lifecycle, confirm capacity release, and continue pending work. Stop an active implementer before takeover; inspect its diff and running work and preserve correct partial results. Cancellation is not rollback.
 
 # Done when
 
-Audit the original request at the requested return boundary: the entire authorized scope (or explicitly limited step/phase) is implemented; acceptance and affected regression checks have evidence; required reviews passed; plan progress and coupled docs match reality; deviations and extra implementation have been checked; no known in-scope blocking finding remains. Unrun, ungraded or failed required verification is incomplete, not success. Stop adding checks once this evidence is sufficient.
+The primary audits the original request at the requested return boundary: the entire authorized scope (or explicitly limited step/phase) is implemented; acceptance and affected regression checks have evidence; required reviews passed; plan progress and coupled docs match reality; deviations and extra implementation have been checked; no known in-scope blocking finding remains. A worker's return, a completed runtime turn, or a schema-valid response is evidence to inspect, not final acceptance. Unrun, ungraded or failed required verification is incomplete, not success. Stop adding checks once this evidence is sufficient.
 
 # Gotchas
 

@@ -2,22 +2,16 @@
   "skill_name": "anti-slop",
   "default_category": "regression_guard",
   "critical_ids": [
+    0,
+    4,
     5,
     6,
     7,
     9,
-    0,
-    4,
     10,
     11
   ],
   "critical_expectations": {
-    "11": [
-      0,
-      1,
-      2,
-      3
-    ],
     "0": [
       0,
       1,
@@ -63,29 +57,17 @@
       1,
       2,
       3
+    ],
+    "11": [
+      0,
+      1,
+      2,
+      3
     ]
   },
-  "behavior_change_ids": [
-    0,
-    4,
-    5,
-    6,
-    7,
-    9,
-    10,
-    11
-  ],
+  "behavior_change_ids": [],
   "redundant_ids": [],
-  "behavior_change_rationale": {
-    "11": "Accept completed synchronous delegation without weakening asynchronous live-handle or evidence requirements.",
-    "0": "Workflow refinement: read-only evidence and review reuse or living-plan progress and approval as specified by this case.",
-    "4": "Workflow refinement: read-only evidence and review reuse or living-plan progress and approval as specified by this case.",
-    "5": "Required independent review needs actual launch/result evidence; nominal availability or a failed launch must leave review incomplete, never replaced by empty waits or self-checks.",
-    "6": "Workflow refinement: read-only evidence and review reuse or living-plan progress and approval as specified by this case.",
-    "7": "The observed empty-wait/claimed-review failure requires actual launch, failure and returned-assessment evidence. Missing target or callable reviewer remains explicitly incomplete; capability notes and model count cannot establish completed independent review.",
-    "9": "Workflow refinement: read-only evidence and review reuse or living-plan progress and approval as specified by this case.",
-    "10": "Workflow refinement: read-only evidence and review reuse or living-plan progress and approval as specified by this case."
-  },
+  "behavior_change_rationale": {},
   "clarification_rationale": {
     "5": "Judge observable substantive independent assessment and real launch/result provenance, not exact delegation wording encrypted by the host. The runtime requirement to request problem-seeking review is unchanged. Preserve old ungradable pilot evidence and evaluate this clarified criterion with a new frozen corpus."
   }

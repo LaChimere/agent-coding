@@ -11,7 +11,11 @@
     13,
     14,
     15,
-    16
+    16,
+    17,
+    18,
+    19,
+    20
   ],
   "critical_expectations": {
     "6": [
@@ -80,25 +84,44 @@
       3,
       4,
       5
+    ],
+    "17": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "18": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "19": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "20": [
+      0,
+      1,
+      2,
+      3
     ]
   },
   "behavior_change_ids": [
-    7,
-    11,
-    12,
-    13,
-    14,
-    15,
-    16
+    17,
+    18,
+    19,
+    20
   ],
   "redundant_ids": [],
   "behavior_change_rationale": {
-    "7": "Implementation-only authority produces verified working-tree readiness in the living plan, never commits. The self-contained token-exchanger fixture requires real renewed values and failure propagation so a stale clone cannot satisfy readiness.",
-    "11": "Workflow refinement: read-only evidence and review reuse or living-plan progress and approval as specified by this case.",
-    "12": "Workflow refinement: read-only evidence and review reuse or living-plan progress and approval as specified by this case.",
-    "13": "Workflow refinement: read-only evidence and review reuse or living-plan progress and approval as specified by this case.",
-    "14": "Workflow refinement: read-only evidence and review reuse or living-plan progress and approval as specified by this case.",
-    "15": "A decision-only contract question rejects an unapproved export rename; no execution progress is produced, so progress semantics are tested in case 16 instead.",
-    "16": "During authorized implementation, inspect the real provider and consumer to discover an incompatible async API, preserve the approved contract, complete independent safe work and separate dynamic blocker evidence from immutable approval."
+    "17": "Coding orchestration: a worker returns its assigned slice rather than owning the whole plan.",
+    "18": "Coding orchestration: retain actual thread context and classify tool failure before capability escalation.",
+    "19": "Coding orchestration: honor caller repair exhaustion across worker changes even with new evidence.",
+    "20": "Coding orchestration: runtime and structured-response completion cannot substitute for task evidence."
   }
 }

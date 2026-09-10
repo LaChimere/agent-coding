@@ -1,0 +1,1 @@
+Recorded portability scenario. Host has ordinary native delegation and the workflow plugin, including execute-plan-loop. No personal agent TOMLs or pr-review plugin are installed. An approved low-risk two-label plan needs verified execution through both steps. No independent review is required by this task. The primary remains the coordinator.

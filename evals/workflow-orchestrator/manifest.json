@@ -7,7 +7,10 @@
     9,
     10,
     11,
-    12
+    12,
+    15,
+    16,
+    17
   ],
   "critical_expectations": {
     "3": [
@@ -28,6 +31,7 @@
       0,
       1,
       2,
+      3,
       4
     ],
     "10": [
@@ -47,31 +51,43 @@
       1,
       2,
       3
+    ],
+    "15": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "16": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "17": [
+      0,
+      1,
+      2,
+      3
     ]
   },
   "behavior_change_ids": [
-    3,
-    4,
+    7,
     9,
-    10,
-    11,
-    12,
-    13,
-    14
+    15,
+    16,
+    17
   ],
   "redundant_ids": [
     2,
     6
   ],
   "behavior_change_rationale": {
-    "3": "Workflow refinement: native approval, living-plan state, bounded review, or embedded parallel planning as specified by this case.",
-    "4": "Workflow refinement: native approval, living-plan state, bounded review, or embedded parallel planning as specified by this case.",
-    "9": "Correct the invalid missing-worker setup: the runner must actually disable all workflow workers except orchestrator and save the resulting host catalog. Retained installed files are not enabled capabilities. Without that live evidence leave the case ungraded.",
-    "10": "A writable save-only handoff must preserve the supplied existing guide byte-for-byte and write only the accepted living plan, without another approval. Before/after file inventory and hashes establish the boundary.",
-    "11": "Workflow refinement: native approval, living-plan state, bounded review, or embedded parallel planning as specified by this case.",
-    "12": "Workflow refinement: native approval, living-plan state, bounded review, or embedded parallel planning as specified by this case.",
-    "13": "Exercise proportionate standalone design writing through the installed template and convergence when the complete simple design and save authority are supplied; grade content and actual writes rather than required headings.",
-    "14": "Exercise persistence and compatibility design writing through the installed template; preserve known state and failure semantics while accurately exposing one unresolved material decision before planning."
+    "7": "Coding orchestration: separate process-skill selection from primary runtime coordination.",
+    "9": "Coding orchestration: required missing skill remains incomplete rather than being reimplemented by a fallback.",
+    "15": "Coding orchestration: process skills do not select runtime roles or models.",
+    "16": "Coding orchestration: task-specific missing dependencies do not block independent authorized work.",
+    "17": "Coding orchestration: portable plugin methods require no personal role configuration."
   },
   "clarification_rationale": {
     "14": "The example-first criterion applies within the proposed design, after the separate constraints section. A concrete load or save behavior example satisfies it; requiring one example to cover the entire load/save lifecycle would add a requirement beyond the design-writing contract. A destination JSON shape alone is not a behavior example."

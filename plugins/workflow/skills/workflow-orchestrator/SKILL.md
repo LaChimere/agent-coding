@@ -1,13 +1,13 @@
 ---
 name: workflow-orchestrator
-description: Resolve a real ambiguity in workflow phase, authorization, or primary worker, or coordinate phases when explicitly requested. Do not use for host-native goal status, clear small tasks, creating one worktree, direct execution of an approved plan, or an already obvious specialist task.
+description: Resolve a real ambiguity in workflow phase, authorization, or process-skill choice, or coordinate phases when explicitly requested. Do not use for host-native goal status, clear small tasks, creating one worktree, direct execution of an approved plan, or an already obvious specialist task.
 ---
 
 # Purpose
 
-Resolve the next phase or worker without owning implementation. The normal path is discussion → design alignment → execution planning → implementation and verification; phases apply only when needed.
+Help the primary session resolve the next phase or process skill. The primary owns coordination and final acceptance. The normal path is discussion → design alignment → execution planning → implementation and verification; phases apply only when needed.
 
-Use this skill for unresolved phase, authorization or worker choices, not as a mandatory front door. Clear small changes belong to the primary session; direct specialist requests go to that installed skill.
+Use this skill for unresolved phase, authorization or process-skill choices, not as a mandatory front door. A skill supplies methods and constraints; a runtime worker is a delegated agent. Selecting a skill does not select a worker, model, or reasoning effort. Those execution decisions remain with the primary and applicable caller policy. Clear small changes belong to the primary session; direct specialist requests use that installed skill.
 
 # References
 
@@ -20,11 +20,11 @@ Project `AGENTS.md` supplies contributor constraints and validation commands, no
 1. **Inspect relevant evidence.** Classify the next step as discovery, design, plan, execution, recovery, review, docs or direct inspection. Read named files and current approvals before making codebase claims. Report contradictions rather than routing toward a workaround fitted to visible tests.
 2. **Use existing planning context.** An accepted native Plan Mode proposal plus explicit revisions is valid input. Do not re-plan or demand a formatted handoff because a file is absent. Reuse an existing `plans/{slug}` for the same scope; choose one short purpose-specific slug only if new records are needed.
 3. **Record only what is needed and authorized.** Native Plan Mode owns exploration and the proposed overall plan. Save to `plan.md` only when the host permits writing and the user authorizes it. Save-only requests authorize documents, not implementation. An explicitly approved native plan satisfies Gate 2; writing it adds no gate. Exiting Plan Mode alone is not approval.
-4. **Choose the smallest sufficient worker.** Use the table below; add companions only for a distinct need. A native proposal's complete parallel section needs no second plan or interview. Routine allocation details remain execution decisions.
+4. **Choose the needed process skill.** Use the table below; add companions only for a distinct need. The primary may execute directly or delegate a bounded task using the selected methods. A native proposal's complete parallel section needs no second plan or interview. Routine allocation details remain execution decisions.
 5. **Resolve only material gaps.** Preserve scope and authority already supplied in the conversation. Default landing mode to `working_tree`; implementation never implies commits or external writes. Ask only for missing decisions that materially affect behavior, contracts, architecture, state/concurrency, safety, cost or scope. Once objective, scope, behavior, constraints and observable success criteria are sufficient to plan, and material unknowns are resolved or explicitly bounded, end the questionnaire, state remaining assumptions and continue within existing authority. If a skill rule blocks authorized work, link its file, quote the exact rule, distinguish a requirement from your interpretation, and identify the needed decision.
-6. **Continue or hand off.** Convey phase, scope, approval source, landing mode, acceptance, worker and any actual blocker concisely. A structured handoff can help another executor, but is not an entry requirement. Continue authorized work unless the request was coordination-only or an explicit phase/step boundary has been reached.
+6. **Continue or hand off.** Convey phase, scope, approval source, landing mode, acceptance, selected skill and any actual blocker concisely. A delegated worker receives its bounded scope, constraints, acceptance and relevant evidence; the primary retains overall progress and the next action. A structured handoff can help, but is not an entry requirement. Continue authorized work unless the request was coordination-only or an explicit phase/step boundary has been reached.
 
-| Worker | Use when |
+| Execution or process skill | Use when |
 |---|---|
 | Primary session | A clear, bounded task needs no specialist workflow |
 | `execute-plan-loop` | Approved implementation needs verified slices through the requested scope |
@@ -55,4 +55,4 @@ capabilities, not another harness's command syntax. A synchronous delegated resu
 an asynchronous launch needs a returned live task handle before waiting. Neither a requested role nor
 a failed launch is evidence of execution. Keep required independence and approval boundaries intact.
 
-Use installed skills and actually exposed host capabilities. Do not claim a missing invocation occurred or automatically install it. Continue independent authorized work; report what cannot be checked. Optional review coverage can be reported as absent; explicitly required independent review remains incomplete until a real reviewer is available, not satisfied by self-review.
+Dependencies are on demand: ordinary native work does not require this plugin or `pr-review`, and neither plugin requires the other to load. Portable skills do not depend on personal role names, models or effort settings. Use installed skills and actually exposed host capabilities. If a task needs an unavailable skill, report that capability and leave the dependent work incomplete; do not recreate its workflow or automatically install it. Continue independent authorized work. Optional review coverage can be reported as absent; required independent review remains incomplete until a real reviewer is available, not satisfied by self-review.

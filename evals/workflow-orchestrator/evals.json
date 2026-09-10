@@ -117,13 +117,13 @@
     {
       "id": 7,
       "prompt": "A user asks to implement an approved feature and also asks to keep the change free of unnecessary abstractions and duplication. Orchestrate the next step. Use the current working directory as the repository root. Do not modify files outside the provided output directory.",
-      "expected_output": "Selects execute-plan-loop as the primary implementation owner and activates anti-slop only as a companion quality guard, without giving both skills ownership of planning or commit cadence.",
+      "expected_output": "Selects execute-plan-loop as the process skill and anti-slop as a companion; the primary session owns coordination, progress and cadence.",
       "fixture_prefix": "files",
       "files": [],
       "expectations": [
-        "Names execute-plan-loop as the primary worker.",
+        "Selects execute-plan-loop as a process skill rather than a runtime worker role or model.",
         "Names anti-slop as a companion rather than an exclusive route.",
-        "Keeps planning and execution ownership with the workflow worker.",
+        "Keeps planning, execution coordination and overall progress with the primary session.",
         "Avoids duplicate review loops.",
         "States the completion or stop boundary."
       ]
@@ -145,7 +145,7 @@
     {
       "id": 9,
       "prompt": "The host's enabled skill catalog exposes only workflow-orchestrator for this case; execute-plan-loop and the other workflow workers are explicitly disabled. workflow/enabled-skills.json records that configuration. The user has an approved implementation plan and asks only to orchestrate the next step, not implement it in this turn. Respect the disabled workers: do not load, enable or install them. Report the available next step while preserving the existing scope and approval. Use the current working directory as the repository root.",
-      "expected_output": "Only grade after verifying the actual host catalog has only workflow-orchestrator enabled; the fixture alone is not proof. Reports the disabled executor accurately and offers a safe bounded primary-session fallback or the required enabling action, without invoking disabled skills or implementing during this coordination-only turn.",
+      "expected_output": "Verify the actual enabled catalog before grading. Report the disabled required executor as incomplete; preserve approval and identify unaffected primary work without recreating or invoking the disabled skill during this coordination-only turn.",
       "fixture_prefix": "files",
       "files": [
         "files/workflow/enabled-skills.json"
@@ -153,8 +153,8 @@
       "expectations": [
         "Does not load or claim to invoke the disabled execute-plan-loop skill.",
         "Reports the executor as disabled/unavailable, not physically absent merely because it is omitted from the enabled catalog.",
-        "Offers a contract-equivalent bounded primary-session fallback only when safe, without starting implementation in this coordination-only turn.",
-        "If enabling a worker is needed, identifies that action without enabling or installing it automatically.",
+        "Leaves required execution-skill work incomplete and identifies only unaffected authorized primary work; does not reproduce the missing workflow or implement during this coordination-only turn.",
+        "Reports capability enablement as a separate action when relevant and never enables or installs disabled skills automatically.",
         "Keeps existing scope and approval intact; disabled capability does not require reapproving the same plan."
       ]
     },
@@ -224,6 +224,51 @@
         "Explains why the envelope conflicts with V1 readers and whole-file writers, compares a credible alternative or deferral with its drawbacks, and labels any compatibility recommendation or migration direction as conditional.",
         "Marks design approval as pending and V1 read/edit compatibility after a V2 save as the one material planning blocker; asks for that decision without inventing its answer or using an assumption to bypass it.",
         "Replaces guidance with coherent standalone content, scales detail to persistence and compatibility, and avoids unrelated questions, implementation steps, extra plan/RFC/ADR/TODO/goal files or implementation."
+      ]
+    },
+    {
+      "id": 15,
+      "prompt": "Use workflow-orchestrator to resolve the next step in status/task.md. Return the decision only, without implementation or delegation.",
+      "expected_output": "Separates process-skill choice from runtime execution, preserves the primary model and authority, and does not mechanically launch a role.",
+      "fixture_prefix": "files/skill-role",
+      "files": [
+        "files/skill-role/status/task.md"
+      ],
+      "expectations": [
+        "Selects execute-plan-loop as the approved execution method while the primary remains the coordinator.",
+        "Distinguishes the caller-selected runtime role/model from the skill; does not assign model policy to the plugin.",
+        "Keeps global progress and final acceptance in the primary, with only a bounded slice delegated if later authorized.",
+        "Does not write files, spawn agents, require another planning gate or change the primary model."
+      ]
+    },
+    {
+      "id": 16,
+      "prompt": "Use workflow-orchestrator on the recorded capability scenario in status/task.md. Decide what can proceed and what remains incomplete. This is a read-only decision fixture; do not invoke, install or recreate unavailable tools.",
+      "expected_output": "Does not turn plugin absence into a global gate or reproduce a missing specialist workflow.",
+      "fixture_prefix": "files/on-demand",
+      "files": [
+        "files/on-demand/status/task.md"
+      ],
+      "expectations": [
+        "Reports the exact required pr-review capability missing and independent review incomplete.",
+        "Allows the separately authorized, independent label correction to proceed later without installing either plugin.",
+        "Does not demand both plugins or personal role files as prerequisites for ordinary native work.",
+        "Does not recreate pr-review, mark primary inspection independent, write files or auto-install capabilities."
+      ]
+    },
+    {
+      "id": 17,
+      "prompt": "Use workflow-orchestrator to decide the workflow for status/task.md. Do not implement or dispatch in this turn.",
+      "expected_output": "Uses installed process methods with caller-selected resources without demanding personal Codex roles or another plugin.",
+      "fixture_prefix": "files/portable",
+      "files": [
+        "files/portable/status/task.md"
+      ],
+      "expectations": [
+        "Recognizes the approved multi-slice execution can use the available execute-plan-loop skill.",
+        "Keeps runtime role/model/effort choice with the primary and requires no personal five-role mapping.",
+        "Does not require pr-review for this task when no task-specific review capability is needed.",
+        "Does not modify files, install anything or fabricate execution evidence."
       ]
     }
   ]
