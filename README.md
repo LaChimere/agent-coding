@@ -267,8 +267,9 @@ release versions. Do not switch production installations or copy credentials for
 
 Skills describe actions, not a universal tool API. Use the host's actual invocation, delegation,
 planning and permission mechanisms. Synchronous reviewer results are complete when returned;
-asynchronous tasks need real handles before waiting. Cross-model claims require actual execution
-and model-family evidence, not just a requested model.
+asynchronous tasks need real handles before waiting. Report independent context, actual model/effort
+and model-family diversity separately from execution evidence. Requested arguments alone do not
+establish effective configuration, including after a failed launch.
 
 Native Plan Mode and `/goal` are optional host capabilities. Without them, explicit chat approval
 can authorize ordinary work, but there is no promised automatic cross-turn continuation. The complete
@@ -329,20 +330,20 @@ branch diff, commit range, or working-tree changes. The plugin is read-only. It 
 capability is installed; otherwise it reports the missing security coverage according to whether
 security was automatic or explicitly required.
 
-`$pr-review` selects the applicable code, comments, tests, errors, types, and specification reviewers;
-design is a focus applied through those reviewers rather than a separate public aspect. When no
+The primary uses `$pr-review` to select necessary code, comments, tests, errors, types, and specification
+aspects. It can combine several aspects in one reviewer while retaining each method and its evidence;
+design is a focus applied through those aspects rather than a separate public aspect. When no
 authoritative specification exists, it skips specification review instead of inferring requirements
 from the diff. The primary agent double-confirms and deduplicates candidates, then reports them as
 Blocker, Critical, Major, Minor, or Suggestion findings with source and coverage details. This workflow
 does not invoke or depend on the separate `$code-review` skill.
 
-For substantial changes, `$pr-review` automatically adds a `$rubber-duck` critic unless the user
-excludes it. SPAR is never automatic, but a review request can explicitly include `$spar` to challenge
-the design assumptions and trade-offs. Ordinary reviewers use the current session model by default;
-the primary agent chooses reasoning effort and retains final judgement. When no eligible different
-model family is available for a challenger, the primary model performs a distinct/sequential
-same-session pass without launching a same-family subagent; the report states that
-limitation.
+The primary decides whether `$rubber-duck` adds useful critique, honoring explicit requests,
+exclusions and necessary independent risk coverage. SPAR is never automatic, but a review request
+can explicitly include `$spar` to challenge assumptions and trade-offs. Dispatch and launch recovery
+follow the primary's model/effort choice; omitted arguments do not guarantee inheritance. An
+independent same-family critic is valid. Another eligible family is optional unless explicitly
+required. A primary fallback remains non-independent and cannot satisfy an unmet independent review.
 
 Use `$spar <idea>` for an explicit, one-shot devil's-advocate analysis of an idea, decision, plan,
 design, migration, or optimization. It develops two independent opposing perspectives by default,

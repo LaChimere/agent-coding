@@ -27,11 +27,9 @@ decision rather than repeating one side. Never use more than three roles.
 The primary agent coordinates the analysis and chooses reasoning effort according to the decision's
 complexity and risk.
 
-- Prefer an eligible model from a different user-, repository-, and host-allowed family for the role
-  perspectives. Do not hard-code a model or reasoning level.
-- Establish a specific eligible different-family model before launching any role. When none is
-  positively known, keep both perspectives in the primary agent and do not enter the collaboration
-  path; same-family subagents are not the fallback.
+- Select suitable available and permitted models for independent role contexts. Same-family models
+  are valid; consider another family when useful and available as an optional enhancement. Do not
+  hard-code a model, personal runtime role or reasoning level.
 - Give each role the same subject and relevant evidence, but not another role's output. Each role
   makes the strongest credible case from its assigned perspective and must not spawn more agents.
 - Launch roles through the host's actual delegation mechanism, in parallel when capacity permits,
@@ -42,19 +40,23 @@ complexity and risk.
   role exists to collect and cannot later produce a result. Continue with the required primary
   perspectives when the receiver set is empty. If a launch returns no handle because capacity is
   full, defer it to a later wave; otherwise
-  retry one no-handle launch once after capacity is available, then use the primary fallback. If a
+  retry one no-handle launch once after capacity is available, preserving the primary's model, effort
+  and read-only dispatch decision, then use the primary fallback. Omitted arguments do not prove
+  inheritance; verify any authorized alternative against the primary's choice. If a
   launched role fails, use the primary fallback without repeatedly relaunching it.
 - Treat `no thread` and an unavailable collaboration tool as delegation unavailable for that
   invocation and use the primary perspectives immediately.
-- If no eligible different family is available or delegation is unavailable, the primary performs
-  the perspectives sequentially as distinct passes.
+- If delegation is unavailable, the primary performs the perspectives sequentially as distinct
+  passes and reports them as non-independent. An unmet required independent assessment remains incomplete.
 - When the user explicitly requires an actual different model family and none is available, report
   the capability limitation instead of calling a same-model analysis cross-model.
 
-Record cross-model analysis only with an actual delegated result (returned synchronously or collected
-through a live handle) and execution evidence confirming a known eligible different model family. Requested model arguments,
-role prompts, intended launches, and failed launch calls are not execution evidence. Otherwise record
-the actual primary-model fallback. Do not reveal hidden reasoning.
+Record context independence, actual model/effort and family separately with returned results and
+execution evidence. Requested model arguments, role prompts, intended launches, and failed calls are
+not execution evidence. Mark unknown configuration as unverified and primary fallback as
+non-independent. Keep unmet required independence or family coverage incomplete. If completed threads
+still occupy capacity, preserve their results and useful context, close them through supported host
+controls, confirm released capacity, and continue pending perspectives. Do not reveal hidden reasoning.
 
 ## Synthesize
 
@@ -89,7 +91,7 @@ Return exactly these sections:
 <one question exposing the most important unresolved tension>
 
 ## Execution
-<cross-model with known model/family, or primary-model fallback and its limitation>
+<independent contexts or primary fallback; actual model/effort/family and evidence or unverified; unmet coverage>
 ```
 
 Do not implement the idea, edit files, assign PR severities, or continue into a multi-round interview.

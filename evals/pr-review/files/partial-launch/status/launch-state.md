@@ -1,25 +1,14 @@
 # Recorded reviewer launcher state
-
-The applicability decision selected exactly these ordinary aspects: `code`, `tests`, `errors`, and
-`types`. Specification and security are not applicable to this fixture.
-
-Delegation is available, with capacity for two reviewers beside the primary agent.
-
-The first wave produced these observable results:
-
-- `code` returned live handle `code-1` and completed with no candidates.
-- `tests` returned live handle `tests-1` and completed with no candidates.
-- `errors` was not attempted because both reviewer slots were occupied.
-- `types` was not attempted because both reviewer slots were occupied.
-
-After the first wave released capacity, the launcher has these deterministic outcomes:
-
-- The preferred-model launch for `errors` returns no live handle because that model is unavailable.
-- Retrying `errors` once without a model override uses the inherited current-session model, returns
-  live handle `errors-2`, and completes with no candidates.
-- The preferred-model launch for `types` returns no live handle because of a transient launcher
-  error.
-- Retrying `types` once without a model override also returns no live handle.
-
-No other launcher outcomes are available. Complete any required fallback from the primary session
-and do not invent additional handles or retries.
+This is recorded decision evidence, not a fresh runtime claim. Selected ordinary aspects are code,
+tests, errors and types. Specification and security are not applicable. Capacity is two reviewers.
+The primary selected reviewer-model-A / high / read-only, explicitly, for all assignments. The global
+fallback is ordinary-model-B / low / workspace-write; omitted arguments do not preserve the choice.
+First wave: code-1 and tests-1 returned live handles and completed with no candidates. Errors and
+types were not attempted while capacity was full. These first-wave threads were then closed.
+After released capacity: errors launch with the selected model failed without a handle because
+that model was unavailable. The primary explicitly selected permitted alternative reviewer-model-C
+/ high / read-only. Its single retry returned errors-2 and completed with no candidates; effective
+runtime evidence confirms model C, high effort, read-only. Types launch failed without a handle due
+to a transient launcher error. Its single retry preserved model A / high / read-only but also
+returned no handle. No further outcomes exist. Complete types in the primary and disclose that
+fallback as non-independent. No independent types result exists. Do not invent handles or retries.

@@ -36,25 +36,26 @@ Do not report something merely to produce feedback.
 
 ## Model and execution
 
-The primary agent chooses reasoning effort according to the work's complexity and risk.
+The primary chooses when critique is needed, its allocation, and a suitable permitted model and
+reasoning effort according to the work's complexity and risk. Honor explicit requests and exclusions.
 
-- Prefer one eligible model from a different user-, repository-, and host-allowed family for the
-  critic pass. Do not hard-code a model or reasoning level.
-- Establish a specific eligible different-family model before launching the critic. When none is
-  positively known, perform a distinct second pass in the primary agent; same-family subagents are
-  not the fallback.
+- An independent same-family context is a valid critic path. Consider another eligible family when
+  useful and available; family diversity is optional, not a launch gate. Do not hard-code a model,
+  personal role or reasoning level.
 - When this skill is already running inside a delegated critic, perform the critique directly and do
   not spawn more agents.
-- When invoked in the primary session, delegate one isolated critic when a suitable different-family
-  model and worker are available. If no eligible different family exists or delegation is
-  unavailable, perform a distinct primary-model second pass.
+- When invoked in the primary session, delegate one isolated critic using the primary's chosen
+  configuration when delegation is available. If delegation is unavailable, perform a distinct
+  primary-model second pass and disclose that it is not independent review.
 - When the user requires an actual different family and none is available, report the capability
-  limitation rather than calling the fallback cross-model.
+  limitation; same-family work cannot satisfy that requirement.
 
 Use the host's actual delegation mechanism. A completed synchronous result needs no handle or wait;
-wait for an asynchronous task only after a launch returned a live handle. Report cross-model execution
-only with a returned critic result and execution evidence of the eligible different model family,
-not merely a requested model or intended launch. Record the actual primary-model fallback when used.
+wait for an asynchronous task only after a launch returned a live handle. Recovery preserves the
+primary's dispatch choice and read-only constraints; omitted model arguments do not prove inheritance.
+Report the returned result, independent context, actual model/effort and family separately, with
+execution evidence rather than requested arguments. Mark unknown facts unverified. Record primary
+fallback as non-independent and keep any unmet required independence or family coverage incomplete.
 Never reveal hidden reasoning.
 
 ## Output
@@ -82,7 +83,7 @@ Return:
 
 ## Review Notes
 - Counterevidence checked: <...>
-- Execution: <cross-model with known model/family, or primary-model fallback>
+- Execution: <independent context or primary fallback; actual model/effort/family and evidence or unverified; unmet coverage>
 ```
 
 Omit empty issue sections. If no substantive issue survives, say so for the reviewed scope and list

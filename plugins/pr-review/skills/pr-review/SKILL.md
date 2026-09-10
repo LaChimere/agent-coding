@@ -6,7 +6,7 @@ description: "Default general review entrypoint for a pull request, branch diff,
 # PR Review
 
 Review one fixed change set without modifying it. The public entrypoint is the `pr-review` skill;
-review aspects are internal workers, not separate public skills. SPAR and Rubber Duck are plugin
+review aspects are checking perspectives, not agent counts or separate public skills. SPAR and Rubber Duck are plugin
 skills that this workflow composes when selected; they can also be invoked directly.
 
 ## Scope
@@ -34,8 +34,8 @@ Record the source or skip reason in the final coverage section.
 
 ## Select review aspects
 
-Read [references/reviewers/index.md](references/reviewers/index.md) before dispatch. By default run
-every applicable aspect. Honor requests to add or exclude an aspect; when the user says "only",
+Read [references/reviewers/index.md](references/reviewers/index.md) before dispatch. The primary selects
+the necessary aspects from the target's actual risks and the index criteria. Honor requests to add or exclude an aspect; when the user says "only",
 limit the review to the named aspects plus the scope work needed to run them safely. `all` means all
 applicable aspects, not every aspect regardless of evidence.
 
@@ -52,20 +52,26 @@ and `spec` reviewers rather than inventing a separate public aspect.
 
 ## Dispatch
 
-The primary agent coordinates the review.
+The primary agent owns review timing, scope, aspects, worker allocation, models, effort, findings and
+final judgment. Portable review methods do not require personal roles or a particular model policy.
 
 - For each selected ordinary aspect, read only the reviewer file linked from
-  [references/reviewers/index.md](references/reviewers/index.md). Launch reviewers in waves within the
-  available concurrency. Give each the same pinned target, changed-file inventory, relevant diff,
-  repository guidance, authoritative spec, and the complete selected reviewer brief. Reviewers are
-  read-only and must not spawn more agents. Launch ordinary reviewers without a model override by
-  default so they use the current session model; the primary chooses reasoning effort according to
-  the aspect's scope, complexity, and risk.
-- Track every selected aspect until it is `completed` or `skipped` with an explicit reason. An aspect
-  not attempted because capacity is full belongs in a later wave; it is not a failed launch.
+  [references/reviewers/index.md](references/reviewers/index.md). The primary can assign several aspects
+  to one reviewer or split them among reviewers. Give each the same pinned target, changed-file
+  inventory, relevant diff, repository guidance, authoritative spec, and every assigned aspect's
+  complete brief. Require evidence and a coverage status for each aspect; combining workers does not
+  omit a checking method. Reviewers are read-only and must not spawn more agents.
+- Dispatch using the host-supported mechanism that implements the primary's selected role, model,
+  effort and read-only constraints. Omitted arguments may use global defaults or role overrides;
+  they do not prove primary-model inheritance. Verify effective configuration from execution evidence
+  when it matters; report unavailable evidence rather than inferring it from a requested argument.
+- Track every selected aspect as completed, pending, incomplete, or skipped with an explicit reason.
+  Launch in waves within actual capacity. An aspect deferred for capacity is not a failed launch.
+  If completed threads still occupy slots, preserve their results and useful context, close them as
+  needed through supported lifecycle controls, confirm capacity release, then dispatch pending work.
 - When continuing from an authoritative recorded launcher state, preserve its execution facts in
   Review Coverage: capacity-deferred aspects, returned handles, each single retry, whether the retry
-  inherited the current-session model without an override, and every primary fallback.
+  followed the primary's dispatch decision, effective configuration evidence, and every primary fallback.
 - Use the host's actual delegation mechanism. A synchronous call that returns a completed reviewer
   result needs no task handle or later wait; record the returned result as execution evidence.
   For asynchronous launches, apply a live-handle gate before every wait/collect call: the receiver set must contain
@@ -74,12 +80,15 @@ The primary agent coordinates the review.
   Continue with the required primary fallback when the receiver set is empty. Requested roles, model
   arguments, intended launches, and failed launch calls are not execution evidence.
 - When delegation is available but an asynchronous launch returns neither a live handle nor a
-  completed result, retry that aspect once after capacity is available, without an explicit
-  model override so it uses the current session's inherited/default model. If that retry still
-  returns no handle, or a launched reviewer later fails, run that brief sequentially in the primary
-  agent and record the fallback. When delegation itself is unavailable, skip retry and use the same
-  primary-agent fallback immediately. Treat `no thread` and an unavailable collaboration tool as
-  delegation unavailable for that invocation. Never retry an aspect more than once.
+  completed result, retry the affected assignment once after capacity is available, preserving the
+  primary's dispatch decision. Any authorized alternative must be explicitly selected by the primary
+  and verified for effective model, effort and read-only constraints; dropping an override is not a
+  recovery policy. If the retry still returns no handle, or a launched reviewer later fails, run the
+  brief sequentially in the primary and record the fallback. When delegation itself is unavailable,
+  skip retry and use that fallback immediately. Treat `no thread` and an unavailable collaboration
+  tool as delegation unavailable for that invocation. Never retry an assignment more than once.
+  Primary inspection cannot complete an unmet independent-review requirement; keep it incomplete
+  and continue unaffected authorized work.
 - Let each reviewer use the report shape natural to its domain. Its output is a set of candidates,
   not final findings.
 
@@ -92,26 +101,22 @@ double confirmation.
 - Run `spar` only when the user explicitly asks for SPAR, devil's-advocate analysis, or an
   assumptions/trade-offs challenge. When selected, read and follow the complete
   [SPAR skill](../spar/SKILL.md). Never add it automatically or treat it as a public review aspect.
-- Run `rubber-duck` when the user explicitly requests it, or automatically when the pinned change is
-  substantial: it materially affects security, persisted data, a public interface, compatibility,
-  migration, concurrency, cross-component behavior, complex state transitions, or a plan/design/test
-  whose failure would have major consequences. When selected, read and follow the complete
-  [Rubber Duck skill](../rubber-duck/SKILL.md). File count alone does not make a change substantial.
-  Honor an explicit request to exclude Rubber Duck. When the user says to review `only` named
-  ordinary aspects, suppress automatic Rubber Duck unless the user also requests it explicitly.
+- The primary decides whether to use `rubber-duck` and who performs it. Honor an explicit request
+  or exclusion, and suppress optional Rubber Duck for `only` named aspects unless also requested.
+  Consider substantive risks in security, persisted data, public contracts, compatibility, migration,
+  concurrency, cross-component behavior and complex state transitions. Preserve necessary risk
+  coverage and any required independent review, whether supplied by selected aspect reviewers or a
+  critic; optional critique is not a mandatory extra stage. When selected, read and follow the complete
+  [Rubber Duck skill](../rubber-duck/SKILL.md). File count alone does not establish the need.
 - Give challengers the same pinned target, relevant context, repository guidance, and authoritative
   specification, but not ordinary reviewer candidates or each other's output. The primary coordinates
   challenger agents; a challenger must not spawn more agents.
-- Prefer an eligible model from a different user-, repository-, and host-allowed family for each
-  challenger. Do not hard-code a model or reasoning level. The primary chooses reasoning effort based
-  on the challenge's complexity and risk.
-- Establish a specific eligible different-family model before launching a challenger. When none is
-  positively known, keep the challenge in the primary agent and do not enter the collaboration path;
-  same-family subagents are not the fallback.
-- If no eligible different family is available or delegation is unavailable, perform a distinct
-  primary-model second pass. If the user
-  requires an actual different family and none exists, report the capability limitation. Never call a
-  primary-model fallback cross-model.
+- The primary selects a suitable available, permitted model and effort. An independent same-family
+  context is a valid critic path. Another family is an optional enhancement when useful and available,
+  not a prerequisite or an automatic extra round. Do not hard-code models or reasoning levels.
+- If delegation is unavailable, perform a distinct primary-model second pass and disclose the lack
+  of independence. If the user requires an actual different family and none exists, report that
+  requirement unmet; same-family work may inform the review but cannot satisfy it.
 - Apply the ordinary live-handle, wave, single-retry, and primary fallback rules to challenger
   dispatch. Track SPAR and Rubber Duck separately until completed, excluded, skipped with reason, or
   blocked by an explicitly required unavailable capability.
@@ -120,10 +125,10 @@ double confirmation.
   severity levels; do not mechanically convert its standalone categories. Do not append a standalone
   SPAR or Rubber Duck report to the final response; integrate only confirmed findings, unresolved
   questions, and challenge coverage into the single PR Review report.
-- Record a pass as cross-model only with an actual delegated result (returned synchronously or
-  collected through a live handle) and execution evidence confirming a known eligible different
-  model family. Otherwise record the actual
-  distinct primary-model fallback and its limitation. Do not expose hidden reasoning.
+- Report context independence, actual model and effort, and model-family diversity separately, using
+  returned results and execution evidence. Different roles do not prove different models or families.
+  Mark unknown configuration as unverified and primary fallback as non-independent; it cannot satisfy
+  pending independent coverage. Do not expose hidden reasoning.
   A Rubber Duck security concern does not complete the security aspect.
 
 - Keep security separate from ordinary reviewers. When security is applicable and

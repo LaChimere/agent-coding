@@ -93,9 +93,12 @@ Use this stable Markdown shape. Omit empty severity sections, but include all ze
 ## Review Coverage
 - Ran: <aspects>
 - Skipped: <aspect and reason>
+- Incomplete: <pending or unmet required coverage and reason, or none>
+- Allocation: <reviewer or primary fallback -> aspects; execution evidence and limits>
 - Independent Challenge:
-  - SPAR: <completed cross-model, completed primary-model fallback, excluded, not requested, or unavailable>
-  - Rubber Duck: <completed cross-model, completed primary-model fallback, excluded, not applicable, or unavailable>
+  - SPAR: <completed independent context, primary-model fallback, excluded, not requested, pending, or unavailable>
+  - Rubber Duck: <completed independent context, primary-model fallback, excluded, not selected with reason, pending, or unavailable>
+  - Execution: <actual model/effort and family, same/different/unknown family, evidence; primary fallback is non-independent>
 - Commands executed: <exact command and decisive result, or none>
 - Security: <completed, incomplete, not applicable, or unavailable>
 

@@ -102,6 +102,22 @@
         "Reports the contrasting family supported by the recorded execution metadata, not a new live delegation claim.",
         "Does not modify files or recommend merging."
       ]
+    },
+    {
+      "id": 6,
+      "prompt": "Use rubber-duck on design.md. Only models from the primary model family are permitted. Use an independent critic context through actual delegation if exposed. Review only; report any unavailable capability accurately.",
+      "expected_output": "Launches a same-family independent critic when available and distinguishes context independence from family diversity.",
+      "fixture_prefix": "files/same-family",
+      "files": [
+        "files/same-family/design.md"
+      ],
+      "expectations": [
+        "Does not require another family before attempting a suitable available independent critic.",
+        "Critiques the operation-versus-attempt idempotency ambiguity and duplicate-effect risk with evidence.",
+        "Uses actual isolated delegation when available, or leaves required independent coverage incomplete when unavailable; never invents a result.",
+        "Reports actual model/effort/family evidence or unverified facts and primary fallback as non-independent.",
+        "Does not modify files, spawn descendants from a critic, or approve delivery."
+      ]
     }
   ]
 }

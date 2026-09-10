@@ -5,9 +5,32 @@
     0,
     1,
     2,
-    4
+    4,
+    5
   ],
   "critical_expectations": {
+    "0": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "1": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "2": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
     "4": [
       0,
       1,
@@ -15,18 +38,7 @@
       3,
       4
     ],
-    "0": [
-      0,
-      1,
-      2,
-      3
-    ],
-    "1": [
-      0,
-      1,
-      3
-    ],
-    "2": [
+    "5": [
       0,
       1,
       2,
@@ -35,14 +47,12 @@
     ]
   },
   "behavior_change_ids": [
-    2,
-    4
+    5
   ],
   "redundant_ids": [],
   "deterministic_ids": [],
   "behavior_change_rationale": {
-    "4": "Accept completed synchronous delegation without weakening asynchronous live-handle or evidence requirements.",
-    "2": "Require execution provenance from returned live handles, skip empty waits, and disclose the primary-model fallback when delegation does not start."
+    "5": "Coding orchestration: same-family independent role perspectives are permitted while explicit trigger and no-delegation fallbacks remain."
   },
   "clarification_rationale": {
     "_coverage": "The cases cover two- and three-role tension framing, capability fallback, evidence gaps, one-shot output, and the read-only boundary."
