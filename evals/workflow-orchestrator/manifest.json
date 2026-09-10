@@ -111,6 +111,7 @@
     "14": "The example-first criterion applies within the proposed design, after the separate constraints section. A concrete load or save behavior example satisfies it; requiring one example to cover the entire load/save lifecycle would add a requirement beyond the design-writing contract. A destination JSON shape alone is not a behavior example.",
     "4": "Keep the original status-update prompt and frozen failures. The delivery repair explicitly defines absent-goal handling; updating status does not authorize creating a goal.",
     "5": "Both approved design and skill permit direct primary handling of clear small tasks. Include that existing route without dropping error-contract or authority checks; original frozen grades remain unchanged.",
-    "15": "The decision report must identify primary-owned progress/final acceptance and the bounded future assignment, even when dispatch is deferred."
+    "15": "The decision report must identify primary-owned progress/final acceptance and the bounded future assignment, even when dispatch is deferred.",
+    "17": "Personal role count is caller configuration. Remove the obsolete five-role wording while retaining all assertions, critical expectations and the role-free portability contract."
   }
 }

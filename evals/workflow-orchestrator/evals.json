@@ -266,7 +266,7 @@
       ],
       "expectations": [
         "Recognizes the approved multi-slice execution can use the available execute-plan-loop skill.",
-        "Keeps runtime role/model/effort choice with the primary and requires no personal five-role mapping.",
+        "Keeps runtime role/model/effort choice with the primary and requires no personal role mapping.",
         "Does not require pr-review for this task when no task-specific review capability is needed.",
         "Does not modify files, install anything or fabricate execution evidence."
       ]
