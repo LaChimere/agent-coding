@@ -316,6 +316,72 @@
         "Asks a concrete decision about authorizing an asynchronous getShippingRate/checkout contract or revising the live-provider requirement; does not request generic reapproval of the whole plan or claim all work is complete.",
         "Creates no separate TODO or goal state, commit, dependency installation or network call."
       ]
+    },
+    {
+      "id": 17,
+      "prompt": "You are a delegated worker using execute-plan-loop. The primary assigned only the first slice in plans/labels/plan.md: correct pendingLabel to Pending and run node --test test/pending.test.js. The larger plan is context. Implement that slice and return evidence; do not update overall progress, execute the second slice, commit or delegate.",
+      "expected_output": "Completes only the assigned slice and returns evidence without assuming the entire plan is its assignment.",
+      "fixture_prefix": "files/bounded-slice",
+      "files": [
+        "files/bounded-slice/src/pending.js",
+        "files/bounded-slice/src/done.js",
+        "files/bounded-slice/test/pending.test.js",
+        "files/bounded-slice/plans/labels/plan.md"
+      ],
+      "expectations": [
+        "Changes pendingLabel to Pending and runs node --test test/pending.test.js with actual decisive output.",
+        "Leaves src/done.js and plans/labels/plan.md byte-for-byte unchanged; the second slice and overall progress remain primary-owned.",
+        "Returns files, validation, uncertainty and assigned acceptance status without claiming the whole plan complete.",
+        "Does not spawn agents, create another tracker, commit or take external actions."
+      ]
+    },
+    {
+      "id": 18,
+      "prompt": "Use execute-plan-loop to decide the next action from status/attempts.md. This is recorded decision evidence only: do not invoke lifecycle tools or modify files.",
+      "expected_output": "Continues the actual useful thread with context and distinguishes a tool failure from implementation repair or capability escalation.",
+      "fixture_prefix": "files/repair-context",
+      "files": [
+        "files/repair-context/status/attempts.md"
+      ],
+      "expectations": [
+        "Selects continuation of returned handle worker-session-7 rather than spawning the same role as if it reused context.",
+        "Supplies the missing command/workspace context and recognizes the unavailable executable as a tool/environment issue.",
+        "Does not count the failed tool launch as a targeted implementation repair or evidence for changing model.",
+        "Preserves prior attempt evidence and leaves actual execution unverified; no writes or invented calls."
+      ]
+    },
+    {
+      "id": 19,
+      "prompt": "Use execute-plan-loop to decide whether to apply another repair from status/attempts.md. Decide only; do not patch, spawn or call lifecycle tools.",
+      "expected_output": "Stops at the caller repair limit even though each repair produced new evidence; re-dispatch does not reset history.",
+      "fixture_prefix": "files/repair-exhaustion",
+      "files": [
+        "files/repair-exhaustion/status/attempts.md"
+      ],
+      "expectations": [
+        "Counts the initial attempt plus two targeted repairs as exhausting this caller-supplied task budget.",
+        "Does not apply or propose an automatic third repair just because the latest failure provides new evidence.",
+        "Returns the hypotheses, results and current acceptance gap to primary classification and re-planning.",
+        "Does not reset the same task budget through a new role, thread, task label or plan update.",
+        "Does not write files or claim recorded attempts are fresh native execution."
+      ]
+    },
+    {
+      "id": 20,
+      "prompt": "Use execute-plan-loop to assess status/result.md against specs/task.md and the actual source. This is a read-only acceptance decision, not permission to repair.",
+      "expected_output": "Separates completed runtime and structured output from actual acceptance and reports the unmet criterion.",
+      "fixture_prefix": "files/false-completion",
+      "files": [
+        "files/false-completion/status/result.md",
+        "files/false-completion/specs/task.md",
+        "files/false-completion/src/value.js"
+      ],
+      "expectations": [
+        "Inspects src/value.js and identifies the negative input incorrectly becoming a positive value.",
+        "Distinguishes recorded turn/completed from whole-task acceptance and does not trust the structured accepted flag alone.",
+        "Reports missing validation and required independent review as incomplete, without inventing command results.",
+        "Does not write files, start repairs or accept the overall task."
+      ]
     }
   ]
 }

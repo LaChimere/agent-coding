@@ -22,7 +22,7 @@ This repository turns those failure modes into reusable skills and a portable or
 | Layer | Role | Analogy |
 |---|---|---|
 | `AGENTS.md` | Repo-specific contributor guidance for this repository | Maintainer guide |
-| `plugins/workflow/skills/workflow-orchestrator/` | Portable workflow coordination contract + planning templates | Conductor |
+| `plugins/workflow/skills/workflow-orchestrator/` | Portable process methods and coordination constraints + planning templates | Process guide |
 | `plugins/workflow/skills/` | Seven coordinated skills, distributed together | Specialists |
 | `skills/scan-image-vulnerabilities/` | Standalone image inspection | Inspector |
 
@@ -36,7 +36,7 @@ Discover if needed → Design if needed → Plan if needed → Execute → Verif
 Fast path (urgent):  Execute → Verify → Lessons (backfill)
 ```
 
-Clear small tasks run directly in the primary session. `workflow-orchestrator` resolves genuine phase, authorization or worker ambiguity; installing the plugin does not make it a mandatory entrypoint.
+Clear small tasks run directly in the primary session. `workflow-orchestrator` resolves genuine phase, authorization or process-skill ambiguity; installing the plugin does not make it a mandatory entrypoint. A skill supplies methods and constraints, while a runtime worker is a bounded delegate. The primary selects execution roles and models, coordinates work and owns final acceptance.
 
 Native Plan Mode owns exploration and the overall proposal. An approved proposal plus explicit revisions can pass straight to execution; save it to a living `plan.md` when authorized and permitted by the host. Saving adds no approval gate. `plan.md` is the only execution progress source, with approved scope separate from changing status and evidence. Optional `design.md`, `research.md` and `lessons.md` serve design decisions, gathered evidence and earned lessons. New tasks have no independent TODO or custom goal file; historical task files are left alone.
 
@@ -134,13 +134,13 @@ Use when: a PR is too large, mixes concerns, or needs post-hoc recovery.
 
 ### workflow-orchestrator
 
-Resolves real phase, authorization or worker ambiguity:
+Resolves real phase, authorization or process-skill ambiguity:
 
 ```
-resolve phase or approval ambiguity → choose the appropriate worker → retain existing scope and evidence
+resolve phase or approval ambiguity → choose the appropriate process skill → retain existing scope and evidence
 ```
 
-Use when: the next phase, approval or worker is genuinely unresolved, or phase coordination is explicitly requested. Clear tasks and approved native plans do not need a new handoff or planning round.
+Use when: the next phase, approval or process skill is genuinely unresolved, or phase coordination is explicitly requested. Clear tasks and approved native plans do not need a new handoff or planning round. Skill selection does not select a runtime worker, model or reasoning effort.
 
 ### execute-plan-loop
 
@@ -150,7 +150,7 @@ Executes approved implementation work in a disciplined long-running loop:
 pick coherent slice → implement → verify → update living plan → continue approved scope → final audit
 ```
 
-Use when: the user wants the agent to carry out an approved implementation scope with verified slices and progress updates. A slice is a checkpoint: it continues through the whole approved scope unless the user limited the request to a step/phase or a real blocker remains. It creates commits only when the recorded landing mode is `commits`.
+Use when: the user wants the primary to carry out an approved implementation scope with verified slices and progress updates. The primary continues through the whole scope unless the user limited the request to a step/phase or a real blocker remains. A delegated worker completes only its assigned slice and returns evidence and repair history; the primary integrates, updates the single progress source and selects the next action. Caller policy supplies any repair limit and model choice. It creates commits only when the recorded landing mode is `commits`.
 
 ### anti-slop
 
@@ -358,7 +358,7 @@ the final decision to the primary agent.
 Install the complete plugin through the [native installation instructions](#native-plugin-installation)
 and use the invocation syntax for your host.
 
-The plugin distributes all seven workflow skills and their bundled resources; it adds no `$workflow` wrapper, MCP server, hook or background service. Invoke the appropriate skill directly. General change-set review uses the separately installed `pr-review` plugin. Missing optional coverage is reported; explicitly required independent review remains incomplete if unavailable, not replaced with self-review or automatic installation.
+The plugin distributes all seven workflow skills and their bundled resources; it adds no `$workflow` wrapper, MCP server, hook or background service. Invoke the appropriate skill directly. General change-set review uses the separately installed `pr-review` plugin when needed. Dependencies are on demand: ordinary native work does not require either plugin, and neither plugin requires personal role configuration or loading the other at startup. Missing required capabilities remain incomplete; continue unaffected work without recreating the missing workflow or automatically installing it.
 
 Candidate verification uses isolated configurations for each supported CLI and this worktree's marketplace, not remote `main`. Installing skill snapshots through `npx skills add --copy` tests instruction content only, not plugin discovery. CLI discovery, native Plan Mode and native goal lifecycle require their own actual evidence. App UI compatibility remains separately unverified unless exercised; it is not a gate for this repository-only working-tree delivery. A new test thread is a discovery check, not a mandatory work phase for ordinary tasks.
 
