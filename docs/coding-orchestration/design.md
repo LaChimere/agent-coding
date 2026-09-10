@@ -474,9 +474,20 @@ Each agent TOML defines `name`, `description`, and `developer_instructions`, plu
 
 The first three roles can perform authorized implementation and default to `workspace-write`. The two critical roles remain `read-only`. When the first three roles perform review or pure analysis, they must also respect the read-only task boundary; possessing write capability does not grant authority to use it.
 
-Implementation must verify how the chosen role, model, effort, and permissions actually take effect. Official documentation describes custom-agent overrides, global defaults, parent inheritance, and live permission overrides. A field in a file alone does not establish the effective runtime guarantee. [Native configuration and inheritance](https://learn.chatgpt.com/docs/agent-configuration/subagents)
+Verify the chosen role, model and effort through the required execution evidence. Record effective
+permission settings when exposed by those runs; a field in a file alone does not establish a runtime
+guarantee. Official documentation describes custom-agent overrides, parent inheritance and live
+permission overrides. [Native configuration and inheritance](https://learn.chatgpt.com/docs/agent-configuration/subagents)
 
-Behavioral instructions and enforced permissions are separate controls. Verify the effective sandbox and approval settings for the execution path in use, and respect external tools' own authorization boundaries. Do not infer that every integration or tool call is sandboxed merely because it is reachable through Codex; the native protocol also exposes operations outside the thread sandbox. [App Server API boundaries](https://developers.openai.com/codex/app-server)
+For this delivery, assess read-only subagents through existing evals that check whether they
+modified files. Reuse those observations and file-change assertions; if no applicable eval exists,
+add no dedicated test. Role-level sandbox enforcement is not a delivery requirement. Retain observed
+permission inheritance as a platform limitation without requiring client changes or further probes.
+
+Behavioral instructions and enforced permissions are separate controls. Respect the actual host
+controls and external tools' authorization boundaries, without adding sandbox-enforcement probes
+for this delivery. Do not infer that every reachable integration or tool is sandboxed; the native
+protocol also exposes operations outside the thread sandbox. [App Server API boundaries](https://developers.openai.com/codex/app-server)
 
 An explicit model argument must not be assumed to override a role file that binds a model. When choosing a different-family critic, use the host's supported dispatch mechanism, preserve task semantics and read-only constraints, and confirm the effective model. Do not invent availability or silently rewrite persistent role mappings to conceal a mismatch.
 
@@ -534,7 +545,7 @@ These are the acceptance targets. See [validation.md](validation.md) for execute
 | More independent tasks than available worker slots | Preserve the task set and schedule in waves; the plugin does not hard-code the personal concurrency limit |
 | Four workers have completed but their threads remain open, and a required reviewer is pending | Preserve returned evidence and context needed for continuation, close completed threads as needed, confirm capacity is released, and launch the pending review within the four-open-thread limit. Do not assume completion frees a slot, wait indefinitely, or drop the pending task |
 | Ordinary capability limit or changed complexity | Require evidence for takeover or reclassification; do not endlessly restart the task |
-| Permissions and stopping | Keep review read-only, preserve user work during cancellation and takeover, and manage only actual handles |
+| Permissions and stopping | Reuse existing read-only-subagent evals to check for file modifications; add no dedicated eval if absent. Preserve user work during cancellation and takeover, and manage only actual handles. Role-level sandbox enforcement is outside this delivery gate |
 | Global fallback alongside specialist review | Explicit dispatch matches the primary's choice rather than relying on ambiguous inheritance |
 | A turn ends while requirements or validation remain unmet | Record runtime status separately; the primary does not accept incomplete work |
 | Structured output says acceptance criteria passed | Check the actual result and supporting evidence; schema conformance alone cannot pass the task |
@@ -573,7 +584,7 @@ workflow contracts and the flexible review/critic contracts. Workflow is `0.1.3`
 
 | Location | Implemented state | Remaining verification |
 | --- | --- | --- |
-| `config/codex` | Mergeable fragment, preserved primary model, five model/effort mappings, implementation and intended read-only role defaults | All five mappings executed. Codex 0.154.0's role override whitelist excludes sandbox/permission settings and dispatch inherits parent permissions, so the intended per-role read-only guarantee remains unsupported. Production activation is not authorized. |
+| `config/codex` | Mergeable fragment, preserved primary model, five model/effort mappings, implementation and intended read-only role defaults | All five mappings executed. Existing read-only-subagent evals record no file modifications. Codex 0.154.0 inherits parent permissions; that platform limitation is recorded rather than treated as a delivery blocker. Production activation is not authorized. |
 | `workflow-orchestrator` and responsibilities | Process skills separated from runtime workers; primary coordination and on-demand dependencies explicit | Behavioral and portable regression results are recorded separately. |
 | `execute-plan-loop` | Bounded worker assignments, primary progress and acceptance, caller repair budget, thread evidence and cancellation boundaries | Native continuation, interruption, preserved partial work and prescribed two-repair exhaustion/handoff observed; behavioral results remain separate. |
 | `pr-review` | Primary-selected aspects and allocation, combined methods, explicit dispatch recovery, incomplete independence reported | Independent source review completed; behavior regression remains separate. |
