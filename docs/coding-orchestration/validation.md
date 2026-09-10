@@ -2,10 +2,11 @@
 
 ## Delivery status
 
-Repository implementation and the scheduled observations are recorded, but the approved acceptance
-criteria are not met. The candidate remains experimental. This document records delivery against
+Repository delivery is complete within the agreed scope and the bounded evidence below. The
+candidate remains experimental; the results do not establish an adoption advantage. This document
+records delivery against
 [design.md](design.md) and baseline `120a1b4f311851f1fa5ebb40a6fba89809ab7bad`.
-It is not a production activation or an acceptance certificate. No production Codex configuration,
+Completion does not mean every recorded trial passed. No production Codex configuration,
 plugin installation, remote branch or pull request is changed by this work.
 
 The user narrowed the acceptance scope on 2026-09-11: behavioral evaluations, native orchestration
@@ -240,7 +241,9 @@ retain limited evidence for assertions unaffected by the four precise runtime ed
 on current bytes, nor a claim that the original 400 paired observations passed. Eight baseline
 cases still have no successful semantic observation. In original SPAR case 5 round 1, one of the
 two independent roles failed on transport; honest fallback disclosure passed, while a complete
-independent pair exists only in rounds 2 and 3. Three complete pairs remain unverified.
+independent pair exists only in rounds 2 and 3. Both conditions executed the required three
+independent contexts. The plan did not require three successful role pairs. A third complete pair
+remains unverified, and the failed role is not counted as completed independent review.
 
 Primary read-only inspection of the nine repair goal databases confirms zero goal rows for
 candidate cases 4 and 18 in all three rounds, and one row for explicit-creation case 19 in each
@@ -263,6 +266,15 @@ route for `approved-native-implementation` in all three new rounds, with no orch
 No absent implementation or review target is treated as completed work. The separate adapters
 are `coding-orchestration-routing-{prepare,execute,evidence}.py` under `/private/tmp/`.
 
+Final inspection compared all four misses with the original contracts and their actual inputs.
+The clearly scoped fix had no source or concrete defect and took the permitted direct path; the
+rate-limiting case stopped at missing repository input after an atomicity check. The other two
+used pr-review's overlapping correctness/duplication methods and reported the missing patch and
+tests. None demonstrated an unauthorized write, invented validation or false task completion.
+Independent audit and primary confirmation found no source-contract defect requiring another
+repair from these records. The exact-name routing result remains 28/32, not an all-routes pass;
+the absent domain tasks remain unperformed.
+
 ## Native acceptance map
 
 Rows N01–N25 follow design §12.2 in order. `native/acceptance-map.json` and its Markdown companion
@@ -284,11 +296,11 @@ to the stated bounded observation, not broad task quality or full behavioral acc
 | N11 Same-family criticism | Actual Rubber Duck contexts and A/B 11-B SPAR contexts completed | Verified |
 | N12 Other-family choice | Catalog visibility exists; no other-family critic executed | Unverified; outside delivery claim |
 | N13 Required review unavailable | Real failed critics and configured missing capabilities retained as incomplete | Verified |
-| N14 Explicit launch failure | Actual no-handle critic refusal and same-selection Astra/high/read-only recovery; separate gate-command conformance failed | Partial; recovery core verified |
+| N14 Explicit launch failure | Actual no-handle critic refusal and same-selection Astra/high/read-only recovery; separate gate-command conformance failed | Verified; bounded recovery |
 | N15 Local mistake or missing context | Actual child continuation; A/B 03-B retained a reviewer through one implementation repair | Verified |
 | N16 Two targeted repairs exhausted | Two actual same-thread patches; third patch declined; fresh read-only handoff preserved exhausted history | Verified; prescribed repairs |
 | N17 Tool/environment/capacity failure | Same-context shell correction, transport continuation and native capacity reuse | Verified |
-| N18 More tasks than slots | New sequence completes all five original tasks across a real four-slot limit; one worker repeats a completed gate command | Partial; capacity core verified |
+| N18 More tasks than slots | New sequence completes all five original tasks across a real four-slot limit; one worker repeats a completed gate command | Verified; bounded scheduling |
 | N19 Completed but open threads | Four completed loaded children followed by actual required review; automatic unloading and retained history verified | Verified; automatic release |
 | N20 Changed capability or complexity | New input arrived after the ordinary task; primary selected complex_worker and checked its substantive diagnosis | Verified; changed input |
 | N21 Permissions and stopping | Existing read-only-subagent evals record no file changes; actual interruption preserves supplied user/partial files. Sandbox inheritance remains a platform limitation | Verified; bounded behavior |
@@ -415,8 +427,16 @@ acceptance rejected that command-conformance claim. Core dispatch and capacity e
 the extra calls and original transport failures remain recorded. No further trial was added to
 replace them. This observation does not establish a general model cause.
 
-The current 25-row map therefore retains 22 bounded verified observations, 2 partial and 1
-unverified (the excluded other-family check). Overall native acceptance remains incomplete.
+The final requirement audit compared these records with design §12.2 at baseline `120a1b4`.
+N14 requires the selected dispatch recovery and genuine independent review; N18 requires retaining
+the task set and scheduling in waves. The new sequence supplies both. Executing every probe command
+exactly once is an additional probe constraint, whose failure remains recorded separately. It does
+not erase the observed recovery and scheduling. This is an evidence interpretation, not a regrade
+of the failed whole probe or earlier attempts.
+
+The current 25-row map has 24 bounded verified requirements and one unverified, excluded
+other-family check. The map preserves its preceding revisions and all raw failures. It establishes
+the required native scenarios within their stated limits, not universal instruction compliance.
 
 ## Distribution acceptance
 
@@ -562,7 +582,7 @@ Independent contract review applied code, errors, tests, specification, types an
 Two findings survived primary confirmation: an optional-critique assertion could falsely appear as a
 critical regression, and a combined-review case prohibited the read commands it required. Both were
 fixed; the second round rechecked only affected assertions and found no surviving issue. Source
-review does not replace the failed or incomplete behavioral/native acceptance recorded above.
+review does not replace the behavioral/native evidence recorded above.
 
 The third, narrow repair review found that the new report cases needed an explicit required error
 contract instead of treating historical behavior as normative. That correction has separate
@@ -584,6 +604,25 @@ tool's measured parent-rollout accounting, not an isolated incremental security-
 an A/B efficiency measurement. Independent graders' time and unavailable usage are recorded separately.
 Local commits separate the four logical units: workflow contracts, review contracts, personal
 configuration and validation records. Additional focused repair commits preserve the two existing
-local commits instead of rewriting them. Committing these reviewable artifacts does not mark the
-unmet acceptance criteria passed or authorize activation. Production activation, remote publication,
-App UI, cross-family certification and long-term stability are outside this delivery's claims.
+local commits instead of rewriting them. The final documentation correction records the accepted
+scope and completion audit; it does not change runtime bytes, corpus, grades or raw observations.
+Production activation, remote publication, App UI, cross-family certification and long-term
+stability are outside this delivery's claims.
+
+Final acceptance uses the original plan plus the two explicit user scope revisions. Independent
+completion-evidence audits and primary inspection found no unresolved blocking source-contract
+issue or missing required execution. These audits did not start a fourth source-review round.
+
+| Required deliverable | Final evidence and limits |
+| --- | --- |
+| Portable contracts and personal roles | Both plugin versions/manifests, five TOMLs and primary policy are implemented. All 44 runtime/configuration files match the evaluated repair freeze. |
+| Behavior and routing regression | Original 59 cases, anti-slop guards, appended cases and relevant suite cases were executed as scheduled. The 200 original candidate behavior slots have documented fresh or unaffected evidence; all 19 original failed/ungraded candidate slots have matching fresh successes. Repair cohorts have no candidate critical failures or missing critical evidence. Four exact-name routing misses remain explained limitations, with their grades unchanged. |
+| Native orchestration | All 24 required scenarios have bounded native evidence. Optional other-family execution remains unverified. Existing read-only file-change checks satisfy the revised requirement. |
+| Distribution | Three CLI combinations, updates, source identity and discovery are recorded. Every affected skill has actual Codex invocation evidence; prior transport failures are retained. Claude/Copilot have no effectiveness guarantee. |
+| Twelve-task A/B | All 24 fixed trials executed once and were independently graded. Quality/authority failures, unknown costs and method limits remain. No efficiency or adoption advantage is established. |
+| Review, checks and local delivery | Three scoped source-review rounds and primary confirmation are complete; required structural checks pass. Local atomic commits contain the implementation and directly coupled tests/docs. No production or remote action is included. |
+
+Across the original and follow-up behavioral/routing cohorts, 30 imported requests retain 962
+actual contexts; the 24 whole-workflow A/B trials are separate. Unscheduled rows are not counted
+as executions. Completion accepts these repository deliverables and their documented evidence;
+it does not promote historical failures, missing model returns or excluded capabilities to passes.
