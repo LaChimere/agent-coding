@@ -96,7 +96,7 @@
         "Classifies uploaded CSV data as a validation boundary.",
         "Classifies database timeouts as operational errors that must be surfaced or propagated.",
         "Warns against redundant parser-internal validation if invariants already guarantee shape.",
-        "Routes to discovery/design or execute-plan-loop based on approval state.",
+        "Chooses direct primary handling, discovery/design or execute-plan-loop according to task clarity and approval, preserving the existing error contract.",
         "Does not equate boundary-focused coding with ignoring operational failures."
       ]
     },
@@ -269,6 +269,36 @@
         "Keeps runtime role/model/effort choice with the primary and requires no personal five-role mapping.",
         "Does not require pr-review for this task when no task-specific review capability is needed.",
         "Does not modify files, install anything or fabricate execution evidence."
+      ]
+    },
+    {
+      "id": 18,
+      "prompt": "Use workflow-orchestrator to inspect the approved plan in plans/import-retry and continue the implementation until done. Use the current directory as the repository and output directory; do not write elsewhere.",
+      "expected_output": "Continues approved implementation or reports a real missing-source blocker without adding native lifecycle state.",
+      "fixture_prefix": "files",
+      "files": [
+        "files/plans/import-retry/plan.md"
+      ],
+      "expectations": [
+        "Reads the approved plan and routes the implementation through execute-plan-loop.",
+        "Does not create a native goal or custom goal/TODO state for ordinary implementation.",
+        "Keeps progress in the existing plan and reports missing implementation files without inventing work or test results.",
+        "Does not commit, install capabilities or write outside the task directory."
+      ]
+    },
+    {
+      "id": 19,
+      "prompt": "Use workflow-orchestrator to establish a new native goal for completing the approved import-retry plan. I explicitly authorize creating that goal. Inspect plans/import-retry/plan.md first, then report the real goal status. This turn is goal setup only; do not implement, edit files or commit.",
+      "expected_output": "Honors explicit native goal creation while preserving the goal-setup-only boundary.",
+      "fixture_prefix": "files",
+      "files": [
+        "files/plans/import-retry/plan.md"
+      ],
+      "expectations": [
+        "Reads the actual approved plan before choosing the goal objective.",
+        "Uses the actual native goal facility to create the explicitly requested goal, or reports a genuinely unavailable capability without emulation.",
+        "Reports the actual goal identity/status, with no fabricated creation or completion claim.",
+        "Does not implement, modify files, start execution workers or infer commit authority."
       ]
     }
   ]
