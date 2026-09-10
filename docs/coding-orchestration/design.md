@@ -2,13 +2,13 @@
 
 | Item | Value |
 | --- | --- |
-| Status | Design agreed; configuration and plugin changes are not implemented |
-| Last updated | 2026-09-10 |
+| Status | Implemented and evaluated within recorded limits; acceptance criteria remain unmet |
+| Last updated | 2026-09-11 |
 | Runtime foundation | Native Codex harness: the existing agent execution runtime beneath the primary and workers |
 | Personal configuration scope | Repository `config/codex` represents the target `~/.codex` configuration |
 | Shared plugin scope | Process contracts in `workflow`; review methods and constraints in `pr-review`, `rubber-duck`, and `spar`; no plugin-owned model or effort policy |
 | Plugin dependencies | `workflow` and `pr-review` are recommended installations, used on demand rather than required for every task |
-| Validation status | Initial model mappings and orchestration behavior await actual use and evals |
+| Validation status | Five role mappings, 724 behavior/route observations and 24 A/B trials recorded; no adoption advantage established; failures and native limits in [validation.md](validation.md) |
 
 ## 1. Design decision
 
@@ -24,7 +24,7 @@ The recommended installation includes both plugins, but core orchestration can p
 
 Keep five semantic roles in v0.1, with an initial model and reasoning-effort mapping for each. A task need not pass through every role. Actual use and evals determine whether roles or mappings should change; the initial combination is not assumed to be optimal.
 
-This document consolidates the initial draft, the research cited below, and the subsequent agreed decisions. It defines the intended design. It does not establish that configuration has been loaded, plugins have been updated, or runtime behavior has been verified.
+This document consolidates the agreed design and defines the implementation contract. Current execution evidence, incomplete acceptance and delivery status are recorded in [validation.md](validation.md); design statements alone are not runtime proof.
 
 ## 2. Terms and priorities
 
@@ -510,7 +510,7 @@ Reuse accurate existing evidence without rerunning every command unnecessarily. 
 
 ### 12.2 Orchestration acceptance
 
-These are post-implementation verification targets, not tests already executed:
+These are the acceptance targets. See [validation.md](validation.md) for executed checks and remaining gaps:
 
 | Scenario | Expected behavior or evidence |
 | --- | --- |
@@ -546,7 +546,12 @@ Use actual native execution evidence when the tested surface exposes it. `codex 
 
 Record the client and runtime version, available effective configuration, actual thread or task handles, relevant tool calls, commands and decisive results, final artifacts, and remaining gaps as needed to establish the claim. Capture exposed evidence rather than reconstructing an imagined trace from the final answer. Missing necessary evidence stays unverified; native events supplement artifact inspection and semantic grading.
 
-When shared plugins change, follow repository requirements for isolated installation, discovery, and invocation in Codex, Claude Code, and Copilot CLI. The five personal model mappings belong to Codex and do not require other clients to use the same models. Claim App or other host compatibility only with corresponding evidence.
+Behavioral evaluation, native orchestration acceptance and effect claims are scoped to Codex.
+Claude Code and Copilot CLI remain distribution targets: verify native manifests, isolated
+installation/update, source identity and discovery, without requiring model evaluations or
+guaranteeing workflow effectiveness on those clients. Previously recorded invocations remain
+historical observations, not effect-acceptance gates. The five personal model mappings belong to
+Codex. Claim App or other host compatibility only with corresponding evidence.
 
 ### 12.3 Actual tasks and model comparisons
 
@@ -562,23 +567,30 @@ Adoption first requires acceptable quality and satisfied boundaries. Compare spe
 
 ## 13. Current implementation gaps and delivery boundaries
 
-At document creation, the personal configuration directory contains only the existing [AGENTS.md](../../config/codex/AGENTS.md). The target config and five role files have not been created. This deliverable is the design document; configuration activation, plugin changes, real dispatch, and model-quality acceptance remain unimplemented or unverified.
+The repository now contains the configuration fragment, all five role files, the primary-owned
+workflow contracts and the flexible review/critic contracts. Workflow is `0.1.3`; pr-review is
+`0.1.2`, with synchronized native manifests and unchanged marketplace identities and paths.
 
-| Location | Current state | Target design |
+| Location | Implemented state | Remaining verification |
 | --- | --- | --- |
-| [pr-review](../../plugins/pr-review/skills/pr-review/SKILL.md) | Already primary-coordinated, target-pinned, read-only, evidence-checked, and coverage-reported | Preserve those boundaries; let the primary explicitly select aspects and combine or split reviewers without a mandatory agent per aspect |
-| pr-review model selection | Ordinary reviewers default to omitting model overrides to inherit the primary | Respect explicit global role decisions, without personal mappings inside the plugin or treating omitted arguments as a guaranteed selection |
-| [Rubber Duck](../../plugins/pr-review/skills/rubber-duck/SKILL.md), [SPAR](../../plugins/pr-review/skills/spar/SKILL.md) | Different-family availability gates delegated critique; otherwise analysis returns to the primary | Permit independent same-family task contexts, make other families optional, and report actual execution accurately |
-| [workflow-orchestrator](../../plugins/workflow/skills/workflow-orchestrator/SKILL.md) and [worker-routing](../../plugins/workflow/skills/workflow-orchestrator/references/worker-routing.md) | Already keeps the primary in control and avoids a mandatory entrypoint; skill-routing tables use the term worker | Distinguish process-skill selection from runtime worker-role selection; clarify on-demand dependencies without model or effort constraints |
-| [execute-plan-loop](../../plugins/workflow/skills/execute-plan-loop/SKILL.md) | Already supplies approved execution, verification, progress, and repeated-failure procedures | Make primary-owned whole-plan execution and bounded worker assignments explicit; preserve one progress source and earlier reassessment, with model decisions outside the skill |
-| Other workflow skills and planning templates | Already provide focused planning, isolation, atomicity, documentation, and anti-slop methods | Reuse their existing contracts; change only demonstrably affected wording or coverage, not all seven skills or every template |
-| Native runtime acceptance | This document has not verified the proposed configuration through actual dispatch or host behavior | Verify effective configuration, continuation, controls, and task acceptance using the actual native surface; add no replacement agent loop or runtime service |
+| `config/codex` | Mergeable fragment, preserved primary model, five model/effort mappings, implementation and intended read-only role defaults | All five mappings executed. Codex 0.154.0's role override whitelist excludes sandbox/permission settings and dispatch inherits parent permissions, so the intended per-role read-only guarantee remains unsupported. Production activation is not authorized. |
+| `workflow-orchestrator` and responsibilities | Process skills separated from runtime workers; primary coordination and on-demand dependencies explicit | Behavioral and portable regression results are recorded separately. |
+| `execute-plan-loop` | Bounded worker assignments, primary progress and acceptance, caller repair budget, thread evidence and cancellation boundaries | Native continuation, interruption, preserved partial work and prescribed two-repair exhaustion/handoff observed; behavioral results remain separate. |
+| `pr-review` | Primary-selected aspects and allocation, combined methods, explicit dispatch recovery, incomplete independence reported | Independent source review completed; behavior regression remains separate. |
+| Rubber Duck and SPAR | Same-family independent contexts permitted, other families optional, SPAR still explicitly triggered | No cross-family certification is claimed. |
+| Anti-slop and other workflow skills | Scope-exclusion and process-override reports clarified; other worker/template behavior retained | Anti-slop guards and related suite routes remain in regression scope. |
+| Native lifecycle | Model/effort and fallback, primary stability, continuation and native interruption observed | Runtime automatically unloads a completed child before replacement; explicit primary-driven closure was not exercised. |
+| Native plugin distribution | Three isolated CLI installations, upgrades, source identity and discovery exercised | Codex invocation and behavioral acceptance remain required. Claude/Copilot adaptation carries no workflow-effectiveness guarantee. |
 
-Future implementation covers `config/codex`, directly affected workflow and review contracts, and coupled evals and documentation. Shared plugin changes apply across supported clients. Model choice, personal role mappings, reasoning-effort policy, and the personal concurrency setting remain outside both plugins.
+The coupled corpus preserves the 59 prior affected-skill cases and 12 anti-slop guards, appends
+17 behavior cases, and updates the affected routing and critical assertions without renumbering.
+Baseline and candidate use the same frozen revised corpus. Recorded lifecycle fixtures establish
+decisions only; native evidence establishes the controls actually exercised.
 
-Extend existing behavior cases for skill/role separation, bounded delegation, same-worker repair, flexible review allocation, missing-plugin behavior, and runtime completion versus task acceptance. Retain current small-task and evidence-reuse coverage; no new evaluation service is required. These are intended adjustments, not changes applied by this document.
-
-During implementation, update reviewer launch-recovery assertions so omitted model arguments are not proof of primary-model inheritance, and primary fallback cannot satisfy an unmet independence requirement. Add the Section 12.2 cases for repair exhaustion despite new evidence and for releasing completed but still-open threads; do not assume capacity has already been released in the fixture. Keep portable plugin cases caller-configured; the five personal mappings and four-thread limit belong to Codex-specific acceptance.
+The design's initial role/model combination, four-worker setting and ordinary fallback are not
+measured optima. Recorded critical failures and native gaps leave the approved completion criteria
+unmet; the 24 A/B trials establish no adoption advantage. [validation.md](validation.md) records the
+executed scope, results and limits without treating configuration text or a comparison gate as acceptance.
 
 This document does not become a new downstream coordination entrypoint. Portable runtime guidance remains in `workflow-orchestrator` and the relevant skills, and the primary uses actually installed and callable capabilities. Synchronizing real `~/.codex`, switching production installations, committing, pushing, and publishing require corresponding authorization.
 

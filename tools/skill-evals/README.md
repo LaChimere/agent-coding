@@ -183,15 +183,17 @@ This is intentionally a skill-content evaluation boundary. A plugin-owned skill 
 standalone snapshot-copy step as a root skill, so the run can evaluate its instructions without
 depending on mutable plugin state. It does **not** prove that the owning plugin manifest,
 marketplace entry, host cache, or skill discovery works. Validate those separately by installing
-the plugin through its marketplace, checking the installed cache against the release candidate,
-and invoking it from a fresh session of each supported CLI: Codex, Claude Code and Copilot CLI.
+the plugin through its marketplace, checking the installed source against the release candidate,
+and verifying discovery in Codex, Claude Code and Copilot CLI. Required fresh-session invocation
+and behavioral evaluation use Codex. Claude/Copilot remain compatible distribution targets;
+model evaluations require an explicit request and their workflow effectiveness is not guaranteed.
 Plugin-owned skills are distributed as complete plugins; isolated content snapshots do not establish
 that every skill works alone without its sibling skills.
 
 Run `uv run --locked --project tools/skill-evals pytest tools/skill-evals/tests/test_plugin_distribution.py`
 for native marketplace/manifest agreement and copied-package resource closure. This test does not
 run a host installer. Native validation must additionally record installation, update, discovery,
-actual invocation and optional capability coverage separately. A validator returning an empty
+Codex invocation and optional capability coverage separately. A validator returning an empty
 inventory or a successful `--plugin-dir` inspection is not persistent-install proof.
 
 For Claude use `CLAUDE_CONFIG_DIR`; for Copilot use `COPILOT_HOME` plus separate
