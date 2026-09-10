@@ -172,10 +172,13 @@ or path and the concrete caller, guard, or invariant that excludes it.
 
 Return one human- and agent-readable Markdown report sorted by the agreed severity levels, with
 source labels, spec/review/challenge coverage, and a natural-language Recommended Action.
+Return it directly in the response. Save a report file only when the user requests that artifact
+and authorizes its path; permission to save the report does not authorize editing the reviewed files.
 
 ## Boundaries
 
-- Review only. Do not edit files, implement fixes, simplify code, commit, push, or write externally.
+- Review only. Apart from an explicitly authorized report artifact, do not edit files, implement
+  fixes, simplify code, commit, push, or write externally.
 - Do not invoke or depend on the separate `$code-review` skill; this workflow owns repository
   standards and specification review internally.
 - Do not invoke or reproduce a code-simplifier.

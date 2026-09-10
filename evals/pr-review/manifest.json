@@ -17,7 +17,9 @@
     16,
     17,
     18,
-    19
+    19,
+    20,
+    21
   ],
   "critical_expectations": {
     "0": [
@@ -133,6 +135,18 @@
       2,
       3,
       4
+    ],
+    "20": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "21": [
+      0,
+      1,
+      2,
+      3
     ]
   },
   "behavior_change_ids": [
@@ -144,7 +158,9 @@
     16,
     17,
     18,
-    19
+    19,
+    20,
+    21
   ],
   "redundant_ids": [],
   "deterministic_ids": [],
@@ -157,9 +173,13 @@
     "16": "Coding orchestration: combined aspect methods retain individual coverage and evidence.",
     "17": "Coding orchestration: independent same-family criticism is permitted.",
     "18": "Coding orchestration: explicit reviewer launch failure cannot be downgraded into unverified completion.",
-    "19": "Coding orchestration: completed open threads require evidence retention and capacity release before pending review."
+    "19": "Coding orchestration: completed open threads require evidence retention and capacity release before pending review.",
+    "20": "Coding orchestration delivery repair: return reports inline by default; an explicit artifact request authorizes only its named path, not source edits or other writes.",
+    "21": "Coding orchestration delivery repair: return reports inline by default; an explicit artifact request authorizes only its named path, not source edits or other writes."
   },
   "clarification_rationale": {
+    "20": "Final source review adds an explicit required error contract rather than treating historical behavior as normative. The earlier repair-1 frozen prompt and its observations remain unchanged.",
+    "21": "Final source review adds the same explicit required error contract for the authorized report-file branch. Preserve the earlier repair-1 prompt and observations; validate this clarified corpus separately.",
     "_coverage": "The cases cover routing, evidence quality, aggregation, optional security, command execution, and report shape without duplicating every language-specific review example."
   }
 }
