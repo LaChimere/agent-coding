@@ -361,6 +361,16 @@ and use the invocation syntax for your host.
 
 The plugin distributes all seven workflow skills and their bundled resources; it adds no `$workflow` wrapper, MCP server, hook or background service. Invoke the appropriate skill directly. General change-set review uses the separately installed `pr-review` plugin when needed. Dependencies are on demand: ordinary native work does not require either plugin, and neither plugin requires personal role configuration or loading the other at startup. Missing required capabilities remain incomplete; continue unaffected work without recreating the missing workflow or automatically installing it.
 
+### Personal Codex orchestration
+
+[config/codex](config/codex/) contains a mergeable configuration fragment and five custom agent TOMLs,
+separate from portable plugin behavior. The primary model and effort remain user-selected. The
+initial worker mappings, four-open-worker limit, repair policy and permission boundaries are defined
+in the [design](docs/coding-orchestration/design.md). These are initial choices, not measured optima.
+Repository delivery does not activate them in real `~/.codex` or switch production plugins.
+On the tested Codex `0.154.0`, reviewer role files do not enforce read-only permissions under a
+writable primary; the configuration remains experimental pending that native acceptance requirement.
+
 Candidate verification uses isolated configurations for each supported CLI and this worktree's marketplace, not remote `main`. Installing skill snapshots through `npx skills add --copy` tests instruction content only, not plugin discovery. CLI discovery, native Plan Mode and native goal lifecycle require their own actual evidence. App UI compatibility remains separately unverified unless exercised; it is not a gate for this repository-only working-tree delivery. A new test thread is a discovery check, not a mandatory work phase for ordinary tasks.
 
 Install `scan-image-vulnerabilities` separately through `npx skills add` when needed; it still requires bash, python3 and Trivy 0.58.0+, with Docker or kubectl only for their respective discovery modes. Manually invoking skills from an unregistered source checkout remains unsupported.
