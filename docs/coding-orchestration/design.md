@@ -2,13 +2,13 @@
 
 | Item | Value |
 | --- | --- |
-| Status | Implemented and evaluated within recorded limits; acceptance criteria remain unmet |
+| Status | Repository delivery complete within the agreed scope and recorded evidence limits; experimental configuration |
 | Last updated | 2026-09-11 |
 | Runtime foundation | Native Codex harness: the existing agent execution runtime beneath the primary and workers |
 | Personal configuration scope | Repository `config/codex` represents the target `~/.codex` configuration |
 | Shared plugin scope | Process contracts in `workflow`; review methods and constraints in `pr-review`, `rubber-duck`, and `spar`; no plugin-owned model or effort policy |
 | Plugin dependencies | `workflow` and `pr-review` are recommended installations, used on demand rather than required for every task |
-| Validation status | Five role mappings, 724 behavior/route observations and 24 A/B trials recorded; no adoption advantage established; failures and native limits in [validation.md](validation.md) |
+| Validation status | Five role mappings, 962 original/follow-up behavior and route contexts, and 24 A/B trials recorded; no adoption advantage established; failures and native limits in [validation.md](validation.md) |
 
 ## 1. Design decision
 
@@ -24,7 +24,7 @@ The recommended installation includes both plugins, but core orchestration can p
 
 Keep five semantic roles in v0.1, with an initial model and reasoning-effort mapping for each. A task need not pass through every role. Actual use and evals determine whether roles or mappings should change; the initial combination is not assumed to be optimal.
 
-This document consolidates the agreed design and defines the implementation contract. Current execution evidence, incomplete acceptance and delivery status are recorded in [validation.md](validation.md); design statements alone are not runtime proof.
+This document consolidates the agreed design and defines the implementation contract. Current execution evidence, acceptance limits and delivery status are recorded in [validation.md](validation.md); design statements alone are not runtime proof.
 
 ## 2. Terms and priorities
 
@@ -576,13 +576,13 @@ Record first-pass and final acceptance, concrete failures, human intervention, c
 
 Adoption first requires acceptable quality and satisfied boundaries. Compare speed and total cost when quality is comparable. Small samples can justify further use, correction, or more evidence, but cannot prove long-term absence of regressions, zero missed findings, or universal optimality.
 
-## 13. Current implementation gaps and delivery boundaries
+## 13. Implemented state and delivery boundaries
 
 The repository now contains the configuration fragment, all five role files, the primary-owned
 workflow contracts and the flexible review/critic contracts. Workflow is `0.1.3`; pr-review is
 `0.1.2`, with synchronized native manifests and unchanged marketplace identities and paths.
 
-| Location | Implemented state | Remaining verification |
+| Location | Implemented state | Verification and limits |
 | --- | --- | --- |
 | `config/codex` | Mergeable fragment, preserved primary model, five model/effort mappings, implementation and intended read-only role defaults | All five mappings executed. Existing read-only-subagent evals record no file modifications. Codex 0.154.0 inherits parent permissions; that platform limitation is recorded rather than treated as a delivery blocker. Production activation is not authorized. |
 | `workflow-orchestrator` and responsibilities | Process skills separated from runtime workers; primary coordination and on-demand dependencies explicit | Behavioral and portable regression results are recorded separately. |
@@ -591,7 +591,7 @@ workflow contracts and the flexible review/critic contracts. Workflow is `0.1.3`
 | Rubber Duck and SPAR | Same-family independent contexts permitted, other families optional, SPAR still explicitly triggered | No cross-family certification is claimed. |
 | Anti-slop and other workflow skills | Scope-exclusion and process-override reports clarified; other worker/template behavior retained | Anti-slop guards and related suite routes remain in regression scope. |
 | Native lifecycle | Model/effort and fallback, primary stability, continuation and native interruption observed | Runtime automatically unloads a completed child before replacement; explicit primary-driven closure was not exercised. |
-| Native plugin distribution | Three isolated CLI installations, upgrades, source identity and discovery exercised | Codex invocation and behavioral acceptance remain required. Claude/Copilot adaptation carries no workflow-effectiveness guarantee. |
+| Native plugin distribution | Three isolated CLI installations, upgrades, source identity and discovery exercised | Affected skills have actual Codex invocation and recorded behavior evidence. Claude/Copilot adaptation carries no workflow-effectiveness guarantee. |
 
 The coupled corpus preserves the 59 prior affected-skill cases and 12 anti-slop guards, appends
 17 behavior cases, and updates the affected routing and critical assertions without renumbering.
@@ -599,9 +599,11 @@ Baseline and candidate use the same frozen revised corpus. Recorded lifecycle fi
 decisions only; native evidence establishes the controls actually exercised.
 
 The design's initial role/model combination, four-worker setting and ordinary fallback are not
-measured optima. Recorded critical failures and native gaps leave the approved completion criteria
-unmet; the 24 A/B trials establish no adoption advantage. [validation.md](validation.md) records the
-executed scope, results and limits without treating configuration text or a comparison gate as acceptance.
+measured optima. Repository delivery is complete under the agreed Codex evaluation and existing
+read-only-behavior-check scope. The 24 A/B trials establish no adoption advantage. Historical
+failures, four exact-name route misses and additional probe limitations remain recorded rather
+than relabeled as passes. [validation.md](validation.md) maps the required deliverables to evidence
+without treating configuration text or a comparison gate as acceptance.
 
 This document does not become a new downstream coordination entrypoint. Portable runtime guidance remains in `workflow-orchestrator` and the relevant skills, and the primary uses actually installed and callable capabilities. Synchronizing real `~/.codex`, switching production installations, committing, pushing, and publishing require corresponding authorization.
 
