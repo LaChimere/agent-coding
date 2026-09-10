@@ -38,7 +38,7 @@ Do not call a change landing-ready when its correctness, safety, or requested sc
 
 Ask questions that can change the outcome:
 
-- **Necessary?** Build the task at hand, not options, flags, plugins, or abstractions imagined for later.
+- **Necessary?** Build the task at hand, not options, flags, plugins, or abstractions imagined for later. When proposed additions are rejected as unnecessary, briefly identify them and the scope reason.
 - **Reusable?** Look for an existing helper or pattern before adding another path. Generated output or temporary compatibility code may repeat structure only when its source, bounds, verification, and removal condition are explicit.
 - **Simpler?** Identify concrete unnecessary complexity and recommend removal or consolidation; apply it only within authorized implementation. Do not delete merely to meet a quota.
 
@@ -56,7 +56,7 @@ Check each received finding against the implementation before marking the indepe
 
 ## Overrides and boundaries
 
-The user may change cadence and review mechanism. A confirmed throwaway that will not land may use a lighter process, but must not be described as landing-ready. Unsupported correctness, safety, or scope for landed work cannot be waived.
+The user may change cadence and review mechanism. When assessing a requested process override, explain which process choices can change and which unmet correctness, safety or scope requirement still prevents landing. A confirmed throwaway that will not land may use a lighter process, but must not be described as landing-ready. Unsupported correctness, safety, or scope for landed work cannot be waived.
 
 The primary executor's normal verification, atomicity, error handling, planning, and cadence rules remain its responsibility. This companion adds necessity, reuse, complexity, and evidence checks only.
 

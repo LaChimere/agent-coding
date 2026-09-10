@@ -22,7 +22,7 @@ Project `AGENTS.md` supplies contributor constraints and validation commands, no
 3. **Record only what is needed and authorized.** Native Plan Mode owns exploration and the proposed overall plan. Save to `plan.md` only when the host permits writing and the user authorizes it. Save-only requests authorize documents, not implementation. An explicitly approved native plan satisfies Gate 2; writing it adds no gate. Exiting Plan Mode alone is not approval.
 4. **Choose the needed process skill.** Use the table below; add companions only for a distinct need. The primary may execute directly or delegate a bounded task using the selected methods. A native proposal's complete parallel section needs no second plan or interview. Routine allocation details remain execution decisions.
 5. **Resolve only material gaps.** Preserve scope and authority already supplied in the conversation. Default landing mode to `working_tree`; implementation never implies commits or external writes. Ask only for missing decisions that materially affect behavior, contracts, architecture, state/concurrency, safety, cost or scope. Once objective, scope, behavior, constraints and observable success criteria are sufficient to plan, and material unknowns are resolved or explicitly bounded, end the questionnaire, state remaining assumptions and continue within existing authority. If a skill rule blocks authorized work, link its file, quote the exact rule, distinguish a requirement from your interpretation, and identify the needed decision.
-6. **Continue or hand off.** Convey phase, scope, approval source, landing mode, acceptance, selected skill and any actual blocker concisely. A delegated worker receives its bounded scope, constraints, acceptance and relevant evidence; the primary retains overall progress and the next action. A structured handoff can help, but is not an entry requirement. Continue authorized work unless the request was coordination-only or an explicit phase/step boundary has been reached.
+6. **Continue or hand off.** Convey phase, scope, approval source, landing mode, acceptance, selected skill and any actual blocker concisely. For a delegation decision, identify the bounded assignment and the primary's ownership of overall progress and final acceptance, including when dispatch is deferred. A delegated worker receives its constraints, acceptance and relevant evidence. A structured handoff can help, but is not an entry requirement. Continue authorized work unless the request was coordination-only or an explicit phase/step boundary has been reached.
 
 | Execution or process skill | Use when |
 |---|---|
@@ -33,7 +33,7 @@ Project `AGENTS.md` supplies contributor constraints and validation commands, no
 | `ensure-atomic-pr` | Assess or recover boundaries of an existing mixed-purpose diff |
 | `refresh-related-docs` | Evidence shows broader Markdown beyond directly coupled docs is stale |
 | `pr-review` | General change-set review; use the separately installed plugin, not a chain of community review workflows |
-| `scan-image-vulnerabilities` | Standalone read-only container image inspection, without planning artifacts or gates |
+| `scan-image-vulnerabilities` | Standalone read-only container image inspection; preserve the exact image and current vulnerability-database requirement in the handoff, without planning artifacts or gates |
 
 `anti-slop` is a signal-driven companion for explicit quality checks, pre-commit readiness, scope growth, test-fitting, fix-on-fix loops or meaningful/high-risk milestones. It does not add another tracker or automatic independent reviewer.
 
@@ -45,7 +45,7 @@ New tasks have no independent TODO or custom goal file. Do not add old-format de
 
 # Native goal boundary
 
-The host's native `/goal` owns persistent lifecycle; the executor owns implementation and verification; the living plan stores scope and evidence. Ordinary tasks do not create goals. Goal intent does not authorize commits, external writes, purchases or destructive operations. Never duplicate host pause/resume, budgets or completion state in a file. If native goal is unavailable, continue an authorized ordinary task but state that automatic cross-turn continuation is unavailable; do not emulate it.
+The host's native `/goal` owns persistent lifecycle; the executor owns implementation and verification; the living plan stores scope and evidence. For a request to report or update goal status, inspect the existing native goal. If none exists, report that state and continue authorized implementation using the living plan; a status request does not authorize creating a goal. Create one only on an explicit request to establish a native goal. Goal intent does not authorize commits, external writes, purchases or destructive operations. Never duplicate host pause/resume, budgets or completion state in a file. If native goal is unavailable, continue an authorized ordinary task but state that automatic cross-turn continuation is unavailable; do not emulate it.
 
 # Missing capabilities
 

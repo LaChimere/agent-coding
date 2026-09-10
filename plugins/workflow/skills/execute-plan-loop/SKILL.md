@@ -24,13 +24,13 @@ Resolve phase, scope, approval, landing, acceptance and return boundary from the
 A host without native Plan Mode can accept the user's explicitly approved conversational proposal.
 Use the host's actual skill and execution tools; this skill does not require a particular CLI syntax.
 
-- Recorded and unchanged: that is the active contract. Execute it. Do not route the same decision back through the orchestrator or create a routing loop.
+- Recorded and unchanged: that is the active contract. Execute it. Missing proposal text, source or tests is an input blocker to report, not renewed phase or approval ambiguity. Do not route the same decision back through the orchestrator or create a routing loop.
 - Real phase, approval, scope or worker ambiguity: consult the installed `workflow-orchestrator` if available. If unavailable, report the missing capability and resolve only what can safely be decided from existing authority; never assume missing approval. Clear small tasks stay in the primary session.
 - Landing authorization is separate from implementation approval. `commits` allows atomic commits after checks pass; anything else, including the default `working_tree`, means verify in the working tree and report. "Implement", "fix", "finish", and "keep going" never imply commit permission.
 
 Read only the artifacts the scope depends on: `plan.md` for approved scope, acceptance and current progress; `design.md` or `research.md` when correctness depends on them. Save an approved native proposal only when authorized and the host allows writing; saving adds no Gate 2 approval. A save-only request does not authorize implementation, and leaving Plan Mode alone does not grant approval. Honor a single-phase or single-step boundary exactly.
 
-The native host `/goal`, when explicitly requested and available, owns persistence, pause/resume, budgets and completion state. Ordinary implementation creates no goal. Do not create independent TODO or custom goal state, call retired lifecycle scripts, add old-format compatibility, or modify historical task files. Without a native goal, execute ordinary authorized work without promising automatic cross-turn continuation. Goal intent never expands side-effect authority.
+The native host `/goal`, when explicitly requested and available, owns persistence, pause/resume, budgets and completion state. Ordinary implementation creates no goal. A request to keep goal status current concerns an existing native goal: inspect it, or report that none exists and continue through the living plan. Creating a native goal requires explicit creation authority. Do not create independent TODO or custom goal state, call retired lifecycle scripts, add old-format compatibility, or modify historical task files. Without a native goal, execute ordinary authorized work without promising automatic cross-turn continuation. Goal intent never expands side-effect authority.
 
 # 2) Pick one atomic slice
 

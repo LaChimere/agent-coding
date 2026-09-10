@@ -10,7 +10,9 @@
     12,
     15,
     16,
-    17
+    17,
+    18,
+    19
   ],
   "critical_expectations": {
     "3": [
@@ -69,6 +71,18 @@
       1,
       2,
       3
+    ],
+    "18": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "19": [
+      0,
+      1,
+      2,
+      3
     ]
   },
   "behavior_change_ids": [
@@ -76,7 +90,9 @@
     9,
     15,
     16,
-    17
+    17,
+    18,
+    19
   ],
   "redundant_ids": [
     2,
@@ -87,9 +103,14 @@
     "9": "Coding orchestration: required missing skill remains incomplete rather than being reimplemented by a fallback.",
     "15": "Coding orchestration: process skills do not select runtime roles or models.",
     "16": "Coding orchestration: task-specific missing dependencies do not block independent authorized work.",
-    "17": "Coding orchestration: portable plugin methods require no personal role configuration."
+    "17": "Coding orchestration: portable plugin methods require no personal role configuration.",
+    "18": "Coding orchestration delivery repair: distinguish ordinary continuation and goal-status maintenance from explicit native goal creation.",
+    "19": "Coding orchestration delivery repair: distinguish ordinary continuation and goal-status maintenance from explicit native goal creation."
   },
   "clarification_rationale": {
-    "14": "The example-first criterion applies within the proposed design, after the separate constraints section. A concrete load or save behavior example satisfies it; requiring one example to cover the entire load/save lifecycle would add a requirement beyond the design-writing contract. A destination JSON shape alone is not a behavior example."
+    "14": "The example-first criterion applies within the proposed design, after the separate constraints section. A concrete load or save behavior example satisfies it; requiring one example to cover the entire load/save lifecycle would add a requirement beyond the design-writing contract. A destination JSON shape alone is not a behavior example.",
+    "4": "Keep the original status-update prompt and frozen failures. The delivery repair explicitly defines absent-goal handling; updating status does not authorize creating a goal.",
+    "5": "Both approved design and skill permit direct primary handling of clear small tasks. Include that existing route without dropping error-contract or authority checks; original frozen grades remain unchanged.",
+    "15": "The decision report must identify primary-owned progress/final acceptance and the bounded future assignment, even when dispatch is deferred."
   }
 }
