@@ -1,0 +1,18 @@
+# Git starts hooks at the repository root; the package script selects this config.
+lefthook: GIT_WORK_TREE=$(pwd) bun run --cwd evals hooks
+
+pre-commit:
+  commands:
+    lint:
+      root: evals/
+      run: bun run lint
+
+pre-push:
+  parallel: true
+  commands:
+    check:
+      root: evals/
+      run: bun run check
+    test:
+      root: evals/
+      run: bun run test
