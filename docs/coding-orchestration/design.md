@@ -109,8 +109,8 @@ Cross-family critique is an optional technique. The agreed Codex policy permits 
 |                  |   |                                       |
 | Quality first    |   | Keeps selected model + effort         |
 | Routing rules    |   |                                       |
-| Authority/limits |   | Understand -> Design -> Plan           |
-+------------------+   | Decide scope, execution and review     |
+| Authority/limits |   | Understand -> Design -> Plan          |
++------------------+   | Decide scope, execution and review    |
                        |                                       |
 +------------------+   |                                       |
 | workflow plugin  |-->| Uses workflow skills when needed      |
