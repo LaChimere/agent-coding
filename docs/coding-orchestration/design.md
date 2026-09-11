@@ -462,15 +462,26 @@ Install `workflow` and `pr-review` through the host's native plugin mechanism wh
 
 ### 10.2 Global configuration fragment
 
-The following retains the draft's intended settings. It is not a complete replacement for a real `config.toml`:
+The following defines the current requested defaults. It is not a complete replacement for a real `config.toml`:
 
 ```toml
+sandbox_mode = "workspace-write"
+approval_policy = "on-request"
+approvals_reviewer = "auto_review"
+
+[sandbox_workspace_write]
+network_access = true
+
 [agents]
 enabled = true
 max_concurrent_threads_per_session = 8
 default_subagent_model = "gpt-5.6-luna"
 default_subagent_reasoning_effort = "max"
 ```
+
+The sandbox defaults permit workspace writes and network access, with on-request approvals routed
+through automatic review. Start a new session to use the updated defaults. This post-merge change
+is checked through native configuration loading; it was not part of the earlier frozen A/B.
 
 Orchestration does not fix or switch the primary model. The primary explicitly selects a semantic role and the required configuration for the task. `default_subagent_*` supplies only the fallback when no explicit choice is made; it is not the normal task classifier or specialist-review model selector.
 

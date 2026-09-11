@@ -1,6 +1,26 @@
 # Coding orchestration v0.1 validation
 
-## Current configuration revision
+## Post-merge local activation
+
+After PR #6 was rebased into `main` at `6a1084b`, the local main checkout was fast-forwarded and
+the retired branch/worktree were removed. The evaluation directory was moved intact into the main
+checkout; a Git bundle preserves the retired branch. Local operation records are under
+`.skill-evals/coding-orchestration-activation/20260911T035518Z/`.
+
+The authorized local Codex update synchronized the global instructions and four role files,
+retained the user's Astra/xhigh primary selection and other settings, and installed workflow
+`0.1.3` and pr-review `0.1.2`. All 37 installed plugin files matched the merged source; a fresh
+App Server discovered exactly the ten target skills from their installed cache paths.
+
+The subsequent user-requested sandbox defaults are recorded in
+[design §10.2](design.md#102-global-configuration-fragment). Codex `0.154.0` strict `config/read`
+accepted `workspace-write`, `on-request`, `auto_review` and network access enabled, while retaining
+the eight-worker setting and primary model/effort. The user's relocated configuration sections
+were preserved. Backups are under `~/.codex/backups/coding-orchestration-20260911T035518Z/`.
+This post-merge default change was checked through configuration loading; it is outside the frozen
+A/B below. No new model evaluation or role-execution claim is made by this activation check.
+
+## Evaluated configuration revision
 
 On 2026-09-11 the user merged takeover into `complex_worker` at Sol/high and selected eight open
 worker threads. The current personal configuration has four roles. The complex role retains the
@@ -80,8 +100,8 @@ retention branch was not exercised by these successful continuations.
 `revision-2/native/acceptance-delta.md` maps current evidence and reuse to N01–N25. The preceding
 other-family exclusion remains. Unchanged methods, three-CLI distribution and read-only file-change
 checks reuse their prior bounded evidence; new role and capacity claims use the new native runs.
-All 37 portable plugin files match `24a0cac`; all six current personal source files match the new
-frozen source inputs. The removed takeover file accounts for the change from 44 to 43 runtime and
+All 37 portable plugin files match `24a0cac`; the six personal source files at `82ed76b` match the
+frozen evaluation inputs. The removed takeover file accounts for the change from 44 to 43 runtime and
 configuration source files. No harness implementation or dependency changed.
 
 ### Full-branch review
