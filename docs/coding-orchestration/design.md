@@ -175,8 +175,8 @@ Cross-family critique is an optional technique. The agreed Codex policy permits 
 
   Shared execution foundation for PRIMARY and all WORKERS:
   +--------------------------------------------------------------------+
-  | CODEX NATIVE HARNESS                                                |
-  | Agent loop / threads / turns / context / tools / execution events   |
+  | CODEX NATIVE HARNESS                                               |
+  | Agent loop / threads / turns / context / tools / execution events  |
   | Configured sandbox and approval mechanisms                         |
   +--------------------------------------------------------------------+
 ```
