@@ -1,5 +1,13 @@
+#:schema https://developers.openai.com/codex/config-schema.json
 # Merge this orchestration fragment into the existing Codex config.
 # Keep provider, credentials and the user's primary model/effort in their existing configuration.
+sandbox_mode = "workspace-write"
+approval_policy = "on-request"
+approvals_reviewer = "auto_review"
+
+[sandbox_workspace_write]
+network_access = true
+
 [agents]
 enabled = true
 max_concurrent_threads_per_session = 8
