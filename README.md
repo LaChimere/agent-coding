@@ -283,7 +283,11 @@ checks validate skill content, not native plugin installation or independent ope
 
 #### Compatibility evidence
 
-Local `0.1.1` candidate verification on 2026-09-07:
+Current candidate validation, including the Codex orchestration checks and the latest full-branch
+review, is recorded in [coding-orchestration validation](docs/coding-orchestration/validation.md).
+The following installation and publication observations are historical evidence for `0.1.1`.
+
+Local candidate verification on 2026-09-07:
 
 | CLI tested | Native installation and discovery | Actual invocation |
 |---|---|---|
@@ -373,7 +377,7 @@ On the tested Codex `0.154.0`, reviewer role files do not enforce read-only perm
 writable primary. Read-only acceptance reuses existing subagent evals that check file modifications;
 this platform limitation does not require client changes or additional tests for this delivery.
 See [validation](docs/coding-orchestration/validation.md) for the completed repository delivery,
-recorded failures and coverage limits. The A/B results establish no adoption advantage.
+full-branch review, recorded failures and coverage limits. The A/B results establish no adoption advantage.
 
 Candidate verification uses isolated configurations for each supported CLI and this worktree's marketplace, not remote `main`. Behavioral evaluation and orchestration-effectiveness acceptance are scoped to Codex. Claude Code and Copilot CLI retain manifest, installation/update, source-identity and discovery checks, without a workflow-effectiveness guarantee. Installing skill snapshots through `npx skills add --copy` tests instruction content only, not plugin discovery. CLI discovery, native Plan Mode and native goal lifecycle require their own actual evidence. App UI compatibility remains separately unverified unless exercised; it is not a gate for this repository-only working-tree delivery. A new test thread is a discovery check, not a mandatory work phase for ordinary tasks.
 
