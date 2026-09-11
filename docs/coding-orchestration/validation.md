@@ -84,6 +84,37 @@ All 37 portable plugin files match `24a0cac`; all six current personal source fi
 frozen source inputs. The removed takeover file accounts for the change from 44 to 43 runtime and
 configuration source files. No harness implementation or dependency changed.
 
+### Full-branch review
+
+The subsequent user-requested review pinned the full range
+`e2cd0fea0ad3072d82b661b6e7474342e96f1746..30d643bd90ed28f54cdb7890c42d6dcd0482ca87`:
+11 commits and all 63 changed files. Independent reviewers covered 20 policy/configuration/plugin
+files, 40 eval/tool-documentation files and three repository/design/validation documents. The
+primary verified the complete file partition and cross-file contracts. Code, comments, tests,
+errors, types/invariants and specification review completed, followed by a fresh independent
+Rubber Duck critique. SPAR was not requested. No substantive finding survived confirmation.
+Actual reviewer model/effort/family metadata was unavailable; independent contexts do not establish
+a cross-family result. The stale role-count wording noted during review is corrected in the
+subsequent documentation-only refresh; runtime configuration, plugin and corpus bytes remain unchanged.
+
+Security scan `0a2f1314-1c2e-4970-8dc6-5bbef71af7f1` used the same range and a fresh per-scan
+architecture model. Its 27 generated source inventory items and 36 supporting changed files were
+accounted for, and it recorded zero security candidates. The tool sealed the scan as `completed`,
+but retained the initial pending-discovery entry and therefore reported coverage `partial`, despite
+27 closed review rows. Preserve that report-state inconsistency; the sealed report is not claimed
+as a complete-coverage security certificate. Daybreak access was `not_granted`, an advisory condition.
+
+The 12-file scan bundle, including its unchanged sealed canonical documents, is archived under
+`.skill-evals/coding-orchestration/revision-2/full-branch-review/security/`.
+The adjacent `review-receipt.json` retains the review allocation, original source path, archive
+hashes, completion metadata and rollout usage. Those token totals are not an independently measured
+incremental scan cost. No new model eval, application test, installation or production operation
+was performed for this review. The pinned-range `git diff --check` returned exit 0; the reviewed
+worktree was clean. The documentation-only follow-up checked 27 local links and anchors across
+41 maintained Markdown documents, preserving 87 fixture documents as test inputs. The 43 frozen
+runtime/configuration source files, eval corpus and historical validation section were unchanged.
+These consistency checks do not alter the historical review target or its sealed evidence.
+
 ### Revised fixed A/B
 
 The new cohort `v2-20260910T190125Z-a0064d65` is under `revision-2/ab/`. Its frozen input hash is
@@ -93,6 +124,22 @@ task limits were retained. A uses the original baseline process; B uses the curr
 eight-slot policy and plugins. The known scanner-mock flag-order correction and workspace-local
 scratch/cache settings apply to both conditions. Their full configurations intentionally differ;
 this descriptive A/B report does not fake a common `config_id` for harness aggregation.
+
+The frozen comparison configurations are:
+
+| Setting | A: pre-orchestration baseline | B: revised candidate |
+| --- | --- | --- |
+| Primary model / effort | `gpt-6-astra` / `xhigh` | `gpt-6-astra` / `xhigh` |
+| Personal instructions | `config/codex/AGENTS.md` at `120a1b4` | Revised primary-owned orchestration policy |
+| Workflow / pr-review versions | `0.1.2` / `0.1.1` | `0.1.3` / `0.1.2` |
+| Custom role files | None; native delegation enabled | Four roles, with complex work and takeover at Sol/high |
+| Open-worker limit | 4 | 8 |
+| Explicit global worker fallback | Not configured | Luna / max |
+
+Both conditions retain the same task starts, prompts, authority, tools and acceptance criteria.
+This compares the full workflow change; it does not isolate the effect of the concurrency limit,
+takeover consolidation or an individual model mapping. No such single-variable eval was required
+or performed.
 
 All 24 trials have results, final snapshots and independently graded frozen packets. They used
 24 actual primary thread IDs and 26 driver `turn/start` requests: the two extra requests were

@@ -202,7 +202,7 @@ ACCEPTED requires satisfied requirements, necessary validation, and necessary re
 
 ### 5.3 On-demand plugin dependencies
 
-Dependency runs from personal orchestration to the capabilities it uses. Neither plugin requires this personal orchestration policy, the five Codex roles, GPT availability, or access to `~/.codex/agents`. Neither plugin must be loaded merely because the other is used.
+Dependency runs from personal orchestration to the capabilities it uses. Neither plugin requires this personal orchestration policy, the personal Codex roles, GPT availability, or access to `~/.codex/agents`. Neither plugin must be loaded merely because the other is used.
 
 | Task situation | Dependency behavior |
 | --- | --- |
@@ -578,7 +578,7 @@ Start with a small set of replayable tasks if useful, then observe real developm
 
 Reuse the repository's [skill evaluation tooling](../../tools/skill-evals/README.md) for its existing corpus, validation, grading, and aggregation responsibilities. Native execution interfaces can supply evidence for focused runs without replacing the provider-neutral evaluation contract or adding another telemetry database. Keep `not_run`, `ungraded`, `failed`, and `passed` distinct. Protocol-level evidence does not by itself verify the App UI, other clients, other models, or long-running recovery.
 
-For an A/B comparison, A is the current workflow and B adds the proposed role routing and selective execution patterns. Keep initial commits, requirements, tools, primary model and effort, authority, and necessary checks consistent between conditions. Isolate their solutions so neither condition reads the other's answer. Alternate execution order across tasks and define adoption criteria before examining results. This comparison measures the whole workflow; use a separate controlled comparison to isolate a particular model or effort setting.
+For the recorded A/B comparison, A is the pre-orchestration workflow at `120a1b4`; B adds the revised personal orchestration and plugin contracts. The exact configurations are recorded in [validation.md](validation.md#revised-fixed-ab). Keep initial commits, requirements, tools, primary model and effort, authority, and necessary checks consistent between conditions. Isolate their solutions so neither condition reads the other's answer. Alternate execution order across tasks and define adoption criteria before examining results. This comparison measures the whole workflow; use a separate controlled comparison to isolate a particular model or effort setting.
 
 Record first-pass and final acceptance, concrete failures, human intervention, complete elapsed time, actual models, repair and review counts, and available end-to-end usage. Include primary work, context transfer, workers, critics, retries, and caching. Retain failed, timed-out, unavailable, unrun, and ungraded outcomes rather than comparing successful tasks alone. Mark unavailable cost data unknown rather than substituting public API prices for subscription or gateway bills.
 
@@ -600,6 +600,11 @@ workflow contracts and the flexible review/critic contracts. Workflow is `0.1.3`
 | Anti-slop and other workflow skills | Scope-exclusion and process-override reports clarified; other worker/template behavior retained | Anti-slop guards and related suite routes remain in regression scope. |
 | Native lifecycle | Model/effort and fallback, primary stability, continuation and native interruption observed | Runtime automatically unloads a completed child before replacement; explicit primary-driven closure was not exercised. |
 | Native plugin distribution | Three isolated CLI installations, upgrades, source identity and discovery exercised | Affected skills have actual Codex invocation and recorded behavior evidence. Claude/Copilot adaptation carries no workflow-effectiveness guarantee. |
+
+The later full-branch review covered all 63 changed files through `30d643b` and found no substantive
+issue after independent review and primary confirmation. Its security scan retained a `partial`
+coverage label because an earlier pending-discovery record remained in the sealed report.
+[Validation](validation.md#full-branch-review) records the exact scope and this report limitation.
 
 The coupled corpus preserves the 59 prior affected-skill cases and 12 anti-slop guards, appends
 17 behavior cases, and updates the affected routing and critical assertions without renumbering.
