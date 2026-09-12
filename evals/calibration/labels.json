@@ -1,0 +1,11 @@
+{
+  "sampleHash": "702275c63b590a96fbe7041f7a1d4be676efc0fa220f90884bddfbd3140bd439",
+  "confirmedAt": "2026-09-11T18:05:40.525Z",
+  "source": "repository-owner",
+  "methods": ["text-rubric", "artifact-rubric"],
+  "labels": {
+    "complete-success": "passed",
+    "complete-failure": "failed",
+    "missing-capture": "unknown"
+  }
+}

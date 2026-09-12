@@ -1,0 +1,34 @@
+[
+  {
+    "id": "complete-success",
+    "description": "A complete captured candidate result contains the required answer.",
+    "rubric": "The observed candidate result must contain the JSON value answer: 42. Use only captured candidate evidence; use unknown when execution or result capture is insufficient.",
+    "files": [{ "path": "result.json", "text": "{\"answer\":42}\n" }],
+    "textEvidence": "Capture is complete. result.json line 1 contains {\"answer\":42}.",
+    "artifactEvidence": "Capture is complete. Inspect result.json in the evidence directory.",
+    "proposedLabel": "passed"
+  },
+  {
+    "id": "complete-failure",
+    "description": "A complete captured candidate result contains the wrong answer.",
+    "rubric": "The observed candidate result must contain the JSON value answer: 42. Use only captured candidate evidence; use unknown when execution or result capture is insufficient.",
+    "files": [{ "path": "result.json", "text": "{\"answer\":41}\n" }],
+    "textEvidence": "Capture is complete. result.json line 1 contains {\"answer\":41}.",
+    "artifactEvidence": "Capture is complete. Inspect result.json in the evidence directory.",
+    "proposedLabel": "failed"
+  },
+  {
+    "id": "missing-capture",
+    "description": "Only task input is available; no execution or candidate result was captured.",
+    "rubric": "The observed candidate result must contain the JSON value answer: 42. Use only captured candidate evidence; use unknown when execution or result capture is insufficient.",
+    "files": [
+      {
+        "path": "capture.json",
+        "text": "{\"captureStatus\":\"missing\",\"task\":\"Produce answer: 42\"}\n"
+      }
+    ],
+    "textEvidence": "capture.json line 1 reports missing capture. Only the task input is known; there is no execution record or captured candidate result. This is not a complete empty result snapshot.",
+    "artifactEvidence": "Inspect capture.json. No execution record or candidate result was captured. The supplied directory contains capture metadata only, not a complete artifact snapshot.",
+    "proposedLabel": "unknown"
+  }
+]
