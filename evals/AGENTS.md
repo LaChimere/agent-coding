@@ -18,6 +18,16 @@ Equivalent configuration migrations and formatting may preserve the existing
 rules. If an enforcement change is uncertain, ask before making it. Record the
 scope and reason of an explicitly approved exception in the change description.
 
+## Code readability
+
+- Use braces and separate lines for conditional and loop bodies.
+- Separate distinct steps with a blank line: validation, preparation, execution,
+  result construction and persistence. Keep a declaration and its immediate
+  validation together when they form one step.
+- Keep related fields and simple expressions together. Expand crowded object
+  construction and nested control flow so their structure is easy to scan.
+- In tests, visually separate setup, the operation under test and its assertions.
+
 ## Runtime
 
 Default to using Bun instead of Node.js.
