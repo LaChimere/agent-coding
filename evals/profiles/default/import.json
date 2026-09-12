@@ -1,0 +1,86 @@
+{
+  "importedAt": "2026-09-11T14:49:58.801Z",
+  "source": "~/.codex",
+  "includedConfigKeys": [
+    "model",
+    "model_provider",
+    "model_reasoning_effort",
+    "model_reasoning_summary",
+    "personality",
+    "web_search",
+    "service_tier",
+    "plan_mode_reasoning_effort",
+    "approval_policy",
+    "approvals_reviewer",
+    "sandbox_mode",
+    "sandbox_workspace_write",
+    "agents",
+    "shell_environment_policy",
+    "model_providers",
+    "plugins (repository-owned entries only)"
+  ],
+  "excludedConfigKeys": [
+    "hide_agent_reasoning",
+    "show_raw_agent_reasoning",
+    "suppress_unstable_features_warning",
+    "notify",
+    "features",
+    "marketplaces",
+    "analytics",
+    "projects",
+    "tui",
+    "desktop",
+    "memories",
+    "skills",
+    "mcp_servers",
+    "hooks",
+    "notice"
+  ],
+  "exclusions": [
+    "Credentials and auth.json",
+    "Session history, memories and logs",
+    "Personal and external skills/plugins/marketplaces",
+    "MCP servers, hooks and notify commands",
+    "Machine project trust and UI state"
+  ],
+  "transformations": [
+    "Retained only the active provider and non-secret connection settings; retained only the User-Agent literal HTTP header.",
+    "The loopback provider endpoint remains an explicit runtime dependency.",
+    "Repository candidate AGENTS.md and agents replace baseline files as whole units.",
+    "Retained repository-owned pr-review@agent-coding and workflow@agent-coding activation; excluded all external plugin activation and personal skill overrides."
+  ],
+  "corrections": [
+    {
+      "date": "2026-09-11",
+      "reason": "The initial filter omitted repository-owned plugin activation. Read-only verification of the same global configuration established both entries as enabled; they were added to complete the agreed baseline scope.",
+      "previousConfigSha256": "d9a5d7a34327794f1bdfe85831752efc823542be92d7867fa6916041da5ee067"
+    }
+  ],
+  "authenticationEnvironment": ["GITHUB_COPILOT_API_KEY"],
+  "inventory": [
+    {
+      "path": "config.toml",
+      "sha256": "ef1824a0cb25b19847be1e3ff420d049798173aae963cd1ca51da7808934215a"
+    },
+    {
+      "path": "AGENTS.md",
+      "sha256": "0568423567b3920dd86461bcad32b0f3d7a91143569fc2f6493e9ce83316fdb2"
+    },
+    {
+      "path": "agents/complex_worker.toml",
+      "sha256": "782bd1698f049cc8ab7154b622b90a29606da84fe1f6d7442f967003deb929eb"
+    },
+    {
+      "path": "agents/critical_reviewer.toml",
+      "sha256": "d586a0b60582c2116b2a26e2e94271372307343d47b1c02b1ef2ea5cbf91d03a"
+    },
+    {
+      "path": "agents/deep_critical_reviewer.toml",
+      "sha256": "e05acb4e46ab1d03491ab9e461c61af3d93b3659ebdd1ddae1e6476d0269a958"
+    },
+    {
+      "path": "agents/ordinary_worker.toml",
+      "sha256": "08c4a9cd3565bb8272088db6d40029f2e8c24484456e8d6a53de82408992a6f1"
+    }
+  ]
+}
