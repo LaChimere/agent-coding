@@ -1,0 +1,551 @@
+[
+  {
+    "description": "spar behavior case 0.",
+    "vars": {
+      "task": "Use $spar to pressure-test the API direction in `idea.md`. Produce one complete analysis and do not implement either option."
+    },
+    "metadata": {
+      "id": "spar/0",
+      "group": "spar",
+      "kind": "task",
+      "requirements": [
+        "expectation-000",
+        "expectation-001",
+        "expectation-002",
+        "expectation-003",
+        "expectation-004"
+      ],
+      "fixture": [{ "source": "spar/files/architecture/idea.md.fixture", "target": "idea.md" }],
+      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "reference": "Frames a concrete product-versus-platform tension, develops independently motivated perspectives, synthesizes what holds and fails, and ends with one decision-forcing question without implementing the API.",
+      "requiredSkills": ["spar"],
+      "turns": [],
+      "authorization": {
+        "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: Use $spar to pressure-test the API direction in `idea.md`. Produce one complete analysis and do not implement either option.",
+        "approvals": []
+      },
+      "outputSchema": null
+    },
+    "assert": [
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-000",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-000"],
+          "rubric": "Uses the required Conflict framing, Roles, role Perspective, Synthesis, The open question, and Execution sections."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-001",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-001"],
+          "rubric": "Uses two roles by default; a third role is allowed only when its independent responsibility materially changes the decision rather than repeating another side."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-002",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-002"],
+          "rubric": "Challenges the proposal using the supplied mobile, compatibility, and operations constraints."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-003",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-003"],
+          "rubric": "Ends with exactly one open question that materially affects the decision."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-004",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-004"],
+          "rubric": "Does not implement an API or modify files."
+        }
+      }
+    ]
+  },
+  {
+    "description": "spar behavior case 1.",
+    "vars": {
+      "task": "Use $spar on `plan.md`. Include a third role only if it changes the migration decision. Return a one-shot analysis."
+    },
+    "metadata": {
+      "id": "spar/1",
+      "group": "spar",
+      "kind": "task",
+      "requirements": [
+        "expectation-000",
+        "expectation-001",
+        "expectation-002",
+        "expectation-003",
+        "expectation-004"
+      ],
+      "fixture": [{ "source": "spar/files/migration/plan.md.fixture", "target": "plan.md" }],
+      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "reference": "Recognizes a genuine three-way migration tension among delivery, operations, and regulated-data responsibilities, keeps the roles independent, and synthesizes the conditions required for a safe cutover.",
+      "requiredSkills": ["spar"],
+      "turns": [],
+      "authorization": {
+        "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: Use $spar on `plan.md`. Include a third role only if it changes the migration decision. Return a one-shot analysis.",
+        "approvals": []
+      },
+      "outputSchema": null
+    },
+    "assert": [
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-000",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-000"],
+          "rubric": "Uses three roles because the regulated-data responsibility changes the conclusion rather than duplicating delivery or operations."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-001",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-001"],
+          "rubric": "Challenges rollback, dual-write consistency, and customer-impact assumptions from the supplied plan."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-002",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-002"],
+          "rubric": "Keeps each perspective independent."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-003",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-003"],
+          "rubric": "Produces one synthesis and one open question rather than starting an interview."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-004",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-004"],
+          "rubric": "Does not modify the migration plan."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-002-presentation",
+        "config": {
+          "core": false,
+          "method": "text-rubric",
+          "requirements": ["expectation-002"],
+          "rubric": "Keeps each perspective concise."
+        }
+      }
+    ]
+  },
+  {
+    "description": "spar behavior case 2.",
+    "vars": {
+      "task": "Use $spar on `idea.md`. Treat `status/capabilities.md` and `status/launch-state.md` as the authoritative observable model and launcher state. Do not call collaboration tools or invent another model, handle, or agent."
+    },
+    "metadata": {
+      "id": "spar/2",
+      "group": "spar",
+      "kind": "task",
+      "requirements": [
+        "expectation-000",
+        "expectation-001",
+        "expectation-002",
+        "expectation-003",
+        "expectation-004",
+        "expectation-005"
+      ],
+      "fixture": [
+        { "source": "spar/files/fallback/idea.md.fixture", "target": "idea.md" },
+        {
+          "source": "spar/files/fallback/status/capabilities.md.fixture",
+          "target": "status/capabilities.md"
+        },
+        {
+          "source": "spar/files/fallback/status/launch-state.md.fixture",
+          "target": "status/launch-state.md"
+        }
+      ],
+      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "reference": "Completes the two perspectives with the primary model because no eligible different family or delegation is available, and discloses primary-model fallback without claiming cross-model independence.",
+      "requiredSkills": ["spar"],
+      "turns": [],
+      "authorization": {
+        "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: Use $spar on `idea.md`. Treat `status/capabilities.md` and `status/launch-state.md` as the authoritative observable model and launcher state. Do not call collaboration tools or invent another model, handle, or agent.",
+        "approvals": []
+      },
+      "outputSchema": null
+    },
+    "assert": [
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-000",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-000"],
+          "rubric": "Completes a useful SPAR analysis despite unavailable delegation."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-001",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-001"],
+          "rubric": "Uses the primary model sequentially for the perspectives."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-002",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-002"],
+          "rubric": "Labels execution as primary-model fallback and does not claim cross-model review."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-003",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-003"],
+          "rubric": "Treats the recorded no-handle launch as no delegated execution, does not wait on an empty handle set, and completes both perspectives sequentially."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-004",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-004"],
+          "rubric": "Does not invent handles, models, or hidden reasoning."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-005",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-005"],
+          "rubric": "Does not modify files."
+        }
+      }
+    ]
+  },
+  {
+    "description": "spar behavior case 3.",
+    "vars": {
+      "task": "Use $spar to challenge `proposal.md`. Distinguish missing evidence from a demonstrated defect and do not turn uncertainty into implementation work."
+    },
+    "metadata": {
+      "id": "spar/3",
+      "group": "spar",
+      "kind": "task",
+      "requirements": [
+        "expectation-000",
+        "expectation-001",
+        "expectation-002",
+        "expectation-003",
+        "expectation-004"
+      ],
+      "fixture": [{ "source": "spar/files/evidence/proposal.md.fixture", "target": "proposal.md" }],
+      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "reference": "Challenges the unsupported performance and adoption assumptions, requests decision-relevant evidence, and avoids declaring the proposal wrong when the available material cannot resolve the tension.",
+      "requiredSkills": ["spar"],
+      "turns": [],
+      "authorization": {
+        "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: Use $spar to challenge `proposal.md`. Distinguish missing evidence from a demonstrated defect and do not turn uncertainty into implementation work.",
+        "approvals": []
+      },
+      "outputSchema": null
+    },
+    "assert": [
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-000",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-000"],
+          "rubric": "Identifies the unsupported performance and adoption assumptions."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-001",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-001"],
+          "rubric": "Separates missing evidence from established facts."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-002",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-002"],
+          "rubric": "Suggests a bounded experiment or evidence request rather than implementation."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-003",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-003"],
+          "rubric": "Does not manufacture a finding, consensus, or extra open questions."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-004",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-004"],
+          "rubric": "Does not modify files."
+        }
+      }
+    ]
+  },
+  {
+    "description": "spar behavior case 4.",
+    "vars": {
+      "task": "Use the spar skill on idea.md. Treat status/synchronous-state.md as authoritative recorded execution evidence for this fixture: both independent perspectives already completed synchronously. Synthesize them without launching agents or inventing task handles."
+    },
+    "metadata": {
+      "id": "spar/4",
+      "group": "spar",
+      "kind": "task",
+      "requirements": [
+        "expectation-000",
+        "expectation-001",
+        "expectation-002",
+        "expectation-003",
+        "expectation-004"
+      ],
+      "fixture": [
+        { "source": "spar/files/architecture/idea.md.fixture", "target": "idea.md" },
+        {
+          "source": "spar/files/architecture/status/synchronous-state.md.fixture",
+          "target": "status/synchronous-state.md"
+        }
+      ],
+      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "reference": "Uses both completed synchronous perspectives, checks their arguments against the proposal and records cross-model evidence without waiting or repeating work.",
+      "requiredSkills": ["spar"],
+      "turns": [],
+      "authorization": {
+        "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: Use the spar skill on idea.md. Treat status/synchronous-state.md as authoritative recorded execution evidence for this fixture: both independent perspectives already completed synchronously. Synthesize them without launching agents or inventing task handles.",
+        "approvals": []
+      },
+      "outputSchema": null
+    },
+    "assert": [
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-000",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-000"],
+          "rubric": "Uses both recorded opposing perspectives and checks them against idea.md."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-001",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-001"],
+          "rubric": "Does not require task handles, wait or relaunch the completed synchronous calls."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-002",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-002"],
+          "rubric": "Records the contrasting family supported by the fixture's execution metadata, not a new live delegation claim."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-003",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-003"],
+          "rubric": "Returns the standard SPAR sections and exactly one open question."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-004",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-004"],
+          "rubric": "Does not modify files."
+        }
+      }
+    ]
+  },
+  {
+    "description": "spar behavior case 5.",
+    "vars": {
+      "task": "Use spar to pressure-test idea.md. Only models from the primary model family are permitted. Use independent role contexts through actual delegation if available; report actual evidence and missing capabilities. Read-only."
+    },
+    "metadata": {
+      "id": "spar/5",
+      "group": "spar",
+      "kind": "task",
+      "requirements": [
+        "expectation-000",
+        "expectation-001",
+        "expectation-002",
+        "expectation-003",
+        "expectation-004"
+      ],
+      "fixture": [{ "source": "spar/files/same-family/idea.md.fixture", "target": "idea.md" }],
+      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "reference": "Develops opposing perspectives in independent same-family contexts when possible and synthesizes without inventing family diversity.",
+      "requiredSkills": ["spar"],
+      "turns": [],
+      "authorization": {
+        "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: Use spar to pressure-test idea.md. Only models from the primary model family are permitted. Use independent role contexts through actual delegation if available; report actual evidence and missing capabilities. Read-only.",
+        "approvals": []
+      },
+      "outputSchema": null
+    },
+    "assert": [
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-000",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-000"],
+          "rubric": "Frames two distinct stakeholder perspectives and permits independent same-family execution rather than requiring another family."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-001",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-001"],
+          "rubric": "Uses actual delegation when exposed with no shared role answers or worker descendants; otherwise reports independent coverage incomplete."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-002",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-002"],
+          "rubric": "Tests the consistency versus availability conflict against the supplied proposal and returns exactly one open question."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-003",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-003"],
+          "rubric": "Reports actual context/model/effort/family evidence or unverified facts; primary fallback is non-independent."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-004",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-004"],
+          "rubric": "Does not implement, modify files or turn the analysis into a multi-round interview."
+        }
+      }
+    ]
+  }
+]

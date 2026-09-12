@@ -1,0 +1,21 @@
+{
+  "SchemaVersion": 2,
+  "ArtifactName": "registry.example.com/checkout/web:9.9.9",
+  "ArtifactType": "container_image",
+  "Results": [
+    {
+      "Target": "registry.example.com/checkout/web:9.9.9 (alpine 3.20.2)",
+      "Class": "os-pkgs",
+      "Type": "alpine",
+      "Packages": [
+        {
+          "ID": "nginx@1.26.1",
+          "Name": "nginx",
+          "Version": "1.26.1",
+          "Release": "r0"
+        }
+      ],
+      "Vulnerabilities": []
+    }
+  ]
+}

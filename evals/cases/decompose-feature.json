@@ -1,0 +1,597 @@
+[
+  {
+    "description": "decompose-feature behavior case 0.",
+    "vars": {
+      "task": "Decompose a saved-searches feature spanning a data model, service logic, API endpoint, and UI panel into small reviewable PRs."
+    },
+    "metadata": {
+      "id": "decompose-feature/0",
+      "group": "decompose-feature",
+      "kind": "task",
+      "requirements": [
+        "expectation-000",
+        "expectation-001",
+        "expectation-002",
+        "expectation-003",
+        "expectation-004"
+      ],
+      "fixture": [],
+      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "reference": "Each PR has one purpose, remains trunk-safe, and carries the tests that verify its behavior.",
+      "requiredSkills": ["decompose-feature"],
+      "turns": [],
+      "authorization": {
+        "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: Decompose a saved-searches feature spanning a data model, service logic, API endpoint, and UI panel into small reviewable PRs.",
+        "approvals": []
+      },
+      "outputSchema": null
+    },
+    "assert": [
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-000",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-000"],
+          "rubric": "Keeps tests with the implementation they verify."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-001",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-001"],
+          "rubric": "Does not create a standalone tests PR."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-002",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-002"],
+          "rubric": "Provides acceptance criteria and validation per PR."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-003",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-003"],
+          "rubric": "Keeps every intermediate merge trunk-safe."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-004",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-004"],
+          "rubric": "States dependencies explicitly."
+        }
+      }
+    ]
+  },
+  {
+    "description": "decompose-feature behavior case 1.",
+    "vars": {
+      "task": "On the existing `feature/wire-protocol-v2` branch, real code already implements a wire-protocol version change: the shared constant, client encoder, and server decoder already exist in the repository and must change together, or every message fails to parse. This is work already underway on that branch, not a proposal for a future or not-yet-started feature. Decide how to split it into PRs for review."
+    },
+    "metadata": {
+      "id": "decompose-feature/1",
+      "group": "decompose-feature",
+      "kind": "task",
+      "requirements": [
+        "expectation-000",
+        "expectation-001",
+        "expectation-002",
+        "expectation-003",
+        "expectation-004"
+      ],
+      "fixture": [],
+      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "reference": "Recognizes the change as indivisible and recommends one PR rather than a split that breaks trunk.",
+      "requiredSkills": ["decompose-feature"],
+      "turns": [],
+      "authorization": {
+        "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: On the existing `feature/wire-protocol-v2` branch, real code already implements a wire-protocol version change: the shared constant, client encoder, and server decoder already exist in the repository and must change together, or every message fails to parse. This is work already underway on that branch, not a proposal for a future or not-yet-started feature. Decide how to split it into PRs for review.",
+        "approvals": []
+      },
+      "outputSchema": null
+    },
+    "assert": [
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-000",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-000"],
+          "rubric": "Identifies the change as inherently indivisible."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-001",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-001"],
+          "rubric": "Recommends one PR."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-002",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-002"],
+          "rubric": "Does not split by file count."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-003",
+        "config": {
+          "core": false,
+          "method": "text-rubric",
+          "requirements": ["expectation-003"],
+          "rubric": "May separate mechanical and semantic work with commits."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-004",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-004"],
+          "rubric": "Explains the invalid intermediate state."
+        }
+      }
+    ]
+  },
+  {
+    "description": "decompose-feature behavior case 2.",
+    "vars": {
+      "task": "Decompose adding archived_at, migrating code to use it, and removing the existing archived boolean."
+    },
+    "metadata": {
+      "id": "decompose-feature/2",
+      "group": "decompose-feature",
+      "kind": "task",
+      "requirements": [
+        "expectation-000",
+        "expectation-001",
+        "expectation-002",
+        "expectation-003",
+        "expectation-004"
+      ],
+      "fixture": [],
+      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "reference": "Orders schema compatibility, code adoption, and cleanup so every intermediate state is safe.",
+      "requiredSkills": ["decompose-feature"],
+      "turns": [],
+      "authorization": {
+        "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: Decompose adding archived_at, migrating code to use it, and removing the existing archived boolean.",
+        "approvals": []
+      },
+      "outputSchema": null
+    },
+    "assert": [
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-000",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-000"],
+          "rubric": "Adds compatible schema before dependent code."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-001",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-001"],
+          "rubric": "Moves readers and writers before removing the existing field."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-002",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-002"],
+          "rubric": "Defers cleanup until the new path is established."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-003",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-003"],
+          "rubric": "Provides validation per PR."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-004",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-004"],
+          "rubric": "Explains rollback or migration risk."
+        }
+      }
+    ]
+  },
+  {
+    "description": "decompose-feature behavior case 3.",
+    "vars": {
+      "task": "A shared GraphQL type and resolver will support independent web, mobile, and admin consumers. Produce the PR sequence and parallelization readiness."
+    },
+    "metadata": {
+      "id": "decompose-feature/3",
+      "group": "decompose-feature",
+      "kind": "task",
+      "requirements": [
+        "expectation-000",
+        "expectation-001",
+        "expectation-002",
+        "expectation-003",
+        "expectation-004"
+      ],
+      "fixture": [],
+      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "reference": "Uses a justified shared base followed by independent consumer slices and hands ownership planning to plan-parallel-work.",
+      "requiredSkills": ["decompose-feature"],
+      "turns": [],
+      "authorization": {
+        "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: A shared GraphQL type and resolver will support independent web, mobile, and admin consumers. Produce the PR sequence and parallelization readiness.",
+        "approvals": []
+      },
+      "outputSchema": null
+    },
+    "assert": [
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-000",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-000"],
+          "rubric": "Uses a base PR for the real shared contract."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-001",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-001"],
+          "rubric": "Keeps consumer-specific logic out of the base."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-002",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-002"],
+          "rubric": "Allows fan-out only after the contract stabilizes."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-003",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-003"],
+          "rubric": "Does not assign branches or agents."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-004",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-004"],
+          "rubric": "Names plan-parallel-work as the ownership handoff."
+        }
+      }
+    ]
+  },
+  {
+    "description": "decompose-feature behavior case 4.",
+    "vars": {
+      "task": "Decompose three low-coupling improvements: a settings export button, shortcut help dialog, and copy-to-clipboard action. They share no contract."
+    },
+    "metadata": {
+      "id": "decompose-feature/4",
+      "group": "decompose-feature",
+      "kind": "task",
+      "requirements": [
+        "expectation-000",
+        "expectation-001",
+        "expectation-002",
+        "expectation-003",
+        "expectation-004"
+      ],
+      "fixture": [],
+      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "reference": "Defaults to independent vertical slices rather than artificial horizontal layers.",
+      "requiredSkills": ["decompose-feature"],
+      "turns": [],
+      "authorization": {
+        "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: Decompose three low-coupling improvements: a settings export button, shortcut help dialog, and copy-to-clipboard action. They share no contract.",
+        "approvals": []
+      },
+      "outputSchema": null
+    },
+    "assert": [
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-000",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-000"],
+          "rubric": "Creates one meaningful vertical slice per improvement."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-001",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-001"],
+          "rubric": "Does not invent a shared base PR."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-002",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-002"],
+          "rubric": "Keeps tests with each slice."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-003",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-003"],
+          "rubric": "Explains the low-coupling decision."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-004",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-004"],
+          "rubric": "Keeps each slice independently mergeable."
+        }
+      }
+    ]
+  },
+  {
+    "description": "decompose-feature behavior case 5.",
+    "vars": {
+      "task": "Create a staged plan for CSV export on one report page. There is no shared schema, feature flag requirement, or second consumer."
+    },
+    "metadata": {
+      "id": "decompose-feature/5",
+      "group": "decompose-feature",
+      "kind": "task",
+      "requirements": [
+        "expectation-000",
+        "expectation-001",
+        "expectation-002",
+        "expectation-003",
+        "expectation-004"
+      ],
+      "fixture": [],
+      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "reference": "Uses one small PR or a vertical slice and does not manufacture base scaffolding.",
+      "requiredSkills": ["decompose-feature"],
+      "turns": [],
+      "authorization": {
+        "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: Create a staged plan for CSV export on one report page. There is no shared schema, feature flag requirement, or second consumer.",
+        "approvals": []
+      },
+      "outputSchema": null
+    },
+    "assert": [
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-000",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-000"],
+          "rubric": "Does not propose an unused base abstraction."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-001",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-001"],
+          "rubric": "Does not add a speculative feature flag."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-002",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-002"],
+          "rubric": "Requires evidence before adding a base PR."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-003",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-003"],
+          "rubric": "Keeps the PR count proportional."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-004",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-004"],
+          "rubric": "Provides concrete validation."
+        }
+      }
+    ]
+  },
+  {
+    "description": "decompose-feature behavior case 6.",
+    "vars": {
+      "task": "The user asks conversationally for a rough PR breakdown of a notifications rewrite and says they are not ready to start."
+    },
+    "metadata": {
+      "id": "decompose-feature/6",
+      "group": "decompose-feature",
+      "kind": "task",
+      "requirements": [
+        "expectation-000",
+        "expectation-001",
+        "expectation-002",
+        "expectation-003",
+        "expectation-004"
+      ],
+      "fixture": [],
+      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "reference": "Provides advisory decomposition inline without forcing plan artifacts or approval gates.",
+      "requiredSkills": ["decompose-feature"],
+      "turns": [],
+      "authorization": {
+        "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: The user asks conversationally for a rough PR breakdown of a notifications rewrite and says they are not ready to start.",
+        "approvals": []
+      },
+      "outputSchema": null
+    },
+    "assert": [
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-000",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-000"],
+          "rubric": "Answers inline."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-001",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-001"],
+          "rubric": "Does not create planning artifacts."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-002",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-002"],
+          "rubric": "Does not require Gate 1 before answering."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-003",
+        "config": {
+          "core": false,
+          "method": "text-rubric",
+          "requirements": ["expectation-003"],
+          "rubric": "May omit materialization entirely; if mentioned, uses at most one factual sentence without an open-ended offer or required next step."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-004",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-004"],
+          "rubric": "Keeps the advice clearly provisional."
+        }
+      }
+    ]
+  }
+]

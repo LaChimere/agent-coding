@@ -1,0 +1,1089 @@
+[
+  {
+    "description": "scan-image-vulnerabilities behavior case 0.",
+    "vars": {
+      "task": "Scan registry.example.com/app:1.2.3 with the installed skill's bundled scanner. The `trivy` on PATH is this workspace's local binary, and its vulnerability database refresh currently fails."
+    },
+    "metadata": {
+      "id": "scan-image-vulnerabilities/0",
+      "group": "scan-image-vulnerabilities",
+      "kind": "task",
+      "requirements": [
+        "expectation-000",
+        "expectation-001",
+        "expectation-002",
+        "expectation-003",
+        "expectation-004",
+        "verification-000",
+        "verification-001"
+      ],
+      "fixture": [
+        { "source": "scan-image-vulnerabilities/files/bin/trivy.fixture", "target": "bin/trivy" },
+        {
+          "source": "scan-image-vulnerabilities/files/bin/kubectl.fixture",
+          "target": "bin/kubectl"
+        },
+        { "source": "scan-image-vulnerabilities/files/bin/docker.fixture", "target": "bin/docker" },
+        {
+          "source": "scan-image-vulnerabilities/files/trivy-fixture/db-refresh-fails.fixture",
+          "target": "trivy-fixture/db-refresh-fails"
+        },
+        {
+          "source": "scan-image-vulnerabilities/files/trivy-fixture/images/registry.example.com_app_1.2.3.json.fixture",
+          "target": "trivy-fixture/images/registry.example.com_app_1.2.3.json"
+        }
+      ],
+      "execution": {
+        "networkAccess": false,
+        "pathPrepend": ["bin"],
+        "executableFiles": ["bin/trivy", "bin/kubectl", "bin/docker"]
+      },
+      "reference": "Stops before scanning, exits nonzero, and does not report a clean result.",
+      "requiredSkills": ["scan-image-vulnerabilities"],
+      "turns": [],
+      "authorization": {
+        "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: Scan registry.example.com/app:1.2.3 with the installed skill's bundled scanner. The `trivy` on PATH is this workspace's local binary, and its vulnerability database refresh currently fails.",
+        "approvals": []
+      },
+      "outputSchema": null
+    },
+    "assert": [
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-000",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-000"],
+          "rubric": "Returns nonzero."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-001",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-001"],
+          "rubric": "Does not scan the image."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-002",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-002"],
+          "rubric": "Reports DB refresh failure."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-003",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-003"],
+          "rubric": "Does not use stale data."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-004",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-004"],
+          "rubric": "Does not claim no vulnerabilities."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "verification-000",
+        "config": {
+          "core": false,
+          "method": "programmatic",
+          "requirements": ["verification-000"],
+          "rubric": "File .scan-fixture-calls/trivy.log exists.",
+          "rule": { "type": "file-exists", "path": ".scan-fixture-calls/trivy.log" }
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "verification-001",
+        "config": {
+          "core": true,
+          "method": "programmatic",
+          "requirements": ["verification-001"],
+          "rubric": "Output matches /(database|\\bDB\\b).*(fail|error|rate limit)|(?:fail|error).*(database|\\bDB\\b)/i.",
+          "rule": {
+            "type": "text-regex",
+            "pattern": "(database|\\bDB\\b).*(fail|error|rate limit)|(?:fail|error).*(database|\\bDB\\b)",
+            "flags": "i"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "description": "scan-image-vulnerabilities behavior case 1.",
+    "vars": {
+      "task": "The `kubectl` on PATH reads this workspace's recorded cluster snapshot. Discover the images running in the payments namespace and scan them with the installed skill's bundled scanner."
+    },
+    "metadata": {
+      "id": "scan-image-vulnerabilities/1",
+      "group": "scan-image-vulnerabilities",
+      "kind": "task",
+      "requirements": [
+        "expectation-000",
+        "expectation-001",
+        "expectation-002",
+        "expectation-003",
+        "expectation-004"
+      ],
+      "fixture": [
+        { "source": "scan-image-vulnerabilities/files/bin/trivy.fixture", "target": "bin/trivy" },
+        {
+          "source": "scan-image-vulnerabilities/files/bin/kubectl.fixture",
+          "target": "bin/kubectl"
+        },
+        { "source": "scan-image-vulnerabilities/files/bin/docker.fixture", "target": "bin/docker" },
+        {
+          "source": "scan-image-vulnerabilities/files/cluster/pods-all-namespaces.json.fixture",
+          "target": "cluster/pods-all-namespaces.json"
+        },
+        {
+          "source": "scan-image-vulnerabilities/files/cluster/pods-payments.json.fixture",
+          "target": "cluster/pods-payments.json"
+        },
+        {
+          "source": "scan-image-vulnerabilities/files/trivy-fixture/images/registry.example.com_payments_api_sha256_8f2c4ad4bb6ec2a1e0f2c8e2f3f2d1b0a9c8d7e6f5a4b3c2d1e0f9a8b7c6d5e4.json.fixture",
+          "target": "trivy-fixture/images/registry.example.com_payments_api_sha256_8f2c4ad4bb6ec2a1e0f2c8e2f3f2d1b0a9c8d7e6f5a4b3c2d1e0f9a8b7c6d5e4.json"
+        },
+        {
+          "source": "scan-image-vulnerabilities/files/trivy-fixture/images/registry.example.com_payments_worker_2.7.1.json.fixture",
+          "target": "trivy-fixture/images/registry.example.com_payments_worker_2.7.1.json"
+        },
+        {
+          "source": "scan-image-vulnerabilities/files/trivy-fixture/images/registry.example.com_checkout_web_9.9.9.json.fixture",
+          "target": "trivy-fixture/images/registry.example.com_checkout_web_9.9.9.json"
+        },
+        {
+          "source": "scan-image-vulnerabilities/files/trivy-fixture/images/registry.k8s.io_kube-proxy_v1.30.2.json.fixture",
+          "target": "trivy-fixture/images/registry.k8s.io_kube-proxy_v1.30.2.json"
+        }
+      ],
+      "execution": {
+        "networkAccess": false,
+        "pathPrepend": ["bin"],
+        "executableFiles": ["bin/trivy", "bin/kubectl", "bin/docker"]
+      },
+      "reference": "Scans the exact discovered references and reports the namespace and targets.",
+      "requiredSkills": ["scan-image-vulnerabilities"],
+      "turns": [],
+      "authorization": {
+        "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: The `kubectl` on PATH reads this workspace's recorded cluster snapshot. Discover the images running in the payments namespace and scan them with the installed skill's bundled scanner.",
+        "approvals": []
+      },
+      "outputSchema": null
+    },
+    "assert": [
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-000",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-000"],
+          "rubric": "Discovers images before scanning."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-001",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-001"],
+          "rubric": "Uses exact tags or digests."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-002",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-002"],
+          "rubric": "Does not guess latest."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-003",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-003"],
+          "rubric": "Narrows to payments."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-004",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-004"],
+          "rubric": "Reports targets."
+        }
+      }
+    ]
+  },
+  {
+    "description": "scan-image-vulnerabilities behavior case 2.",
+    "vars": {
+      "task": "Scan registry.example.com/platform/base:3.1.0 and registry.example.com/private/billing:5.0.0 with the installed skill's bundled scanner, then summarize the result for a release decision."
+    },
+    "metadata": {
+      "id": "scan-image-vulnerabilities/2",
+      "group": "scan-image-vulnerabilities",
+      "kind": "task",
+      "requirements": [
+        "expectation-000",
+        "expectation-001",
+        "expectation-002",
+        "expectation-003",
+        "expectation-004"
+      ],
+      "fixture": [
+        { "source": "scan-image-vulnerabilities/files/bin/trivy.fixture", "target": "bin/trivy" },
+        {
+          "source": "scan-image-vulnerabilities/files/bin/kubectl.fixture",
+          "target": "bin/kubectl"
+        },
+        { "source": "scan-image-vulnerabilities/files/bin/docker.fixture", "target": "bin/docker" },
+        {
+          "source": "scan-image-vulnerabilities/files/trivy-fixture/images/registry.example.com_platform_base_3.1.0.json.fixture",
+          "target": "trivy-fixture/images/registry.example.com_platform_base_3.1.0.json"
+        },
+        {
+          "source": "scan-image-vulnerabilities/files/trivy-fixture/images/registry.example.com_private_billing_5.0.0.error.fixture",
+          "target": "trivy-fixture/images/registry.example.com_private_billing_5.0.0.error"
+        }
+      ],
+      "execution": {
+        "networkAccess": false,
+        "pathPrepend": ["bin"],
+        "executableFiles": ["bin/trivy", "bin/kubectl", "bin/docker"]
+      },
+      "reference": "Prioritizes severe findings and reports the second image as failed rather than clean.",
+      "requiredSkills": ["scan-image-vulnerabilities"],
+      "turns": [],
+      "authorization": {
+        "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: Scan registry.example.com/platform/base:3.1.0 and registry.example.com/private/billing:5.0.0 with the installed skill's bundled scanner, then summarize the result for a release decision.",
+        "approvals": []
+      },
+      "outputSchema": null
+    },
+    "assert": [
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-000",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-000"],
+          "rubric": "Leads with critical and high."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-001",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-001"],
+          "rubric": "Provides severity counts."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-002",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-002"],
+          "rubric": "Does not dump low-severity noise."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-003",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-003"],
+          "rubric": "Reports authentication failure."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-004",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-004"],
+          "rubric": "Does not report the failed image as clean."
+        }
+      }
+    ]
+  },
+  {
+    "description": "scan-image-vulnerabilities behavior case 3.",
+    "vars": {
+      "task": "Decide whether this skill applies to (A) a container image CVE scan and (B) an application source-code SQL injection audit."
+    },
+    "metadata": {
+      "id": "scan-image-vulnerabilities/3",
+      "group": "scan-image-vulnerabilities",
+      "kind": "task",
+      "requirements": [
+        "expectation-000",
+        "expectation-001",
+        "expectation-002",
+        "expectation-003",
+        "expectation-004"
+      ],
+      "fixture": [
+        { "source": "scan-image-vulnerabilities/files/bin/trivy.fixture", "target": "bin/trivy" },
+        {
+          "source": "scan-image-vulnerabilities/files/bin/kubectl.fixture",
+          "target": "bin/kubectl"
+        },
+        { "source": "scan-image-vulnerabilities/files/bin/docker.fixture", "target": "bin/docker" }
+      ],
+      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "reference": "Applies to A and not B.",
+      "requiredSkills": ["scan-image-vulnerabilities"],
+      "turns": [],
+      "authorization": {
+        "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: Decide whether this skill applies to (A) a container image CVE scan and (B) an application source-code SQL injection audit.",
+        "approvals": []
+      },
+      "outputSchema": null
+    },
+    "assert": [
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-000",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-000"],
+          "rubric": "Routes the image request to this skill."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-001",
+        "config": {
+          "core": true,
+          "method": "artifact-rubric",
+          "requirements": ["expectation-001"],
+          "rubric": "Does not route the source audit."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-002",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-002"],
+          "rubric": "Uses container/cluster/Trivy as the boundary."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-003",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-003"],
+          "rubric": "Does not trigger on the word vulnerability alone."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-004",
+        "config": {
+          "core": true,
+          "method": "artifact-rubric",
+          "requirements": ["expectation-004"],
+          "rubric": "Names a different capability for source security."
+        }
+      }
+    ]
+  },
+  {
+    "description": "scan-image-vulnerabilities behavior case 4.",
+    "vars": {
+      "task": "Run the installed skill's bundled scanner against registry.example.com/app/ok:1.0.0 and registry.example.com/app/missing:1.0.0 in one invocation, then report the outcome and the process exit status."
+    },
+    "metadata": {
+      "id": "scan-image-vulnerabilities/4",
+      "group": "scan-image-vulnerabilities",
+      "kind": "task",
+      "requirements": [
+        "expectation-000",
+        "expectation-001",
+        "expectation-002",
+        "expectation-003",
+        "expectation-004",
+        "verification-000",
+        "verification-001",
+        "verification-002"
+      ],
+      "fixture": [
+        { "source": "scan-image-vulnerabilities/files/bin/trivy.fixture", "target": "bin/trivy" },
+        {
+          "source": "scan-image-vulnerabilities/files/bin/kubectl.fixture",
+          "target": "bin/kubectl"
+        },
+        { "source": "scan-image-vulnerabilities/files/bin/docker.fixture", "target": "bin/docker" },
+        {
+          "source": "scan-image-vulnerabilities/files/trivy-fixture/images/registry.example.com_app_ok_1.0.0.json.fixture",
+          "target": "trivy-fixture/images/registry.example.com_app_ok_1.0.0.json"
+        },
+        {
+          "source": "scan-image-vulnerabilities/files/trivy-fixture/images/registry.example.com_app_missing_1.0.0.error.fixture",
+          "target": "trivy-fixture/images/registry.example.com_app_missing_1.0.0.error"
+        }
+      ],
+      "execution": {
+        "networkAccess": false,
+        "pathPrepend": ["bin"],
+        "executableFiles": ["bin/trivy", "bin/kubectl", "bin/docker"]
+      },
+      "reference": "Keeps the successful artifact but returns nonzero and lists the failed image.",
+      "requiredSkills": ["scan-image-vulnerabilities"],
+      "turns": [],
+      "authorization": {
+        "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: Run the installed skill's bundled scanner against registry.example.com/app/ok:1.0.0 and registry.example.com/app/missing:1.0.0 in one invocation, then report the outcome and the process exit status.",
+        "approvals": []
+      },
+      "outputSchema": null
+    },
+    "assert": [
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-000",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-000"],
+          "rubric": "Returns nonzero."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-001",
+        "config": {
+          "core": true,
+          "method": "artifact-rubric",
+          "requirements": ["expectation-001"],
+          "rubric": "Keeps successful JSON."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-002",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-002"],
+          "rubric": "Lists failed images."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-003",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-003"],
+          "rubric": "Prints successful summary."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-004",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-004"],
+          "rubric": "Does not claim overall success."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "verification-000",
+        "config": {
+          "core": true,
+          "method": "programmatic",
+          "requirements": ["verification-000"],
+          "rubric": "A generated file matches **/registry.example.com_app_ok_1.0.0_e0d5a8af213a.json.",
+          "rule": {
+            "type": "file-pattern",
+            "pattern": "**/registry.example.com_app_ok_1.0.0_e0d5a8af213a.json"
+          }
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "verification-001",
+        "config": {
+          "core": true,
+          "method": "programmatic",
+          "requirements": ["verification-001"],
+          "rubric": "Output matches /(exit status|returned?|status)[^\\n]*1/i.",
+          "rule": {
+            "type": "text-regex",
+            "pattern": "(exit status|returned?|status)[^\\n]*1",
+            "flags": "i"
+          }
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "verification-002",
+        "config": {
+          "core": true,
+          "method": "programmatic",
+          "requirements": ["verification-002"],
+          "rubric": "Output matches /(missing|MANIFEST_UNKNOWN|manifest does not exist)/i.",
+          "rule": {
+            "type": "text-regex",
+            "pattern": "(missing|MANIFEST_UNKNOWN|manifest does not exist)",
+            "flags": "i"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "description": "scan-image-vulnerabilities behavior case 5.",
+    "vars": {
+      "task": "Scan the remote reference registry.example.com/app:1.2.3 into the caller-provided directory ./scan-artifacts with the installed skill's bundled scanner; this workspace has no Docker daemon. Then run the scanner again without an explicit output directory and report where the default artifacts landed."
+    },
+    "metadata": {
+      "id": "scan-image-vulnerabilities/5",
+      "group": "scan-image-vulnerabilities",
+      "kind": "task",
+      "requirements": [
+        "expectation-000",
+        "expectation-001",
+        "expectation-002",
+        "expectation-003",
+        "expectation-004",
+        "verification-000",
+        "verification-001",
+        "verification-002"
+      ],
+      "fixture": [
+        { "source": "scan-image-vulnerabilities/files/bin/trivy.fixture", "target": "bin/trivy" },
+        {
+          "source": "scan-image-vulnerabilities/files/bin/kubectl.fixture",
+          "target": "bin/kubectl"
+        },
+        { "source": "scan-image-vulnerabilities/files/bin/docker.fixture", "target": "bin/docker" },
+        {
+          "source": "scan-image-vulnerabilities/files/trivy-fixture/images/registry.example.com_app_1.2.3.json.fixture",
+          "target": "trivy-fixture/images/registry.example.com_app_1.2.3.json"
+        }
+      ],
+      "execution": {
+        "networkAccess": false,
+        "pathPrepend": ["bin"],
+        "executableFiles": ["bin/trivy", "bin/kubectl", "bin/docker"]
+      },
+      "reference": "Uses the exact provided directory, uses a controlled non-/tmp default, and does not require Docker for the remote reference.",
+      "requiredSkills": ["scan-image-vulnerabilities"],
+      "turns": [],
+      "authorization": {
+        "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: Scan the remote reference registry.example.com/app:1.2.3 into the caller-provided directory ./scan-artifacts with the installed skill's bundled scanner; this workspace has no Docker daemon. Then run the scanner again without an explicit output directory and report where the default artifacts landed.",
+        "approvals": []
+      },
+      "outputSchema": null
+    },
+    "assert": [
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-000",
+        "config": {
+          "core": true,
+          "method": "artifact-rubric",
+          "requirements": ["expectation-000"],
+          "rubric": "Honors --output-dir."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-001",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-001"],
+          "rubric": "Avoids a hard-coded /tmp default."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-002",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-002"],
+          "rubric": "Does not require Docker for remote scans."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-003",
+        "config": {
+          "core": true,
+          "method": "artifact-rubric",
+          "requirements": ["expectation-003"],
+          "rubric": "Reports the output location."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-004",
+        "config": {
+          "core": true,
+          "method": "artifact-rubric",
+          "requirements": ["expectation-004"],
+          "rubric": "Creates JSON only in the selected location."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "verification-000",
+        "config": {
+          "core": true,
+          "method": "programmatic",
+          "requirements": ["verification-000"],
+          "rubric": "File scan-artifacts/registry.example.com_app_1.2.3_a2636d4dc77a.json exists.",
+          "rule": {
+            "type": "file-exists",
+            "path": "scan-artifacts/registry.example.com_app_1.2.3_a2636d4dc77a.json"
+          }
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "verification-001",
+        "config": {
+          "core": true,
+          "method": "programmatic",
+          "requirements": ["verification-001"],
+          "rubric": "Output matches /scan-artifacts/i.",
+          "rule": { "type": "text-regex", "pattern": "scan-artifacts", "flags": "i" }
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "verification-002",
+        "config": {
+          "core": true,
+          "method": "programmatic",
+          "requirements": ["verification-002"],
+          "rubric": "Output matches /(default artifact|default.*landed|trivy-image-scan)/i.",
+          "rule": {
+            "type": "text-regex",
+            "pattern": "(default artifact|default.*landed|trivy-image-scan)",
+            "flags": "i"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "description": "scan-image-vulnerabilities behavior case 6.",
+    "vars": {
+      "task": "This project has no repository-root skills/ directory; the skill exists only as an npx-installed copy. Invoke its bundled scanner against registry.example.com/app:1.2.3 from this working directory."
+    },
+    "metadata": {
+      "id": "scan-image-vulnerabilities/6",
+      "group": "scan-image-vulnerabilities",
+      "kind": "task",
+      "requirements": [
+        "expectation-000",
+        "expectation-001",
+        "expectation-002",
+        "expectation-003",
+        "expectation-004",
+        "verification-000",
+        "verification-001"
+      ],
+      "fixture": [
+        { "source": "scan-image-vulnerabilities/files/bin/trivy.fixture", "target": "bin/trivy" },
+        {
+          "source": "scan-image-vulnerabilities/files/bin/kubectl.fixture",
+          "target": "bin/kubectl"
+        },
+        { "source": "scan-image-vulnerabilities/files/bin/docker.fixture", "target": "bin/docker" },
+        {
+          "source": "scan-image-vulnerabilities/files/trivy-fixture/images/registry.example.com_app_1.2.3.json.fixture",
+          "target": "trivy-fixture/images/registry.example.com_app_1.2.3.json"
+        }
+      ],
+      "execution": {
+        "networkAccess": false,
+        "pathPrepend": ["bin"],
+        "executableFiles": ["bin/trivy", "bin/kubectl", "bin/docker"]
+      },
+      "reference": "Finds the bundled script relative to the installed skill directory.",
+      "requiredSkills": ["scan-image-vulnerabilities"],
+      "turns": [],
+      "authorization": {
+        "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: This project has no repository-root skills/ directory; the skill exists only as an npx-installed copy. Invoke its bundled scanner against registry.example.com/app:1.2.3 from this working directory.",
+        "approvals": []
+      },
+      "outputSchema": null
+    },
+    "assert": [
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-000",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-000"],
+          "rubric": "Uses a skill-relative script path."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-001",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-001"],
+          "rubric": "Does not require a repository-root skills path."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-002",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-002"],
+          "rubric": "Runs from an unrelated working directory."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-003",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-003"],
+          "rubric": "Does not fail with script not found."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-004",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-004"],
+          "rubric": "Uses the installed bundled script."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "verification-000",
+        "config": {
+          "core": true,
+          "method": "programmatic",
+          "requirements": ["verification-000"],
+          "rubric": "A generated file matches **/registry.example.com_app_1.2.3_a2636d4dc77a.json.",
+          "rule": {
+            "type": "file-pattern",
+            "pattern": "**/registry.example.com_app_1.2.3_a2636d4dc77a.json"
+          }
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "verification-001",
+        "config": {
+          "core": true,
+          "method": "programmatic",
+          "requirements": ["verification-001"],
+          "rubric": "Output matches /(CVE-2024-30001|zlib)/i.",
+          "rule": { "type": "text-regex", "pattern": "(CVE-2024-30001|zlib)", "flags": "i" }
+        }
+      }
+    ]
+  },
+  {
+    "description": "scan-image-vulnerabilities behavior case 7.",
+    "vars": {
+      "task": "Scan registry.example.com/coverage/app:1.0.0 with the installed skill's bundled scanner and report package coverage as well as vulnerabilities."
+    },
+    "metadata": {
+      "id": "scan-image-vulnerabilities/7",
+      "group": "scan-image-vulnerabilities",
+      "kind": "task",
+      "requirements": [
+        "expectation-000",
+        "expectation-001",
+        "expectation-002",
+        "expectation-003",
+        "expectation-004",
+        "expectation-005",
+        "expectation-006",
+        "expectation-007",
+        "verification-000",
+        "verification-001",
+        "verification-002",
+        "verification-003",
+        "verification-004"
+      ],
+      "fixture": [
+        { "source": "scan-image-vulnerabilities/files/bin/trivy.fixture", "target": "bin/trivy" },
+        {
+          "source": "scan-image-vulnerabilities/files/bin/kubectl.fixture",
+          "target": "bin/kubectl"
+        },
+        { "source": "scan-image-vulnerabilities/files/bin/docker.fixture", "target": "bin/docker" },
+        {
+          "source": "scan-image-vulnerabilities/files/trivy-fixture/images/registry.example.com_coverage_app_1.0.0.json.fixture",
+          "target": "trivy-fixture/images/registry.example.com_coverage_app_1.0.0.json"
+        }
+      ],
+      "execution": {
+        "networkAccess": false,
+        "pathPrepend": ["bin"],
+        "executableFiles": ["bin/trivy", "bin/kubectl", "bin/docker"]
+      },
+      "reference": "Uses Trivy package inventory data to report result class/type coverage, detected language packages and ecosystems, and vulnerable library package details.",
+      "requiredSkills": ["scan-image-vulnerabilities"],
+      "turns": [],
+      "authorization": {
+        "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: Scan registry.example.com/coverage/app:1.0.0 with the installed skill's bundled scanner and report package coverage as well as vulnerabilities.",
+        "approvals": []
+      },
+      "outputSchema": null
+    },
+    "assert": [
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-000",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-000"],
+          "rubric": "Invokes the installed bundled scanner with comprehensive detection options for OS and library packages, every package relationship and severity, unfixed and suppressed findings, and all package inventory. This case deliberately uses the declared offline Trivy fixture: assess the actual invocation and options, not a real registry fetch or live vulnerability database update. Do not interpret fixture results as evidence of a real external scan."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-001",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-001"],
+          "rubric": "Reports package counts grouped by Trivy result class and type."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-002",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-002"],
+          "rubric": "Reports detected language-package count and ecosystem."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-003",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-003"],
+          "rubric": "Reports lodash as a vulnerable npm package with its installed version and HIGH finding."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-004",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-004"],
+          "rubric": "Reports suppressed vulnerabilities separately from active severity counts."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-005",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-005"],
+          "rubric": "Reports a combined total covering active and suppressed vulnerabilities."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-006",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-006"],
+          "rubric": "Overrides ambient status, skipped-path, vulnerability exit-code, and EOL exit-code settings that could reduce or misclassify the scan."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-007",
+        "config": {
+          "core": true,
+          "method": "artifact-rubric",
+          "requirements": ["expectation-007"],
+          "rubric": "Keeps the complete raw JSON artifact."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "verification-000",
+        "config": {
+          "core": true,
+          "method": "programmatic",
+          "requirements": ["verification-000"],
+          "rubric": "A generated file matches **/registry.example.com_coverage_app_1.0.0_621e6f78efbb.json.",
+          "rule": {
+            "type": "file-pattern",
+            "pattern": "**/registry.example.com_coverage_app_1.0.0_621e6f78efbb.json"
+          }
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "verification-001",
+        "config": {
+          "core": true,
+          "method": "programmatic",
+          "requirements": ["verification-001"],
+          "rubric": "Output matches /lodash[^\\n]*4\\.17\\.20/i.",
+          "rule": { "type": "text-regex", "pattern": "lodash[^\\n]*4\\.17\\.20", "flags": "i" }
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "verification-002",
+        "config": {
+          "core": true,
+          "method": "programmatic",
+          "requirements": ["verification-002"],
+          "rubric": "Output matches /(npm|language.package)/i.",
+          "rule": { "type": "text-regex", "pattern": "(npm|language.package)", "flags": "i" }
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "verification-003",
+        "config": {
+          "core": true,
+          "method": "programmatic",
+          "requirements": ["verification-003"],
+          "rubric": "Output matches /suppress/i.",
+          "rule": { "type": "text-regex", "pattern": "suppress", "flags": "i" }
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "verification-004",
+        "config": {
+          "core": true,
+          "method": "programmatic",
+          "requirements": ["verification-004"],
+          "rubric": "Output matches /(combined|active plus suppressed|total)[^\\n]*2/i.",
+          "rule": {
+            "type": "text-regex",
+            "pattern": "(combined|active plus suppressed|total)[^\\n]*2",
+            "flags": "i"
+          }
+        }
+      }
+    ]
+  }
+]

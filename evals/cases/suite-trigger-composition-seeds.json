@@ -1,0 +1,866 @@
+[
+  {
+    "description": "routing classification trigger-composition-seeds/orchestrator-vs-direct-worker.",
+    "vars": {
+      "task": "Classify the exact incoming request below. Return which installed skills should handle it and why. Do not execute the described task, modify files, call external systems, or create artifacts.\n\nIncoming request:\nAn approved plan asks for one implementation slice. Which skill owns it?"
+    },
+    "metadata": {
+      "id": "suite/trigger-composition-seeds/orchestrator-vs-direct-worker",
+      "group": "suite:trigger-composition-seeds",
+      "kind": "routing",
+      "requirements": ["route-answer", "expectation-000", "expectation-001"],
+      "fixture": [],
+      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "reference": "",
+      "requiredSkills": [],
+      "turns": [],
+      "authorization": {
+        "scope": "Classification only: identify the installed skills that should handle the incoming request; do not execute it, modify files, or create artifacts.",
+        "approvals": []
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "skills": { "type": "array", "items": { "type": "string" } },
+          "reason": { "type": "string" }
+        },
+        "required": ["skills", "reason"]
+      }
+    },
+    "assert": [
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "route-answer",
+        "config": {
+          "core": true,
+          "method": "programmatic",
+          "requirements": ["route-answer"],
+          "rubric": "The classification answer names the expected installed route and excludes forbidden routes; this checks the answer contract, not actual skill invocation.",
+          "rule": {
+            "type": "route",
+            "expected": ["execute-plan-loop"],
+            "forbidden": ["workflow-orchestrator"]
+          }
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-001",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-000"],
+          "rubric": "This is a routing-only classification case. Assess whether the selected route and rationale identify how the downstream skill should handle the requirement below. Do not require actual task execution, file edits, scans, reviews, or tool calls in this classification answer. Requirement: Consume clear approval from the conversation or living plan directly."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-002",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-001"],
+          "rubric": "This is a routing-only classification case. Assess whether the selected route and rationale identify how the downstream skill should handle the requirement below. Do not require actual task execution, file edits, scans, reviews, or tool calls in this classification answer. Requirement: Do not create an orchestrator loop."
+        }
+      }
+    ]
+  },
+  {
+    "description": "routing classification trigger-composition-seeds/decompose-vs-atomic.",
+    "vars": {
+      "task": "Classify the exact incoming request below. Return which installed skills should handle it and why. Do not execute the described task, modify files, call external systems, or create artifacts.\n\nIncoming request:\nA broad feature spans auth, API, migrations, and UI. Plan which PRs should deliver it and their trunk-safe landing order before implementation; retain one PR if the components cannot merge safely separately."
+    },
+    "metadata": {
+      "id": "suite/trigger-composition-seeds/decompose-vs-atomic",
+      "group": "suite:trigger-composition-seeds",
+      "kind": "routing",
+      "requirements": ["route-answer", "expectation-000", "expectation-001"],
+      "fixture": [],
+      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "reference": "",
+      "requiredSkills": [],
+      "turns": [],
+      "authorization": {
+        "scope": "Classification only: identify the installed skills that should handle the incoming request; do not execute it, modify files, or create artifacts.",
+        "approvals": []
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "skills": { "type": "array", "items": { "type": "string" } },
+          "reason": { "type": "string" }
+        },
+        "required": ["skills", "reason"]
+      }
+    },
+    "assert": [
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "route-answer",
+        "config": {
+          "core": true,
+          "method": "programmatic",
+          "requirements": ["route-answer"],
+          "rubric": "The classification answer names the expected installed route and excludes forbidden routes; this checks the answer contract, not actual skill invocation.",
+          "rule": { "type": "route", "expected": ["decompose-feature"], "forbidden": [] }
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-001",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-000"],
+          "rubric": "This is a routing-only classification case. Assess whether the selected route and rationale identify how the downstream skill should handle the requirement below. Do not require actual task execution, file edits, scans, reviews, or tool calls in this classification answer. Requirement: Plan trunk-safe PR boundaries and landing order, retaining one PR when the feature is indivisible."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-002",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-001"],
+          "rubric": "This is a routing-only classification case. Assess whether the selected route and rationale identify how the downstream skill should handle the requirement below. Do not require actual task execution, file edits, scans, reviews, or tool calls in this classification answer. Requirement: Distinguish delivery-sequence planning from assessing whether a planned or existing change is atomic."
+        }
+      }
+    ]
+  },
+  {
+    "description": "routing classification trigger-composition-seeds/decompose-vs-parallel.",
+    "vars": {
+      "task": "Classify the exact incoming request below. Return which installed skills should handle it and why. Do not execute the described task, modify files, call external systems, or create artifacts.\n\nIncoming request:\nThe approved PR slices have independent owners and worktrees. Plan safe simultaneous work."
+    },
+    "metadata": {
+      "id": "suite/trigger-composition-seeds/decompose-vs-parallel",
+      "group": "suite:trigger-composition-seeds",
+      "kind": "routing",
+      "requirements": ["route-answer", "expectation-000", "expectation-001"],
+      "fixture": [],
+      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "reference": "",
+      "requiredSkills": [],
+      "turns": [],
+      "authorization": {
+        "scope": "Classification only: identify the installed skills that should handle the incoming request; do not execute it, modify files, or create artifacts.",
+        "approvals": []
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "skills": { "type": "array", "items": { "type": "string" } },
+          "reason": { "type": "string" }
+        },
+        "required": ["skills", "reason"]
+      }
+    },
+    "assert": [
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "route-answer",
+        "config": {
+          "core": true,
+          "method": "programmatic",
+          "requirements": ["route-answer"],
+          "rubric": "The classification answer names the expected installed route and excludes forbidden routes; this checks the answer contract, not actual skill invocation.",
+          "rule": { "type": "route", "expected": ["plan-parallel-work"], "forbidden": [] }
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-001",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-000"],
+          "rubric": "This is a routing-only classification case. Assess whether the selected route and rationale identify how the downstream skill should handle the requirement below. Do not require actual task execution, file edits, scans, reviews, or tool calls in this classification answer. Requirement: Specify ownership and dependencies."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-002",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-001"],
+          "rubric": "This is a routing-only classification case. Assess whether the selected route and rationale identify how the downstream skill should handle the requirement below. Do not require actual task execution, file edits, scans, reviews, or tool calls in this classification answer. Requirement: Do not use decomposition merely because agents are parallel."
+        }
+      }
+    ]
+  },
+  {
+    "description": "routing classification trigger-composition-seeds/docs-direct-vs-broad-refresh.",
+    "vars": {
+      "task": "Classify the exact incoming request below. Return which installed skills should handle it and why. Do not execute the described task, modify files, call external systems, or create artifacts.\n\nIncoming request:\nUpdate the explicitly named API guide, then assess whether newly discovered docs are stale."
+    },
+    "metadata": {
+      "id": "suite/trigger-composition-seeds/docs-direct-vs-broad-refresh",
+      "group": "suite:trigger-composition-seeds",
+      "kind": "routing",
+      "requirements": ["route-answer", "expectation-000", "expectation-001"],
+      "fixture": [],
+      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "reference": "",
+      "requiredSkills": [],
+      "turns": [],
+      "authorization": {
+        "scope": "Classification only: identify the installed skills that should handle the incoming request; do not execute it, modify files, or create artifacts.",
+        "approvals": []
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "skills": { "type": "array", "items": { "type": "string" } },
+          "reason": { "type": "string" }
+        },
+        "required": ["skills", "reason"]
+      }
+    },
+    "assert": [
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "route-answer",
+        "config": {
+          "core": true,
+          "method": "programmatic",
+          "requirements": ["route-answer"],
+          "rubric": "The classification answer names the expected installed route and excludes forbidden routes; this checks the answer contract, not actual skill invocation.",
+          "rule": { "type": "route", "expected": ["refresh-related-docs"], "forbidden": [] }
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-001",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-000"],
+          "rubric": "This is a routing-only classification case. Assess whether the selected route and rationale identify how the downstream skill should handle the requirement below. Do not require actual task execution, file edits, scans, reviews, or tool calls in this classification answer. Requirement: The named guide is directly approved."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-002",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-001"],
+          "rubric": "This is a routing-only classification case. Assess whether the selected route and rationale identify how the downstream skill should handle the requirement below. Do not require actual task execution, file edits, scans, reviews, or tool calls in this classification answer. Requirement: Keep the requested assessment of other docs read-only; report staleness without a routine approval question."
+        }
+      }
+    ]
+  },
+  {
+    "description": "routing classification trigger-composition-seeds/image-scan-vs-source-security.",
+    "vars": {
+      "task": "Classify the exact incoming request below. Return which installed skills should handle it and why. Do not execute the described task, modify files, call external systems, or create artifacts.\n\nIncoming request:\nScan registry.example.com/payments:4.2 for CVEs; do not audit source code."
+    },
+    "metadata": {
+      "id": "suite/trigger-composition-seeds/image-scan-vs-source-security",
+      "group": "suite:trigger-composition-seeds",
+      "kind": "routing",
+      "requirements": ["route-answer", "expectation-000", "expectation-001"],
+      "fixture": [],
+      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "reference": "",
+      "requiredSkills": [],
+      "turns": [],
+      "authorization": {
+        "scope": "Classification only: identify the installed skills that should handle the incoming request; do not execute it, modify files, or create artifacts.",
+        "approvals": []
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "skills": { "type": "array", "items": { "type": "string" } },
+          "reason": { "type": "string" }
+        },
+        "required": ["skills", "reason"]
+      }
+    },
+    "assert": [
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "route-answer",
+        "config": {
+          "core": true,
+          "method": "programmatic",
+          "requirements": ["route-answer"],
+          "rubric": "The classification answer names the expected installed route and excludes forbidden routes; this checks the answer contract, not actual skill invocation.",
+          "rule": {
+            "type": "route",
+            "expected": ["scan-image-vulnerabilities"],
+            "forbidden": ["security-review"]
+          }
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-001",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-000"],
+          "rubric": "This is a routing-only classification case. Assess whether the selected route and rationale identify how the downstream skill should handle the requirement below. Do not require actual task execution, file edits, scans, reviews, or tool calls in this classification answer. Requirement: Route directly to read-only image scanning."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-002",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-001"],
+          "rubric": "This is a routing-only classification case. Assess whether the selected route and rationale identify how the downstream skill should handle the requirement below. Do not require actual task execution, file edits, scans, reviews, or tool calls in this classification answer. Requirement: Do not convert an image-CVE request into source security review."
+        }
+      }
+    ]
+  },
+  {
+    "description": "routing classification trigger-composition-seeds/pr-review-with-security-companion.",
+    "vars": {
+      "task": "Classify the exact incoming request below. Return which installed skills should handle it and why. Do not execute the described task, modify files, call external systems, or create artifacts.\n\nIncoming request:\nUse $pr-review for the current authentication PR and include security review."
+    },
+    "metadata": {
+      "id": "suite/trigger-composition-seeds/pr-review-with-security-companion",
+      "group": "suite:trigger-composition-seeds",
+      "kind": "routing",
+      "requirements": ["route-answer", "expectation-000", "expectation-001"],
+      "fixture": [],
+      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "reference": "",
+      "requiredSkills": [],
+      "turns": [],
+      "authorization": {
+        "scope": "Classification only: identify the installed skills that should handle the incoming request; do not execute it, modify files, or create artifacts.",
+        "approvals": []
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "skills": { "type": "array", "items": { "type": "string" } },
+          "reason": { "type": "string" }
+        },
+        "required": ["skills", "reason"]
+      }
+    },
+    "assert": [
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "route-answer",
+        "config": {
+          "core": true,
+          "method": "programmatic",
+          "requirements": ["route-answer"],
+          "rubric": "The classification answer names the expected installed route and excludes forbidden routes; this checks the answer contract, not actual skill invocation.",
+          "rule": { "type": "route", "expected": ["pr-review"], "forbidden": ["code-review"] }
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-001",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-000"],
+          "rubric": "This is a routing-only classification case. Assess whether the selected route and rationale identify how the downstream skill should handle the requirement below. Do not require actual task execution, file edits, scans, reviews, or tool calls in this classification answer. Requirement: Keep pr-review as the single public entrypoint."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-002",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-001"],
+          "rubric": "This is a routing-only classification case. Assess whether the selected route and rationale identify how the downstream skill should handle the requirement below. Do not require actual task execution, file edits, scans, reviews, or tool calls in this classification answer. Requirement: Invoke complete diff security as a companion when available."
+        }
+      }
+    ]
+  },
+  {
+    "description": "routing classification trigger-composition-seeds/pr-review-vs-image-scan.",
+    "vars": {
+      "task": "Classify the exact incoming request below. Return which installed skills should handle it and why. Do not execute the described task, modify files, call external systems, or create artifacts.\n\nIncoming request:\nScan registry.example.com/payments:4.2 for image CVEs only."
+    },
+    "metadata": {
+      "id": "suite/trigger-composition-seeds/pr-review-vs-image-scan",
+      "group": "suite:trigger-composition-seeds",
+      "kind": "routing",
+      "requirements": ["route-answer", "expectation-000", "expectation-001"],
+      "fixture": [],
+      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "reference": "",
+      "requiredSkills": [],
+      "turns": [],
+      "authorization": {
+        "scope": "Classification only: identify the installed skills that should handle the incoming request; do not execute it, modify files, or create artifacts.",
+        "approvals": []
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "skills": { "type": "array", "items": { "type": "string" } },
+          "reason": { "type": "string" }
+        },
+        "required": ["skills", "reason"]
+      }
+    },
+    "assert": [
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "route-answer",
+        "config": {
+          "core": true,
+          "method": "programmatic",
+          "requirements": ["route-answer"],
+          "rubric": "The classification answer names the expected installed route and excludes forbidden routes; this checks the answer contract, not actual skill invocation.",
+          "rule": {
+            "type": "route",
+            "expected": ["scan-image-vulnerabilities"],
+            "forbidden": ["pr-review"]
+          }
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-001",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-000"],
+          "rubric": "This is a routing-only classification case. Assess whether the selected route and rationale identify how the downstream skill should handle the requirement below. Do not require actual task execution, file edits, scans, reviews, or tool calls in this classification answer. Requirement: Use the image scanner."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-002",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-001"],
+          "rubric": "This is a routing-only classification case. Assess whether the selected route and rationale identify how the downstream skill should handle the requirement below. Do not require actual task execution, file edits, scans, reviews, or tool calls in this classification answer. Requirement: Do not activate PR review for an image-only request."
+        }
+      }
+    ]
+  },
+  {
+    "description": "routing classification trigger-composition-seeds/pr-review-vs-atomicity.",
+    "vars": {
+      "task": "Classify the exact incoming request below. Return which installed skills should handle it and why. Do not execute the described task, modify files, call external systems, or create artifacts.\n\nIncoming request:\nOnly assess whether this existing diff is atomic enough for one PR."
+    },
+    "metadata": {
+      "id": "suite/trigger-composition-seeds/pr-review-vs-atomicity",
+      "group": "suite:trigger-composition-seeds",
+      "kind": "routing",
+      "requirements": ["route-answer", "expectation-000", "expectation-001"],
+      "fixture": [],
+      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "reference": "",
+      "requiredSkills": [],
+      "turns": [],
+      "authorization": {
+        "scope": "Classification only: identify the installed skills that should handle the incoming request; do not execute it, modify files, or create artifacts.",
+        "approvals": []
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "skills": { "type": "array", "items": { "type": "string" } },
+          "reason": { "type": "string" }
+        },
+        "required": ["skills", "reason"]
+      }
+    },
+    "assert": [
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "route-answer",
+        "config": {
+          "core": true,
+          "method": "programmatic",
+          "requirements": ["route-answer"],
+          "rubric": "The classification answer names the expected installed route and excludes forbidden routes; this checks the answer contract, not actual skill invocation.",
+          "rule": { "type": "route", "expected": ["ensure-atomic-pr"], "forbidden": ["pr-review"] }
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-001",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-000"],
+          "rubric": "This is a routing-only classification case. Assess whether the selected route and rationale identify how the downstream skill should handle the requirement below. Do not require actual task execution, file edits, scans, reviews, or tool calls in this classification answer. Requirement: Use the atomicity assessment skill."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-002",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-001"],
+          "rubric": "This is a routing-only classification case. Assess whether the selected route and rationale identify how the downstream skill should handle the requirement below. Do not require actual task execution, file edits, scans, reviews, or tool calls in this classification answer. Requirement: Do not substitute general PR review."
+        }
+      }
+    ]
+  },
+  {
+    "description": "routing classification trigger-composition-seeds/pr-review-auto-rubber-duck.",
+    "vars": {
+      "task": "Classify the exact incoming request below. Return which installed skills should handle it and why. Do not execute the described task, modify files, call external systems, or create artifacts.\n\nIncoming request:\nUse $pr-review on this public payment-interface change. The primary has decided to include $rubber-duck for independent critique. Review only."
+    },
+    "metadata": {
+      "id": "suite/trigger-composition-seeds/pr-review-auto-rubber-duck",
+      "group": "suite:trigger-composition-seeds",
+      "kind": "routing",
+      "requirements": ["route-answer", "expectation-000", "expectation-001", "expectation-002"],
+      "fixture": [],
+      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "reference": "",
+      "requiredSkills": [],
+      "turns": [],
+      "authorization": {
+        "scope": "Classification only: identify the installed skills that should handle the incoming request; do not execute it, modify files, or create artifacts.",
+        "approvals": []
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "skills": { "type": "array", "items": { "type": "string" } },
+          "reason": { "type": "string" }
+        },
+        "required": ["skills", "reason"]
+      }
+    },
+    "assert": [
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "route-answer",
+        "config": {
+          "core": true,
+          "method": "programmatic",
+          "requirements": ["route-answer"],
+          "rubric": "The classification answer names the expected installed route and excludes forbidden routes; this checks the answer contract, not actual skill invocation.",
+          "rule": {
+            "type": "route",
+            "expected": ["pr-review", "rubber-duck"],
+            "forbidden": ["spar", "code-review"]
+          }
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-001",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-000"],
+          "rubric": "This is a routing-only classification case. Assess whether the selected route and rationale identify how the downstream skill should handle the requirement below. Do not require actual task execution, file edits, scans, reviews, or tool calls in this classification answer. Requirement: Keep pr-review as the public entrypoint."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-002",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-001"],
+          "rubric": "This is a routing-only classification case. Assess whether the selected route and rationale identify how the downstream skill should handle the requirement below. Do not require actual task execution, file edits, scans, reviews, or tool calls in this classification answer. Requirement: Include Rubber Duck because the primary explicitly selected it; preserve the payment-risk review methods."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-003",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-002"],
+          "rubric": "This is a routing-only classification case. Assess whether the selected route and rationale identify how the downstream skill should handle the requirement below. Do not require actual task execution, file edits, scans, reviews, or tool calls in this classification answer. Requirement: Do not add SPAR without an explicit request."
+        }
+      }
+    ]
+  },
+  {
+    "description": "routing classification trigger-composition-seeds/pr-review-explicit-spar.",
+    "vars": {
+      "task": "Classify the exact incoming request below. Return which installed skills should handle it and why. Do not execute the described task, modify files, call external systems, or create artifacts.\n\nIncoming request:\nUse $pr-review on this cache design and explicitly include $spar to challenge its assumptions."
+    },
+    "metadata": {
+      "id": "suite/trigger-composition-seeds/pr-review-explicit-spar",
+      "group": "suite:trigger-composition-seeds",
+      "kind": "routing",
+      "requirements": ["route-answer", "expectation-000", "expectation-001", "expectation-002"],
+      "fixture": [],
+      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "reference": "",
+      "requiredSkills": [],
+      "turns": [],
+      "authorization": {
+        "scope": "Classification only: identify the installed skills that should handle the incoming request; do not execute it, modify files, or create artifacts.",
+        "approvals": []
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "skills": { "type": "array", "items": { "type": "string" } },
+          "reason": { "type": "string" }
+        },
+        "required": ["skills", "reason"]
+      }
+    },
+    "assert": [
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "route-answer",
+        "config": {
+          "core": true,
+          "method": "programmatic",
+          "requirements": ["route-answer"],
+          "rubric": "The classification answer names the expected installed route and excludes forbidden routes; this checks the answer contract, not actual skill invocation.",
+          "rule": {
+            "type": "route",
+            "expected": ["pr-review", "spar"],
+            "forbidden": ["code-review"]
+          }
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-001",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-000"],
+          "rubric": "This is a routing-only classification case. Assess whether the selected route and rationale identify how the downstream skill should handle the requirement below. Do not require actual task execution, file edits, scans, reviews, or tool calls in this classification answer. Requirement: Keep pr-review as the public entrypoint."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-002",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-001"],
+          "rubric": "This is a routing-only classification case. Assess whether the selected route and rationale identify how the downstream skill should handle the requirement below. Do not require actual task execution, file edits, scans, reviews, or tool calls in this classification answer. Requirement: Run SPAR because the user explicitly requested it."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-003",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-002"],
+          "rubric": "This is a routing-only classification case. Assess whether the selected route and rationale identify how the downstream skill should handle the requirement below. Do not require actual task execution, file edits, scans, reviews, or tool calls in this classification answer. Requirement: Keep SPAR challenge output subject to primary confirmation."
+        }
+      }
+    ]
+  },
+  {
+    "description": "routing classification trigger-composition-seeds/pr-review-small-change-no-challenger.",
+    "vars": {
+      "task": "Classify the exact incoming request below. Return which installed skills should handle it and why. Do not execute the described task, modify files, call external systems, or create artifacts.\n\nIncoming request:\nUse $pr-review on this one-line internal label helper change. Review only."
+    },
+    "metadata": {
+      "id": "suite/trigger-composition-seeds/pr-review-small-change-no-challenger",
+      "group": "suite:trigger-composition-seeds",
+      "kind": "routing",
+      "requirements": ["route-answer", "expectation-000", "expectation-001", "expectation-002"],
+      "fixture": [],
+      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "reference": "",
+      "requiredSkills": [],
+      "turns": [],
+      "authorization": {
+        "scope": "Classification only: identify the installed skills that should handle the incoming request; do not execute it, modify files, or create artifacts.",
+        "approvals": []
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "skills": { "type": "array", "items": { "type": "string" } },
+          "reason": { "type": "string" }
+        },
+        "required": ["skills", "reason"]
+      }
+    },
+    "assert": [
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "route-answer",
+        "config": {
+          "core": true,
+          "method": "programmatic",
+          "requirements": ["route-answer"],
+          "rubric": "The classification answer names the expected installed route and excludes forbidden routes; this checks the answer contract, not actual skill invocation.",
+          "rule": {
+            "type": "route",
+            "expected": ["pr-review"],
+            "forbidden": ["rubber-duck", "spar", "code-review"]
+          }
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-001",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-000"],
+          "rubric": "This is a routing-only classification case. Assess whether the selected route and rationale identify how the downstream skill should handle the requirement below. Do not require actual task execution, file edits, scans, reviews, or tool calls in this classification answer. Requirement: Run the ordinary applicable review."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-002",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-001"],
+          "rubric": "This is a routing-only classification case. Assess whether the selected route and rationale identify how the downstream skill should handle the requirement below. Do not require actual task execution, file edits, scans, reviews, or tool calls in this classification answer. Requirement: Do not add Rubber Duck solely because a review was requested."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-003",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-002"],
+          "rubric": "This is a routing-only classification case. Assess whether the selected route and rationale identify how the downstream skill should handle the requirement below. Do not require actual task execution, file edits, scans, reviews, or tool calls in this classification answer. Requirement: Do not add SPAR without an explicit request."
+        }
+      }
+    ]
+  },
+  {
+    "description": "routing classification trigger-composition-seeds/pr-review-explicit-rubber-duck-exclusion.",
+    "vars": {
+      "task": "Classify the exact incoming request below. Return which installed skills should handle it and why. Do not execute the described task, modify files, call external systems, or create artifacts.\n\nIncoming request:\nUse $pr-review on this substantial public API migration, but exclude Rubber Duck. Review only."
+    },
+    "metadata": {
+      "id": "suite/trigger-composition-seeds/pr-review-explicit-rubber-duck-exclusion",
+      "group": "suite:trigger-composition-seeds",
+      "kind": "routing",
+      "requirements": ["route-answer", "expectation-000", "expectation-001", "expectation-002"],
+      "fixture": [],
+      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "reference": "",
+      "requiredSkills": [],
+      "turns": [],
+      "authorization": {
+        "scope": "Classification only: identify the installed skills that should handle the incoming request; do not execute it, modify files, or create artifacts.",
+        "approvals": []
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "skills": { "type": "array", "items": { "type": "string" } },
+          "reason": { "type": "string" }
+        },
+        "required": ["skills", "reason"]
+      }
+    },
+    "assert": [
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "route-answer",
+        "config": {
+          "core": true,
+          "method": "programmatic",
+          "requirements": ["route-answer"],
+          "rubric": "The classification answer names the expected installed route and excludes forbidden routes; this checks the answer contract, not actual skill invocation.",
+          "rule": {
+            "type": "route",
+            "expected": ["pr-review"],
+            "forbidden": ["rubber-duck", "spar", "code-review"]
+          }
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-001",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-000"],
+          "rubric": "This is a routing-only classification case. Assess whether the selected route and rationale identify how the downstream skill should handle the requirement below. Do not require actual task execution, file edits, scans, reviews, or tool calls in this classification answer. Requirement: Honor the explicit Rubber Duck exclusion."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-002",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-001"],
+          "rubric": "This is a routing-only classification case. Assess whether the selected route and rationale identify how the downstream skill should handle the requirement below. Do not require actual task execution, file edits, scans, reviews, or tool calls in this classification answer. Requirement: Complete ordinary review without silently replacing the excluded challenge."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-003",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-002"],
+          "rubric": "This is a routing-only classification case. Assess whether the selected route and rationale identify how the downstream skill should handle the requirement below. Do not require actual task execution, file edits, scans, reviews, or tool calls in this classification answer. Requirement: Do not add SPAR without an explicit request."
+        }
+      }
+    ]
+  }
+]

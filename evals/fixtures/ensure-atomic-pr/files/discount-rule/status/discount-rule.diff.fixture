@@ -1,0 +1,35 @@
+diff --git a/src/pricing/discount.js b/src/pricing/discount.js
+index 1c2d3e4..5f6a7b8 100644
+--- a/src/pricing/discount.js
++++ b/src/pricing/discount.js
+@@ -1,5 +1,5 @@
+-// Applies the loyalty-tier discount described in docs/pricing/discount-formula.md.
++// Applies the loyalty-tier discount described in docs/pricing/discount-formula.md.
+ export function applyDiscount(subtotal, loyaltyTier) {
+   const rate = loyaltyTier === "gold" ? 0.15 : loyaltyTier === "silver" ? 0.1 : 0.05;
+-  return Math.round(subtotal * (1 - rate) * 100) / 100;
++  const capped = Math.min(rate, 0.15);
++  return Math.round(subtotal * (1 - capped) * 100) / 100;
+ }
+diff --git a/test/discount.test.js b/test/discount.test.js
+index 2a3b4c5..6d7e8f9 100644
+--- a/test/discount.test.js
++++ b/test/discount.test.js
+@@ -10,3 +10,7 @@ test("applies the default discount rate for other tiers", () => {
+   assert.equal(applyDiscount(100, "bronze"), 95);
+ });
++
++test("caps the discount rate at 15%", () => {
++  assert.equal(applyDiscount(200, "gold"), 170);
++});
+diff --git a/docs/pricing/discount-formula.md b/docs/pricing/discount-formula.md
+index 4b5c6d7..8e9fa0b 100644
+--- a/docs/pricing/discount-formula.md
++++ b/docs/pricing/discount-formula.md
+@@ -6,3 +6,6 @@ The loyalty-tier discount rate is applied to the order subtotal before tax:
+ | gold | 15% |
+ | silver | 10% |
+ | other | 5% |
++
++The applied rate is capped at 15% regardless of tier, so the discount can
++never exceed `subtotal * 0.15`. The result is rounded to the nearest cent.

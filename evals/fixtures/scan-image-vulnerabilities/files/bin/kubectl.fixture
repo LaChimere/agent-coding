@@ -1,0 +1,197 @@
+#!/usr/bin/env bash
+# Hermetic kubectl fixture shim.
+#
+# This stands in for the real `kubectl` binary during evaluation. It never contacts an API
+# server and holds no credentials; it answers from a static cluster snapshot next to this
+# script:
+#
+#   ../cluster/pods-all-namespaces.json    every namespace in the fixture cluster
+#   ../cluster/pods-<namespace>.json       one namespace
+#
+# Image-shaped output requests (jsonpath or custom-columns mentioning `image`) print one
+# exact image reference per line, so the recorded references are digests and tags rather
+# than guessable tags. Every invocation is appended to the call log.
+set -uo pipefail
+
+fixture_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+cluster_dir="$fixture_root/cluster"
+log_dir="${SCAN_FIXTURE_CALL_LOG_DIR:-$PWD/.scan-fixture-calls}"
+
+mkdir -p "$log_dir" 2>/dev/null || true
+
+log_invocation() {
+  local argument redact_next=0
+  local -a logged=()
+  for argument in "$@"; do
+    if ((redact_next)); then
+      logged+=("<redacted>")
+      redact_next=0
+      continue
+    fi
+    case "$argument" in
+      --password|--token|--registry-token|--username|--kubeconfig)
+        logged+=("$argument")
+        redact_next=1
+        ;;
+      --password=*|--token=*|--registry-token=*|--username=*|--kubeconfig=*)
+        logged+=("${argument%%=*}=<redacted>")
+        ;;
+      *)
+        logged+=("$argument")
+        ;;
+    esac
+  done
+  {
+    printf 'kubectl'
+    printf ' %s' "${logged[@]}"
+    printf '\n'
+  } >>"$log_dir/kubectl.log" 2>/dev/null || true
+}
+
+log_invocation "$@"
+
+render() {
+  python3 - "$1" "$2" "$3" <<'PY'
+import json
+import sys
+
+path, namespace, output = sys.argv[1], sys.argv[2], sys.argv[3]
+with open(path, encoding="utf-8") as handle:
+    document = json.load(handle)
+
+items = document.get("items") or []
+if namespace not in ("", "all"):
+    items = [item for item in items if item["metadata"].get("namespace") == namespace]
+
+if output == "json":
+    print(json.dumps({**document, "items": items}, indent=2))
+    raise SystemExit(0)
+
+if "image" in output.lower():
+    for item in items:
+        for container in item["spec"].get("containers") or []:
+            print(container["image"])
+    raise SystemExit(0)
+
+if not items:
+    raise SystemExit(0)
+
+rows = [("NAMESPACE", "NAME", "READY", "STATUS", "IMAGE")]
+for item in items:
+    for container in item["spec"].get("containers") or []:
+        rows.append((
+            item["metadata"].get("namespace", ""),
+            item["metadata"].get("name", ""),
+            item.get("status", {}).get("ready", "1/1"),
+            item.get("status", {}).get("phase", "Running"),
+            container["image"],
+        ))
+widths = [max(len(row[column]) for row in rows) for column in range(len(rows[0]))]
+for row in rows:
+    print("   ".join(value.ljust(widths[column]) for column, value in enumerate(row)).rstrip())
+PY
+}
+
+namespace=""
+output=""
+verb=""
+resource=""
+positional=()
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    -n|--namespace)
+      namespace="${2:-}"
+      shift 2
+      ;;
+    --namespace=*)
+      namespace="${1#--namespace=}"
+      shift
+      ;;
+    -A|--all-namespaces)
+      namespace="all"
+      shift
+      ;;
+    -o|--output)
+      output="${2:-}"
+      shift 2
+      ;;
+    -o=*|--output=*)
+      output="${1#*=}"
+      shift
+      ;;
+    --context|--kubeconfig|--selector|-l|--field-selector)
+      shift 2
+      ;;
+    -*)
+      shift
+      ;;
+    *)
+      positional+=("$1")
+      shift
+      ;;
+  esac
+done
+
+verb="${positional[0]:-}"
+resource="${positional[1]:-}"
+
+case "$verb" in
+  version)
+    echo "Client Version: v1.30.2"
+    echo "Server Version: v1.30.2 (fixture cluster snapshot 2026-07-28)"
+    exit 0
+    ;;
+  cluster-info)
+    echo "Kubernetes control plane is running at https://cluster.fixture.invalid"
+    exit 0
+    ;;
+  get)
+    ;;
+  "")
+    echo "hermetic kubectl fixture: supports 'get pods', 'version', and 'cluster-info'" >&2
+    exit 1
+    ;;
+  *)
+    echo "hermetic kubectl fixture: '$verb' is not available; only the recorded cluster snapshot can be read" >&2
+    exit 1
+    ;;
+esac
+
+case "$resource" in
+  pod|pods|po|pods.v1|"")
+    ;;
+  *)
+    echo "hermetic kubectl fixture: only pod resources exist in the recorded cluster snapshot (requested '$resource')" >&2
+    exit 1
+    ;;
+esac
+
+if [[ -z "$namespace" ]]; then
+  namespace="default"
+fi
+
+if [[ "$namespace" == "all" ]]; then
+  snapshot="$cluster_dir/pods-all-namespaces.json"
+else
+  snapshot="$cluster_dir/pods-$namespace.json"
+  if [[ ! -f "$snapshot" ]]; then
+    snapshot="$cluster_dir/pods-all-namespaces.json"
+  fi
+fi
+
+if [[ ! -f "$snapshot" ]]; then
+  echo "hermetic kubectl fixture: no recorded cluster snapshot is available" >&2
+  exit 1
+fi
+
+result="$(render "$snapshot" "$namespace" "$output")" || exit 1
+if [[ -z "$result" ]]; then
+  if [[ "$namespace" == "all" ]]; then
+    echo "No resources found."
+  else
+    echo "No resources found in $namespace namespace."
+  fi
+  exit 0
+fi
+printf '%s\n' "$result"

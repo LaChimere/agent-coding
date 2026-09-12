@@ -1,0 +1,37 @@
+diff --git a/src/orders/order-total.js b/src/orders/order-total.js
+index 3f1a2c9..7b2e6d1 100644
+--- a/src/orders/order-total.js
++++ b/src/orders/order-total.js
+@@ -1,4 +1,6 @@
+-export function computeSubtotal(order) {
+-  return order.quantity * order.unitPrice;
++export function computeLineTotal(order) {
++  // Rounds to the nearest cent using a half-up rule instead of truncating,
++  // so totals no longer drift a cent low on repeating-decimal unit prices.
++  return Math.round(order.quantity * order.unitPrice * 100) / 100;
+ }
+diff --git a/src/orders/order-summary.js b/src/orders/order-summary.js
+index 9c4b1aa..1d5f0ee 100644
+--- a/src/orders/order-summary.js
++++ b/src/orders/order-summary.js
+@@ -1,7 +1,7 @@
+-import { computeSubtotal } from "./order-total.js";
++import { computeLineTotal } from "./order-total.js";
+ export function summarizeOrder(order) {
+   return {
+     id: order.id,
+-    total: computeSubtotal(order),
++    total: computeLineTotal(order),
+   };
+ }
+diff --git a/src/invoices/invoice-total.js b/src/invoices/invoice-total.js
+index 2a7c5dd..8e0f412 100644
+--- a/src/invoices/invoice-total.js
++++ b/src/invoices/invoice-total.js
+@@ -1,4 +1,4 @@
+-import { computeSubtotal } from "../orders/order-total.js";
++import { computeLineTotal } from "../orders/order-total.js";
+ export function summarizeInvoice(lines) {
+-  return lines.reduce((sum, line) => sum + computeSubtotal(line), 0);
++  return lines.reduce((sum, line) => sum + computeLineTotal(line), 0);
+ }

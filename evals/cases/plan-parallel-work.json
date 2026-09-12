@@ -1,0 +1,1055 @@
+[
+  {
+    "description": "plan-parallel-work behavior case 0.",
+    "vars": {
+      "task": "Two requested parallel tasks must repeatedly edit the same central routing table. Produce the execution topology."
+    },
+    "metadata": {
+      "id": "plan-parallel-work/0",
+      "group": "plan-parallel-work",
+      "kind": "task",
+      "requirements": [
+        "expectation-000",
+        "expectation-001",
+        "expectation-002",
+        "expectation-003",
+        "expectation-004",
+        "expectation-005",
+        "expectation-006"
+      ],
+      "fixture": [],
+      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "reference": "Rejects naive parallel editing and serializes the work or assigns one owner to the hot file.",
+      "requiredSkills": ["plan-parallel-work"],
+      "turns": [],
+      "authorization": {
+        "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: Two requested parallel tasks must repeatedly edit the same central routing table. Produce the execution topology.",
+        "approvals": []
+      },
+      "outputSchema": null
+    },
+    "assert": [
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-000",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-000"],
+          "rubric": "Identifies the shared hot file."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-001",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-001"],
+          "rubric": "Does not approve concurrent edits to it."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-002",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-002"],
+          "rubric": "Uses serial work or one owner."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-003",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-003"],
+          "rubric": "Explains why directory ownership is insufficient."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-004",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-004"],
+          "rubric": "States the safe fallback."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-005",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-005"],
+          "rubric": "Produces an embeddable Parallel execution section, not a separate parallel plan or copied progress state."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-006",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-006"],
+          "rubric": "Does not claim to create branches/worktrees or dispatch implementation during planning."
+        }
+      }
+    ]
+  },
+  {
+    "description": "plan-parallel-work behavior case 1.",
+    "vars": {
+      "task": "A base PR has landed a shared API type. Web, mobile, and admin changes now live in separate directories. Assign parallel ownership. For this planning exercise, the supplied scenario confirms that refs/tags/api-types-v1 is the stable base containing the landed API type and passing prerequisite checks. Implementation workers will have that ref. Treat these as scenario inputs; do not create branches, mutate Git history, or query a remote to verify them."
+    },
+    "metadata": {
+      "id": "plan-parallel-work/1",
+      "group": "plan-parallel-work",
+      "kind": "task",
+      "requirements": [
+        "expectation-000",
+        "expectation-001",
+        "expectation-002",
+        "expectation-003",
+        "expectation-004",
+        "expectation-005",
+        "expectation-006"
+      ],
+      "fixture": [],
+      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "reference": "Creates safe fan-out tasks with isolated work areas, explicit exclusions, and implementation-owned tests.",
+      "requiredSkills": ["plan-parallel-work"],
+      "turns": [],
+      "authorization": {
+        "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: A base PR has landed a shared API type. Web, mobile, and admin changes now live in separate directories. Assign parallel ownership. For this planning exercise, the supplied scenario confirms that refs/tags/api-types-v1 is the stable base containing the landed API type and passing prerequisite checks. Implementation workers will have that ref. Treat these as scenario inputs; do not create branches, mutate Git history, or query a remote to verify them.",
+        "approvals": []
+      },
+      "outputSchema": null
+    },
+    "assert": [
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-000",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-000"],
+          "rubric": "Uses a separate branch and working copy per task."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-001",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-001"],
+          "rubric": "Defines owned and forbidden paths."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-002",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-002"],
+          "rubric": "Confirms the base is stable."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-003",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-003"],
+          "rubric": "Keeps tests with implementation owners."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-004",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-004"],
+          "rubric": "Does not redesign the PR sequence."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-005",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-005"],
+          "rubric": "Produces an embeddable Parallel execution section, not a separate parallel plan or copied progress state."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-006",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-006"],
+          "rubric": "Does not claim to create branches/worktrees or dispatch implementation during planning."
+        }
+      }
+    ]
+  },
+  {
+    "description": "plan-parallel-work behavior case 2.",
+    "vars": {
+      "task": "Three module owners all need package.json, the lockfile, and one shared CI matrix. Plan the shared-file handling."
+    },
+    "metadata": {
+      "id": "plan-parallel-work/2",
+      "group": "plan-parallel-work",
+      "kind": "task",
+      "requirements": [
+        "expectation-000",
+        "expectation-001",
+        "expectation-002",
+        "expectation-003",
+        "expectation-004",
+        "expectation-005",
+        "expectation-006"
+      ],
+      "fixture": [],
+      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "reference": "Assigns one owner or serial phase for shared files and regenerates generated artifacts after convergence.",
+      "requiredSkills": ["plan-parallel-work"],
+      "turns": [],
+      "authorization": {
+        "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: Three module owners all need package.json, the lockfile, and one shared CI matrix. Plan the shared-file handling.",
+        "approvals": []
+      },
+      "outputSchema": null
+    },
+    "assert": [
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-000",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-000"],
+          "rubric": "Assigns one owner for shared manifests."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-001",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-001"],
+          "rubric": "Prevents independent lockfile edits."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-002",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-002"],
+          "rubric": "Regenerates generated artifacts after merge."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-003",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-003"],
+          "rubric": "Names a convergence owner."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-004",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-004"],
+          "rubric": "Includes final validation."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-005",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-005"],
+          "rubric": "Produces an embeddable Parallel execution section, not a separate parallel plan or copied progress state."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-006",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-006"],
+          "rubric": "Does not claim to create branches/worktrees or dispatch implementation during planning."
+        }
+      }
+    ]
+  },
+  {
+    "description": "plan-parallel-work behavior case 3.",
+    "vars": {
+      "task": "The shared data contract changes daily and no frozen base exists. The user asks to fan out work now."
+    },
+    "metadata": {
+      "id": "plan-parallel-work/3",
+      "group": "plan-parallel-work",
+      "kind": "task",
+      "requirements": [
+        "expectation-000",
+        "expectation-001",
+        "expectation-002",
+        "expectation-003",
+        "expectation-004",
+        "expectation-005",
+        "expectation-006"
+      ],
+      "fixture": [],
+      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "reference": "Recommends waiting or serializing until the contract stabilizes.",
+      "requiredSkills": ["plan-parallel-work"],
+      "turns": [],
+      "authorization": {
+        "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: The shared data contract changes daily and no frozen base exists. The user asks to fan out work now.",
+        "approvals": []
+      },
+      "outputSchema": null
+    },
+    "assert": [
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-000",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-000"],
+          "rubric": "Declines immediate fan-out."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-001",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-001"],
+          "rubric": "Names contract churn as the reason."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-002",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-002"],
+          "rubric": "Defines the condition for safe fan-out."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-003",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-003"],
+          "rubric": "Avoids speculative branch assignments."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-004",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-004"],
+          "rubric": "Explains rebase risk."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-005",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-005"],
+          "rubric": "Produces an embeddable Parallel execution section, not a separate parallel plan or copied progress state."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-006",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-006"],
+          "rubric": "Does not claim to create branches/worktrees or dispatch implementation during planning."
+        }
+      }
+    ]
+  },
+  {
+    "description": "plan-parallel-work behavior case 4.",
+    "vars": {
+      "task": "Finalize a two-agent implementation section. Existing stable base is the current checked-out HEAD (inspect git rev-parse HEAD rather than inventing a SHA). Agent A owns src/web/ and its tests; B owns src/mobile/ and its tests; both are forbidden from editing src/shared/. Integrator owns src/shared/. Each UI must render the new existing User.name field. Plan only; no branch/worktree creation, dispatch, commits or PRs. Include task acceptance and final integration validation."
+    },
+    "metadata": {
+      "id": "plan-parallel-work/4",
+      "group": "plan-parallel-work",
+      "kind": "task",
+      "requirements": [
+        "expectation-000",
+        "expectation-001",
+        "expectation-002",
+        "expectation-003",
+        "expectation-004",
+        "expectation-005",
+        "expectation-006"
+      ],
+      "fixture": [],
+      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "reference": "Pins the base ref, gives per-task acceptance and handoff payloads, and defines convergence validation.",
+      "requiredSkills": ["plan-parallel-work"],
+      "turns": [],
+      "authorization": {
+        "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: Finalize a two-agent implementation section. Existing stable base is the current checked-out HEAD (inspect git rev-parse HEAD rather than inventing a SHA). Agent A owns src/web/ and its tests; B owns src/mobile/ and its tests; both are forbidden from editing src/shared/. Integrator owns src/shared/. Each UI must render the new existing User.name field. Plan only; no branch/worktree creation, dispatch, commits or PRs. Include task acceptance and final integration validation.",
+        "approvals": []
+      },
+      "outputSchema": null
+    },
+    "assert": [
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-000",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-000"],
+          "rubric": "Inspects the supplied repository to resolve HEAD or reports that it cannot resolve it; does not invent a ref."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-001",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-001"],
+          "rubric": "Provides acceptance criteria per task."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-002",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-002"],
+          "rubric": "Provides a standard handoff payload."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-003",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-003"],
+          "rubric": "Defines final convergence validation."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-004",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-004"],
+          "rubric": "Names merge and cleanup ownership."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-005",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-005"],
+          "rubric": "Produces an embeddable Parallel execution section, not a separate parallel plan or copied progress state."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-006",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-006"],
+          "rubric": "Does not claim to create branches/worktrees or dispatch implementation during planning."
+        }
+      }
+    ]
+  },
+  {
+    "description": "plan-parallel-work behavior case 5.",
+    "vars": {
+      "task": "A feature naturally divides into five independent service-module tasks. Produce the parallel plan."
+    },
+    "metadata": {
+      "id": "plan-parallel-work/5",
+      "group": "plan-parallel-work",
+      "kind": "task",
+      "requirements": [
+        "expectation-000",
+        "expectation-001",
+        "expectation-002",
+        "expectation-003",
+        "expectation-004",
+        "expectation-005",
+        "expectation-006"
+      ],
+      "fixture": [],
+      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "reference": "Emits five repeatable task blocks rather than a fixed three-agent template.",
+      "requiredSkills": ["plan-parallel-work"],
+      "turns": [],
+      "authorization": {
+        "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: A feature naturally divides into five independent service-module tasks. Produce the parallel plan.",
+        "approvals": []
+      },
+      "outputSchema": null
+    },
+    "assert": [
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-000",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-000"],
+          "rubric": "Creates five task blocks."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-001",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-001"],
+          "rubric": "Uses the same fields for each."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-002",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-002"],
+          "rubric": "Does not pad or collapse to three."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-003",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-003"],
+          "rubric": "Keeps ownership explicit."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-004",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-004"],
+          "rubric": "Defines one convergence owner."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-005",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-005"],
+          "rubric": "Produces an embeddable Parallel execution section, not a separate parallel plan or copied progress state."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-006",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-006"],
+          "rubric": "Does not claim to create branches/worktrees or dispatch implementation during planning."
+        }
+      }
+    ]
+  },
+  {
+    "description": "plan-parallel-work behavior case 6.",
+    "vars": {
+      "task": "Worktrees are unavailable, but the environment provides isolated per-agent clones. Plan safe isolation."
+    },
+    "metadata": {
+      "id": "plan-parallel-work/6",
+      "group": "plan-parallel-work",
+      "kind": "task",
+      "requirements": [
+        "expectation-000",
+        "expectation-001",
+        "expectation-002",
+        "expectation-003",
+        "expectation-004",
+        "expectation-005",
+        "expectation-006"
+      ],
+      "fixture": [],
+      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "reference": "Uses capability-equivalent isolated working copies while preserving separate branches and ownership.",
+      "requiredSkills": ["plan-parallel-work"],
+      "turns": [],
+      "authorization": {
+        "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: Worktrees are unavailable, but the environment provides isolated per-agent clones. Plan safe isolation.",
+        "approvals": []
+      },
+      "outputSchema": null
+    },
+    "assert": [
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-000",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-000"],
+          "rubric": "Accepts isolated clones as an alternative."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-001",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-001"],
+          "rubric": "Keeps one branch per task."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-002",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-002"],
+          "rubric": "Prevents shared working directories."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-003",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-003"],
+          "rubric": "States the capability guarantee."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-004",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-004"],
+          "rubric": "Does not hard-fail solely because worktrees are unavailable."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-005",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-005"],
+          "rubric": "Produces an embeddable Parallel execution section, not a separate parallel plan or copied progress state."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-006",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-006"],
+          "rubric": "Does not claim to create branches/worktrees or dispatch implementation during planning."
+        }
+      }
+    ]
+  },
+  {
+    "description": "plan-parallel-work behavior case 7.",
+    "vars": {
+      "task": "Accepted overall plan: two implementations, A owns src/web/ and tests/web/, B owns src/mobile/ and tests/mobile/, both exclude src/shared/ and package.json. Integrator owns shared files. Both start from existing stable tag v1.0; A and B may run concurrently in isolated clones with separate branches. Accept A with node --test tests/web/*.test.js, B with node --test tests/mobile/*.test.js; integrate A then B and run node --test. One PR after integration. The full plan, including this Parallel execution section, has implementation approval. Check whether any parallel planning decisions remain. Do not execute."
+    },
+    "metadata": {
+      "id": "plan-parallel-work/7",
+      "group": "plan-parallel-work",
+      "kind": "task",
+      "requirements": ["expectation-000", "expectation-001", "expectation-002", "expectation-003"],
+      "fixture": [],
+      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "reference": "Recognizes complete existing parallel arrangements without a new plan or gate.",
+      "requiredSkills": ["plan-parallel-work"],
+      "turns": [],
+      "authorization": {
+        "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: Accepted overall plan: two implementations, A owns src/web/ and tests/web/, B owns src/mobile/ and tests/mobile/, both exclude src/shared/ and package.json. Integrator owns shared files. Both start from existing stable tag v1.0; A and B may run concurrently in isolated clones with separate branches. Accept A with node --test tests/web/*.test.js, B with node --test tests/mobile/*.test.js; integrate A then B and run node --test. One PR after integration. The full plan, including this Parallel execution section, has implementation approval. Check whether any parallel planning decisions remain. Do not execute.",
+        "approvals": []
+      },
+      "outputSchema": null
+    },
+    "assert": [
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-000",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-000"],
+          "rubric": "Uses existing task, isolation, ownership and validation decisions."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-001",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-001"],
+          "rubric": "Does not rewrite the overall plan or duplicate its progress."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-002",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-002"],
+          "rubric": "Does not add another parallel approval or force a base PR."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-003",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-003"],
+          "rubric": "Does not create branches/worktrees or dispatch workers."
+        }
+      }
+    ]
+  },
+  {
+    "description": "plan-parallel-work behavior case 8.",
+    "vars": {
+      "task": "Accepted overall plan: two implementations, A owns src/web/ and tests/web/, B owns src/mobile/ and tests/mobile/, both exclude src/shared/ and package.json. Both start from existing stable tag v1.0; A and B may run concurrently in isolated clones with separate branches. Accept A with node --test tests/web/*.test.js, B with node --test tests/mobile/*.test.js; integrate A then B and run node --test. One PR after integration. The full plan, including this Parallel execution section, has implementation approval. Only the shared-file owner was omitted. Complete just that gap, keeping every other decision and approval. Do not execute."
+    },
+    "metadata": {
+      "id": "plan-parallel-work/8",
+      "group": "plan-parallel-work",
+      "kind": "task",
+      "requirements": ["expectation-000", "expectation-001", "expectation-002", "expectation-003"],
+      "fixture": [],
+      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "reference": "Supplies only the missing shared-file ownership decision.",
+      "requiredSkills": ["plan-parallel-work"],
+      "turns": [],
+      "authorization": {
+        "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: Accepted overall plan: two implementations, A owns src/web/ and tests/web/, B owns src/mobile/ and tests/mobile/, both exclude src/shared/ and package.json. Both start from existing stable tag v1.0; A and B may run concurrently in isolated clones with separate branches. Accept A with node --test tests/web/*.test.js, B with node --test tests/mobile/*.test.js; integrate A then B and run node --test. One PR after integration. The full plan, including this Parallel execution section, has implementation approval. Only the shared-file owner was omitted. Complete just that gap, keeping every other decision and approval. Do not execute.",
+        "approvals": []
+      },
+      "outputSchema": null
+    },
+    "assert": [
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-000",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-000"],
+          "rubric": "Names one shared-file owner or serial integrator role for src/shared/ and package.json."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-001",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-001"],
+          "rubric": "Does not reopen settled tasks, acceptance, isolation or base decisions."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-002",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-002"],
+          "rubric": "Does not add a separate plan, duplicated status, PR sequence or approval gate."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-003",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-003"],
+          "rubric": "Does not claim execution actions occurred."
+        }
+      }
+    ]
+  },
+  {
+    "description": "plan-parallel-work behavior case 9.",
+    "vars": {
+      "task": "Two agents will independently research retry-library tradeoffs and three reviewers will review their findings. Nobody will modify code. Decide whether parallel implementation planning applies."
+    },
+    "metadata": {
+      "id": "plan-parallel-work/9",
+      "group": "plan-parallel-work",
+      "kind": "task",
+      "requirements": ["expectation-000", "expectation-001", "expectation-002"],
+      "fixture": [],
+      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "reference": "Does not activate parallel implementation planning for research or review.",
+      "requiredSkills": ["plan-parallel-work"],
+      "turns": [],
+      "authorization": {
+        "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: Two agents will independently research retry-library tradeoffs and three reviewers will review their findings. Nobody will modify code. Decide whether parallel implementation planning applies.",
+        "approvals": []
+      },
+      "outputSchema": null
+    },
+    "assert": [
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-000",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-000"],
+          "rubric": "Recognizes no simultaneous implementation writes exist."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-001",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-001"],
+          "rubric": "Does not require branches/worktrees, a base PR, or implementation ownership planning."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-002",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-002"],
+          "rubric": "Does not produce another execution plan or approval."
+        }
+      }
+    ]
+  },
+  {
+    "description": "plan-parallel-work behavior case 10.",
+    "vars": {
+      "task": "We have a stable released API at v1.0. Two implementation tasks modify disjoint src/web and src/mobile directories and their local tests. Plan their parallel execution inside the already approved overall plan, landing as one working-tree result. No PR sequence is needed."
+    },
+    "metadata": {
+      "id": "plan-parallel-work/10",
+      "group": "plan-parallel-work",
+      "kind": "task",
+      "requirements": [
+        "expectation-000",
+        "expectation-001",
+        "expectation-002",
+        "expectation-003",
+        "expectation-004",
+        "expectation-005"
+      ],
+      "fixture": [],
+      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "reference": "Uses the existing stable base and one overall plan, with no compulsory base PR or decomposition.",
+      "requiredSkills": ["plan-parallel-work"],
+      "turns": [],
+      "authorization": {
+        "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: We have a stable released API at v1.0. Two implementation tasks modify disjoint src/web and src/mobile directories and their local tests. Plan their parallel execution inside the already approved overall plan, landing as one working-tree result. No PR sequence is needed.",
+        "approvals": []
+      },
+      "outputSchema": null
+    },
+    "assert": [
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-000",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-000"],
+          "rubric": "Uses existing stable tag v1.0 instead of requiring a new base PR."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-001",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-001"],
+          "rubric": "Defines separate permitted and forbidden paths and safe isolation."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-002",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-002"],
+          "rubric": "Defines acceptance, integration order and final verification."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-003",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-003"],
+          "rubric": "Does not equate task fan-out with multiple PRs or invoke decompose-feature unnecessarily."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-004",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-004"],
+          "rubric": "Does not add another approval gate for routine allocation."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-005",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-005"],
+          "rubric": "When the overall plan has not been materialized, returns the parallel supplement inline instead of creating a new plan.md containing only that supplement."
+        }
+      }
+    ]
+  }
+]

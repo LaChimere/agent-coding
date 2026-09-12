@@ -1,0 +1,1696 @@
+[
+  {
+    "description": "workflow-orchestrator behavior case 0.",
+    "vars": {
+      "task": "A user asks: `What does src/billing/invoice.ts do, and should we use execute-plan-loop to change it?` In a mock repository, orchestrate the next workflow step. Use the current working directory as the repository root. Do not modify files outside the provided output directory."
+    },
+    "metadata": {
+      "id": "workflow-orchestrator/0",
+      "group": "workflow-orchestrator",
+      "kind": "task",
+      "requirements": [
+        "expectation-000",
+        "expectation-001",
+        "expectation-002",
+        "expectation-003",
+        "expectation-004"
+      ],
+      "fixture": [],
+      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "reference": "Treats the named file as required evidence before answering or execution routing. It should route to evidence-gathering or stop with a blocker if unavailable, rather than speculating about billing behavior.",
+      "requiredSkills": ["workflow-orchestrator"],
+      "turns": [],
+      "authorization": {
+        "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: A user asks: `What does src/billing/invoice.ts do, and should we use execute-plan-loop to change it?` In a mock repository, orchestrate the next workflow step. Use the current working directory as the repository root. Do not modify files outside the provided output directory.",
+        "approvals": []
+      },
+      "outputSchema": null
+    },
+    "assert": [
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-000",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-000"],
+          "rubric": "Routes to a step that reads src/billing/invoice.ts, or explicitly requires reading it before making claims about it."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-001",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-001"],
+          "rubric": "Does not classify the work solely from the filename."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-002",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-002"],
+          "rubric": "Routes to evidence-gathering when the request is not yet grounded."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-003",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-003"],
+          "rubric": "Reports a blocker if the referenced file cannot be inspected."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-004",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-004"],
+          "rubric": "Does not create implementation artifacts before the route is justified."
+        }
+      }
+    ]
+  },
+  {
+    "description": "workflow-orchestrator behavior case 1.",
+    "vars": {
+      "task": "A user asks to implement `fix the CSV parser so all tests pass`. The supplied `docs/csv-header-contract.md` defines normalized header lookup, while `test/csv-parser.test.ts` visibly exercises only `Customer ID` and `EMAIL`; inspect the parser and these sources before deciding the workflow and next worker skill. Use the current working directory as the repository root. Do not modify files outside the provided output directory."
+    },
+    "metadata": {
+      "id": "workflow-orchestrator/1",
+      "group": "workflow-orchestrator",
+      "kind": "task",
+      "requirements": [
+        "expectation-000",
+        "expectation-001",
+        "expectation-002",
+        "expectation-003",
+        "expectation-004"
+      ],
+      "fixture": [
+        {
+          "source": "workflow-orchestrator/files/csv-parser/docs/csv-header-contract.md.fixture",
+          "target": "docs/csv-header-contract.md"
+        },
+        {
+          "source": "workflow-orchestrator/files/csv-parser/src/csv-parser.ts.fixture",
+          "target": "src/csv-parser.ts"
+        },
+        {
+          "source": "workflow-orchestrator/files/csv-parser/test/csv-parser.test.ts.fixture",
+          "target": "test/csv-parser.test.ts"
+        }
+      ],
+      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "reference": "Routes toward a principled implementation workflow rather than a test-fitting workaround. It should require understanding the parser contract and using standard repository tools.",
+      "requiredSkills": ["workflow-orchestrator"],
+      "turns": [],
+      "authorization": {
+        "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: A user asks to implement `fix the CSV parser so all tests pass`. The supplied `docs/csv-header-contract.md` defines normalized header lookup, while `test/csv-parser.test.ts` visibly exercises only `Customer ID` and `EMAIL`; inspect the parser and these sources before deciding the workflow and next worker skill. Use the current working directory as the repository root. Do not modify files outside the provided output directory.",
+        "approvals": []
+      },
+      "outputSchema": null
+    },
+    "assert": [
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-000",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-000"],
+          "rubric": "Calls out that tests verify correctness but should not be hard-coded against."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-001",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-001"],
+          "rubric": "Routes to planning or execute-plan-loop depending on whether scope is already approved."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-002",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-002"],
+          "rubric": "Requires inspecting parser code, contract, and relevant tests before implementation."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-003",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-003"],
+          "rubric": "Rejects throwaway workaround scripts or fixture rewrites as the primary solution."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-004",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-004"],
+          "rubric": "Surfaces incorrect tests as a possible blocker rather than working around them."
+        }
+      }
+    ]
+  },
+  {
+    "description": "workflow-orchestrator behavior case 2.",
+    "vars": {
+      "task": "A user asks for a plan to add validation around internal checkout state transitions because they want the code to be safer. The supplied HTTP adapter parses an untrusted request before it calls `advanceCheckout`, whose event parameter is an internal union; inspect that boundary surface before orchestrating the next workflow step. Use the current working directory as the repository root. Do not modify files outside the provided output directory."
+    },
+    "metadata": {
+      "id": "workflow-orchestrator/2",
+      "group": "workflow-orchestrator",
+      "kind": "task",
+      "requirements": [
+        "expectation-000",
+        "expectation-001",
+        "expectation-002",
+        "expectation-003",
+        "expectation-004"
+      ],
+      "fixture": [
+        {
+          "source": "workflow-orchestrator/files/checkout-state/src/http/checkout-request.ts.fixture",
+          "target": "src/http/checkout-request.ts"
+        },
+        {
+          "source": "workflow-orchestrator/files/checkout-state/src/checkout-state.ts.fixture",
+          "target": "src/checkout-state.ts"
+        },
+        {
+          "source": "workflow-orchestrator/files/checkout-state/test/checkout-state.test.ts.fixture",
+          "target": "test/checkout-state.test.ts"
+        }
+      ],
+      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "reference": "Applies boundary-focused defensive coding. It should distinguish external inputs from trusted internal invariants and avoid routing toward over-defensive fallback branches for impossible states.",
+      "requiredSkills": ["workflow-orchestrator"],
+      "turns": [],
+      "authorization": {
+        "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: A user asks for a plan to add validation around internal checkout state transitions because they want the code to be safer. The supplied HTTP adapter parses an untrusted request before it calls `advanceCheckout`, whose event parameter is an internal union; inspect that boundary surface before orchestrating the next workflow step. Use the current working directory as the repository root. Do not modify files outside the provided output directory.",
+        "approvals": []
+      },
+      "outputSchema": null
+    },
+    "assert": [
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-000",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-000"],
+          "rubric": "Identifies boundary validation as appropriate for user input, files, external APIs, or network data."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-001",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-001"],
+          "rubric": "Warns against redundant validation for impossible internal states."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-002",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-002"],
+          "rubric": "Routes to discovery/design if the true boundary is unclear."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-003",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-003"],
+          "rubric": "Avoids treating broad fallback handling as the default definition of safety."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-004",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-004"],
+          "rubric": "Keeps the proposed next step focused and reviewable."
+        }
+      }
+    ]
+  },
+  {
+    "description": "workflow-orchestrator behavior case 3.",
+    "vars": {
+      "task": "A user says: `Use /goal to ship account deletion safely; it touches auth, data deletion, public API responses, and docs.` In a sample repository, orchestrate the next workflow step. Use the current working directory as the repository root. Do not modify files outside the provided output directory."
+    },
+    "metadata": {
+      "id": "workflow-orchestrator/3",
+      "group": "workflow-orchestrator",
+      "kind": "task",
+      "requirements": [
+        "expectation-000",
+        "expectation-001",
+        "expectation-002",
+        "expectation-003",
+        "expectation-004"
+      ],
+      "fixture": [],
+      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "reference": "Uses the host native goal lifecycle without a custom goal skill or file, while resolving material account-deletion design and approval decisions before implementation.",
+      "requiredSkills": ["workflow-orchestrator"],
+      "turns": [],
+      "authorization": {
+        "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: A user says: `Use /goal to ship account deletion safely; it touches auth, data deletion, public API responses, and docs.` In a sample repository, orchestrate the next workflow step. Use the current working directory as the repository root. Do not modify files outside the provided output directory.",
+        "approvals": []
+      },
+      "outputSchema": null
+    },
+    "assert": [
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-000",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-000"],
+          "rubric": "Uses native goal capability only when exposed; does not invoke achieve-goal or write goal.md."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-001",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-001"],
+          "rubric": "Identifies auth/security, data deletion, public API, and docs as planning concerns."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-002",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-002"],
+          "rubric": "Does not start implementation with unresolved material behavior decisions."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-003",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-003"],
+          "rubric": "Does not mistake goal lifecycle for permission to delete data, commit, push, or deploy."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-004",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-004"],
+          "rubric": "Names the actual missing decision or capability instead of adding a custom lifecycle."
+        }
+      }
+    ]
+  },
+  {
+    "description": "workflow-orchestrator behavior case 4.",
+    "vars": {
+      "task": "A user asks: `We have an approved plan in plans/import-retry. Keep going until the implementation is done, but also keep the overall goal status updated.` The supplied `plans/import-retry/plan.md` records implementation approval and its Execution status section names the ready retry slice; inspect that handoff before orchestrating the next workflow step. Use the current working directory as the repository root. Do not modify files outside the provided output directory."
+    },
+    "metadata": {
+      "id": "workflow-orchestrator/4",
+      "group": "workflow-orchestrator",
+      "kind": "task",
+      "requirements": [
+        "expectation-000",
+        "expectation-001",
+        "expectation-002",
+        "expectation-003",
+        "expectation-004"
+      ],
+      "fixture": [
+        {
+          "source": "workflow-orchestrator/files/plans/import-retry/plan.md.fixture",
+          "target": "plans/import-retry/plan.md"
+        }
+      ],
+      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "reference": "Consumes the approved living plan directly and delegates implementation to execute-plan-loop without creating a second execution or lifecycle state.",
+      "requiredSkills": ["workflow-orchestrator"],
+      "turns": [],
+      "authorization": {
+        "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: A user asks: `We have an approved plan in plans/import-retry. Keep going until the implementation is done, but also keep the overall goal status updated.` The supplied `plans/import-retry/plan.md` records implementation approval and its Execution status section names the ready retry slice; inspect that handoff before orchestrating the next workflow step. Use the current working directory as the repository root. Do not modify files outside the provided output directory.",
+        "approvals": []
+      },
+      "outputSchema": null
+    },
+    "assert": [
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-000",
+        "config": {
+          "core": true,
+          "method": "artifact-rubric",
+          "requirements": ["expectation-000"],
+          "rubric": "Distinguishes native goal lifecycle from implementation progress in plan.md."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-001",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-001"],
+          "rubric": "Routes approved implementation work to execute-plan-loop."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-002",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-002"],
+          "rubric": "Does not invoke achieve-goal, write goal.md, or create todo.md."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-003",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-003"],
+          "rubric": "Does not infer commit authorization from goal or implementation approval."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-004",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-004"],
+          "rubric": "Does not create a new goal for an ordinary request to keep going."
+        }
+      }
+    ]
+  },
+  {
+    "description": "workflow-orchestrator behavior case 5.",
+    "vars": {
+      "task": "A user says: `The importer sometimes crashes on CSV uploads and database timeouts. Add validation but don't overengineer internal parser checks.` The supplied importer accepts an uploaded CSV before calling a typed parser, and its profile-store operation can reject with `DatabaseTimeoutError`; inspect those sources before orchestrating the next workflow step. Use the current working directory as the repository root. Do not modify files outside the provided output directory."
+    },
+    "metadata": {
+      "id": "workflow-orchestrator/5",
+      "group": "workflow-orchestrator",
+      "kind": "task",
+      "requirements": [
+        "expectation-000",
+        "expectation-001",
+        "expectation-002",
+        "expectation-003",
+        "expectation-004"
+      ],
+      "fixture": [
+        {
+          "source": "workflow-orchestrator/files/profile-import/src/csv-parser.ts.fixture",
+          "target": "src/csv-parser.ts"
+        },
+        {
+          "source": "workflow-orchestrator/files/profile-import/src/profile-importer.ts.fixture",
+          "target": "src/profile-importer.ts"
+        },
+        {
+          "source": "workflow-orchestrator/files/profile-import/src/profile-store.ts.fixture",
+          "target": "src/profile-store.ts"
+        },
+        {
+          "source": "workflow-orchestrator/files/profile-import/test/profile-importer.test.ts.fixture",
+          "target": "test/profile-importer.test.ts"
+        }
+      ],
+      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "reference": "Routes toward boundary-focused analysis that separates untrusted CSV data validation from operational error handling for database timeouts.",
+      "requiredSkills": ["workflow-orchestrator"],
+      "turns": [],
+      "authorization": {
+        "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: A user says: `The importer sometimes crashes on CSV uploads and database timeouts. Add validation but don't overengineer internal parser checks.` The supplied importer accepts an uploaded CSV before calling a typed parser, and its profile-store operation can reject with `DatabaseTimeoutError`; inspect those sources before orchestrating the next workflow step. Use the current working directory as the repository root. Do not modify files outside the provided output directory.",
+        "approvals": []
+      },
+      "outputSchema": null
+    },
+    "assert": [
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-000",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-000"],
+          "rubric": "Classifies uploaded CSV data as a validation boundary."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-001",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-001"],
+          "rubric": "Classifies database timeouts as operational errors that must be surfaced or propagated."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-002",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-002"],
+          "rubric": "Warns against redundant parser-internal validation if invariants already guarantee shape."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-003",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-003"],
+          "rubric": "Chooses direct primary handling, discovery/design or execute-plan-loop according to task clarity and approval, preserving the existing error contract."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-004",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-004"],
+          "rubric": "Does not equate boundary-focused coding with ignoring operational failures."
+        }
+      }
+    ]
+  },
+  {
+    "description": "workflow-orchestrator behavior case 6.",
+    "vars": {
+      "task": "A user asks: `All tests pass if we rewrite the fixture JSON with a script. Can you just do that?` In a sample repository, orchestrate the next workflow step. Use the current working directory as the repository root. Do not modify files outside the provided output directory."
+    },
+    "metadata": {
+      "id": "workflow-orchestrator/6",
+      "group": "workflow-orchestrator",
+      "kind": "task",
+      "requirements": [
+        "expectation-000",
+        "expectation-001",
+        "expectation-002",
+        "expectation-003",
+        "expectation-004"
+      ],
+      "fixture": [],
+      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "reference": "Rejects fixture-rewrite workarounds as the primary route and sends the work toward understanding and fixing the real implementation or incorrect test contract.",
+      "requiredSkills": ["workflow-orchestrator"],
+      "turns": [],
+      "authorization": {
+        "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: A user asks: `All tests pass if we rewrite the fixture JSON with a script. Can you just do that?` In a sample repository, orchestrate the next workflow step. Use the current working directory as the repository root. Do not modify files outside the provided output directory.",
+        "approvals": []
+      },
+      "outputSchema": null
+    },
+    "assert": [
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-000",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-000"],
+          "rubric": "Does not route directly to a fixture-rewrite workaround."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-001",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-001"],
+          "rubric": "Requires evidence about whether implementation or tests are wrong."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-002",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-002"],
+          "rubric": "Routes toward principled implementation or test-contract correction."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-003",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-003"],
+          "rubric": "Allows legitimate fixture generators only if they are part of the real repository contract."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-004",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-004"],
+          "rubric": "Surfaces incorrect tests as a possible blocker rather than hiding them."
+        }
+      }
+    ]
+  },
+  {
+    "description": "workflow-orchestrator behavior case 7.",
+    "vars": {
+      "task": "A user asks to implement an approved feature and also asks to keep the change free of unnecessary abstractions and duplication. Orchestrate the next step. Use the current working directory as the repository root. Do not modify files outside the provided output directory."
+    },
+    "metadata": {
+      "id": "workflow-orchestrator/7",
+      "group": "workflow-orchestrator",
+      "kind": "task",
+      "requirements": [
+        "expectation-000",
+        "expectation-001",
+        "expectation-002",
+        "expectation-003",
+        "expectation-004"
+      ],
+      "fixture": [],
+      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "reference": "Selects execute-plan-loop as the process skill and anti-slop as a companion; the primary session owns coordination, progress and cadence.",
+      "requiredSkills": ["workflow-orchestrator"],
+      "turns": [],
+      "authorization": {
+        "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: A user asks to implement an approved feature and also asks to keep the change free of unnecessary abstractions and duplication. Orchestrate the next step. Use the current working directory as the repository root. Do not modify files outside the provided output directory.",
+        "approvals": []
+      },
+      "outputSchema": null
+    },
+    "assert": [
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-000",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-000"],
+          "rubric": "Selects execute-plan-loop as a process skill rather than a runtime worker role or model."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-001",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-001"],
+          "rubric": "Names anti-slop as a companion rather than an exclusive route."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-002",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-002"],
+          "rubric": "Keeps planning, execution coordination and overall progress with the primary session."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-003",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-003"],
+          "rubric": "Avoids duplicate review loops."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-004",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-004"],
+          "rubric": "States the completion or stop boundary."
+        }
+      }
+    ]
+  },
+  {
+    "description": "workflow-orchestrator behavior case 8.",
+    "vars": {
+      "task": "A user asks only to scan `registry.example.com/payments:4.2` for container CVEs. Orchestrate the next step. Use the current working directory as the repository root. Do not modify files outside the provided output directory."
+    },
+    "metadata": {
+      "id": "workflow-orchestrator/8",
+      "group": "workflow-orchestrator",
+      "kind": "task",
+      "requirements": [
+        "expectation-000",
+        "expectation-001",
+        "expectation-002",
+        "expectation-003",
+        "expectation-004"
+      ],
+      "fixture": [],
+      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "reference": "Routes directly to the read-only image scanner without creating planning artifacts or applying implementation approval gates.",
+      "requiredSkills": ["workflow-orchestrator"],
+      "turns": [],
+      "authorization": {
+        "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: A user asks only to scan `registry.example.com/payments:4.2` for container CVEs. Orchestrate the next step. Use the current working directory as the repository root. Do not modify files outside the provided output directory.",
+        "approvals": []
+      },
+      "outputSchema": null
+    },
+    "assert": [
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-000",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-000"],
+          "rubric": "Selects scan-image-vulnerabilities directly."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-001",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-001"],
+          "rubric": "Treats the scan as read-only inspection outside plan mode."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-002",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-002"],
+          "rubric": "Does not create research/design/plan artifacts for the scan."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-003",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-003"],
+          "rubric": "Does not route to execute-plan-loop."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-004",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-004"],
+          "rubric": "Preserves exact-image and latest-database requirements."
+        }
+      }
+    ]
+  },
+  {
+    "description": "workflow-orchestrator behavior case 9.",
+    "vars": {
+      "task": "The host's enabled skill catalog exposes only workflow-orchestrator for this case; execute-plan-loop and the other workflow workers are explicitly disabled. workflow/enabled-skills.json records that configuration. The user has an approved implementation plan and asks only to orchestrate the next step, not implement it in this turn. Respect the disabled workers: do not load, enable or install them. Report the available next step while preserving the existing scope and approval. Use the current working directory as the repository root."
+    },
+    "metadata": {
+      "id": "workflow-orchestrator/9",
+      "group": "workflow-orchestrator",
+      "kind": "task",
+      "requirements": [
+        "expectation-000",
+        "expectation-001",
+        "expectation-002",
+        "expectation-003",
+        "expectation-004"
+      ],
+      "fixture": [
+        {
+          "source": "workflow-orchestrator/files/workflow/enabled-skills.json.fixture",
+          "target": "workflow/enabled-skills.json"
+        }
+      ],
+      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "reference": "Verify the actual enabled catalog before grading. Report the disabled required executor as incomplete; preserve approval and identify unaffected primary work without recreating or invoking the disabled skill during this coordination-only turn.",
+      "requiredSkills": ["workflow-orchestrator"],
+      "turns": [],
+      "authorization": {
+        "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: The host's enabled skill catalog exposes only workflow-orchestrator for this case; execute-plan-loop and the other workflow workers are explicitly disabled. workflow/enabled-skills.json records that configuration. The user has an approved implementation plan and asks only to orchestrate the next step, not implement it in this turn. Respect the disabled workers: do not load, enable or install them. Report the available next step while preserving the existing scope and approval. Use the current working directory as the repository root.",
+        "approvals": []
+      },
+      "outputSchema": null
+    },
+    "assert": [
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-000",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-000"],
+          "rubric": "Does not load or claim to invoke the disabled execute-plan-loop skill."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-001",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-001"],
+          "rubric": "Reports the executor as disabled/unavailable, not physically absent merely because it is omitted from the enabled catalog."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-002",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-002"],
+          "rubric": "Leaves required execution-skill work incomplete and identifies only unaffected authorized primary work; does not reproduce the missing workflow or implement during this coordination-only turn."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-003",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-003"],
+          "rubric": "Reports capability enablement as a separate action when relevant and never enables or installs disabled skills automatically."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-004",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-004"],
+          "rubric": "Keeps existing scope and approval intact; disabled capability does not require reapproving the same plan."
+        }
+      }
+    ]
+  },
+  {
+    "description": "workflow-orchestrator behavior case 10.",
+    "vars": {
+      "task": "The user accepted this native Plan Mode proposal: update docs/guide.md to document the existing timeout, run git diff --check, landing working_tree. The user now says: save that plan as plans/timeout/plan.md, do not implement. You are now in a writable normal session. docs/guide.md says \"Timeout is configurable.\" Only the plan file may be written."
+    },
+    "metadata": {
+      "id": "workflow-orchestrator/10",
+      "group": "workflow-orchestrator",
+      "kind": "task",
+      "requirements": ["expectation-000", "expectation-001", "expectation-002", "expectation-003"],
+      "fixture": [
+        {
+          "source": "workflow-orchestrator/files/save-only/docs/guide.md.fixture",
+          "target": "docs/guide.md"
+        }
+      ],
+      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "reference": "Saves the accepted proposal without redesign, implementation, or another approval round.",
+      "requiredSkills": ["workflow-orchestrator"],
+      "turns": [],
+      "authorization": {
+        "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: The user accepted this native Plan Mode proposal: update docs/guide.md to document the existing timeout, run git diff --check, landing working_tree. The user now says: save that plan as plans/timeout/plan.md, do not implement. You are now in a writable normal session. docs/guide.md says \"Timeout is configurable.\" Only the plan file may be written.",
+        "approvals": []
+      },
+      "outputSchema": null
+    },
+    "assert": [
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-000",
+        "config": {
+          "core": true,
+          "method": "artifact-rubric",
+          "requirements": ["expectation-000"],
+          "rubric": "Saves plans/timeout/plan.md with the accepted scope and working_tree mode; the actual changed-file inventory contains only that plan."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-001",
+        "config": {
+          "core": true,
+          "method": "artifact-rubric",
+          "requirements": ["expectation-001"],
+          "rubric": "Leaves the existing docs/guide.md byte-for-byte unchanged, confirmed by equal before/after SHA-256 hashes, and does not claim implementation started."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-002",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-002"],
+          "rubric": "Does not require a formatted handoff or repeat design questions."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-003",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-003"],
+          "rubric": "Does not create TODO or custom goal files."
+        }
+      }
+    ]
+  },
+  {
+    "description": "workflow-orchestrator behavior case 11.",
+    "vars": {
+      "task": "We are still in native Plan Mode with filesystem writes prohibited. The user approved the design direction, not implementation, and asks you to draft the execution plan for a timeout fix. Do not leave Plan Mode or write files."
+    },
+    "metadata": {
+      "id": "workflow-orchestrator/11",
+      "group": "workflow-orchestrator",
+      "kind": "task",
+      "requirements": ["expectation-000", "expectation-001", "expectation-002", "expectation-003"],
+      "fixture": [],
+      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "reference": "Produces the execution proposal while honoring host write restrictions and Gate 1-only approval.",
+      "requiredSkills": ["workflow-orchestrator"],
+      "turns": [],
+      "authorization": {
+        "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: We are still in native Plan Mode with filesystem writes prohibited. The user approved the design direction, not implementation, and asks you to draft the execution plan for a timeout fix. Do not leave Plan Mode or write files.",
+        "approvals": []
+      },
+      "outputSchema": null
+    },
+    "assert": [
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-000",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-000"],
+          "rubric": "Does not write plan.md or any other artifact."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-001",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-001"],
+          "rubric": "Does not implement the timeout change."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-002",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-002"],
+          "rubric": "Distinguishes design approval from implementation approval."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-003",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-003"],
+          "rubric": "Does not claim that a template overrides host restrictions."
+        }
+      }
+    ]
+  },
+  {
+    "description": "workflow-orchestrator behavior case 12.",
+    "vars": {
+      "task": "The user approved a small implementation in chat: correct the typo in docs/guide.md, check the diff, and do not commit. This host has no native Plan Mode or goal capability. There is no structured handoff and no plans directory. Decide whether the primary session can execute this directly."
+    },
+    "metadata": {
+      "id": "workflow-orchestrator/12",
+      "group": "workflow-orchestrator",
+      "kind": "task",
+      "requirements": ["expectation-000", "expectation-001", "expectation-002", "expectation-003"],
+      "fixture": [],
+      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "reference": "Accepts clear chat authority without native Plan Mode, mandatory orchestration, plan creation or a custom goal lifecycle.",
+      "requiredSkills": ["workflow-orchestrator"],
+      "turns": [],
+      "authorization": {
+        "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: The user approved a small implementation in chat: correct the typo in docs/guide.md, check the diff, and do not commit. This host has no native Plan Mode or goal capability. There is no structured handoff and no plans directory. Decide whether the primary session can execute this directly.",
+        "approvals": []
+      },
+      "outputSchema": null
+    },
+    "assert": [
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-000",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-000"],
+          "rubric": "Allows the primary session to make the bounded typo correction directly."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-001",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-001"],
+          "rubric": "Does not request Gate 2 again or require a handoff object."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-002",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-002"],
+          "rubric": "Does not require design.md, plan.md, TODO, or goal state."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-003",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-003"],
+          "rubric": "Preserves no-commit authority."
+        }
+      }
+    ]
+  },
+  {
+    "description": "workflow-orchestrator behavior case 13.",
+    "vars": {
+      "task": "Use workflow-orchestrator and its bundled DESIGN.md template to write plans/empty-search/design.md in English. This is a writable session and I authorize saving this design only. Treat these facts as the complete design brief: our desktop app filters an in-memory list of saved bookmarks by title as the user types; when a query matches nothing it currently shows a blank list, which testers mistake for lost bookmarks. We agreed to show 'No bookmarks match your search' only for a nonempty query with zero matches, using the existing results view's filtered-count and query values. Clearing the query restores the current list; the initial empty-library message, filtering rules and storage remain unchanged. Success is the message appearing for a no-match query and disappearing when the query is cleared or matches exist. I approved this direction in this message, with no revisions, and all needed decisions are supplied. Keep the document proportionate and finish the requested save without further design questions. Do not implement or write an execution plan."
+    },
+    "metadata": {
+      "id": "workflow-orchestrator/13",
+      "group": "workflow-orchestrator",
+      "kind": "task",
+      "requirements": [
+        "expectation-000",
+        "expectation-001",
+        "expectation-002",
+        "expectation-003",
+        "expectation-004",
+        "expectation-005"
+      ],
+      "fixture": [],
+      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "reference": "Writes a concrete, standalone design from the installed template, tailoring its depth to a view-only change and completing the authorized save. Grade meaning, scope and convergence, not heading count or prompt completion.",
+      "requiredSkills": ["workflow-orchestrator"],
+      "turns": [],
+      "authorization": {
+        "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: Use workflow-orchestrator and its bundled DESIGN.md template to write plans/empty-search/design.md in English. This is a writable session and I authorize saving this design only. Treat these facts as the complete design brief: our desktop app filters an in-memory list of saved bookmarks by title as the user types; when a query matches nothing it currently shows a blank list, which testers mistake for lost bookmarks. We agreed to show 'No bookmarks match your search' only for a nonempty query with zero matches, using the existing results view's filtered-count and query values. Clearing the query restores the current list; the initial empty-library message, filtering rules and storage remain unchanged. Success is the message appearing for a no-match query and disappearing when the query is cleared or matches exist. I approved this direction in this message, with no revisions, and all needed decisions are supplied. Keep the document proportionate and finish the requested save without further design questions. Do not implement or write an execution plan.",
+        "approvals": []
+      },
+      "outputSchema": null
+    },
+    "assert": [
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-000",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-000"],
+          "rubric": "Actual tool reads resolve workflow-orchestrator and templates/DESIGN.md from the installed candidate; only plans/empty-search/design.md is created or changed."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-001",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-001"],
+          "rubric": "The saved English design explains the blank-results problem, affected bookmark users, intended message behavior and observable success with a concrete query/clear or match example, without requiring chat context."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-002",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-002"],
+          "rubric": "Explains the existing results view responsibility and use of query and filtered count; preserves empty-library behavior, filtering and storage without adding unrelated architecture, state machinery, dependencies or fabricated metrics."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-003",
+        "config": {
+          "core": false,
+          "method": "text-rubric",
+          "requirements": ["expectation-003"],
+          "rubric": "Replaces template guidance with content and tailors depth to the simple design; omitting or merging sections is acceptable, and headings alone do not establish quality."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-004",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-004"],
+          "rubric": "Explains why reusing the existing view is sufficient and any relevant limitation without inventing a quota of alternatives or repeating trade-offs."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-005",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-005"],
+          "rubric": "Records the supplied design approval and absence of revisions accurately, completes the save without more questions or an approval gate, and does not implement, write a plan or create extra RFC/ADR/TODO/goal documents."
+        }
+      }
+    ]
+  },
+  {
+    "description": "workflow-orchestrator behavior case 14.",
+    "vars": {
+      "task": "Use workflow-orchestrator and its bundled DESIGN.md template to write an English draft at plans/preferences-v2/design.md, then identify the one decision needed before execution planning. This is a writable session; I authorize that draft only, and the design is not yet approved. Known facts: a desktop app stores preferences in a local JSON file. V1 readers require a flat object with theme and fontSize, reject a versioned envelope, and V1 writers replace the whole file. V2 needs named profiles and proposes an envelope with schemaVersion, activeProfile and profiles. PreferencesStore owns disk reads and writes; the UI uses its load/save interface. We have agreed that the new loader recognizes both shapes, maps V1 values to a default profile in memory, and validates before exposing state to the UI. Saves use a temporary sibling file and atomic replacement on the same filesystem; the in-memory saved state advances only after replacement succeeds. Validation or disk failures must reach the caller and preserve the last valid saved file; corrupt input must not be silently replaced by defaults. The existing single-process writer assumption remains; cloud sync and concurrent writers are out of scope. Success means V2 reads an existing V1 file without losing its values, round-trips named profiles, and reports a failed save without claiming persistence. The sole unresolved decision is whether users must still be able to open and edit preferences using V1 after their first V2 save. Product has not answered, and the current envelope proposal breaks V1 reads. Capture the known responsibilities, read/save flow, failure behavior, compatibility trade-off and migration direction. You may recommend an option, but do not decide backward write compatibility for us or invent an approved migration. Do not implement, write an execution plan or ask unrelated questions."
+    },
+    "metadata": {
+      "id": "workflow-orchestrator/14",
+      "group": "workflow-orchestrator",
+      "kind": "task",
+      "requirements": [
+        "expectation-000",
+        "expectation-001",
+        "expectation-002",
+        "expectation-003",
+        "expectation-004",
+        "expectation-005",
+        "expectation-006"
+      ],
+      "fixture": [],
+      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "reference": "Writes a reviewable, standalone draft that explains persistence and failure semantics, contrasts credible compatibility approaches, and isolates V1 edit compatibility as a planning blocker. Grade content and honest uncertainty rather than six headings or exhaustive template filling.",
+      "requiredSkills": ["workflow-orchestrator"],
+      "turns": [],
+      "authorization": {
+        "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: Use workflow-orchestrator and its bundled DESIGN.md template to write an English draft at plans/preferences-v2/design.md, then identify the one decision needed before execution planning. This is a writable session; I authorize that draft only, and the design is not yet approved. Known facts: a desktop app stores preferences in a local JSON file. V1 readers require a flat object with theme and fontSize, reject a versioned envelope, and V1 writers replace the whole file. V2 needs named profiles and proposes an envelope with schemaVersion, activeProfile and profiles. PreferencesStore owns disk reads and writes; the UI uses its load/save interface. We have agreed that the new loader recognizes both shapes, maps V1 values to a default profile in memory, and validates before exposing state to the UI. Saves use a temporary sibling file and atomic replacement on the same filesystem; the in-memory saved state advances only after replacement succeeds. Validation or disk failures must reach the caller and preserve the last valid saved file; corrupt input must not be silently replaced by defaults. The existing single-process writer assumption remains; cloud sync and concurrent writers are out of scope. Success means V2 reads an existing V1 file without losing its values, round-trips named profiles, and reports a failed save without claiming persistence. The sole unresolved decision is whether users must still be able to open and edit preferences using V1 after their first V2 save. Product has not answered, and the current envelope proposal breaks V1 reads. Capture the known responsibilities, read/save flow, failure behavior, compatibility trade-off and migration direction. You may recommend an option, but do not decide backward write compatibility for us or invent an approved migration. Do not implement, write an execution plan or ask unrelated questions.",
+        "approvals": []
+      },
+      "outputSchema": null
+    },
+    "assert": [
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-000",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-000"],
+          "rubric": "Actual tool reads resolve workflow-orchestrator and templates/DESIGN.md from the installed candidate; only plans/preferences-v2/design.md is created or changed."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-001",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-001"],
+          "rubric": "The saved English draft explains the existing V1 format, named-profile goal, relevant constraints and observable success, with a concrete V1-to-V2 behavior example before detailed mechanism explanations in the proposed design."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-002",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-002"],
+          "rubric": "Explains PreferencesStore ownership, the UI load/save boundary, recognition and validation of both input shapes, and mapping V1 values to a default profile without claiming that reading migrates the saved file."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-003",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-003"],
+          "rubric": "Explains temporary-file and atomic-replacement boundaries, memory advancing only after a successful save, and caller-visible validation/disk errors that preserve the last valid saved file; keeps single-process ownership and excludes cloud sync/concurrent writers."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-004",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-004"],
+          "rubric": "Explains why the envelope conflicts with V1 readers and whole-file writers, compares a credible alternative or deferral with its drawbacks, and labels any compatibility recommendation or migration direction as conditional."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-005",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-005"],
+          "rubric": "Marks design approval as pending and V1 read/edit compatibility after a V2 save as the one material planning blocker; asks for that decision without inventing its answer or using an assumption to bypass it."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-006",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-006"],
+          "rubric": "Replaces guidance with coherent standalone content and avoids unrelated questions, implementation steps, extra plan/RFC/ADR/TODO/goal files or implementation."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-006-presentation",
+        "config": {
+          "core": false,
+          "method": "text-rubric",
+          "requirements": ["expectation-006"],
+          "rubric": "Scales the level of detail to persistence and compatibility."
+        }
+      }
+    ]
+  },
+  {
+    "description": "workflow-orchestrator behavior case 15.",
+    "vars": {
+      "task": "Use workflow-orchestrator to resolve the next step in status/task.md. Return the decision only, without implementation or delegation."
+    },
+    "metadata": {
+      "id": "workflow-orchestrator/15",
+      "group": "workflow-orchestrator",
+      "kind": "task",
+      "requirements": ["expectation-000", "expectation-001", "expectation-002", "expectation-003"],
+      "fixture": [
+        {
+          "source": "workflow-orchestrator/files/skill-role/status/task.md.fixture",
+          "target": "status/task.md"
+        }
+      ],
+      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "reference": "Separates process-skill choice from runtime execution, preserves the primary model and authority, and does not mechanically launch a role.",
+      "requiredSkills": ["workflow-orchestrator"],
+      "turns": [],
+      "authorization": {
+        "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: Use workflow-orchestrator to resolve the next step in status/task.md. Return the decision only, without implementation or delegation.",
+        "approvals": []
+      },
+      "outputSchema": null
+    },
+    "assert": [
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-000",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-000"],
+          "rubric": "Selects execute-plan-loop as the approved execution method while the primary remains the coordinator."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-001",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-001"],
+          "rubric": "Distinguishes the caller-selected runtime role/model from the skill; does not assign model policy to the plugin."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-002",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-002"],
+          "rubric": "Keeps global progress and final acceptance in the primary, with only a bounded slice delegated if later authorized."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-003",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-003"],
+          "rubric": "Does not write files, spawn agents, require another planning gate or change the primary model."
+        }
+      }
+    ]
+  },
+  {
+    "description": "workflow-orchestrator behavior case 16.",
+    "vars": {
+      "task": "Use workflow-orchestrator on the recorded capability scenario in status/task.md. Decide what can proceed and what remains incomplete. This is a read-only decision fixture; do not invoke, install or recreate unavailable tools."
+    },
+    "metadata": {
+      "id": "workflow-orchestrator/16",
+      "group": "workflow-orchestrator",
+      "kind": "task",
+      "requirements": ["expectation-000", "expectation-001", "expectation-002", "expectation-003"],
+      "fixture": [
+        {
+          "source": "workflow-orchestrator/files/on-demand/status/task.md.fixture",
+          "target": "status/task.md"
+        }
+      ],
+      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "reference": "Does not turn plugin absence into a global gate or reproduce a missing specialist workflow.",
+      "requiredSkills": ["workflow-orchestrator"],
+      "turns": [],
+      "authorization": {
+        "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: Use workflow-orchestrator on the recorded capability scenario in status/task.md. Decide what can proceed and what remains incomplete. This is a read-only decision fixture; do not invoke, install or recreate unavailable tools.",
+        "approvals": []
+      },
+      "outputSchema": null
+    },
+    "assert": [
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-000",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-000"],
+          "rubric": "Reports the exact required pr-review capability missing and independent review incomplete."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-001",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-001"],
+          "rubric": "Allows the separately authorized, independent label correction to proceed later without installing either plugin."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-002",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-002"],
+          "rubric": "Does not demand both plugins or personal role files as prerequisites for ordinary native work."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-003",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-003"],
+          "rubric": "Does not recreate pr-review, mark primary inspection independent, write files or auto-install capabilities."
+        }
+      }
+    ]
+  },
+  {
+    "description": "workflow-orchestrator behavior case 17.",
+    "vars": {
+      "task": "Use workflow-orchestrator to decide the workflow for status/task.md. Do not implement or dispatch in this turn."
+    },
+    "metadata": {
+      "id": "workflow-orchestrator/17",
+      "group": "workflow-orchestrator",
+      "kind": "task",
+      "requirements": ["expectation-000", "expectation-001", "expectation-002", "expectation-003"],
+      "fixture": [
+        {
+          "source": "workflow-orchestrator/files/portable/status/task.md.fixture",
+          "target": "status/task.md"
+        }
+      ],
+      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "reference": "Uses installed process methods with caller-selected resources without demanding personal Codex roles or another plugin.",
+      "requiredSkills": ["workflow-orchestrator"],
+      "turns": [],
+      "authorization": {
+        "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: Use workflow-orchestrator to decide the workflow for status/task.md. Do not implement or dispatch in this turn.",
+        "approvals": []
+      },
+      "outputSchema": null
+    },
+    "assert": [
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-000",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-000"],
+          "rubric": "Recognizes the approved multi-slice execution can use the available execute-plan-loop skill."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-001",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-001"],
+          "rubric": "Keeps runtime role/model/effort choice with the primary and requires no personal role mapping."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-002",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-002"],
+          "rubric": "Does not require pr-review for this task when no task-specific review capability is needed."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-003",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-003"],
+          "rubric": "Does not modify files, install anything or fabricate execution evidence."
+        }
+      }
+    ]
+  },
+  {
+    "description": "workflow-orchestrator behavior case 18.",
+    "vars": {
+      "task": "Use workflow-orchestrator to inspect the approved plan in plans/import-retry and continue the implementation until done. Use the current directory as the repository and output directory; do not write elsewhere."
+    },
+    "metadata": {
+      "id": "workflow-orchestrator/18",
+      "group": "workflow-orchestrator",
+      "kind": "task",
+      "requirements": ["expectation-000", "expectation-001", "expectation-002", "expectation-003"],
+      "fixture": [
+        {
+          "source": "workflow-orchestrator/files/plans/import-retry/plan.md.fixture",
+          "target": "plans/import-retry/plan.md"
+        }
+      ],
+      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "reference": "Continues approved implementation or reports a real missing-source blocker without adding native lifecycle state.",
+      "requiredSkills": ["workflow-orchestrator"],
+      "turns": [],
+      "authorization": {
+        "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: Use workflow-orchestrator to inspect the approved plan in plans/import-retry and continue the implementation until done. Use the current directory as the repository and output directory; do not write elsewhere.",
+        "approvals": []
+      },
+      "outputSchema": null
+    },
+    "assert": [
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-000",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-000"],
+          "rubric": "Reads the approved plan and routes the implementation through execute-plan-loop."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-001",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-001"],
+          "rubric": "Does not create a native goal or custom goal/TODO state for ordinary implementation."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-002",
+        "config": {
+          "core": true,
+          "method": "artifact-rubric",
+          "requirements": ["expectation-002"],
+          "rubric": "Keeps progress in the existing plan and reports missing implementation files without inventing work or test results."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-003",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-003"],
+          "rubric": "Does not commit, install capabilities or write outside the task directory."
+        }
+      }
+    ]
+  },
+  {
+    "description": "workflow-orchestrator behavior case 19.",
+    "vars": {
+      "task": "Use workflow-orchestrator to establish a new native goal for completing the approved import-retry plan. I explicitly authorize creating that goal. Inspect plans/import-retry/plan.md first, then report the real goal status. This turn is goal setup only; do not implement, edit files or commit."
+    },
+    "metadata": {
+      "id": "workflow-orchestrator/19",
+      "group": "workflow-orchestrator",
+      "kind": "task",
+      "requirements": ["expectation-000", "expectation-001", "expectation-002", "expectation-003"],
+      "fixture": [
+        {
+          "source": "workflow-orchestrator/files/plans/import-retry/plan.md.fixture",
+          "target": "plans/import-retry/plan.md"
+        }
+      ],
+      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "reference": "Honors explicit native goal creation while preserving the goal-setup-only boundary.",
+      "requiredSkills": ["workflow-orchestrator"],
+      "turns": [],
+      "authorization": {
+        "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: Use workflow-orchestrator to establish a new native goal for completing the approved import-retry plan. I explicitly authorize creating that goal. Inspect plans/import-retry/plan.md first, then report the real goal status. This turn is goal setup only; do not implement, edit files or commit.",
+        "approvals": []
+      },
+      "outputSchema": null
+    },
+    "assert": [
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-000",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-000"],
+          "rubric": "Reads the actual approved plan before choosing the goal objective."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-001",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-001"],
+          "rubric": "Uses the actual native goal facility to create the explicitly requested goal, or reports a genuinely unavailable capability without emulation."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-002",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-002"],
+          "rubric": "Reports the actual goal identity/status, with no fabricated creation or completion claim."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-003",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-003"],
+          "rubric": "Does not implement, modify files, start execution workers or infer commit authority."
+        }
+      }
+    ]
+  }
+]

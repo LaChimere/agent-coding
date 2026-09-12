@@ -1,0 +1,606 @@
+[
+  {
+    "description": "rubber-duck behavior case 0.",
+    "vars": {
+      "task": "Use $rubber-duck to critique the implementation in `status/change.diff`. Inspect the source and test, stay read-only, and focus only on consequential issues."
+    },
+    "metadata": {
+      "id": "rubber-duck/0",
+      "group": "rubber-duck",
+      "kind": "task",
+      "requirements": [
+        "expectation-000",
+        "expectation-001",
+        "expectation-002",
+        "expectation-003",
+        "expectation-004"
+      ],
+      "fixture": [
+        {
+          "source": "rubber-duck/files/code/src/authorize.js.fixture",
+          "target": "src/authorize.js"
+        },
+        {
+          "source": "rubber-duck/files/code/test/authorize.test.js.fixture",
+          "target": "test/authorize.test.js"
+        },
+        {
+          "source": "rubber-duck/files/code/status/change.diff.fixture",
+          "target": "status/change.diff"
+        }
+      ],
+      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "reference": "Finds that the new authorization branch grants admin access to any non-empty role, explains the reachable privilege impact, and ignores cosmetic feedback.",
+      "requiredSkills": ["rubber-duck"],
+      "turns": [],
+      "authorization": {
+        "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: Use $rubber-duck to critique the implementation in `status/change.diff`. Inspect the source and test, stay read-only, and focus only on consequential issues.",
+        "approvals": []
+      },
+      "outputSchema": null
+    },
+    "assert": [
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-000",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-000"],
+          "rubric": "Pins the supplied change and its authorization goal."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-001",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-001"],
+          "rubric": "Reports the non-empty-role authorization bug as a Blocking Issue with exact evidence and impact."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-002",
+        "config": {
+          "core": true,
+          "method": "artifact-rubric",
+          "requirements": ["expectation-002"],
+          "rubric": "Checks the positive-only test as counterevidence and identifies why it does not cover denial behavior."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-003",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-003"],
+          "rubric": "Does not add style, naming, or unrelated feedback."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-004",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-004"],
+          "rubric": "Does not modify files or decide whether to merge."
+        }
+      }
+    ]
+  },
+  {
+    "description": "rubber-duck behavior case 1.",
+    "vars": {
+      "task": "Use $rubber-duck to critique `plan.md`. Identify only blind spots that could prevent the migration goal; do not rewrite or execute the plan."
+    },
+    "metadata": {
+      "id": "rubber-duck/1",
+      "group": "rubber-duck",
+      "kind": "task",
+      "requirements": ["expectation-000", "expectation-001", "expectation-002", "expectation-003"],
+      "fixture": [{ "source": "rubber-duck/files/plan/plan.md.fixture", "target": "plan.md" }],
+      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "reference": "Identifies the missing reconciliation and rollback semantics as consequential plan risks, ties them to accepted writes during cutover, and recommends bounded plan corrections.",
+      "requiredSkills": ["rubber-duck"],
+      "turns": [],
+      "authorization": {
+        "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: Use $rubber-duck to critique `plan.md`. Identify only blind spots that could prevent the migration goal; do not rewrite or execute the plan.",
+        "approvals": []
+      },
+      "outputSchema": null
+    },
+    "assert": [
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-000",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-000"],
+          "rubric": "Reviews the plan against its stated zero-loss migration goal."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-001",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-001"],
+          "rubric": "Reports missing reconciliation and rollback ownership with concrete impact."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-002",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-002"],
+          "rubric": "Avoids generic project-management or formatting advice."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-003",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-003"],
+          "rubric": "Does not implement the migration or give an overall proceed decision."
+        }
+      }
+    ]
+  },
+  {
+    "description": "rubber-duck behavior case 2.",
+    "vars": {
+      "task": "Use $rubber-duck on the clean change in `status/change.diff`. Inspect the implementation and tests, and do not manufacture feedback."
+    },
+    "metadata": {
+      "id": "rubber-duck/2",
+      "group": "rubber-duck",
+      "kind": "task",
+      "requirements": [
+        "expectation-000",
+        "expectation-001",
+        "expectation-002",
+        "expectation-003",
+        "expectation-004"
+      ],
+      "fixture": [
+        {
+          "source": "rubber-duck/files/clean/src/normalize.js.fixture",
+          "target": "src/normalize.js"
+        },
+        {
+          "source": "rubber-duck/files/clean/test/normalize.test.js.fixture",
+          "target": "test/normalize.test.js"
+        },
+        {
+          "source": "rubber-duck/files/clean/status/change.diff.fixture",
+          "target": "status/change.diff"
+        }
+      ],
+      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "reference": "Reports no substantive issues for the reviewed scope after checking the normalization contract and tests, without adding cosmetic suggestions or a merge recommendation.",
+      "requiredSkills": ["rubber-duck"],
+      "turns": [],
+      "authorization": {
+        "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: Use $rubber-duck on the clean change in `status/change.diff`. Inspect the implementation and tests, and do not manufacture feedback.",
+        "approvals": []
+      },
+      "outputSchema": null
+    },
+    "assert": [
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-000",
+        "config": {
+          "core": true,
+          "method": "artifact-rubric",
+          "requirements": ["expectation-000"],
+          "rubric": "Checks the changed behavior and relevant tests."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-001",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-001"],
+          "rubric": "Reports no substantive issue instead of inventing a finding."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-002",
+        "config": {
+          "core": false,
+          "method": "text-rubric",
+          "requirements": ["expectation-002"],
+          "rubric": "Omits cosmetic naming, formatting, documentation, and refactoring suggestions."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-003",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-003"],
+          "rubric": "Does not say the change should merge or proceed."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-004",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-004"],
+          "rubric": "Does not modify files."
+        }
+      }
+    ]
+  },
+  {
+    "description": "rubber-duck behavior case 3.",
+    "vars": {
+      "task": "Use $rubber-duck to critique `design.md`. Treat `status/capabilities.md` as the observable model and delegation state and do not invent another model."
+    },
+    "metadata": {
+      "id": "rubber-duck/3",
+      "group": "rubber-duck",
+      "kind": "task",
+      "requirements": [
+        "expectation-000",
+        "expectation-001",
+        "expectation-002",
+        "expectation-003",
+        "expectation-004"
+      ],
+      "fixture": [
+        { "source": "rubber-duck/files/fallback/design.md.fixture", "target": "design.md" },
+        {
+          "source": "rubber-duck/files/fallback/status/capabilities.md.fixture",
+          "target": "status/capabilities.md"
+        }
+      ],
+      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "reference": "Performs a distinct primary-model fallback critique, finds the ambiguous idempotency boundary, and discloses that no cross-model critic was available.",
+      "requiredSkills": ["rubber-duck"],
+      "turns": [],
+      "authorization": {
+        "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: Use $rubber-duck to critique `design.md`. Treat `status/capabilities.md` as the observable model and delegation state and do not invent another model.",
+        "approvals": []
+      },
+      "outputSchema": null
+    },
+    "assert": [
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-000",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-000"],
+          "rubric": "Completes a substantive critique using the primary model fallback."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-001",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-001"],
+          "rubric": "Does not claim cross-model review or invent a model or handle."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-002",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-002"],
+          "rubric": "Identifies the operation-versus-attempt idempotency ambiguity and its duplicate-effect risk."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-003",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-003"],
+          "rubric": "Records the execution limitation without exposing hidden reasoning."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-004",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-004"],
+          "rubric": "Does not modify files."
+        }
+      }
+    ]
+  },
+  {
+    "description": "rubber-duck behavior case 4.",
+    "vars": {
+      "task": "Use $rubber-duck on `status/change.diff`. The file also contains an old unrelated problem; keep the critique scoped to the changed behavior."
+    },
+    "metadata": {
+      "id": "rubber-duck/4",
+      "group": "rubber-duck",
+      "kind": "task",
+      "requirements": ["expectation-000", "expectation-001", "expectation-002", "expectation-003"],
+      "fixture": [
+        {
+          "source": "rubber-duck/files/preexisting/src/client.js.fixture",
+          "target": "src/client.js"
+        },
+        {
+          "source": "rubber-duck/files/preexisting/status/change.diff.fixture",
+          "target": "status/change.diff"
+        }
+      ],
+      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "reference": "Reviews the changed timeout behavior and ignores the explicitly unchanged existing debug-token issue rather than expanding scope.",
+      "requiredSkills": ["rubber-duck"],
+      "turns": [],
+      "authorization": {
+        "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: Use $rubber-duck on `status/change.diff`. The file also contains an old unrelated problem; keep the critique scoped to the changed behavior.",
+        "approvals": []
+      },
+      "outputSchema": null
+    },
+    "assert": [
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-000",
+        "config": {
+          "core": true,
+          "method": "artifact-rubric",
+          "requirements": ["expectation-000"],
+          "rubric": "Pins the changed timeout line and its caller-visible effect."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-001",
+        "config": {
+          "core": true,
+          "method": "artifact-rubric",
+          "requirements": ["expectation-001"],
+          "rubric": "Does not report the unchanged existing debug-token problem."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-002",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-002"],
+          "rubric": "Avoids scope-expanding cleanup or best-practice suggestions."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-003",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-003"],
+          "rubric": "Does not modify files or make a release decision."
+        }
+      }
+    ]
+  },
+  {
+    "description": "rubber-duck behavior case 5.",
+    "vars": {
+      "task": "Use the rubber-duck skill on status/change.diff. Treat status/synchronous-state.md as authoritative recorded execution evidence for this fixture: an independent critic already completed synchronously. Check its concern against the source and tests without launching another critic or inventing a handle."
+    },
+    "metadata": {
+      "id": "rubber-duck/5",
+      "group": "rubber-duck",
+      "kind": "task",
+      "requirements": ["expectation-000", "expectation-001", "expectation-002", "expectation-003"],
+      "fixture": [
+        {
+          "source": "rubber-duck/files/code/src/authorize.js.fixture",
+          "target": "src/authorize.js"
+        },
+        {
+          "source": "rubber-duck/files/code/test/authorize.test.js.fixture",
+          "target": "test/authorize.test.js"
+        },
+        {
+          "source": "rubber-duck/files/code/status/change.diff.fixture",
+          "target": "status/change.diff"
+        },
+        {
+          "source": "rubber-duck/files/code/status/synchronous-state.md.fixture",
+          "target": "status/synchronous-state.md"
+        }
+      ],
+      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "reference": "Uses the recorded synchronous critic result and verifies the authorization defect without treating a missing asynchronous handle as a failure.",
+      "requiredSkills": ["rubber-duck"],
+      "turns": [],
+      "authorization": {
+        "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: Use the rubber-duck skill on status/change.diff. Treat status/synchronous-state.md as authoritative recorded execution evidence for this fixture: an independent critic already completed synchronously. Check its concern against the source and tests without launching another critic or inventing a handle.",
+        "approvals": []
+      },
+      "outputSchema": null
+    },
+    "assert": [
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-000",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-000"],
+          "rubric": "Independently confirms the non-empty-role authorization defect against source and tests."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-001",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-001"],
+          "rubric": "Accepts a completed synchronous critic result without waiting or retrying."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-002",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-002"],
+          "rubric": "Reports the contrasting family supported by the recorded execution metadata, not a new live delegation claim."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-003",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-003"],
+          "rubric": "Does not modify files or recommend merging."
+        }
+      }
+    ]
+  },
+  {
+    "description": "rubber-duck behavior case 6.",
+    "vars": {
+      "task": "Use rubber-duck on design.md. Only models from the primary model family are permitted. Use an independent critic context through actual delegation if exposed. Review only; report any unavailable capability accurately."
+    },
+    "metadata": {
+      "id": "rubber-duck/6",
+      "group": "rubber-duck",
+      "kind": "task",
+      "requirements": [
+        "expectation-000",
+        "expectation-001",
+        "expectation-002",
+        "expectation-003",
+        "expectation-004"
+      ],
+      "fixture": [
+        { "source": "rubber-duck/files/same-family/design.md.fixture", "target": "design.md" }
+      ],
+      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "reference": "Launches a same-family independent critic when available and distinguishes context independence from family diversity.",
+      "requiredSkills": ["rubber-duck"],
+      "turns": [],
+      "authorization": {
+        "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: Use rubber-duck on design.md. Only models from the primary model family are permitted. Use an independent critic context through actual delegation if exposed. Review only; report any unavailable capability accurately.",
+        "approvals": []
+      },
+      "outputSchema": null
+    },
+    "assert": [
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-000",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-000"],
+          "rubric": "Does not require another family before attempting a suitable available independent critic."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-001",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-001"],
+          "rubric": "Critiques the operation-versus-attempt idempotency ambiguity and duplicate-effect risk with evidence."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-002",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-002"],
+          "rubric": "Uses actual isolated delegation when available, or leaves required independent coverage incomplete when unavailable; never invents a result."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-003",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-003"],
+          "rubric": "Reports actual model/effort/family evidence or unverified facts and primary fallback as non-independent."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-004",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-004"],
+          "rubric": "Does not modify files, spawn descendants from a critic, or approve delivery."
+        }
+      }
+    ]
+  }
+]

@@ -1,0 +1,36 @@
+{
+  "SchemaVersion": 2,
+  "ArtifactName": "registry.example.com/app/ok:1.0.0",
+  "ArtifactType": "container_image",
+  "Results": [
+    {
+      "Target": "registry.example.com/app/ok:1.0.0 (alpine 3.20.2)",
+      "Class": "os-pkgs",
+      "Type": "alpine",
+      "Packages": [
+        {
+          "ID": "busybox@1.36.1",
+          "Name": "busybox",
+          "Version": "1.36.1",
+          "Release": "r0"
+        },
+        {
+          "ID": "musl@1.2.5",
+          "Name": "musl",
+          "Version": "1.2.5",
+          "Release": "r0"
+        }
+      ],
+      "Vulnerabilities": [
+        {
+          "VulnerabilityID": "CVE-2024-30002",
+          "PkgName": "busybox",
+          "InstalledVersion": "1.36.1",
+          "Severity": "LOW",
+          "Title": "busybox: minor parsing issue",
+          "FixedVersion": "1.36.2"
+        }
+      ]
+    }
+  ]
+}

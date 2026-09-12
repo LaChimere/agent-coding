@@ -1,0 +1,46 @@
+diff --git a/src/auth/session.ts b/src/auth/session.ts
+index 2e8613d..ad047fc 100644
+--- a/src/auth/session.ts
++++ b/src/auth/session.ts
+@@ -1,8 +1,15 @@
+ export async function resolveSession(session, refresh) {
+   if (session.expiresAt > Date.now()) {
+     return session;
+   }
+
+-  return session;
++  const refreshed = await refresh(session.refreshToken);
++
++  if (!refreshed) {
++    throw new Error("session refresh failed");
++  }
++
++  return refreshed;
+ }
+diff --git a/src/auth/session.test.ts b/src/auth/session.test.ts
+index 5bda8de..4a747e3 100644
+--- a/src/auth/session.test.ts
++++ b/src/auth/session.test.ts
+@@ -8,4 +8,24 @@ test("returns an active session unchanged", async () => {
+   expect(await resolveSession(session, refresh)).toBe(session);
+   expect(refresh).not.toHaveBeenCalled();
+ });
++
++test("refreshes an expired session", async () => {
++  const refresh = vi.fn().mockResolvedValue({
++    expiresAt: Date.now() + 60_000,
++    refreshToken: "new-token",
++  });
++
++  await expect(
++    resolveSession({ expiresAt: Date.now() - 1, refreshToken: "old-token" }, refresh),
++  ).resolves.toEqual(expect.objectContaining({ refreshToken: "new-token" }));
++});
++
++test("rejects an expired session when refresh fails", async () => {
++  const refresh = vi.fn().mockResolvedValue(undefined);
++
++  await expect(
++    resolveSession({ expiresAt: Date.now() - 1, refreshToken: "old-token" }, refresh),
++  ).rejects.toThrow("session refresh failed");
++});

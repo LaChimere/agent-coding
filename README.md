@@ -88,13 +88,19 @@ plugins/pr-review/                     # Separate review plugin
 skills/scan-image-vulnerabilities/      # Standalone, with bundled script and tests
 .agents/plugins/marketplace.json
 .claude-plugin/marketplace.json        # Claude Code + Copilot CLI marketplace
-evals/<skill>/                         # Central cases, manifests, fixtures; never distributed
-evals/suites/
-tools/skill-evals/                     # Existing provider-neutral harness
-.skill-evals/                          # Ignored immutable evaluation evidence
+evals/                                # Bun/TypeScript Codex evaluation project
+  calibration/                        # Samples and owner-confirmed grader labels
+  cases/                              # Central cases and checks
+  fixtures/                           # Inert fixture data, never distributed
+  pricing/                            # Dated model-token reference prices
+  profiles/                           # Versioned baseline and runtime references
+  src/
+  tests/                              # Framework tests grouped by source domain
+  out/                                # Ignored run evidence and reports
+.skill-evals/                          # Historical ignored evidence
 ```
 
-**Evals are repository-maintenance assets, not skill content.** Every root or plugin runtime skill has a matching `evals/<skill>/` directory with functional cases, fixtures, and a classification manifest, but that material lives outside runtime skill directories and is never distributed. An installed skill or plugin therefore cannot read its own cases or expected answers. See `tools/skill-evals/README.md` for validation, run preparation, and grading.
+**Evals are repository-maintenance assets, not skill content.** The central corpus covers standalone and plugin-owned skills. Native Codex runs receive isolated runtime installations and case fixtures; grading definitions and reference answers remain private. Promptfoo schedules cases and provides native exports, with project records for passed/failed/unknown quality, time, tokens and cost. See [the evaluation guide](evals/README.md) for commands and [the design](docs/evaluation/design.md) for the contract.
 
 ## Skills
 
@@ -414,10 +420,10 @@ None of these steps authorizes a commit, push or deployment.
 1. Repo-root `AGENTS.md` applies only to this repository.
 2. If you change cross-skill workflow behavior, update `workflow-orchestrator` first.
 3. If you change a worker skill, keep it aligned with the `workflow-orchestrator` contract.
-4. Keep repository-maintenance scope in the approved conversation; do not create a root `plans/` directory or task slugs. Generated evaluation evidence belongs in `.skill-evals/`. The optional downstream living-plan templates and their fixtures remain supported.
-5. Add or change eval cases under `evals/<skill>/`, never inside a runtime skill directory; validate with
-   `uv run --locked --project tools/skill-evals python tools/skill-evals/skill_evals.py validate --repo .`.
-6. Keep generated eval run artifacts in the ignored `.skill-evals/` workspace.
+4. Keep repository-maintenance scope in the approved conversation; do not create a root `plans/` directory or task slugs. Generated evaluation evidence belongs in `evals/out/`. The optional downstream living-plan templates and their fixtures remain supported.
+5. Add or change eval cases under `evals/cases/` and fixtures under `evals/fixtures/`; validate with
+   `(cd evals && bun run start -- validate)`. Runtime skill directories contain no evaluation corpus.
+6. Follow the frozen quality rules in `evals/AGENTS.md`; preserve historical `.skill-evals/` evidence.
 
 ### What the agent does at runtime
 
@@ -482,4 +488,4 @@ If your agent platform supports hooks, consider adding them to high-risk skills 
 
 ## Status
 
-Every runtime skill has functional eval definitions and classification metadata in the central `evals/` corpus. The provider-neutral harness evaluates both root and plugin-owned skill content through isolated `npx skills add --copy` snapshot copies. That hermetic behavior check does not validate a plugin manifest, marketplace entry, cache, or Codex discovery. Plugin changes therefore also require the separate marketplace install and installed-copy validation described in `AGENTS.md` and `tools/skill-evals/README.md`. Historical certification is not certification of this workflow candidate. Each result must identify its runtime snapshot, frozen corpus, model/settings and actual execution evidence; unrun, ungraded and failed checks are not passes. Continue refining from real usage evidence rather than adding speculative workflow rules.
+The central `evals/` project evaluates Codex with frozen inputs, native installation and discovery, actual task execution, independent grading, and resource records. Claude Code and Copilot CLI retain distribution/adaptation checks without model-effectiveness evaluation. See [the evaluation guide](evals/README.md) and [the acceptance report](docs/evaluation/acceptance.md). Historical certification is not certification of a new candidate. Each result identifies its runtime snapshot, frozen corpus, model/settings and actual execution evidence; unrun, ungraded and failed checks are not passes.

@@ -1,0 +1,68 @@
+{
+  "SchemaVersion": 2,
+  "ArtifactName": "registry.example.com/coverage/app:1.0.0",
+  "ArtifactType": "container_image",
+  "Results": [
+    {
+      "Target": "registry.example.com/coverage/app:1.0.0 (alpine 3.20.2)",
+      "Class": "os-pkgs",
+      "Type": "alpine",
+      "Packages": [
+        {
+          "ID": "busybox@1.36.1",
+          "Name": "busybox",
+          "Version": "1.36.1",
+          "Release": "r0"
+        }
+      ],
+      "Vulnerabilities": []
+    },
+    {
+      "Target": "app/package-lock.json",
+      "Class": "lang-pkgs",
+      "Type": "npm",
+      "Packages": [
+        {
+          "ID": "lodash@4.17.20",
+          "Name": "lodash",
+          "Version": "4.17.20",
+          "FilePath": "app/package-lock.json"
+        },
+        {
+          "ID": "express@4.18.2",
+          "Name": "express",
+          "Version": "4.18.2",
+          "FilePath": "app/package-lock.json"
+        }
+      ],
+      "Vulnerabilities": [
+        {
+          "VulnerabilityID": "CVE-2021-23337",
+          "PkgName": "lodash",
+          "PkgPath": "app/package-lock.json",
+          "InstalledVersion": "4.17.20",
+          "FixedVersion": "4.17.21",
+          "Severity": "HIGH",
+          "Title": "nodejs-lodash: command injection via template"
+        }
+      ],
+      "ExperimentalModifiedFindings": [
+        {
+          "Type": "vulnerability",
+          "Status": "not_affected",
+          "Statement": "vulnerable_code_not_in_execute_path",
+          "Source": "fixture.vex",
+          "Finding": {
+            "VulnerabilityID": "CVE-2020-7598",
+            "PkgName": "minimist",
+            "PkgPath": "app/package-lock.json",
+            "InstalledVersion": "1.2.0",
+            "FixedVersion": "1.2.2",
+            "Severity": "CRITICAL",
+            "Title": "nodejs-minimist: prototype pollution"
+          }
+        }
+      ]
+    }
+  ]
+}

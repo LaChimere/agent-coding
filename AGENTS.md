@@ -16,10 +16,9 @@ It is **not** the portable coordination contract for downstream skills or downst
 
 - `skills/` contains standalone skills; coordinated workflow skills live only under `plugins/workflow/skills/`.
 - `plugins/` contains shared plugin skills with native distribution for Codex CLI, Claude Code and GitHub Copilot CLI.
-- `evals/` contains the central repository-maintenance corpus; it is never distributed with skills.
-- `tools/skill-evals/` contains the provider-neutral validation, snapshot, grading, aggregation, and suite tooling.
+- `evals/` contains the Bun/TypeScript Codex evaluation framework, central cases, fixtures and versioned profiles; it is never distributed with skills. Follow its local `AGENTS.md` and frozen quality baseline.
 - `plugins/workflow/skills/workflow-orchestrator/` is the portable coordination layer and owns the shared workflow contract plus planning templates.
-- This repository does not keep a root `plans/` directory or task slugs. Use the approved conversation for maintenance scope and `.skill-evals/` for generated evaluation evidence. Downstream planning templates and eval fixtures are separate from this repository-maintenance convention.
+- This repository does not keep a root `plans/` directory or task slugs. Use the approved conversation for maintenance scope and `evals/out/` for new generated evaluation evidence. Historical `.skill-evals/` evidence remains unchanged. Downstream planning templates and eval fixtures are separate from this repository-maintenance convention.
 - Repo-root `AGENTS.md` is for repo-specific contributor guidance only.
 - Repo-root `templates/` should not exist; reusable templates belong with the skill that uses them.
 
@@ -58,20 +57,20 @@ This repo does not have a single universal build/test pipeline.
 Use the narrowest validation that matches the change:
 
 - minimum structural check: `git diff --check`
-- skill/eval structural check: `uv run --locked --project tools/skill-evals python tools/skill-evals/skill_evals.py validate --repo .`
-- Python tests: use `uv run --locked --project tools/skill-evals pytest ...` as the primary runner; existing unittest-compatible tests may remain when pytest collects them correctly
+- eval corpus structural check: `(cd evals && bun run start -- validate)`
+- framework checks: `(cd evals && bun run check && bun run test:coverage && bun run build)`; these local checks do not run model evaluations
 - workflow changes: targeted skill/doc consistency review
 - doc-only changes: consistency review of the affected skills/docs
 - distributed skill changes: validate installed snapshot copies through `npx skills add`; plugin-owned changes also need actual isolated marketplace installation. Neither structural checks nor snapshot copies prove host discovery.
-- Plugin changes: run `uv run --locked --project tools/skill-evals pytest tools/skill-evals/tests/test_plugin_distribution.py`, validate native manifests, and verify isolated installation/update, source identity and discovery in each supported CLI. Required model invocation, behavioral evaluation and orchestration-effectiveness acceptance use Codex. Claude Code and Copilot CLI remain compatible distribution targets without an effectiveness guarantee; model evaluations for them require an explicit request. Record CLI versions and distinguish installation, discovery, invocation and optional capability coverage. App/IDE/cloud compatibility needs separate evidence when claimed; it is not a gate for this repository-only working-tree delivery. Do not switch production installs or copy credentials as part of validation.
+- Plugin changes: run `(cd evals && bun test tests/distribution.test.ts)`, validate native manifests, and verify isolated installation/update, source identity and discovery in each supported CLI. Required model invocation, behavioral evaluation and orchestration-effectiveness acceptance use Codex. Claude Code and Copilot CLI remain compatible distribution targets without an effectiveness guarantee; model evaluations for them require an explicit request. Record CLI versions and distinguish installation, discovery, invocation and optional capability coverage. App/IDE/cloud compatibility needs separate evidence when claimed; it is not a gate for this repository-only working-tree delivery. Do not switch production installs or copy credentials as part of validation.
 
 ## Practical change map
 
 - Changing cross-skill routing or approval/gate behavior -> update `plugins/workflow/skills/workflow-orchestrator/`
 - Changing a worker skill's narrow behavior -> update that skill and keep it aligned with `workflow-orchestrator`
-- Changing eval cases, fixtures, or classifications -> update `evals/<skill>/`, never `skills/<skill>/evals/`
-- Changing trigger/composition suites -> update `evals/suites/`
-- Changing harness contracts -> update `tools/skill-evals/` and its tests
+- Changing eval cases, fixtures, or classifications -> update `evals/cases/` and `evals/fixtures/`, never runtime skill directories
+- Changing trigger/composition coverage -> update the relevant cases and their declared requirements under `evals/cases/`
+- Changing harness contracts -> update `evals/src/` and `evals/tests/`; see `evals/README.md` and `docs/evaluation/design.md`
 - Changing repo contribution guidance -> update this `AGENTS.md`
 - Changing planning artifact formats -> update `plugins/workflow/skills/workflow-orchestrator/templates/`
-- Changing a plugin -> update `plugins/<plugin>/`, its affected central `evals/<skill>/` corpus, and native marketplace/docs when needed
+- Changing a plugin -> update `plugins/<plugin>/`, its affected central cases in `evals/cases/`, and native marketplace/docs when needed

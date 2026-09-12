@@ -1,5 +1,11 @@
 # Coding orchestration v0.1 validation
 
+> This records implementation and activation checkpoints. Commands, counts,
+> client versions and outcomes describe the checkpoint where they appear.
+> For the current eval interface and implementation acceptance, use
+> [the evaluation guide](../../evals/README.md) and
+> [the current acceptance record](../evaluation/acceptance.md).
+
 ## Post-merge local activation
 
 After PR #6 was rebased into `main` at `6a1084b`, the local main checkout was fast-forwarded and
@@ -309,7 +315,7 @@ Recorded client versions: Codex CLI `0.154.0`, Claude Code `2.1.267`, GitHub Cop
 The generated Codex protocol schema and bundled model catalog are retained separately; a bundled
 catalog entry is not evidence that a provider can execute that model.
 
-Required repository checks:
+Commands used at this checkpoint (historical):
 
 ```sh
 git diff --check
@@ -319,9 +325,12 @@ python3 /Users/lachimere/.codex/skills/.system/plugin-creator/scripts/validate_p
 python3 /Users/lachimere/.codex/skills/.system/plugin-creator/scripts/validate_plugin.py plugins/pr-review
 ```
 
-The local tool paths identify the validator used, not a distributed runtime dependency. Temporary
-`UV_CACHE_DIR` is used when needed. No harness implementation or dependency change is planned.
-Current results: corpus validator `VALID`; plugin distribution tests `6 passed in 0.06s`; both native
+The local tool paths identify the validators used at that checkpoint. The old eval commands above
+were subsequently replaced by the [current Codex evaluation framework](../../evals/README.md#commands);
+its corpus and distribution checks run with `bun run start -- validate` and
+`bun test tests/distribution.test.ts` from `evals/`. The recorded invocation used a temporary
+`UV_CACHE_DIR` when needed.
+Checkpoint results: corpus validator `VALID`; plugin distribution tests `6 passed in 0.06s`; both native
 manifest validators passed; all five modified skills returned `Skill is valid!`; `git diff --check`
 passed. These structural checks do not establish behavioral acceptance.
 
