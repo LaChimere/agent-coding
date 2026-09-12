@@ -1,0 +1,652 @@
+[
+  {
+    "description": "ensure-atomic-pr behavior case 0.",
+    "vars": {
+      "task": "Assess a diff that adds one validation function, its unit test, and one call site for a single bug fix."
+    },
+    "metadata": {
+      "id": "ensure-atomic-pr/0",
+      "group": "ensure-atomic-pr",
+      "kind": "task",
+      "requirements": [
+        "expectation-000",
+        "expectation-001",
+        "expectation-002",
+        "expectation-003",
+        "expectation-004"
+      ],
+      "fixture": [],
+      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "reference": "Reports the change is already atomic and does not invent a split.",
+      "requiredSkills": ["ensure-atomic-pr"],
+      "turns": [],
+      "authorization": {
+        "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: Assess a diff that adds one validation function, its unit test, and one call site for a single bug fix.",
+        "approvals": []
+      },
+      "outputSchema": null
+    },
+    "assert": [
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-000",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-000"],
+          "rubric": "Concludes the change is atomic."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-001",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-001"],
+          "rubric": "States its one logical purpose."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-002",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-002"],
+          "rubric": "Keeps the test with the fix."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-003",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-003"],
+          "rubric": "Does not propose unnecessary units."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-004",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-004"],
+          "rubric": "Recommends proceeding."
+        }
+      }
+    ]
+  },
+  {
+    "description": "ensure-atomic-pr behavior case 1.",
+    "vars": {
+      "task": "In a mock repository, inspect `status/rename-branch.md` and `status/rename.diff`. They describe the current state of the existing branch already checked out here, not a proposal for future work: a symbol has already been renamed across 50 files, and one of those files also carries a small unrelated semantic tweak in the same commit. The user asks to split the rename into two PRs by file count. Decide how to organize the PRs. Use the current working directory as the repository root. Do not modify files outside the provided output directory."
+    },
+    "metadata": {
+      "id": "ensure-atomic-pr/1",
+      "group": "ensure-atomic-pr",
+      "kind": "task",
+      "requirements": [
+        "expectation-000",
+        "expectation-001",
+        "expectation-002",
+        "expectation-003",
+        "expectation-004"
+      ],
+      "fixture": [
+        {
+          "source": "ensure-atomic-pr/files/rename-branch/package.json.fixture",
+          "target": "package.json"
+        },
+        {
+          "source": "ensure-atomic-pr/files/rename-branch/src/orders/order-total.js.fixture",
+          "target": "src/orders/order-total.js"
+        },
+        {
+          "source": "ensure-atomic-pr/files/rename-branch/src/orders/order-summary.js.fixture",
+          "target": "src/orders/order-summary.js"
+        },
+        {
+          "source": "ensure-atomic-pr/files/rename-branch/src/invoices/invoice-total.js.fixture",
+          "target": "src/invoices/invoice-total.js"
+        },
+        {
+          "source": "ensure-atomic-pr/files/rename-branch/status/rename-branch.md.fixture",
+          "target": "status/rename-branch.md"
+        },
+        {
+          "source": "ensure-atomic-pr/files/rename-branch/status/rename.diff.fixture",
+          "target": "status/rename.diff"
+        }
+      ],
+      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "reference": "Keeps the indivisible rename in one PR and separates the semantic tweak by commit or follow-up.",
+      "requiredSkills": ["ensure-atomic-pr"],
+      "turns": [],
+      "authorization": {
+        "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: In a mock repository, inspect `status/rename-branch.md` and `status/rename.diff`. They describe the current state of the existing branch already checked out here, not a proposal for future work: a symbol has already been renamed across 50 files, and one of those files also carries a small unrelated semantic tweak in the same commit. The user asks to split the rename into two PRs by file count. Decide how to organize the PRs. Use the current working directory as the repository root. Do not modify files outside the provided output directory.",
+        "approvals": []
+      },
+      "outputSchema": null
+    },
+    "assert": [
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-000",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-000"],
+          "rubric": "Identifies the rename as indivisible."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-001",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-001"],
+          "rubric": "Rejects a half-rename PR."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-002",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-002"],
+          "rubric": "Preserves a healthy intermediate state."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-003",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-003"],
+          "rubric": "Separates the semantic concern."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-004",
+        "config": {
+          "core": true,
+          "method": "artifact-rubric",
+          "requirements": ["expectation-004"],
+          "rubric": "Does not use diff size alone as the atomicity test."
+        }
+      }
+    ]
+  },
+  {
+    "description": "ensure-atomic-pr behavior case 2.",
+    "vars": {
+      "task": "Assess this change based only on the description below — no repository diff, file listing, or other project state is provided, so do not assume specific files, line counts, or behavior beyond what is stated: an automated formatting pass plus an isolated variable rename with no behavior change."
+    },
+    "metadata": {
+      "id": "ensure-atomic-pr/2",
+      "group": "ensure-atomic-pr",
+      "kind": "task",
+      "requirements": [
+        "expectation-000",
+        "expectation-001",
+        "expectation-002",
+        "expectation-003",
+        "expectation-004"
+      ],
+      "fixture": [],
+      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "reference": "Treats it as one mechanical unit kept separate from behavioral work.",
+      "requiredSkills": ["ensure-atomic-pr"],
+      "turns": [],
+      "authorization": {
+        "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: Assess this change based only on the description below — no repository diff, file listing, or other project state is provided, so do not assume specific files, line counts, or behavior beyond what is stated: an automated formatting pass plus an isolated variable rename with no behavior change.",
+        "approvals": []
+      },
+      "outputSchema": null
+    },
+    "assert": [
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-000",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-000"],
+          "rubric": "Classifies the change as mechanical."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-001",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-001"],
+          "rubric": "Does not over-split formatting from the rename."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-002",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-002"],
+          "rubric": "States that behavior is unchanged."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-003",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-003"],
+          "rubric": "Keeps it separate from unrelated behavior."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-004",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-004"],
+          "rubric": "Uses proportionate validation."
+        }
+      }
+    ]
+  },
+  {
+    "description": "ensure-atomic-pr behavior case 3.",
+    "vars": {
+      "task": "Assess a rate-limiter feature that also deletes an unrelated helper and upgrades an unrelated dependency."
+    },
+    "metadata": {
+      "id": "ensure-atomic-pr/3",
+      "group": "ensure-atomic-pr",
+      "kind": "task",
+      "requirements": [
+        "expectation-000",
+        "expectation-001",
+        "expectation-002",
+        "expectation-003",
+        "expectation-004"
+      ],
+      "fixture": [],
+      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "reference": "Flags mixed purposes and separates the feature, cleanup, and dependency change.",
+      "requiredSkills": ["ensure-atomic-pr"],
+      "turns": [],
+      "authorization": {
+        "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: Assess a rate-limiter feature that also deletes an unrelated helper and upgrades an unrelated dependency.",
+        "approvals": []
+      },
+      "outputSchema": null
+    },
+    "assert": [
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-000",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-000"],
+          "rubric": "Concludes the PR is not atomic."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-001",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-001"],
+          "rubric": "Identifies all unrelated concerns."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-002",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-002"],
+          "rubric": "Creates purpose-based units."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-003",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-003"],
+          "rubric": "Does not make cleanup block the feature."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-004",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-004"],
+          "rubric": "States dependencies."
+        }
+      }
+    ]
+  },
+  {
+    "description": "ensure-atomic-pr behavior case 4.",
+    "vars": {
+      "task": "In a mock repository, inspect `status/discount-rule.md` and `status/discount-rule.diff`, along with `src/pricing/discount.js`, `test/discount.test.js`, and `docs/pricing/discount-formula.md`. Assess this discount-rule change with its regression tests and its directly coupled formula doc update. Use the current working directory as the repository root. Do not modify files outside the provided output directory."
+    },
+    "metadata": {
+      "id": "ensure-atomic-pr/4",
+      "group": "ensure-atomic-pr",
+      "kind": "task",
+      "requirements": [
+        "expectation-000",
+        "expectation-001",
+        "expectation-002",
+        "expectation-003",
+        "expectation-004"
+      ],
+      "fixture": [
+        {
+          "source": "ensure-atomic-pr/files/discount-rule/package.json.fixture",
+          "target": "package.json"
+        },
+        {
+          "source": "ensure-atomic-pr/files/discount-rule/src/pricing/discount.js.fixture",
+          "target": "src/pricing/discount.js"
+        },
+        {
+          "source": "ensure-atomic-pr/files/discount-rule/test/discount.test.js.fixture",
+          "target": "test/discount.test.js"
+        },
+        {
+          "source": "ensure-atomic-pr/files/discount-rule/docs/pricing/discount-formula.md.fixture",
+          "target": "docs/pricing/discount-formula.md"
+        },
+        {
+          "source": "ensure-atomic-pr/files/discount-rule/status/discount-rule.md.fixture",
+          "target": "status/discount-rule.md"
+        },
+        {
+          "source": "ensure-atomic-pr/files/discount-rule/status/discount-rule.diff.fixture",
+          "target": "status/discount-rule.diff"
+        }
+      ],
+      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "reference": "Keeps behavior, tests, and directly coupled documentation together as one purpose.",
+      "requiredSkills": ["ensure-atomic-pr"],
+      "turns": [],
+      "authorization": {
+        "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: In a mock repository, inspect `status/discount-rule.md` and `status/discount-rule.diff`, along with `src/pricing/discount.js`, `test/discount.test.js`, and `docs/pricing/discount-formula.md`. Assess this discount-rule change with its regression tests and its directly coupled formula doc update. Use the current working directory as the repository root. Do not modify files outside the provided output directory.",
+        "approvals": []
+      },
+      "outputSchema": null
+    },
+    "assert": [
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-000",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-000"],
+          "rubric": "Keeps regression tests with behavior."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-001",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-001"],
+          "rubric": "Keeps the coupled doc with behavior."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-002",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-002"],
+          "rubric": "Does not create tests-only or docs-only units."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-003",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-003"],
+          "rubric": "Frames the unit by logical purpose."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-004",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-004"],
+          "rubric": "Uses proportionate validation for the coupled behavior, tests and documentation without requiring a proposed-split or new acceptance-criteria block for an already atomic change."
+        }
+      }
+    ]
+  },
+  {
+    "description": "ensure-atomic-pr behavior case 5.",
+    "vars": {
+      "task": "Split a caching fix with refactor and tests plus an unrelated logging improvement with refactor and tests."
+    },
+    "metadata": {
+      "id": "ensure-atomic-pr/5",
+      "group": "ensure-atomic-pr",
+      "kind": "task",
+      "requirements": [
+        "expectation-000",
+        "expectation-001",
+        "expectation-002",
+        "expectation-003",
+        "expectation-004"
+      ],
+      "fixture": [],
+      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "reference": "Creates one unit per logical purpose, with each purpose's preparation and tests included.",
+      "requiredSkills": ["ensure-atomic-pr"],
+      "turns": [],
+      "authorization": {
+        "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: Split a caching fix with refactor and tests plus an unrelated logging improvement with refactor and tests.",
+        "approvals": []
+      },
+      "outputSchema": null
+    },
+    "assert": [
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-000",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-000"],
+          "rubric": "Creates caching and logging units."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-001",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-001"],
+          "rubric": "Keeps each unit's tests with it."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-002",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-002"],
+          "rubric": "Does not group all refactors together."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-003",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-003"],
+          "rubric": "Does not group all tests together."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-004",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-004"],
+          "rubric": "Keeps dependencies genuine."
+        }
+      }
+    ]
+  },
+  {
+    "description": "ensure-atomic-pr behavior case 6.",
+    "vars": {
+      "task": "Finalize the existing proposed three-unit split documented in status/proposed-split.md. That file is the authoritative supplied description of an already-authored mixed change and its current proposal; it is not a request to design a new feature or a new delivery sequence. The application source, diff and Git history are intentionally not present in this isolated workspace: assess only the recorded facts, without claiming to inspect missing code. For each proposed unit, provide its purpose, included/excluded concerns, genuine dependencies, concrete acceptance criteria, validation method and evidence or conditions for a healthy intermediate state. Give bounded recovery advice only. Answer inline; do not create files, run tests, stage, commit, create branches or contact external systems."
+    },
+    "metadata": {
+      "id": "ensure-atomic-pr/6",
+      "group": "ensure-atomic-pr",
+      "kind": "task",
+      "requirements": [
+        "expectation-000",
+        "expectation-001",
+        "expectation-002",
+        "expectation-003",
+        "expectation-004"
+      ],
+      "fixture": [
+        {
+          "source": "ensure-atomic-pr/files/proposed-split/status/proposed-split.md.fixture",
+          "target": "status/proposed-split.md"
+        }
+      ],
+      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "reference": "Finalizes the three supplied recovery units with concrete acceptance, existing validation methods, genuine independence and justified intermediate-health conditions, without inventing inspected source or passing tests.",
+      "requiredSkills": ["ensure-atomic-pr"],
+      "turns": [],
+      "authorization": {
+        "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: Finalize the existing proposed three-unit split documented in status/proposed-split.md. That file is the authoritative supplied description of an already-authored mixed change and its current proposal; it is not a request to design a new feature or a new delivery sequence. The application source, diff and Git history are intentionally not present in this isolated workspace: assess only the recorded facts, without claiming to inspect missing code. For each proposed unit, provide its purpose, included/excluded concerns, genuine dependencies, concrete acceptance criteria, validation method and evidence or conditions for a healthy intermediate state. Give bounded recovery advice only. Answer inline; do not create files, run tests, stage, commit, create branches or contact external systems.",
+        "approvals": []
+      },
+      "outputSchema": null
+    },
+    "assert": [
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-000",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-000"],
+          "rubric": "Every unit has concrete acceptance criteria."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-001",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-001"],
+          "rubric": "Every unit has validation."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-002",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-002"],
+          "rubric": "Every unit states intermediate-state safety."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-003",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-003"],
+          "rubric": "Every unit has one purpose."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-004",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-004"],
+          "rubric": "Dependencies are explicit."
+        }
+      }
+    ]
+  }
+]

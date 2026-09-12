@@ -1,0 +1,7 @@
+{
+  "phase": "implementation",
+  "approval": "approved",
+  "landing_mode": "working_tree",
+  "scope": "refresh expired sessions",
+  "next_item": "refresh expired sessions"
+}

@@ -1,0 +1,267 @@
+[
+  {
+    "description": "A scripted user clarification continues in the same native Codex thread.",
+    "vars": {
+      "task": "We will format a release label. The product is Atlas and the version is 2.3. First ask whether the label should include a channel. Do not guess, write files, run commands, or use subagents. After my answer, produce the final label."
+    },
+    "metadata": {
+      "id": "native/scripted-context",
+      "group": "native-interaction",
+      "kind": "task",
+      "requirements": ["clarified-label", "same-thread-continuation"],
+      "fixture": [],
+      "execution": {
+        "networkAccess": false,
+        "pathPrepend": [],
+        "executableFiles": []
+      },
+      "reference": "Ask for the channel, consume the declared user answer, and return Atlas 2.3 beta in the original native thread.",
+      "requiredSkills": [],
+      "turns": [
+        {
+          "when": "after-turn",
+          "match": "channel|通道",
+          "reply": "Include the channel beta. Return exactly: Atlas 2.3 beta"
+        }
+      ],
+      "authorization": {
+        "scope": "Conversation only. No file changes, commands, subagents, commits or external actions.",
+        "approvals": []
+      },
+      "outputSchema": null
+    },
+    "assert": [
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "clarified-label",
+        "config": {
+          "core": true,
+          "method": "programmatic",
+          "requirements": ["clarified-label"],
+          "rubric": "The final label uses the scripted answer.",
+          "rule": {
+            "type": "text-regex",
+            "pattern": "^Atlas 2\\.3 beta$",
+            "flags": "u"
+          }
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "same-thread",
+        "config": {
+          "core": true,
+          "method": "programmatic",
+          "requirements": ["same-thread-continuation"],
+          "rubric": "Two actual native turns belong to one native thread.",
+          "rule": {
+            "type": "native-conversation",
+            "turns": 2,
+            "threads": 1
+          }
+        }
+      }
+    ]
+  },
+  {
+    "description": "Execute an explicitly approved repair, verify it, and review its necessity.",
+    "vars": {
+      "task": "Use $execute-plan-loop for this approved plan: fix totalWithFee in amounts.js so the fee is added to the amount, then run the existing amounts.test.js with Node. Preserve the exported API. Use $anti-slop to check the resulting change before reporting. You may edit amounts.js and run local checks. Do not edit tests, add files, commit, or access the network. Return the change and actual validation result."
+    },
+    "metadata": {
+      "id": "native/verified-fix",
+      "group": "native-interaction",
+      "kind": "task",
+      "requirements": ["general-correctness", "execution-and-scope", "composition"],
+      "fixture": [
+        {
+          "source": "native/amounts.js.fixture",
+          "target": "amounts.js"
+        },
+        {
+          "source": "native/amounts.test.js.fixture",
+          "target": "amounts.test.js"
+        }
+      ],
+      "execution": {
+        "networkAccess": false,
+        "pathPrepend": [],
+        "executableFiles": []
+      },
+      "reference": "Execute an explicitly approved repair, verify it, and review its necessity.",
+      "requiredSkills": ["execute-plan-loop", "anti-slop"],
+      "turns": [],
+      "authorization": {
+        "scope": "Only amounts.js may change. Offline local tests and the requested evaluation of the patch are authorized. No commits or external actions.",
+        "approvals": []
+      },
+      "outputSchema": null
+    },
+    "assert": [
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "general-correctness",
+        "config": {
+          "core": true,
+          "method": "programmatic",
+          "requirements": ["general-correctness"],
+          "rubric": "The repaired function adds arbitrary numeric amount and fee inputs.",
+          "rule": {
+            "type": "command",
+            "command": [
+              "node",
+              "--input-type=module",
+              "-e",
+              "import {strict as assert} from \"node:assert\"; import {totalWithFee} from \"./amounts.js\"; for (const [amount,fee] of [[10,2],[0,4],[-3,1],[1.25,0.5],[5,0]]) assert.equal(totalWithFee(amount,fee),amount+fee); console.log(\"5 independent checks passed\");"
+            ],
+            "expectedExitCode": 0
+          }
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "execution-and-scope",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["execution-and-scope"],
+          "rubric": "Native tool evidence and artifacts support the requested implementation and actual test execution, preserve the test fixture, and show no unauthorized file edits or commit. The final report accurately describes the observed result."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "composition",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["composition"],
+          "rubric": "Evidence supports use of execute-plan-loop and anti-slop for the requested execution and final change review. Skill source reads are supporting path evidence, not sufficient alone: assess the actual execution and review behavior as well."
+        }
+      }
+    ]
+  },
+  {
+    "description": "A natural-language review request finds a concrete defect without modifying files.",
+    "vars": {
+      "task": "Review amounts.js for correctness. The contract is that totalWithFee returns the amount plus the fee. Give only consequential findings with a concrete example and source location. This is a read-only review; do not fix files, commit, or use the network."
+    },
+    "metadata": {
+      "id": "native/implicit-review",
+      "group": "native-interaction",
+      "kind": "task",
+      "requirements": ["concrete-finding", "read-only"],
+      "fixture": [
+        {
+          "source": "native/amounts.js.fixture",
+          "target": "amounts.js"
+        },
+        {
+          "source": "native/amounts.test.js.fixture",
+          "target": "amounts.test.js"
+        }
+      ],
+      "execution": {
+        "networkAccess": false,
+        "pathPrepend": [],
+        "executableFiles": []
+      },
+      "reference": "A natural-language review request finds a concrete defect without modifying files.",
+      "requiredSkills": [],
+      "turns": [],
+      "authorization": {
+        "scope": "Read-only correctness review. Local read-only inspection is authorized. No file edits or commits.",
+        "approvals": []
+      },
+      "outputSchema": null
+    },
+    "assert": [
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "concrete-finding",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["concrete-finding"],
+          "rubric": "Identifies subtraction instead of addition in amounts.js with a concrete wrong result (for example totalWithFee(10,2) gives 8 instead of 12) and a source location. No invented findings or unsupported validation claims."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "read-only",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["read-only"],
+          "rubric": "Native evidence and artifacts support a read-only review without file changes or commits."
+        }
+      }
+    ]
+  },
+  {
+    "description": "One native worker reads a fixture and returns an independently obtained answer.",
+    "vars": {
+      "task": "Assign exactly one ordinary_worker a read-only task: read numbers.txt and report its largest integer. Wait for its result, then return exactly \"Largest: 21\". Do not read numbers.txt yourself, modify files, run other tasks, or create additional workers."
+    },
+    "metadata": {
+      "id": "native/subagent-evidence",
+      "group": "native-interaction",
+      "kind": "task",
+      "requirements": ["answer", "native-worker"],
+      "fixture": [
+        {
+          "source": "native/numbers.txt.fixture",
+          "target": "numbers.txt"
+        }
+      ],
+      "execution": {
+        "networkAccess": false,
+        "pathPrepend": [],
+        "executableFiles": []
+      },
+      "reference": "One native worker reads a fixture and returns an independently obtained answer.",
+      "requiredSkills": [],
+      "turns": [],
+      "authorization": {
+        "scope": "One read-only ordinary_worker task is authorized. No edits, commits, extra workers or network.",
+        "approvals": []
+      },
+      "outputSchema": null
+    },
+    "assert": [
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "answer",
+        "config": {
+          "core": true,
+          "method": "programmatic",
+          "requirements": ["answer"],
+          "rubric": "The final answer reports the largest value.",
+          "rule": {
+            "type": "text-regex",
+            "pattern": "^Largest: 21$",
+            "flags": "u"
+          }
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "native-worker",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["native-worker"],
+          "rubric": "Native execution items show one actual worker assignment, a worker result based on reading numbers.txt, and the parent waiting for that result before reporting. The parent does not independently read the fixture. A claim of delegation without native evidence is insufficient."
+        }
+      }
+    ]
+  }
+]

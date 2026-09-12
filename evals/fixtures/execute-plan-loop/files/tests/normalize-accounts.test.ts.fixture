@@ -1,0 +1,7 @@
+import { normalizeAccount } from "../scripts/normalize-accounts";
+
+test("normalizes existing account email", () => {
+  expect(normalizeAccount({ email: " USER@EXAMPLE.COM " })).toEqual({
+    email: "user@example.com",
+  });
+});

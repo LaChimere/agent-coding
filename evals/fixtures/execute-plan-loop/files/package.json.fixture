@@ -1,0 +1,7 @@
+{
+  "private": true,
+  "scripts": {
+    "test:profile-import": "node --test tests/profile-import.test.js",
+    "test:password-reset": "node --test tests/password-reset.test.js tests/billing-scope.test.js"
+  }
+}

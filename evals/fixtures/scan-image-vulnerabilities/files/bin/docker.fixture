@@ -1,0 +1,51 @@
+#!/usr/bin/env bash
+# Hermetic Docker fixture shim.
+#
+# The evaluation environment deliberately has no Docker daemon: remote registry references
+# must be scannable without one. The client responds, every daemon operation fails the way
+# a missing daemon fails, and nothing ever reaches a socket or the network.
+set -uo pipefail
+
+log_dir="${SCAN_FIXTURE_CALL_LOG_DIR:-$PWD/.scan-fixture-calls}"
+mkdir -p "$log_dir" 2>/dev/null || true
+
+log_invocation() {
+  local argument redact_next=0
+  local -a logged=()
+  for argument in "$@"; do
+    if ((redact_next)); then
+      logged+=("<redacted>")
+      redact_next=0
+      continue
+    fi
+    case "$argument" in
+      --password|--token|--registry-token|--username|--kubeconfig)
+        logged+=("$argument")
+        redact_next=1
+        ;;
+      --password=*|--token=*|--registry-token=*|--username=*|--kubeconfig=*)
+        logged+=("${argument%%=*}=<redacted>")
+        ;;
+      *)
+        logged+=("$argument")
+        ;;
+    esac
+  done
+  {
+    printf 'docker'
+    printf ' %s' "${logged[@]}"
+    printf '\n'
+  } >>"$log_dir/docker.log" 2>/dev/null || true
+}
+
+log_invocation "$@"
+
+case "${1:-}" in
+  --version|-v)
+    echo "Docker version 27.0.3, build fixture"
+    exit 0
+    ;;
+esac
+
+echo "Cannot connect to the Docker daemon at unix:///var/run/docker.sock. Is the docker daemon running?" >&2
+exit 1

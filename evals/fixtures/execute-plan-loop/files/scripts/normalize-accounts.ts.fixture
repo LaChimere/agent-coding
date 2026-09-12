@@ -1,0 +1,7 @@
+export type Account = {
+  email: string;
+};
+
+export function normalizeAccount(account: Account): Account {
+  return account;
+}

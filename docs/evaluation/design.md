@@ -1,14 +1,12 @@
 # Codex Evaluation Framework Design
 
-> The repository owner approved the evaluation scope, framework, grading, interaction, and aggregation policies during the design discussion on 2026-09-11. This document incorporates those decisions and the subsequent requirement to use the Workflow design template in English. Integration assumptions remain unvalidated; design approval is separate from implementation authority and execution evidence.
+> The repository owner approved the evaluation scope, framework, grading, interaction, and aggregation policies during the design discussion on 2026-09-11. This document incorporates those decisions and the subsequent requirement to use the Workflow design template in English. Current implementation and qualification evidence is tracked in [the implementation plan](plan.md); design approval is separate from execution evidence.
 
 ## Background and problem
 
 The agent-coding repository distributes skills, plugins, and Codex configuration intended to improve coding work. Maintainers need to know whether a change helps Codex complete real tasks, preserves required behavior, and changes the time, token usage, or cost of doing the work. A plausible final response is insufficient: the agent can claim completion while leaving an invalid artifact, skipping required review, or exceeding its authorized scope.
 
-The current [skill eval harness](../../tools/skill-evals/README.md) provides corpus validation, static footprint analysis, input snapshots, execution requests, result import, grading, aggregation, and paired differences. Its commands are validate, footprint, prepare, import-results, and aggregate. It does not itself run Codex or install the candidate capabilities. Existing native evaluations rely on external execution scripts, as recorded in [coding orchestration validation](../coding-orchestration/validation.md).
-
-The central [evals directory](../../evals/) already separates cases, classification manifests, fixtures, and suites from distributed runtime content. That separation is valuable and should survive the refactor. The gap is a maintained workflow that connects those assets to actual Codex execution, complete evidence, independent grading, and interpretable resource measurements.
+Earlier evaluations used separate corpus tooling and external execution scripts, as recorded in [coding orchestration validation](../coding-orchestration/validation.md). The TypeScript/Bun project at [evals/](../../evals/) now connects the central cases and fixtures to actual Codex execution, complete evidence, independent grading, and interpretable resource measurements. Cases and fixtures remain separate from distributed runtime content.
 
 The current [Codex configuration](../../config/codex/config.toml) is a mergeable orchestration fragment, accompanied by instructions and role files. It preserves the user's provider, credentials, and primary model settings rather than specifying a complete standalone environment. Establishing the evaluation baseline therefore requires more than copying the current repository fragment into a temporary directory.
 
@@ -88,7 +86,7 @@ The main interfaces are between a selected case and its prepared environment, be
 
 These responsibilities do not require separate services or a generic module hierarchy. If one project command is needed to perform mandatory preparation, it composes the necessary operations and invokes the framework; it does not implement another case scheduler or grading engine.
 
-Promptfoo's [Codex App Server provider](https://www.promptfoo.dev/docs/providers/openai-codex-app-server/) is the first native route to validate because the project needs thread identity, permission requests, plugin behavior, and execution events. The documented provider is not proof that every required scenario already works. Concrete extension signatures and dependency versions follow the integration evidence.
+Promptfoo's [Codex App Server provider](https://www.promptfoo.dev/docs/providers/openai-codex-app-server/) was the first native route identified for integration because the project needs thread identity, permission requests, plugin behavior, and execution events. The implemented route uses Promptfoo's public provider interface with a repository adapter to native Codex App Server. This adapter supplies the case's prepared environment, scripted user responses and retained evidence; Codex still owns the agent loop and tools. Concrete qualification is recorded in [the acceptance report](acceptance.md), rather than inferred from the existence of a documented provider.
 
 ### Records and ownership
 
@@ -100,7 +98,9 @@ A grading record belongs to a trial but has its own identity, rubric version, mo
 
 A report fixes its trial manifest, grading definitions, selected grading-record identifiers for each trial and check, and resource-accounting scope. Selected records must belong to the referenced trial and match the report's grading definition. Selection follows a declared rule rather than choosing favorable verdicts. Applying a later grading record produces a new report or an explicit report version; an existing report never silently resolves its checks against the latest available grades.
 
-Generated records live under .skill-evals/ and retain references to their original inputs and evidence. Cases, suites, fixtures, rubrics, and reference materials stay in evals/. Project preparation, interaction, collection, and conversion code stays in tools/skill-evals/. This document and subsequent design or planning material belong in docs/evaluation/.
+New generated records live under evals/out/runs/ and retain references to their original inputs and evidence. Cases, suites, fixtures, rubrics, reference materials, and TypeScript preparation, interaction, collection, and reporting code belong to the evals/ subproject. Historical .skill-evals/ evidence retains its original meaning. This document and the implementation plan belong in docs/evaluation/.
+
+Each run uses its own local Promptfoo SQLite database for native exports. The owner approved this integration refinement after Promptfoo 0.123.0's JSON/HTML export path was observed querying SQLite even with persistence disabled. Project JSON records and original evidence remain authoritative; the database is an export aid, not a shared history store or service. Each run executes in a fresh process because Promptfoo caches its database connection.
 
 Distributed skills and plugins do not include the central evaluation corpus. The repository's contributor instructions are not a runtime dependency for downstream installations.
 
@@ -112,7 +112,7 @@ The import records its time, included scope, path transformations, and exclusion
 
 Each run freezes the actual participating content, including relevant uncommitted changes and new files, rather than relying on a Git commit alone. It records configuration, cases, fixtures, grading definitions, CLI versions, dependencies, and a content inventory. Unrelated generated output, caches, and credentials are excluded.
 
-Runtime content and evaluation material are frozen separately. The candidate receives only the fixture and runtime capabilities needed for its task. Hidden tests, rubrics, reference answers, and human labels are not made available through a mounted copy of the central corpus.
+Runtime content and evaluation material are frozen separately. The candidate receives the case fixture and the selected candidate's repository-owned runtime capabilities, subject to its configured activation. A case's required capabilities are prerequisites, not an instruction to hide other repository capabilities from trigger evaluation. Hidden tests, rubrics, reference answers, and human labels are not made available through a mounted copy of the central corpus.
 
 Each trial starts from an independent workspace and native conversation. Install standalone skills and complete plugins through their supported native mechanisms, and record source identity and actual discovery. An isolated CODEX_HOME is only one part of isolation: personal discovery paths, parent-directory instructions, plugin caches and registrations, and inherited environment can also affect behavior.
 
@@ -126,7 +126,7 @@ Each case states its objective and requirement mapping, initial prompt and fixtu
 
 Map this information to Promptfoo's cases, variables, assertions, and metadata rather than creating another configuration language. The case contract rejects missing requirements, duplicate identifiers, invalid references, and an empty core-criteria set that would otherwise pass automatically.
 
-Coverage includes explicit and implicit skill triggers, near misses, real task outcomes, scope and authorization, plugin combinations, role selection and handoffs, completion claims, and failure behavior. Migration retains a requirement-to-case mapping and explains which old cases are retained, rewritten, merged, or retired.
+Coverage includes explicit and implicit skill triggers, near misses, real task outcomes, scope and authorization, plugin combinations, role selection and handoffs, completion claims, and failure behavior. Each maintained case declares its own requirements and their grading criteria. The shared case loader validates those bindings, and the corpus inventory test rejects unused fixture payloads.
 
 Tool ordering is a constraint only when it is part of the behavior being tested. A valid alternative implementation is not a failure merely because it differs from a reference trajectory. For workflow skills, however, required clarification, review, authorization, and acceptance are themselves task requirements.
 
@@ -138,7 +138,7 @@ Unmatched requests preserve the current state without expanding permission. A pr
 
 Preparation must identify the inputs, establish the workspace, and make configuration and installation evidence available before candidate execution starts. During execution, evidence is retained incrementally so a failure or manual interruption does not erase the work already observed. Original artifacts are frozen before verification and grading.
 
-Mandatory execution conditions are prerequisites for a valid trial, not candidate-quality assertions. Preparation must establish them before launching the candidate; otherwise the trial is not run, with the unmet conditions and refusal reason recorded. This preserves the existing [execution-hint contract](../../tools/skill-evals/README.md#hermetic-execution-hints-an-adapter-must-honor-them-or-refuse-the-case), including required network isolation, fixture-tool PATH precedence, and executable fixture files. The ability to report an observation as unknown does not permit starting without these prerequisites. Preparation consumption remains recorded even when execution is refused.
+Mandatory execution conditions are prerequisites for a valid trial, not candidate-quality assertions. Preparation must establish them before launching the candidate; otherwise the trial is not run, with the unmet conditions and refusal reason recorded. These conditions include required network isolation, fixture-tool PATH precedence, and executable fixture files. The ability to report an observation as unknown does not permit starting without these prerequisites. Preparation consumption remains recorded even when execution is refused.
 
 Concurrency is finite, configurable, and recorded. Each concurrent trial retains independent mutable state; shared runtime or cache reuse must not mix configurations, workspaces, or conversations. Concurrency is an experimental condition rather than a resource budget.
 
@@ -149,6 +149,17 @@ Transport retries, Codex self-correction within a trial, and a whole-case rerun 
 A connection failure does not establish that a request never executed. Establish the original state before resubmission; otherwise preserve incomplete or unknown status. The initial system does not promise crash recovery without duplicated or omitted work.
 
 Manual interruption preserves available evidence. There is no overall task time or token budget. Explicit connection, startup, and protocol error-detection timeouts can still exist, but their purpose and effect must be recorded separately. A large finite task timeout is not unlimited execution.
+
+Interruption stops new candidate and grader work and signals owned operations.
+The batch waits for running callbacks to persist their terminal or incomplete
+records before exporting or aggregating resources. Ledger readers preserve the
+publication dependency between operations and their results or grades, and reject
+record identities or operation references that disagree with their run.
+Report reads check that the published record inventory is unchanged across the
+read and bind their accounting cutoff to that interval. A concurrent publication
+can make reporting refuse the read; a fresh report command is sufficient and
+must not trigger another candidate execution. Completion state and export links
+use the same observed inventory.
 
 ### Grading, evidence, and calibration
 
@@ -196,13 +207,21 @@ Input, output, cached, and reasoning token categories retain their provider-defi
 
 Cost estimates record the price source, version or date, currency, model mapping, and token assumptions. Actual charges require attributable provider evidence. Shared-account, subscription, or gateway charges that cannot be allocated reliably remain unknown. Local computation cost and model charges are distinct; initially, programmatic verification duration is recorded without inventing a price for local computation.
 
+The implementation ships a dated OpenAI Standard text-token reference price book
+inside `evals/`. New runs freeze it; older records can receive a new priced report
+without new candidate execution or rewritten history. Explicit price overrides
+create a new report. Unobserved service-tier, cache-write and request-context
+conditions keep the reference estimate partial and visible; cumulative thread
+usage must not select a per-request long-context price bracket. This implements
+the owner's 2026-09-12 pricing request without claiming actual gateway charges.
+
 Failures, incomplete work, retries, interruption, and grader errors retain consumption already incurred. Report candidate and grader costs separately before any coverage-qualified total. Efficiency comparisons show quality and measurement completeness alongside resource differences.
 
 Resource accounting is independent of verdict selection. The report identifies the execution and grading operations included in its accounting scope and counts each actual operation once, including failed or superseded grading attempts within that scope. It must not omit their consumption merely because their verdicts were not selected. Later grading operations remain recorded in their own scope and can be included in a new report; they do not retroactively change a saved report's totals.
 
 The report exposes run identity and conditions, scope and coverage, case and check verdicts, evidence links, errors, resource breakdowns, and explicit A/B differences. Promptfoo provides the primary local inspection and export workflow. Project reporting supplements only the missing state, evidence-index, or accounting semantics.
 
-### Comparison and migration direction
+### Comparison and corpus ownership
 
 An explicit A/B comparison holds the tested cases, fixtures, grading definitions, and judge configuration constant while declaring the intended candidate differences. Candidate models, roles, or permissions may themselves be experimental variables; requiring those settings to match would prevent the intended comparison.
 
@@ -210,11 +229,16 @@ Declare the pairing rule using case version, initial fixture and interaction con
 
 Paired quality differences use only pairs whose selected judgments are decidable on both sides. Each resource metric uses its own jointly valid pair set with matching units, measurement scope, and aggregation semantics; comparable quality groups are identified when interpreting efficiency. Report the eligible pair count, planned denominator, excluded observations and reasons for each comparison. If no eligible pairs exist, the paired difference is unavailable, not zero.
 
+Matching selected grader configuration is required for core criteria that define
+the case judgment. A missing or different diagnostic grade does not invalidate an
+otherwise decidable core-quality pair; diagnostic definitions remain part of the
+declared comparison conditions.
+
 Keep one-sided quality summaries and whole-run resource totals, including failed and unpaired work, alongside the paired view. They describe what happened on each side but must not automatically become paired improvement claims. For example, if A reports pass/fail/unknown and B reports pass/unknown/pass for the same three cases, their one-sided decidable pass rates are 50% and 100%, but the only jointly decidable pair is unchanged. Equal coverage percentages do not establish equal observation sets.
 
 If only grading rules or grading configuration change, both sides can be regraded with the same version when saved evidence is sufficient. If task inputs, fixtures, interaction conditions, or authorization change, old records are not execution evidence for the revised case. Mark them as not directly comparable or explicitly execute the revised case. Relabeling historical output cannot produce new experimental evidence.
 
-The migration preserves the existing separation between runtime content and the central corpus, along with the meaning of historical evidence. It replaces the current external-runner and import arrangement only after the new path can execute representative requirements and account for its results. Old cases and callers are mapped to their intended behavior before being replaced or removed.
+The maintained corpus consists of the case files under evals/cases/ and their referenced payloads under evals/fixtures/. Each case directly declares its requirements, criteria, execution conditions and fixture bindings. Tests validate that corpus and reject unused fixture payloads. Import maps, transition aliases and migration-specific checks are not part of the maintained implementation. Historical reports retain their original case identities and frozen inputs; changing current case identities does not rewrite earlier observations or make them eligible for regrading against different inputs.
 
 Claude/Copilot effectiveness runners can be retired while retaining their required adaptation checks. Old JSON formats are not a permanent compatibility requirement. Detailed delivery slices, verification commands, and execution progress belong in the implementation plan rather than this design.
 
@@ -252,11 +276,11 @@ Preserving raw evidence and grading versions adds storage and bookkeeping. It en
 
 ## Risks and open questions
 
-No product-policy question remains open. Planning can proceed with the agreed scope and the assumption that Promptfoo's native integration can carry the essential execution path. The following implementation assumptions must be resolved before depending on them for migration or acceptance.
+No product-policy question remains open. The implementation has completed the qualifications recorded in [the acceptance report](acceptance.md). The following risks remain relevant when changing runtime integration, case inputs or grading contracts.
 
 | Risk or assumption | Impact and resolution direction |
 | --- | --- |
-| Native provider fidelity | Same-thread turns, scripted replies, approvals, event retention, and terminal states may need project integration. Confirm the concrete extension points; revisit scope if a required capability would demand a materially different runtime. |
+| Native provider fidelity | Runtime upgrades must preserve qualified same-thread turns, scripted replies, approvals, event retention and terminal states. Recheck affected native capabilities before relying on a changed runtime. |
 | Baseline and authentication isolation | The configuration fragment is incomplete, and isolated configuration does not by itself exclude personal skills or instructions. Establish effective configuration and discovery while keeping credentials outside snapshots. |
 | Judge availability | The chosen model and high reasoning setting must work through the selected API or Codex route. Verify actual identity and parameters; do not silently substitute another judge. |
 | Evidence independence | Candidate files may be loaded as grader instructions, or verification may mutate artifacts. Separate grader startup context from evidence and preserve immutable originals with writable verification copies where needed. |
@@ -265,6 +289,6 @@ No product-policy question remains open. Planning can proceed with the agreed sc
 | Regrading sufficiency | A new rubric may need evidence that was never captured. Preserve unknown results and require explicit new execution when the task or its conditions change. |
 | Grader calibration | Strong models can still disagree with intended criteria or cite insufficient evidence. Use human-labeled cases and known correct and incorrect artifacts to refine the grading contract. |
 | Concurrency and interruption | Shared state or uncertain request completion can contaminate trials or duplicate work. Validate isolation and failure handling under the selected concurrency; preserve incomplete records when recovery is uncertain. |
-| Migration coverage | Mechanical format conversion may drop behavioral requirements, mandatory execution conditions, or a caller still needed for adaptation checks. Preserve the requirement mapping and proof-or-refusal rule, and retain historical evidence without changing its meaning. |
+| Corpus coverage | Case edits may omit behavioral requirements, mandatory execution conditions or adaptation checks. Validate the requirements and criteria declared in each case, check fixture usage, and preserve the proof-or-refusal rule. |
 
-These are questions for targeted integration work, not reasons to reopen the design questionnaire. Exact framework versions, hook signatures, concurrency values, command entry points, and verification procedures can be specified in the implementation plan as evidence becomes available. A demonstrated need to expand scope, change agreed behavior, or accept substantial new maintenance cost requires an explicit design revision.
+Current tooling versions and commands are documented in [the evaluation guide](../../evals/README.md); qualification results and limits are recorded in [the acceptance report](acceptance.md). Recheck affected behavior when those conditions change. Expanding scope, changing agreed behavior or accepting substantial new maintenance cost requires an explicit design revision.

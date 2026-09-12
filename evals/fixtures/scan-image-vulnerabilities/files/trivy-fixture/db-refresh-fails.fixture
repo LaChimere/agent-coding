@@ -1,0 +1,5 @@
+2026-07-28T00:00:00Z INFO Need to update DB
+2026-07-28T00:00:00Z INFO Downloading vulnerability DB...
+2026-07-28T00:00:00Z FATAL Fatal error init error: DB error: failed to download vulnerability DB:
+  OCI repository error: 1 error occurred:
+    * GET https://mirror.gcr.io/v2/aquasecurity/trivy-db/manifests/2: TOOMANYREQUESTS: retry budget exhausted (denied: pull rate limit exceeded)

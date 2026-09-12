@@ -1,0 +1,470 @@
+[
+  {
+    "description": "routing classification workflow-refinement/small-edit.",
+    "vars": {
+      "task": "Classify the exact incoming request below. Return which installed skills should handle it and why. Do not execute the described task, modify files, call external systems, or create artifacts.\n\nIncoming request:\nFix this one obvious typo in the named README line; no plan or commit."
+    },
+    "metadata": {
+      "id": "suite/workflow-refinement/small-edit",
+      "group": "suite:workflow-refinement",
+      "kind": "routing",
+      "requirements": ["route-answer", "expectation-000"],
+      "fixture": [],
+      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "reference": "",
+      "requiredSkills": [],
+      "turns": [],
+      "authorization": {
+        "scope": "Classification only: identify the installed skills that should handle the incoming request; do not execute it, modify files, or create artifacts.",
+        "approvals": []
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "skills": { "type": "array", "items": { "type": "string" } },
+          "reason": { "type": "string" }
+        },
+        "required": ["skills", "reason"]
+      }
+    },
+    "assert": [
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "route-answer",
+        "config": {
+          "core": true,
+          "method": "programmatic",
+          "requirements": ["route-answer"],
+          "rubric": "The classification answer names the expected installed route and excludes forbidden routes; this checks the answer contract, not actual skill invocation.",
+          "rule": {
+            "type": "route",
+            "expected": [],
+            "forbidden": ["workflow-orchestrator", "plan-parallel-work"]
+          }
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-001",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-000"],
+          "rubric": "This is a routing-only classification case. Assess whether the selected route and rationale identify how the downstream skill should handle the requirement below. Do not require actual task execution, file edits, scans, reviews, or tool calls in this classification answer. Requirement: Use only the route required by the stated task; no custom goal, extra gate or implementation outside scope."
+        }
+      }
+    ]
+  },
+  {
+    "description": "routing classification workflow-refinement/single-step-code-edit.",
+    "vars": {
+      "task": "Classify the exact incoming request below. Return which installed skills should handle it and why. Do not execute the described task, modify files, call external systems, or create artifacts.\n\nIncoming request:\nIn this repository, change the greeting prefix in src/greeting.js from Hello to Hi, preserving interpolation of the supplied name. The existing test/greeting.test.js already expects the new prefix. Make this one change and run node --test test/greeting.test.js. No plan, commit or other behavior change is needed."
+    },
+    "metadata": {
+      "id": "suite/workflow-refinement/single-step-code-edit",
+      "group": "suite:workflow-refinement",
+      "kind": "routing",
+      "requirements": ["route-answer", "expectation-000"],
+      "fixture": [],
+      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "reference": "",
+      "requiredSkills": [],
+      "turns": [],
+      "authorization": {
+        "scope": "Classification only: identify the installed skills that should handle the incoming request; do not execute it, modify files, or create artifacts.",
+        "approvals": []
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "skills": { "type": "array", "items": { "type": "string" } },
+          "reason": { "type": "string" }
+        },
+        "required": ["skills", "reason"]
+      }
+    },
+    "assert": [
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "route-answer",
+        "config": {
+          "core": true,
+          "method": "programmatic",
+          "requirements": ["route-answer"],
+          "rubric": "The classification answer names the expected installed route and excludes forbidden routes; this checks the answer contract, not actual skill invocation.",
+          "rule": {
+            "type": "route",
+            "expected": [],
+            "forbidden": ["execute-plan-loop", "workflow-orchestrator", "plan-parallel-work"]
+          }
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-001",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-000"],
+          "rubric": "This is a routing-only classification case. Assess whether the selected route and rationale identify how the downstream skill should handle the requirement below. Do not require actual task execution, file edits, scans, reviews, or tool calls in this classification answer. Requirement: Handle the explicitly authorized one-step repository change directly; do not load an execution workflow merely because implementation and a targeted check are requested."
+        }
+      }
+    ]
+  },
+  {
+    "description": "routing classification workflow-refinement/single-worktree.",
+    "vars": {
+      "task": "Classify the exact incoming request below. Return which installed skills should handle it and why. Do not execute the described task, modify files, call external systems, or create artifacts.\n\nIncoming request:\nCreate one local worktree and branch from the current HEAD, do not implement anything."
+    },
+    "metadata": {
+      "id": "suite/workflow-refinement/single-worktree",
+      "group": "suite:workflow-refinement",
+      "kind": "routing",
+      "requirements": ["route-answer", "expectation-000"],
+      "fixture": [],
+      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "reference": "",
+      "requiredSkills": [],
+      "turns": [],
+      "authorization": {
+        "scope": "Classification only: identify the installed skills that should handle the incoming request; do not execute it, modify files, or create artifacts.",
+        "approvals": []
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "skills": { "type": "array", "items": { "type": "string" } },
+          "reason": { "type": "string" }
+        },
+        "required": ["skills", "reason"]
+      }
+    },
+    "assert": [
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "route-answer",
+        "config": {
+          "core": true,
+          "method": "programmatic",
+          "requirements": ["route-answer"],
+          "rubric": "The classification answer names the expected installed route and excludes forbidden routes; this checks the answer contract, not actual skill invocation.",
+          "rule": {
+            "type": "route",
+            "expected": [],
+            "forbidden": ["workflow-orchestrator", "plan-parallel-work"]
+          }
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-001",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-000"],
+          "rubric": "This is a routing-only classification case. Assess whether the selected route and rationale identify how the downstream skill should handle the requirement below. Do not require actual task execution, file edits, scans, reviews, or tool calls in this classification answer. Requirement: Use only the route required by the stated task; no custom goal, extra gate or implementation outside scope."
+        }
+      }
+    ]
+  },
+  {
+    "description": "routing classification workflow-refinement/parallel-research.",
+    "vars": {
+      "task": "Classify the exact incoming request below. Return which installed skills should handle it and why. Do not execute the described task, modify files, call external systems, or create artifacts.\n\nIncoming request:\nRun independent research and review in parallel; no implementation writes are planned."
+    },
+    "metadata": {
+      "id": "suite/workflow-refinement/parallel-research",
+      "group": "suite:workflow-refinement",
+      "kind": "routing",
+      "requirements": ["route-answer", "expectation-000"],
+      "fixture": [],
+      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "reference": "",
+      "requiredSkills": [],
+      "turns": [],
+      "authorization": {
+        "scope": "Classification only: identify the installed skills that should handle the incoming request; do not execute it, modify files, or create artifacts.",
+        "approvals": []
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "skills": { "type": "array", "items": { "type": "string" } },
+          "reason": { "type": "string" }
+        },
+        "required": ["skills", "reason"]
+      }
+    },
+    "assert": [
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "route-answer",
+        "config": {
+          "core": true,
+          "method": "programmatic",
+          "requirements": ["route-answer"],
+          "rubric": "The classification answer names the expected installed route and excludes forbidden routes; this checks the answer contract, not actual skill invocation.",
+          "rule": { "type": "route", "expected": [], "forbidden": ["plan-parallel-work"] }
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-001",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-000"],
+          "rubric": "This is a routing-only classification case. Assess whether the selected route and rationale identify how the downstream skill should handle the requirement below. Do not require actual task execution, file edits, scans, reviews, or tool calls in this classification answer. Requirement: Use only the route required by the stated task; no custom goal, extra gate or implementation outside scope."
+        }
+      }
+    ]
+  },
+  {
+    "description": "routing classification workflow-refinement/approved-native-implementation.",
+    "vars": {
+      "task": "Classify the exact incoming request below. Return which installed skills should handle it and why. Do not execute the described task, modify files, call external systems, or create artifacts.\n\nIncoming request:\nImplement the native proposal I just approved; its scope, acceptance and working_tree landing are clear, but no handoff file exists."
+    },
+    "metadata": {
+      "id": "suite/workflow-refinement/approved-native-implementation",
+      "group": "suite:workflow-refinement",
+      "kind": "routing",
+      "requirements": ["route-answer", "expectation-000"],
+      "fixture": [],
+      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "reference": "",
+      "requiredSkills": [],
+      "turns": [],
+      "authorization": {
+        "scope": "Classification only: identify the installed skills that should handle the incoming request; do not execute it, modify files, or create artifacts.",
+        "approvals": []
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "skills": { "type": "array", "items": { "type": "string" } },
+          "reason": { "type": "string" }
+        },
+        "required": ["skills", "reason"]
+      }
+    },
+    "assert": [
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "route-answer",
+        "config": {
+          "core": true,
+          "method": "programmatic",
+          "requirements": ["route-answer"],
+          "rubric": "The classification answer names the expected installed route and excludes forbidden routes; this checks the answer contract, not actual skill invocation.",
+          "rule": {
+            "type": "route",
+            "expected": ["execute-plan-loop"],
+            "forbidden": ["workflow-orchestrator"]
+          }
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-001",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-000"],
+          "rubric": "This is a routing-only classification case. Assess whether the selected route and rationale identify how the downstream skill should handle the requirement below. Do not require actual task execution, file edits, scans, reviews, or tool calls in this classification answer. Requirement: Use only the route required by the stated task; no custom goal, extra gate or implementation outside scope."
+        }
+      }
+    ]
+  },
+  {
+    "description": "routing classification workflow-refinement/parallel-gap.",
+    "vars": {
+      "task": "Classify the exact incoming request below. Return which installed skills should handle it and why. Do not execute the described task, modify files, call external systems, or create artifacts.\n\nIncoming request:\nTwo simultaneous implementation tasks are agreed. Supplement only missing shared-file ownership in the overall approved plan."
+    },
+    "metadata": {
+      "id": "suite/workflow-refinement/parallel-gap",
+      "group": "suite:workflow-refinement",
+      "kind": "routing",
+      "requirements": ["route-answer", "expectation-000"],
+      "fixture": [],
+      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "reference": "",
+      "requiredSkills": [],
+      "turns": [],
+      "authorization": {
+        "scope": "Classification only: identify the installed skills that should handle the incoming request; do not execute it, modify files, or create artifacts.",
+        "approvals": []
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "skills": { "type": "array", "items": { "type": "string" } },
+          "reason": { "type": "string" }
+        },
+        "required": ["skills", "reason"]
+      }
+    },
+    "assert": [
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "route-answer",
+        "config": {
+          "core": true,
+          "method": "programmatic",
+          "requirements": ["route-answer"],
+          "rubric": "The classification answer names the expected installed route and excludes forbidden routes; this checks the answer contract, not actual skill invocation.",
+          "rule": {
+            "type": "route",
+            "expected": ["plan-parallel-work"],
+            "forbidden": ["decompose-feature", "workflow-orchestrator"]
+          }
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-001",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-000"],
+          "rubric": "This is a routing-only classification case. Assess whether the selected route and rationale identify how the downstream skill should handle the requirement below. Do not require actual task execution, file edits, scans, reviews, or tool calls in this classification answer. Requirement: Use only the route required by the stated task; no custom goal, extra gate or implementation outside scope."
+        }
+      }
+    ]
+  },
+  {
+    "description": "routing classification workflow-refinement/native-goal-status.",
+    "vars": {
+      "task": "Classify the exact incoming request below. Return which installed skills should handle it and why. Do not execute the described task, modify files, call external systems, or create artifacts.\n\nIncoming request:\nReport the current host-native goal status only, without modifying repository files."
+    },
+    "metadata": {
+      "id": "suite/workflow-refinement/native-goal-status",
+      "group": "suite:workflow-refinement",
+      "kind": "routing",
+      "requirements": ["route-answer", "expectation-000"],
+      "fixture": [],
+      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "reference": "",
+      "requiredSkills": [],
+      "turns": [],
+      "authorization": {
+        "scope": "Classification only: identify the installed skills that should handle the incoming request; do not execute it, modify files, or create artifacts.",
+        "approvals": []
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "skills": { "type": "array", "items": { "type": "string" } },
+          "reason": { "type": "string" }
+        },
+        "required": ["skills", "reason"]
+      }
+    },
+    "assert": [
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "route-answer",
+        "config": {
+          "core": true,
+          "method": "programmatic",
+          "requirements": ["route-answer"],
+          "rubric": "The classification answer names the expected installed route and excludes forbidden routes; this checks the answer contract, not actual skill invocation.",
+          "rule": {
+            "type": "route",
+            "expected": [],
+            "forbidden": ["execute-plan-loop", "workflow-orchestrator"]
+          }
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-001",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-000"],
+          "rubric": "This is a routing-only classification case. Assess whether the selected route and rationale identify how the downstream skill should handle the requirement below. Do not require actual task execution, file edits, scans, reviews, or tool calls in this classification answer. Requirement: Use only the route required by the stated task; no custom goal, extra gate or implementation outside scope."
+        }
+      }
+    ]
+  },
+  {
+    "description": "routing classification workflow-refinement/parallel-one-result.",
+    "vars": {
+      "task": "Classify the exact incoming request below. Return which installed skills should handle it and why. Do not execute the described task, modify files, call external systems, or create artifacts.\n\nIncoming request:\nPlan isolated simultaneous work for two disjoint tasks from existing stable tag v1.0, integrating into one PR; no delivery decomposition needed."
+    },
+    "metadata": {
+      "id": "suite/workflow-refinement/parallel-one-result",
+      "group": "suite:workflow-refinement",
+      "kind": "routing",
+      "requirements": ["route-answer", "expectation-000"],
+      "fixture": [],
+      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "reference": "",
+      "requiredSkills": [],
+      "turns": [],
+      "authorization": {
+        "scope": "Classification only: identify the installed skills that should handle the incoming request; do not execute it, modify files, or create artifacts.",
+        "approvals": []
+      },
+      "outputSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "skills": { "type": "array", "items": { "type": "string" } },
+          "reason": { "type": "string" }
+        },
+        "required": ["skills", "reason"]
+      }
+    },
+    "assert": [
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "route-answer",
+        "config": {
+          "core": true,
+          "method": "programmatic",
+          "requirements": ["route-answer"],
+          "rubric": "The classification answer names the expected installed route and excludes forbidden routes; this checks the answer contract, not actual skill invocation.",
+          "rule": {
+            "type": "route",
+            "expected": ["plan-parallel-work"],
+            "forbidden": ["decompose-feature"]
+          }
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "criterion-001",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["expectation-000"],
+          "rubric": "This is a routing-only classification case. Assess whether the selected route and rationale identify how the downstream skill should handle the requirement below. Do not require actual task execution, file edits, scans, reviews, or tool calls in this classification answer. Requirement: Use only the route required by the stated task; no custom goal, extra gate or implementation outside scope."
+        }
+      }
+    ]
+  }
+]

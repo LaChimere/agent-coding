@@ -1,0 +1,13 @@
+import test from "node:test";
+import assert from "node:assert/strict";
+import { fetchCompatibleUser } from "../src/compat/user-compat-adapter.js";
+
+test("keeps the existing user entry point during the v3 migration", async () => {
+  const originalRequest = globalThis.request;
+  globalThis.request = async (path) => ({ path });
+  try {
+    assert.deepEqual(await fetchCompatibleUser("42"), { path: "/users/42" });
+  } finally {
+    globalThis.request = originalRequest;
+  }
+});

@@ -1,0 +1,9 @@
+diff --git a/src/payments.js b/src/payments.js
+new file mode 100644
+index 0000000..f400001
+--- /dev/null
++++ b/src/payments.js
+@@ -0,0 +1,3 @@
++export async function charge(operationId, attemptId, gateway) {
++  return gateway.charge({ operationId, idempotencyKey: attemptId });
++}

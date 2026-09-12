@@ -1,0 +1,1 @@
+M src/internal/format-helpers.ts (renamed private helper: normalizeWhitespace -> collapseSpaces)
