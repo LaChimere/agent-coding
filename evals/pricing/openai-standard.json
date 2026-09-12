@@ -1,0 +1,29 @@
+{
+  "source": "OpenAI API Standard text-token reference prices",
+  "version": "2026-09-12",
+  "currency": "USD",
+  "references": [
+    "https://developers.openai.com/api/docs/models/gpt-6-astra",
+    "https://developers.openai.com/api/docs/models/gpt-5.6-sol",
+    "https://developers.openai.com/api/docs/models/gpt-5.6-luna"
+  ],
+  "assumptions": [
+    "Rates are USD per one million text tokens, checked against the official model pages on 2026-09-12. Model names map explicitly; there is no guessed alias or fallback price.",
+    "Reference scenario: Standard service and at most 272000 input tokens per request. Cached input is priced as a cache read; the remaining input uses the uncached rate. Reasoning tokens are already included in output.",
+    "This is an OpenAI API reference estimate, not a charge from the configured gateway or subscription. Local computation and separate tool charges are excluded."
+  ],
+  "uncertainties": [
+    "Saved usage does not establish every request's service tier, long-context bracket or cache-write quantity. Standard/base-context reference rates are assumed; thread-cumulative input is never treated as one request's context length.",
+    "The official pages apply higher rates above 272000 request input tokens and a 1.25x uncached-input rate for cache writes; Batch/Flex and Fast modes have different multipliers. These unobserved adjustments are not included, so the reference estimate is partial and not a guaranteed lower bound."
+  ],
+  "rates": {
+    "gpt-6-astra": { "input": 10, "cachedInput": 1, "output": 50 },
+    "gpt-5.6-sol": { "input": 4, "cachedInput": 0.4, "output": 20 },
+    "gpt-5.6-luna": { "input": 0.2, "cachedInput": 0.02, "output": 1.2 }
+  },
+  "modelMapping": {
+    "gpt-6-astra": "gpt-6-astra",
+    "gpt-5.6-sol": "gpt-5.6-sol",
+    "gpt-5.6-luna": "gpt-5.6-luna"
+  }
+}
