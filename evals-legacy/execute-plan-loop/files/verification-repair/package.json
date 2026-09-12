@@ -1,6 +1,0 @@
-{
-  "scripts": {
-    "test": "vitest run",
-    "test:auth": "vitest run src/auth"
-  }
-}

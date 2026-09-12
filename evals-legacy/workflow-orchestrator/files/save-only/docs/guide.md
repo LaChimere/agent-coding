@@ -1,3 +1,0 @@
-# Guide
-
-Timeout is configurable.

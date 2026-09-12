@@ -1,5 +1,0 @@
-diff --git a/src/value.js b/src/value.js
---- /dev/null
-+++ b/src/value.js
-@@ -0,0 +1 @@
-+exports.normalize = value => String(value).trim();

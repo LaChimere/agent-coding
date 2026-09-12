@@ -1,1 +1,0 @@
-exports.pendingLabel = () => 'pending';

@@ -1,8 +1,0 @@
-{
-  "name": "sample-app",
-  "scripts": {
-    "test": "jest",
-    "lint": "eslint .",
-    "verify": "npm run lint && npm test"
-  }
-}

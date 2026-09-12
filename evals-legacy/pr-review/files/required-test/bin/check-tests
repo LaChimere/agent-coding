@@ -1,3 +1,0 @@
-#!/usr/bin/env bash
-set -euo pipefail
-printf '2 arithmetic tests passed\n'
