@@ -1,0 +1,28 @@
+{
+  "codexExecutable": "~/.local/bin/codex",
+  "toolReadPaths": [
+    "/opt/homebrew/Cellar",
+    "/opt/homebrew/bin",
+    "/opt/homebrew/opt",
+    "/opt/homebrew/lib/node_modules",
+    "/opt/homebrew/etc/openssl@3/openssl.cnf",
+    "/Library/Frameworks/Python.framework"
+  ],
+  "tools": [
+    { "name": "bun", "executable": "bun", "probe": ["--version"] },
+    { "name": "node", "executable": "node", "probe": ["--version"] },
+    { "name": "npm", "executable": "npm", "probe": ["--version"] },
+    { "name": "git", "executable": "git", "probe": ["--version"] },
+    { "name": "python3", "executable": "python3", "probe": ["--version"] },
+    { "name": "uv", "executable": "uv", "probe": ["--version"] }
+  ],
+  "authentication": [
+    {
+      "environment": "GITHUB_COPILOT_API_KEY",
+      "jsonFile": {
+        "path": "~/.local/share/copilot-api/config.json",
+        "pointer": "/auth/apiKeys/0"
+      }
+    }
+  ]
+}

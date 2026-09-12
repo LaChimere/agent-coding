@@ -1,0 +1,42 @@
+model = "gpt-6-astra"
+model_provider = "copilot_api"
+model_reasoning_effort = "xhigh"
+model_reasoning_summary = "concise"
+personality = "pragmatic"
+web_search = "live"
+service_tier = "default"
+plan_mode_reasoning_effort = "xhigh"
+approval_policy = "on-request"
+approvals_reviewer = "auto_review"
+sandbox_mode = "workspace-write"
+
+[sandbox_workspace_write]
+network_access = true
+
+[agents]
+enabled = true
+max_concurrent_threads_per_session = 8
+default_subagent_model = "gpt-5.6-luna"
+default_subagent_reasoning_effort = "max"
+
+[shell_environment_policy]
+inherit = "core"
+
+[model_providers.copilot_api]
+name = "OpenAI"
+base_url = "http://127.0.0.1:4141/v1"
+env_key = "GITHUB_COPILOT_API_KEY"
+requires_openai_auth = true
+supports_websockets = false
+wire_api = "responses"
+request_max_retries = 10
+stream_max_retries = 10
+
+[model_providers.copilot_api.http_headers]
+User-Agent = "codex_cli_rs/0.153.4"
+
+[plugins."pr-review@agent-coding"]
+enabled = true
+
+[plugins."workflow@agent-coding"]
+enabled = true
