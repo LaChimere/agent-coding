@@ -23,7 +23,6 @@ skills-lock.json
 # Python and tool caches
 __pycache__/
 *.py[codz]
-tools/skill-evals/.venv/
 .pytest_cache/
 .ruff_cache/
 

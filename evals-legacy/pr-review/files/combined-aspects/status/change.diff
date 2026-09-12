@@ -1,6 +1,0 @@
-diff --git a/src/import.js b/src/import.js
---- a/src/import.js
-+++ b/src/import.js
-@@ -1 +1 @@
--exports.importProfile = text => JSON.parse(text);
-+exports.importProfile = text => { try { return JSON.parse(text); } catch { return {}; } };

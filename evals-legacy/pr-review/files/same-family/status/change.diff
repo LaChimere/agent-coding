@@ -1,6 +1,0 @@
-diff --git a/src/value.js b/src/value.js
---- a/src/value.js
-+++ b/src/value.js
-@@ -1 +1 @@
--exports.parse = text => JSON.parse(text);
-+exports.parse = text => { try { return JSON.parse(text); } catch { return {}; } };
