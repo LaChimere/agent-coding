@@ -9,10 +9,14 @@ A case specifies a task and its checks. A trial is one fresh Codex execution of
 that case; fixture files establish its starting workspace. Regrading adds a new
 judgment of saved evidence, not another trial.
 
-The [design](../docs/evaluation/design.md) defines the contract. The
-[implementation plan](../docs/evaluation/plan.md) records acceptance progress.
-The [acceptance report](../docs/evaluation/acceptance.md) records qualifications,
-explicit execution/regrading selections, observed quality and measured resources.
+The [framework design](../docs/evaluation/design.md) and
+[refinement design](../docs/evaluation/refinement-design.md) define the contract.
+The [refinement implementation plan](../docs/evaluation/refinement-plan.md) records
+current implementation progress. The [coverage map](../docs/evaluation/refinement-coverage.md)
+and [refinement acceptance report](../docs/evaluation/refinement-acceptance.md)
+record required capabilities, checks and qualification status. The original framework
+[plan](../docs/evaluation/plan.md) and [acceptance](../docs/evaluation/acceptance.md)
+are historical records, not qualification of the refined corpus.
 
 ## Setup
 
@@ -207,10 +211,11 @@ Reports separate ordinary outcomes from skill mechanisms and summarize planning,
 implementation, review and documentation. Requirement coverage links checks to
 observed evidence; diagnostic-only checks do not qualify a required capability.
 
-The owner-confirmed calibration examples cover complete and missing capture,
-concise correct results, wrong routes, valid alternatives, authority boundaries,
-worker evidence and unsupported completion claims across both model methods.
-Agreement on this finite set does not establish accuracy for every domain rubric.
+The original six owner-confirmed calibration observations cover three samples
+across both model methods. The refinement adds representative positive, negative,
+alternative and insufficient-evidence examples; their confirmation and actual
+calibration status are recorded in the refinement plan. Agreement on a finite
+calibration set does not establish the accuracy of every domain rubric.
 Review disagreements and add representative human-labeled examples as criteria evolve.
 Each calibration run freezes its price snapshot and records grader time, tokens
 and estimated cost. Calibration does not add candidate execution samples.

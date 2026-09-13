@@ -1,5 +1,12 @@
 # Codex Evaluation Acceptance
 
+> Historical framework record, qualified on 2026-09-12. Counts, commands and
+> acceptance statements below describe that recorded version. Current refinement
+> work and qualification are tracked in [refinement-plan.md](refinement-plan.md);
+> this document does not establish the new baseline.
+> Generated-evidence links refer to the original evaluation workspace and may be
+> absent from a fresh checkout; the archived evidence is not recreated by Git.
+
 Updated 2026-09-12. The framework is accepted for local atomic-commit delivery against
 [the design](design.md). Current local verification is complete. Native results
 below belong to their recorded, pre-cleanup inputs; they are not a full model

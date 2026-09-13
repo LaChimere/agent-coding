@@ -1,5 +1,10 @@
 # Codex Evaluation Implementation Plan
 
+> Historical framework record, qualified on 2026-09-12. Counts, commands and
+> acceptance statements below describe that recorded version. Current refinement
+> work and qualification are tracked in [refinement-plan.md](refinement-plan.md);
+> this document does not establish the new baseline.
+
 Updated 2026-09-12. Implementation, local acceptance and the owner's renewed
 comprehensive review and refinement are complete.
 Delivery uses local atomic commits on `lachimere/refactor-eval`, authorized by
