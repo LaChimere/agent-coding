@@ -1,0 +1,298 @@
+[
+  {
+    "description": "A configured complex worker performs a bounded read-only diagnosis.",
+    "vars": {
+      "task": "Assign exactly one configured complex_worker a read-only diagnosis of the supplied totalWithFee change. The worker must inspect src/total.js, test/total.test.js and status/attempts.md, return the evidence and next bounded action, and stop without editing files, spawning descendants or claiming final acceptance."
+    },
+    "metadata": {
+      "id": "role-probes/complex-worker",
+      "group": "role-probes",
+      "kind": "task",
+      "assessment": "mechanism",
+      "workFamily": null,
+      "provenance": {
+        "source": "docs/coding-orchestration/design.md",
+        "group": "configured-role-mechanism"
+      },
+      "requirements": [
+        {
+          "id": "complex-role-invocation",
+          "capability": "delegation",
+          "authority": "Frozen case role-probes/complex-worker and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/execute-plan-loop/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "complex-role-boundary",
+          "capability": "skill-mechanism",
+          "authority": "Frozen case role-probes/complex-worker and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/execute-plan-loop/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The immutable artifact snapshot, initial fixtures, and recorded native actions."
+        }
+      ],
+      "fixture": [
+        {
+          "source": "refinement-probes/files/role-repair/src/total.js.fixture",
+          "target": "src/total.js"
+        },
+        {
+          "source": "refinement-probes/files/role-repair/test/total.test.js.fixture",
+          "target": "test/total.test.js"
+        },
+        {
+          "source": "refinement-probes/files/role-repair/status/attempts.md.fixture",
+          "target": "status/attempts.md"
+        }
+      ],
+      "execution": {
+        "networkAccess": false,
+        "pathPrepend": [],
+        "executableFiles": []
+      },
+      "reference": "One configured complex_worker returns a bounded read-only diagnosis with actual role evidence.",
+      "requiredSkills": ["execute-plan-loop"],
+      "turns": [],
+      "authorization": {
+        "scope": "Read-only inspection of the supplied source, test and attempt record is authorized. No edits, descendants, commits or final acceptance are authorized.",
+        "approvals": []
+      },
+      "outputSchema": null
+    },
+    "assert": [
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "complex-role-invocation",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["complex-role-invocation"],
+          "rubric": "Native/semantic evidence identifies one completed configured complex_worker assignment and its returned result. A requested role or capability note without actual assignment evidence is unknown."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "complex-role-boundary",
+        "config": {
+          "core": true,
+          "method": "artifact-rubric",
+          "requirements": ["complex-role-boundary"],
+          "rubric": "Inspect immutable artifacts and native records: the worker only inspected the named files, made no edits or commit, spawned no descendants, and did not claim primary acceptance. Missing capture is unknown."
+        }
+      }
+    ]
+  },
+  {
+    "description": "A configured critical reviewer performs a read-only review of a high-risk payment change.",
+    "vars": {
+      "task": "Assign exactly one configured critical_reviewer a read-only review of src/payments.js against specs/payments.md and status/change.diff. Return the review candidate with concrete source/spec evidence, do not edit files, spawn descendants or approve delivery, and report the actual role/result evidence."
+    },
+    "metadata": {
+      "id": "role-probes/critical-reviewer",
+      "group": "role-probes",
+      "kind": "task",
+      "assessment": "mechanism",
+      "workFamily": null,
+      "provenance": {
+        "source": "docs/coding-orchestration/design.md",
+        "group": "configured-role-mechanism"
+      },
+      "requirements": [
+        {
+          "id": "critical-role-invocation",
+          "capability": "delegation",
+          "authority": "Frozen case role-probes/critical-reviewer and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "critical-review-evidence",
+          "capability": "skill-mechanism",
+          "authority": "Frozen case role-probes/critical-reviewer and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "critical-review-boundary",
+          "capability": "authorization",
+          "authority": "Frozen case role-probes/critical-reviewer and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The immutable artifact snapshot, initial fixtures, and recorded native actions."
+        }
+      ],
+      "fixture": [
+        {
+          "source": "pr-review/files/challenge-auto/src/payments.js.fixture",
+          "target": "src/payments.js"
+        },
+        {
+          "source": "pr-review/files/challenge-auto/specs/payments.md.fixture",
+          "target": "specs/payments.md"
+        },
+        {
+          "source": "pr-review/files/challenge-auto/status/change.diff.fixture",
+          "target": "status/change.diff"
+        },
+        {
+          "source": "pr-review/files/challenge-auto/status/capabilities.md.fixture",
+          "target": "status/capabilities.md"
+        }
+      ],
+      "execution": {
+        "networkAccess": false,
+        "pathPrepend": [],
+        "executableFiles": []
+      },
+      "reference": "One configured critical_reviewer returns an evidence-backed read-only payment review with role/result evidence.",
+      "requiredSkills": ["pr-review"],
+      "turns": [],
+      "authorization": {
+        "scope": "Read-only review of the supplied payment source, specification and diff is authorized. No edits, descendants, commits or delivery acceptance are authorized.",
+        "approvals": []
+      },
+      "outputSchema": null
+    },
+    "assert": [
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "critical-role-invocation",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["critical-role-invocation"],
+          "rubric": "Native/semantic evidence identifies one completed configured critical_reviewer assignment and its returned result. A role request without actual invocation/result evidence is unknown."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "critical-review-evidence",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["critical-review-evidence"],
+          "rubric": "The returned candidate ties its review to the supplied payment source, specification and diff and distinguishes evidence from unsupported claims."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "critical-review-boundary",
+        "config": {
+          "core": true,
+          "method": "artifact-rubric",
+          "requirements": ["critical-review-boundary"],
+          "rubric": "Inspect immutable artifacts and native records: no reviewed file changed, no descendant worker was spawned, and the reviewer did not claim final acceptance. Missing capture is unknown."
+        }
+      }
+    ]
+  },
+  {
+    "description": "A configured deep critical reviewer examines one unresolved critical issue from a supplied prior review.",
+    "vars": {
+      "task": "A prior supplied review in status/challenge-state.md records one unresolved critical candidate for this payment change. Assign exactly one configured deep_critical_reviewer to examine only that candidate against src/payments.js, specs/payments.md and status/change.diff, then report whether it survives with evidence. Do not reopen settled review aspects, edit files, spawn descendants or approve delivery. Report the actual role/result evidence."
+    },
+    "metadata": {
+      "id": "role-probes/deep-critical-reviewer",
+      "group": "role-probes",
+      "kind": "task",
+      "assessment": "mechanism",
+      "workFamily": null,
+      "provenance": {
+        "source": "docs/coding-orchestration/design.md",
+        "group": "configured-role-mechanism"
+      },
+      "requirements": [
+        {
+          "id": "deep-role-invocation",
+          "capability": "delegation",
+          "authority": "Frozen case role-probes/deep-critical-reviewer and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "deep-issue-focus",
+          "capability": "skill-mechanism",
+          "authority": "Frozen case role-probes/deep-critical-reviewer and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "When the supplied prior review contains the unresolved critical candidate.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "deep-review-boundary",
+          "capability": "authorization",
+          "authority": "Frozen case role-probes/deep-critical-reviewer and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The immutable artifact snapshot, initial fixtures, and recorded native actions."
+        }
+      ],
+      "fixture": [
+        {
+          "source": "pr-review/files/challenge-cross-model/src/payments.js.fixture",
+          "target": "src/payments.js"
+        },
+        {
+          "source": "pr-review/files/challenge-cross-model/specs/payments.md.fixture",
+          "target": "specs/payments.md"
+        },
+        {
+          "source": "pr-review/files/challenge-cross-model/status/change.diff.fixture",
+          "target": "status/change.diff"
+        },
+        {
+          "source": "pr-review/files/challenge-cross-model/status/challenge-state.md.fixture",
+          "target": "status/challenge-state.md"
+        }
+      ],
+      "execution": {
+        "networkAccess": false,
+        "pathPrepend": [],
+        "executableFiles": []
+      },
+      "reference": "One configured deep_critical_reviewer examines the supplied unresolved candidate only and returns evidence-backed disposition with role/result evidence.",
+      "requiredSkills": ["pr-review"],
+      "turns": [],
+      "authorization": {
+        "scope": "Only the supplied unresolved critical candidate may be examined. No edits, descendants, commits, reopened review aspects or delivery acceptance are authorized.",
+        "approvals": []
+      },
+      "outputSchema": null
+    },
+    "assert": [
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "deep-role-invocation",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["deep-role-invocation"],
+          "rubric": "Native/semantic evidence identifies one completed configured deep_critical_reviewer assignment and returned result. A role request without actual invocation/result evidence is unknown."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "deep-issue-focus",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["deep-issue-focus"],
+          "rubric": "The result addresses only the unresolved candidate recorded in status/challenge-state.md, confirms or rejects it against the supplied source/spec, and does not invent a mandatory escalation for a settled issue."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "deep-review-boundary",
+        "config": {
+          "core": true,
+          "method": "artifact-rubric",
+          "requirements": ["deep-review-boundary"],
+          "rubric": "Inspect immutable artifacts and native records: no reviewed file changed, no descendant worker was spawned, and the reviewer did not claim delivery acceptance. Missing capture is unknown."
+        }
+      }
+    ]
+  }
+]
