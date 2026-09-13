@@ -163,7 +163,8 @@ and assertions are not included in the initial candidate prompt.
 Every requirement maps to a core or diagnostic assertion. See
 [`native-interaction.json`](cases/native-interaction.json) for runnable examples.
 Use [`refinement-probes.json`](cases/refinement-probes.json) for clarification,
-blockers and same-worker repair scenarios.
+blockers and same-worker repair scenarios. Configured worker/reviewer invocations
+are covered by [`role-probes.json`](cases/role-probes.json).
 Cases use their current skill or suite names, and fixture bindings resolve
 under the selected collection's fixture root. The corpus inventory test validates the actual case
 files and rejects unreferenced fixture payloads.
