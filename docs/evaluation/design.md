@@ -1,6 +1,13 @@
 # Codex Evaluation Framework Design
 
-> The repository owner approved the evaluation scope, framework, grading, interaction, and aggregation policies during the design discussion on 2026-09-11. This document incorporates those decisions and the subsequent requirement to use the Workflow design template in English. Current implementation and qualification evidence is tracked in [the implementation plan](plan.md); design approval is separate from execution evidence.
+> The repository owner approved the evaluation scope, framework, grading, interaction, and aggregation policies during the design discussion on 2026-09-11. This document incorporates those decisions and the subsequent requirement to use the Workflow design template in English. The original implementation and qualification evidence is tracked in [the framework implementation record](plan.md); design approval is separate from execution evidence.
+
+The subsequent [evaluation refinement design](refinement-design.md) records the
+agreed direction for task coverage, grading validity, holdout use, and a new
+baseline before runtime instruction changes. Its [implementation plan](refinement-plan.md)
+tracks the current refinement and qualification. The collection and grading
+interfaces below include that approved refinement; original acceptance remains
+a historical record.
 
 ## Background and problem
 
@@ -32,7 +39,7 @@ The repository is the authority for the evaluated configuration. Its initial non
 
 Promptfoo is the primary framework. Native Codex remains responsible for the agent loop, conversation state, tools, and configured execution controls. Project code supplies the preparation, scripted interaction, evidence interpretation, and measurements that are specific to this repository.
 
-A normal invocation evaluates the current candidate against the full Codex suite once per case. A/B comparisons, subsets, and additional repetitions are explicit. Every report shows its planned scope and sample counts.
+A normal invocation evaluates the current candidate against the full development/regression collection once per case. Holdout selection is explicit acceptance and is excluded before ordinary discovery and snapshots. A/B comparisons, subsets, and additional repetitions are explicit. Every report shows its planned scope and sample counts.
 
 The initial system records elapsed time, token usage, and cost without imposing time or token budgets. Finite concurrency and transport error detection remain necessary execution controls; neither should be presented as an implicit task budget.
 
@@ -238,7 +245,7 @@ Keep one-sided quality summaries and whole-run resource totals, including failed
 
 If only grading rules or grading configuration change, both sides can be regraded with the same version when saved evidence is sufficient. If task inputs, fixtures, interaction conditions, or authorization change, old records are not execution evidence for the revised case. Mark them as not directly comparable or explicitly execute the revised case. Relabeling historical output cannot produce new experimental evidence.
 
-The maintained corpus consists of the case files under evals/cases/ and their referenced payloads under evals/fixtures/. Each case directly declares its requirements, criteria, execution conditions and fixture bindings. Tests validate that corpus and reject unused fixture payloads. Import maps, transition aliases and migration-specific checks are not part of the maintained implementation. Historical reports retain their original case identities and frozen inputs; changing current case identities does not rewrite earlier observations or make them eligible for regrading against different inputs.
+The collection registry selects development cases under evals/cases/ and fixtures under evals/fixtures/, with holdout tasks in separate roots. Selection precedes all task discovery and copying. Run/report scope records retain frozen collection identity, membership, provenance and known exposure. Each case directly declares its requirements, criteria, execution conditions and fixture bindings. Tests validate that corpus and reject unused fixture payloads. Import maps, transition aliases and migration-specific checks are not part of the maintained implementation. Historical reports retain their original case identities and frozen inputs; changing current case identities does not rewrite earlier observations. Current readers accept the new contracts only, without old-format compatibility or migration. Regrading uses frozen execution inputs and optional explicit assertion/reference corrections; it does not discover the current corpus or permit new obligations.
 
 Claude/Copilot effectiveness runners can be retired while retaining their required adaptation checks. Old JSON formats are not a permanent compatibility requirement. Detailed delivery slices, verification commands, and execution progress belong in the implementation plan rather than this design.
 
