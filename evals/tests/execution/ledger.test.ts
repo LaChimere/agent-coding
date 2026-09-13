@@ -1,6 +1,7 @@
 import { afterEach, expect, spyOn, test } from 'bun:test';
 import { mkdir, mkdtemp, rm } from 'node:fs/promises';
 import { resolve } from 'node:path';
+import type { ILoadedCase } from '../../src/corpus/cases.ts';
 import { loadLedger, selectGrades } from '../../src/execution/ledger.ts';
 import { saveReport } from '../../src/execution/worker.ts';
 import { buildQualityReport } from '../../src/results/quality.ts';
@@ -11,6 +12,7 @@ import type {
   ITrialResult,
 } from '../../src/results/records.ts';
 import { accountResources, type IResourceOperation } from '../../src/results/resources.ts';
+import { collection, priceBook, requirement, writeManifest } from '../fixtures/contracts.ts';
 
 const roots: string[] = [];
 const inventory = { sha256: 'inventory', entries: [] } as const;
@@ -34,8 +36,52 @@ function trial(id: string): IPlannedTrial {
 }
 
 function manifest(trials: readonly IPlannedTrial[]): IRunManifest {
+  const cases: ILoadedCase[] = [
+    {
+      source: 'cases/ledger.json',
+      version: 'case-v1',
+      executionVersion: 'execution-v1',
+      definition: {
+        description: 'Ledger accounting fixture.',
+        vars: { task: 'Return a completed result.' },
+        metadata: {
+          id: 'case-ledger',
+          group: 'ledger',
+          kind: 'task',
+          assessment: 'outcome',
+          workFamily: 'implementation',
+          provenance: { source: 'ledger-test', group: 'ledger' },
+          requirements: [requirement('result')],
+          fixture: [],
+          execution: { networkAccess: false, pathPrepend: [], executableFiles: [] },
+          reference: '',
+          requiredSkills: [],
+          turns: [],
+          authorization: { scope: 'Fixture only.', approvals: [] },
+          outputSchema: null,
+        },
+        assert: [
+          {
+            type: 'javascript',
+            value: 'file://src/grading/assertion.ts',
+            metric: 'criterion',
+            config: {
+              core: true,
+              method: 'programmatic',
+              requirements: ['result'],
+              rubric: 'The fixture result is retained.',
+              rule: { type: 'text-contains', value: 'result' },
+            },
+          },
+        ],
+      },
+    },
+  ];
+
   return {
-    schema: 'codex-evals/run-v1',
+    schema: 'codex-evals/run-v2',
+    collection: collection(cases),
+    priceBook,
     id: 'run-ledger',
     createdAt: 1,
     concurrency: 1,
@@ -63,7 +109,7 @@ function manifest(trials: readonly IPlannedTrial[]): IRunManifest {
         profileInventory: inventory,
       },
     ],
-    cases: [],
+    cases,
     trials: [...trials],
   };
 }
@@ -165,7 +211,7 @@ test('reconstructs unfinished candidate and preparation trials without retrying 
   roots.push(root);
   const candidateTrial = trial('trial-candidate');
   const preparationTrial = trial('trial-preparation');
-  await writeJson(resolve(root, 'manifest.json'), manifest([candidateTrial, preparationTrial]));
+  await writeManifest(root, manifest([candidateTrial, preparationTrial]));
   await writeJson(resolve(root, 'trials/trial-candidate/started.json'), { startedAt: 10 });
   await writeJson(resolve(root, 'trials/trial-candidate/candidate-started.json'), {
     id: 'trial-candidate-candidate',
@@ -242,7 +288,7 @@ test('reconstructs unfinished candidate and preparation trials without retrying 
 test('refuses concurrent result publication, then includes its operations in a fresh read', async () => {
   const root = await mkdtemp(resolve('.cache/ledger-test-'));
   roots.push(root);
-  await writeJson(resolve(root, 'manifest.json'), manifest([trial('trial-candidate')]));
+  await writeManifest(root, manifest([trial('trial-candidate')]));
   const resultPath = resolve(root, 'trials/trial-candidate/result.json');
   const candidate: IResourceOperation = {
     ...operation('candidate-operation', 10),
@@ -288,7 +334,7 @@ test('refuses concurrent result publication, then includes its operations in a f
 test('refuses a candidate start published after checking its marker instead of reporting complete zero usage', async () => {
   const root = await mkdtemp(resolve('.cache/ledger-test-'));
   roots.push(root);
-  await writeJson(resolve(root, 'manifest.json'), manifest([trial('trial-candidate')]));
+  await writeManifest(root, manifest([trial('trial-candidate')]));
   await writeJson(resolve(root, 'trials/trial-candidate/started.json'), { startedAt: 10 });
   const startPath = resolve(root, 'trials/trial-candidate/candidate-started.json');
   const restoreFile = interceptFileExists(startPath, async (file) => {
@@ -332,7 +378,7 @@ test('refuses a candidate start published after checking its marker instead of r
 test('uses the ledger cutoff rather than the later report creation time', async () => {
   const root = await mkdtemp(resolve('.cache/ledger-test-'));
   roots.push(root);
-  await writeJson(resolve(root, 'manifest.json'), manifest([trial('trial-candidate')]));
+  await writeManifest(root, manifest([trial('trial-candidate')]));
   const clock = spyOn(Date, 'now').mockReturnValueOnce(40).mockReturnValue(50);
 
   try {
@@ -365,10 +411,7 @@ test.each([
 ])('rejects misplaced stored identity at $path', async ({ path, record, message }) => {
   const root = await mkdtemp(resolve('.cache/ledger-test-'));
   roots.push(root);
-  await writeJson(
-    resolve(root, 'manifest.json'),
-    manifest([trial('trial-candidate'), trial('trial-other')]),
-  );
+  await writeManifest(root, manifest([trial('trial-candidate'), trial('trial-other')]));
   await writeJson(resolve(root, path), record);
 
   await expect(loadLedger(root)).rejects.toThrow(message);
@@ -379,10 +422,7 @@ test.each(['missing', 'another-trial'])(
   async (kind) => {
     const root = await mkdtemp(resolve('.cache/ledger-test-'));
     roots.push(root);
-    await writeJson(
-      resolve(root, 'manifest.json'),
-      manifest([trial('trial-candidate'), trial('trial-other')]),
-    );
+    await writeManifest(root, manifest([trial('trial-candidate'), trial('trial-other')]));
     if (kind === 'another-trial') {
       await writeJson(resolve(root, 'operations/op/record.json'), {
         ...operation('op', 10),

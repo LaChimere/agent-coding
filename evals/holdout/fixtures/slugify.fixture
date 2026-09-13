@@ -1,0 +1,6 @@
+import re
+
+
+def normalize_slug(value: str) -> str:
+    """Return a URL-safe slug for a display label."""
+    return value.strip().replace(" ", "-")

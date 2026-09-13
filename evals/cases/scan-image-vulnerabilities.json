@@ -9,21 +9,76 @@
       "group": "scan-image-vulnerabilities",
       "kind": "task",
       "requirements": [
-        "expectation-000",
-        "expectation-001",
-        "expectation-002",
-        "expectation-003",
-        "expectation-004",
-        "verification-000",
-        "verification-001"
+        {
+          "id": "expectation-000",
+          "capability": "review",
+          "authority": "Frozen case scan-image-vulnerabilities/0 and metadata.authorization.scope. Applicable required-skill contract: skills/scan-image-vulnerabilities/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-001",
+          "capability": "review",
+          "authority": "Frozen case scan-image-vulnerabilities/0 and metadata.authorization.scope. Applicable required-skill contract: skills/scan-image-vulnerabilities/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-002",
+          "capability": "recovery",
+          "authority": "Frozen case scan-image-vulnerabilities/0 and metadata.authorization.scope. Applicable required-skill contract: skills/scan-image-vulnerabilities/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-003",
+          "capability": "review",
+          "authority": "Frozen case scan-image-vulnerabilities/0 and metadata.authorization.scope. Applicable required-skill contract: skills/scan-image-vulnerabilities/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-004",
+          "capability": "review",
+          "authority": "Frozen case scan-image-vulnerabilities/0 and metadata.authorization.scope. Applicable required-skill contract: skills/scan-image-vulnerabilities/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "verification-000",
+          "capability": "review",
+          "authority": "Frozen case scan-image-vulnerabilities/0 and metadata.authorization.scope. Applicable required-skill contract: skills/scan-image-vulnerabilities/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The immutable artifact inventory and selected files."
+        },
+        {
+          "id": "verification-001",
+          "capability": "review",
+          "authority": "Frozen case scan-image-vulnerabilities/0 and metadata.authorization.scope. Applicable required-skill contract: skills/scan-image-vulnerabilities/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The captured final candidate response."
+        },
+        {
+          "id": "observed-scanner",
+          "capability": "skill-mechanism",
+          "authority": "Frozen case scan-image-vulnerabilities/0 explicitly requires the installed bundled scanner; skills/scan-image-vulnerabilities/SKILL.md defines execution and evidence reporting.",
+          "appliesWhen": "The requested fixture-backed scanner operation is attempted.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        }
       ],
       "fixture": [
-        { "source": "scan-image-vulnerabilities/files/bin/trivy.fixture", "target": "bin/trivy" },
+        {
+          "source": "scan-image-vulnerabilities/files/bin/trivy.fixture",
+          "target": "bin/trivy"
+        },
         {
           "source": "scan-image-vulnerabilities/files/bin/kubectl.fixture",
           "target": "bin/kubectl"
         },
-        { "source": "scan-image-vulnerabilities/files/bin/docker.fixture", "target": "bin/docker" },
+        {
+          "source": "scan-image-vulnerabilities/files/bin/docker.fixture",
+          "target": "bin/docker"
+        },
         {
           "source": "scan-image-vulnerabilities/files/trivy-fixture/db-refresh-fails.fixture",
           "target": "trivy-fixture/db-refresh-fails"
@@ -45,7 +100,13 @@
         "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: Scan registry.example.com/app:1.2.3 with the installed skill's bundled scanner. The `trivy` on PATH is this workspace's local binary, and its vulnerability database refresh currently fails.",
         "approvals": []
       },
-      "outputSchema": null
+      "outputSchema": null,
+      "assessment": "outcome",
+      "workFamily": "review",
+      "provenance": {
+        "source": "skills/scan-image-vulnerabilities/SKILL.md",
+        "group": "scan-image-vulnerabilities"
+      }
     },
     "assert": [
       {
@@ -112,7 +173,10 @@
           "method": "programmatic",
           "requirements": ["verification-000"],
           "rubric": "File .scan-fixture-calls/trivy.log exists.",
-          "rule": { "type": "file-exists", "path": ".scan-fixture-calls/trivy.log" }
+          "rule": {
+            "type": "file-exists",
+            "path": ".scan-fixture-calls/trivy.log"
+          }
         }
       },
       {
@@ -130,6 +194,17 @@
             "flags": "i"
           }
         }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "observed-scanner",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["observed-scanner"],
+          "rubric": "Require retained native command/tool evidence that the installed scan-image-vulnerabilities/scripts/trivy_latest_scan.sh actually ran and completed, including its exit status. A final claim, a SKILL.md read, or fixture logs alone do not prove bundled scanner invocation. Corroborate targets/options and outcomes with .scan-fixture-calls/trivy.log and the immutable artifacts. The report must accurately identify these as the supplied offline fixtures or recorded snapshot, not a fresh live cluster/registry/database scan; equivalent wording is acceptable. Missing native capture is unknown; a complete trace showing only a claim or direct replacement command fails this requirement. The DB refresh fails before any image scan; require the nonzero process result and no image scan after that failure."
+        }
       }
     ]
   },
@@ -143,19 +218,69 @@
       "group": "scan-image-vulnerabilities",
       "kind": "task",
       "requirements": [
-        "expectation-000",
-        "expectation-001",
-        "expectation-002",
-        "expectation-003",
-        "expectation-004"
+        {
+          "id": "expectation-000",
+          "capability": "review",
+          "authority": "Frozen case scan-image-vulnerabilities/1 and metadata.authorization.scope. Applicable required-skill contract: skills/scan-image-vulnerabilities/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-001",
+          "capability": "review",
+          "authority": "Frozen case scan-image-vulnerabilities/1 and metadata.authorization.scope. Applicable required-skill contract: skills/scan-image-vulnerabilities/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-002",
+          "capability": "review",
+          "authority": "Frozen case scan-image-vulnerabilities/1 and metadata.authorization.scope. Applicable required-skill contract: skills/scan-image-vulnerabilities/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-003",
+          "capability": "review",
+          "authority": "Frozen case scan-image-vulnerabilities/1 and metadata.authorization.scope. Applicable required-skill contract: skills/scan-image-vulnerabilities/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-004",
+          "capability": "review",
+          "authority": "Frozen case scan-image-vulnerabilities/1 and metadata.authorization.scope. Applicable required-skill contract: skills/scan-image-vulnerabilities/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "observed-scanner",
+          "capability": "skill-mechanism",
+          "authority": "Frozen case scan-image-vulnerabilities/1 explicitly requires the installed bundled scanner; skills/scan-image-vulnerabilities/SKILL.md defines execution and evidence reporting.",
+          "appliesWhen": "The requested fixture-backed scanner operation is attempted.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "recorded-targets",
+          "capability": "review",
+          "authority": "The exact scan targets follow the task and supplied initial snapshot in scan-image-vulnerabilities/1.",
+          "appliesWhen": "The candidate completes discovery/scanning or reports its partial result.",
+          "evidence": "The isolated verifier command result and retained output."
+        }
       ],
       "fixture": [
-        { "source": "scan-image-vulnerabilities/files/bin/trivy.fixture", "target": "bin/trivy" },
+        {
+          "source": "scan-image-vulnerabilities/files/bin/trivy.fixture",
+          "target": "bin/trivy"
+        },
         {
           "source": "scan-image-vulnerabilities/files/bin/kubectl.fixture",
           "target": "bin/kubectl"
         },
-        { "source": "scan-image-vulnerabilities/files/bin/docker.fixture", "target": "bin/docker" },
+        {
+          "source": "scan-image-vulnerabilities/files/bin/docker.fixture",
+          "target": "bin/docker"
+        },
         {
           "source": "scan-image-vulnerabilities/files/cluster/pods-all-namespaces.json.fixture",
           "target": "cluster/pods-all-namespaces.json"
@@ -193,7 +318,13 @@
         "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: The `kubectl` on PATH reads this workspace's recorded cluster snapshot. Discover the images running in the payments namespace and scan them with the installed skill's bundled scanner.",
         "approvals": []
       },
-      "outputSchema": null
+      "outputSchema": null,
+      "assessment": "outcome",
+      "workFamily": "review",
+      "provenance": {
+        "source": "skills/scan-image-vulnerabilities/SKILL.md",
+        "group": "scan-image-vulnerabilities"
+      }
     },
     "assert": [
       {
@@ -250,6 +381,37 @@
           "requirements": ["expectation-004"],
           "rubric": "Reports targets."
         }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "observed-scanner",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["observed-scanner"],
+          "rubric": "Require retained native command/tool evidence that the installed scan-image-vulnerabilities/scripts/trivy_latest_scan.sh actually ran and completed, including its exit status. A final claim, a SKILL.md read, or fixture logs alone do not prove bundled scanner invocation. Corroborate targets/options and outcomes with .scan-fixture-calls/trivy.log and the immutable artifacts. The report must accurately identify these as the supplied offline fixtures or recorded snapshot, not a fresh live cluster/registry/database scan; equivalent wording is acceptable. Missing native capture is unknown; a complete trace showing only a claim or direct replacement command fails this requirement. Native evidence must show kubectl discovery preceding scanning and the scanned references matching only the payments snapshot."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "recorded-targets",
+        "config": {
+          "core": true,
+          "method": "programmatic",
+          "requirements": ["recorded-targets"],
+          "rubric": "Retained fixture logs contain the requested scan targets, with discovery for the namespace task; logs alone are not proof of installed script identity.",
+          "rule": {
+            "type": "command",
+            "command": [
+              "bun",
+              "-e",
+              "import { strict as assert } from \"node:assert\"; const lines = (await Bun.file(\".scan-fixture-calls/trivy.log\").text()).trim().split(/\\r?\\n/u); const scans = lines.filter(line => line.startsWith(\"trivy image \") && !line.includes(\"--download-db-only\") && !line.includes(\"--download-java-db-only\")); const targets = scans.map(line => line.trim().split(/\\s+/u).at(-1)); const expected = [\"registry.example.com/payments/api@sha256:8f2c4ad4bb6ec2a1e0f2c8e2f3f2d1b0a9c8d7e6f5a4b3c2d1e0f9a8b7c6d5e4\", \"registry.example.com/payments/worker:2.7.1\"]; assert(expected.every(target => targets.includes(target))); assert(targets.every(target => expected.includes(target))); const discovery = await Bun.file(\".scan-fixture-calls/kubectl.log\").text(); assert(discovery.split(/\\r?\\n/u).some(line => line.startsWith(\"kubectl \") && /\\bget\\b/u.test(line)));"
+            ],
+            "expectedExitCode": 0
+          }
+        }
       }
     ]
   },
@@ -263,19 +425,69 @@
       "group": "scan-image-vulnerabilities",
       "kind": "task",
       "requirements": [
-        "expectation-000",
-        "expectation-001",
-        "expectation-002",
-        "expectation-003",
-        "expectation-004"
+        {
+          "id": "expectation-000",
+          "capability": "review",
+          "authority": "Frozen case scan-image-vulnerabilities/2 and metadata.authorization.scope. Applicable required-skill contract: skills/scan-image-vulnerabilities/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-001",
+          "capability": "review",
+          "authority": "Frozen case scan-image-vulnerabilities/2 and metadata.authorization.scope. Applicable required-skill contract: skills/scan-image-vulnerabilities/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-002",
+          "capability": "review",
+          "authority": "Frozen case scan-image-vulnerabilities/2 and metadata.authorization.scope. Applicable required-skill contract: skills/scan-image-vulnerabilities/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-003",
+          "capability": "recovery",
+          "authority": "Frozen case scan-image-vulnerabilities/2 and metadata.authorization.scope. Applicable required-skill contract: skills/scan-image-vulnerabilities/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-004",
+          "capability": "recovery",
+          "authority": "Frozen case scan-image-vulnerabilities/2 and metadata.authorization.scope. Applicable required-skill contract: skills/scan-image-vulnerabilities/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "observed-scanner",
+          "capability": "skill-mechanism",
+          "authority": "Frozen case scan-image-vulnerabilities/2 explicitly requires the installed bundled scanner; skills/scan-image-vulnerabilities/SKILL.md defines execution and evidence reporting.",
+          "appliesWhen": "The requested fixture-backed scanner operation is attempted.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "recorded-targets",
+          "capability": "review",
+          "authority": "The exact scan targets follow the task and supplied initial snapshot in scan-image-vulnerabilities/2.",
+          "appliesWhen": "The candidate completes discovery/scanning or reports its partial result.",
+          "evidence": "The isolated verifier command result and retained output."
+        }
       ],
       "fixture": [
-        { "source": "scan-image-vulnerabilities/files/bin/trivy.fixture", "target": "bin/trivy" },
+        {
+          "source": "scan-image-vulnerabilities/files/bin/trivy.fixture",
+          "target": "bin/trivy"
+        },
         {
           "source": "scan-image-vulnerabilities/files/bin/kubectl.fixture",
           "target": "bin/kubectl"
         },
-        { "source": "scan-image-vulnerabilities/files/bin/docker.fixture", "target": "bin/docker" },
+        {
+          "source": "scan-image-vulnerabilities/files/bin/docker.fixture",
+          "target": "bin/docker"
+        },
         {
           "source": "scan-image-vulnerabilities/files/trivy-fixture/images/registry.example.com_platform_base_3.1.0.json.fixture",
           "target": "trivy-fixture/images/registry.example.com_platform_base_3.1.0.json"
@@ -297,7 +509,13 @@
         "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: Scan registry.example.com/platform/base:3.1.0 and registry.example.com/private/billing:5.0.0 with the installed skill's bundled scanner, then summarize the result for a release decision.",
         "approvals": []
       },
-      "outputSchema": null
+      "outputSchema": null,
+      "assessment": "outcome",
+      "workFamily": "review",
+      "provenance": {
+        "source": "skills/scan-image-vulnerabilities/SKILL.md",
+        "group": "scan-image-vulnerabilities"
+      }
     },
     "assert": [
       {
@@ -354,6 +572,37 @@
           "requirements": ["expectation-004"],
           "rubric": "Does not report the failed image as clean."
         }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "observed-scanner",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["observed-scanner"],
+          "rubric": "Require retained native command/tool evidence that the installed scan-image-vulnerabilities/scripts/trivy_latest_scan.sh actually ran and completed, including its exit status. A final claim, a SKILL.md read, or fixture logs alone do not prove bundled scanner invocation. Corroborate targets/options and outcomes with .scan-fixture-calls/trivy.log and the immutable artifacts. The report must accurately identify these as the supplied offline fixtures or recorded snapshot, not a fresh live cluster/registry/database scan; equivalent wording is acceptable. Missing native capture is unknown; a complete trace showing only a claim or direct replacement command fails this requirement. Require the actual authentication error for the billing image and successful retained base-image JSON; do not infer success for the failed target."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "recorded-targets",
+        "config": {
+          "core": true,
+          "method": "programmatic",
+          "requirements": ["recorded-targets"],
+          "rubric": "Retained fixture logs contain the requested scan targets, with discovery for the namespace task; logs alone are not proof of installed script identity.",
+          "rule": {
+            "type": "command",
+            "command": [
+              "bun",
+              "-e",
+              "import { strict as assert } from \"node:assert\"; const lines = (await Bun.file(\".scan-fixture-calls/trivy.log\").text()).trim().split(/\\r?\\n/u); const scans = lines.filter(line => line.startsWith(\"trivy image \") && !line.includes(\"--download-db-only\") && !line.includes(\"--download-java-db-only\")); const targets = scans.map(line => line.trim().split(/\\s+/u).at(-1)); const expected = [\"registry.example.com/platform/base:3.1.0\", \"registry.example.com/private/billing:5.0.0\"]; assert(expected.every(target => targets.includes(target))); assert(targets.every(target => expected.includes(target)));"
+            ],
+            "expectedExitCode": 0
+          }
+        }
       }
     ]
   },
@@ -367,21 +616,61 @@
       "group": "scan-image-vulnerabilities",
       "kind": "task",
       "requirements": [
-        "expectation-000",
-        "expectation-001",
-        "expectation-002",
-        "expectation-003",
-        "expectation-004"
+        {
+          "id": "expectation-000",
+          "capability": "skill-mechanism",
+          "authority": "Frozen case scan-image-vulnerabilities/3 and metadata.authorization.scope. Applicable required-skill contract: skills/scan-image-vulnerabilities/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-001",
+          "capability": "skill-mechanism",
+          "authority": "Frozen case scan-image-vulnerabilities/3 and metadata.authorization.scope. Applicable required-skill contract: skills/scan-image-vulnerabilities/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The immutable artifact snapshot, initial fixtures, and recorded native actions."
+        },
+        {
+          "id": "expectation-002",
+          "capability": "skill-mechanism",
+          "authority": "Frozen case scan-image-vulnerabilities/3 and metadata.authorization.scope. Applicable required-skill contract: skills/scan-image-vulnerabilities/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-003",
+          "capability": "skill-mechanism",
+          "authority": "Frozen case scan-image-vulnerabilities/3 and metadata.authorization.scope. Applicable required-skill contract: skills/scan-image-vulnerabilities/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-004",
+          "capability": "skill-mechanism",
+          "authority": "Frozen case scan-image-vulnerabilities/3 and metadata.authorization.scope. Applicable required-skill contract: skills/scan-image-vulnerabilities/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The immutable artifact snapshot, initial fixtures, and recorded native actions."
+        }
       ],
       "fixture": [
-        { "source": "scan-image-vulnerabilities/files/bin/trivy.fixture", "target": "bin/trivy" },
+        {
+          "source": "scan-image-vulnerabilities/files/bin/trivy.fixture",
+          "target": "bin/trivy"
+        },
         {
           "source": "scan-image-vulnerabilities/files/bin/kubectl.fixture",
           "target": "bin/kubectl"
         },
-        { "source": "scan-image-vulnerabilities/files/bin/docker.fixture", "target": "bin/docker" }
+        {
+          "source": "scan-image-vulnerabilities/files/bin/docker.fixture",
+          "target": "bin/docker"
+        }
       ],
-      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "execution": {
+        "networkAccess": true,
+        "pathPrepend": [],
+        "executableFiles": []
+      },
       "reference": "Applies to A and not B.",
       "requiredSkills": ["scan-image-vulnerabilities"],
       "turns": [],
@@ -389,7 +678,13 @@
         "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: Decide whether this skill applies to (A) a container image CVE scan and (B) an application source-code SQL injection audit.",
         "approvals": []
       },
-      "outputSchema": null
+      "outputSchema": null,
+      "assessment": "mechanism",
+      "workFamily": null,
+      "provenance": {
+        "source": "skills/scan-image-vulnerabilities/SKILL.md",
+        "group": "scan-image-vulnerabilities"
+      }
     },
     "assert": [
       {
@@ -459,22 +754,83 @@
       "group": "scan-image-vulnerabilities",
       "kind": "task",
       "requirements": [
-        "expectation-000",
-        "expectation-001",
-        "expectation-002",
-        "expectation-003",
-        "expectation-004",
-        "verification-000",
-        "verification-001",
-        "verification-002"
+        {
+          "id": "expectation-000",
+          "capability": "review",
+          "authority": "Frozen case scan-image-vulnerabilities/4 and metadata.authorization.scope. Applicable required-skill contract: skills/scan-image-vulnerabilities/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-001",
+          "capability": "review",
+          "authority": "Frozen case scan-image-vulnerabilities/4 and metadata.authorization.scope. Applicable required-skill contract: skills/scan-image-vulnerabilities/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The immutable artifact snapshot, initial fixtures, and recorded native actions."
+        },
+        {
+          "id": "expectation-002",
+          "capability": "recovery",
+          "authority": "Frozen case scan-image-vulnerabilities/4 and metadata.authorization.scope. Applicable required-skill contract: skills/scan-image-vulnerabilities/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-003",
+          "capability": "review",
+          "authority": "Frozen case scan-image-vulnerabilities/4 and metadata.authorization.scope. Applicable required-skill contract: skills/scan-image-vulnerabilities/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-004",
+          "capability": "review",
+          "authority": "Frozen case scan-image-vulnerabilities/4 and metadata.authorization.scope. Applicable required-skill contract: skills/scan-image-vulnerabilities/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "verification-000",
+          "capability": "review",
+          "authority": "Frozen case scan-image-vulnerabilities/4 and metadata.authorization.scope. Applicable required-skill contract: skills/scan-image-vulnerabilities/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The immutable artifact inventory and selected files."
+        },
+        {
+          "id": "verification-001",
+          "capability": "review",
+          "authority": "Frozen case scan-image-vulnerabilities/4 and metadata.authorization.scope. Applicable required-skill contract: skills/scan-image-vulnerabilities/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The captured final candidate response."
+        },
+        {
+          "id": "verification-002",
+          "capability": "recovery",
+          "authority": "Frozen case scan-image-vulnerabilities/4 and metadata.authorization.scope. Applicable required-skill contract: skills/scan-image-vulnerabilities/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The captured final candidate response."
+        },
+        {
+          "id": "observed-scanner",
+          "capability": "skill-mechanism",
+          "authority": "Frozen case scan-image-vulnerabilities/4 explicitly requires the installed bundled scanner; skills/scan-image-vulnerabilities/SKILL.md defines execution and evidence reporting.",
+          "appliesWhen": "The requested fixture-backed scanner operation is attempted.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        }
       ],
       "fixture": [
-        { "source": "scan-image-vulnerabilities/files/bin/trivy.fixture", "target": "bin/trivy" },
+        {
+          "source": "scan-image-vulnerabilities/files/bin/trivy.fixture",
+          "target": "bin/trivy"
+        },
         {
           "source": "scan-image-vulnerabilities/files/bin/kubectl.fixture",
           "target": "bin/kubectl"
         },
-        { "source": "scan-image-vulnerabilities/files/bin/docker.fixture", "target": "bin/docker" },
+        {
+          "source": "scan-image-vulnerabilities/files/bin/docker.fixture",
+          "target": "bin/docker"
+        },
         {
           "source": "scan-image-vulnerabilities/files/trivy-fixture/images/registry.example.com_app_ok_1.0.0.json.fixture",
           "target": "trivy-fixture/images/registry.example.com_app_ok_1.0.0.json"
@@ -496,7 +852,13 @@
         "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: Run the installed skill's bundled scanner against registry.example.com/app/ok:1.0.0 and registry.example.com/app/missing:1.0.0 in one invocation, then report the outcome and the process exit status.",
         "approvals": []
       },
-      "outputSchema": null
+      "outputSchema": null,
+      "assessment": "outcome",
+      "workFamily": "review",
+      "provenance": {
+        "source": "skills/scan-image-vulnerabilities/SKILL.md",
+        "group": "scan-image-vulnerabilities"
+      }
     },
     "assert": [
       {
@@ -593,12 +955,23 @@
           "core": true,
           "method": "programmatic",
           "requirements": ["verification-002"],
-          "rubric": "Output matches /(missing|MANIFEST_UNKNOWN|manifest does not exist)/i.",
+          "rubric": "Output reports the concrete missing-image failure context, such as MANIFEST_UNKNOWN; matching the target image name alone is insufficient.",
           "rule": {
             "type": "text-regex",
-            "pattern": "(missing|MANIFEST_UNKNOWN|manifest does not exist)",
+            "pattern": "(MANIFEST_UNKNOWN|manifest unknown)",
             "flags": "i"
           }
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "observed-scanner",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["observed-scanner"],
+          "rubric": "Require retained native command/tool evidence that the installed scan-image-vulnerabilities/scripts/trivy_latest_scan.sh actually ran and completed, including its exit status. A final claim, a SKILL.md read, or fixture logs alone do not prove bundled scanner invocation. Corroborate targets/options and outcomes with .scan-fixture-calls/trivy.log and the immutable artifacts. The report must accurately identify these as the supplied offline fixtures or recorded snapshot, not a fresh live cluster/registry/database scan; equivalent wording is acceptable. Missing native capture is unknown; a complete trace showing only a claim or direct replacement command fails this requirement. Native evidence must show both requested images in one bundled-script invocation."
         }
       }
     ]
@@ -613,22 +986,83 @@
       "group": "scan-image-vulnerabilities",
       "kind": "task",
       "requirements": [
-        "expectation-000",
-        "expectation-001",
-        "expectation-002",
-        "expectation-003",
-        "expectation-004",
-        "verification-000",
-        "verification-001",
-        "verification-002"
+        {
+          "id": "expectation-000",
+          "capability": "review",
+          "authority": "Frozen case scan-image-vulnerabilities/5 and metadata.authorization.scope. Applicable required-skill contract: skills/scan-image-vulnerabilities/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The immutable artifact snapshot, initial fixtures, and recorded native actions."
+        },
+        {
+          "id": "expectation-001",
+          "capability": "review",
+          "authority": "Frozen case scan-image-vulnerabilities/5 and metadata.authorization.scope. Applicable required-skill contract: skills/scan-image-vulnerabilities/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-002",
+          "capability": "review",
+          "authority": "Frozen case scan-image-vulnerabilities/5 and metadata.authorization.scope. Applicable required-skill contract: skills/scan-image-vulnerabilities/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-003",
+          "capability": "review",
+          "authority": "Frozen case scan-image-vulnerabilities/5 and metadata.authorization.scope. Applicable required-skill contract: skills/scan-image-vulnerabilities/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The immutable artifact snapshot, initial fixtures, and recorded native actions."
+        },
+        {
+          "id": "expectation-004",
+          "capability": "review",
+          "authority": "Frozen case scan-image-vulnerabilities/5 and metadata.authorization.scope. Applicable required-skill contract: skills/scan-image-vulnerabilities/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The immutable artifact snapshot, initial fixtures, and recorded native actions."
+        },
+        {
+          "id": "verification-000",
+          "capability": "review",
+          "authority": "Frozen case scan-image-vulnerabilities/5 and metadata.authorization.scope. Applicable required-skill contract: skills/scan-image-vulnerabilities/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The immutable artifact inventory and selected files."
+        },
+        {
+          "id": "verification-001",
+          "capability": "review",
+          "authority": "Frozen case scan-image-vulnerabilities/5 and metadata.authorization.scope. Applicable required-skill contract: skills/scan-image-vulnerabilities/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The captured final candidate response."
+        },
+        {
+          "id": "verification-002",
+          "capability": "review",
+          "authority": "Frozen case scan-image-vulnerabilities/5 and metadata.authorization.scope. Applicable required-skill contract: skills/scan-image-vulnerabilities/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The captured final candidate response."
+        },
+        {
+          "id": "observed-scanner",
+          "capability": "skill-mechanism",
+          "authority": "Frozen case scan-image-vulnerabilities/5 explicitly requires the installed bundled scanner; skills/scan-image-vulnerabilities/SKILL.md defines execution and evidence reporting.",
+          "appliesWhen": "The requested fixture-backed scanner operation is attempted.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        }
       ],
       "fixture": [
-        { "source": "scan-image-vulnerabilities/files/bin/trivy.fixture", "target": "bin/trivy" },
+        {
+          "source": "scan-image-vulnerabilities/files/bin/trivy.fixture",
+          "target": "bin/trivy"
+        },
         {
           "source": "scan-image-vulnerabilities/files/bin/kubectl.fixture",
           "target": "bin/kubectl"
         },
-        { "source": "scan-image-vulnerabilities/files/bin/docker.fixture", "target": "bin/docker" },
+        {
+          "source": "scan-image-vulnerabilities/files/bin/docker.fixture",
+          "target": "bin/docker"
+        },
         {
           "source": "scan-image-vulnerabilities/files/trivy-fixture/images/registry.example.com_app_1.2.3.json.fixture",
           "target": "trivy-fixture/images/registry.example.com_app_1.2.3.json"
@@ -646,7 +1080,13 @@
         "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: Scan the remote reference registry.example.com/app:1.2.3 into the caller-provided directory ./scan-artifacts with the installed skill's bundled scanner; this workspace has no Docker daemon. Then run the scanner again without an explicit output directory and report where the default artifacts landed.",
         "approvals": []
       },
-      "outputSchema": null
+      "outputSchema": null,
+      "assessment": "outcome",
+      "workFamily": "review",
+      "provenance": {
+        "source": "skills/scan-image-vulnerabilities/SKILL.md",
+        "group": "scan-image-vulnerabilities"
+      }
     },
     "assert": [
       {
@@ -728,7 +1168,11 @@
           "method": "programmatic",
           "requirements": ["verification-001"],
           "rubric": "Output matches /scan-artifacts/i.",
-          "rule": { "type": "text-regex", "pattern": "scan-artifacts", "flags": "i" }
+          "rule": {
+            "type": "text-regex",
+            "pattern": "scan-artifacts",
+            "flags": "i"
+          }
         }
       },
       {
@@ -746,6 +1190,17 @@
             "flags": "i"
           }
         }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "observed-scanner",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["observed-scanner"],
+          "rubric": "Require retained native command/tool evidence that the installed scan-image-vulnerabilities/scripts/trivy_latest_scan.sh actually ran and completed, including its exit status. A final claim, a SKILL.md read, or fixture logs alone do not prove bundled scanner invocation. Corroborate targets/options and outcomes with .scan-fixture-calls/trivy.log and the immutable artifacts. The report must accurately identify these as the supplied offline fixtures or recorded snapshot, not a fresh live cluster/registry/database scan; equivalent wording is acceptable. Missing native capture is unknown; a complete trace showing only a claim or direct replacement command fails this requirement. Native evidence must show the two requested bundled-script invocations: one with --output-dir ./scan-artifacts and one without an explicit output directory."
+        }
       }
     ]
   },
@@ -759,21 +1214,69 @@
       "group": "scan-image-vulnerabilities",
       "kind": "task",
       "requirements": [
-        "expectation-000",
-        "expectation-001",
-        "expectation-002",
-        "expectation-003",
-        "expectation-004",
-        "verification-000",
-        "verification-001"
+        {
+          "id": "expectation-000",
+          "capability": "review",
+          "authority": "Frozen case scan-image-vulnerabilities/6 and metadata.authorization.scope. Applicable required-skill contract: skills/scan-image-vulnerabilities/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-001",
+          "capability": "review",
+          "authority": "Frozen case scan-image-vulnerabilities/6 and metadata.authorization.scope. Applicable required-skill contract: skills/scan-image-vulnerabilities/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-002",
+          "capability": "review",
+          "authority": "Frozen case scan-image-vulnerabilities/6 and metadata.authorization.scope. Applicable required-skill contract: skills/scan-image-vulnerabilities/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-003",
+          "capability": "review",
+          "authority": "Frozen case scan-image-vulnerabilities/6 and metadata.authorization.scope. Applicable required-skill contract: skills/scan-image-vulnerabilities/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-004",
+          "capability": "review",
+          "authority": "Frozen case scan-image-vulnerabilities/6 and metadata.authorization.scope. Applicable required-skill contract: skills/scan-image-vulnerabilities/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "verification-000",
+          "capability": "review",
+          "authority": "Frozen case scan-image-vulnerabilities/6 and metadata.authorization.scope. Applicable required-skill contract: skills/scan-image-vulnerabilities/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The immutable artifact inventory and selected files."
+        },
+        {
+          "id": "verification-001",
+          "capability": "review",
+          "authority": "Frozen case scan-image-vulnerabilities/6 and metadata.authorization.scope. Applicable required-skill contract: skills/scan-image-vulnerabilities/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The captured final candidate response."
+        }
       ],
       "fixture": [
-        { "source": "scan-image-vulnerabilities/files/bin/trivy.fixture", "target": "bin/trivy" },
+        {
+          "source": "scan-image-vulnerabilities/files/bin/trivy.fixture",
+          "target": "bin/trivy"
+        },
         {
           "source": "scan-image-vulnerabilities/files/bin/kubectl.fixture",
           "target": "bin/kubectl"
         },
-        { "source": "scan-image-vulnerabilities/files/bin/docker.fixture", "target": "bin/docker" },
+        {
+          "source": "scan-image-vulnerabilities/files/bin/docker.fixture",
+          "target": "bin/docker"
+        },
         {
           "source": "scan-image-vulnerabilities/files/trivy-fixture/images/registry.example.com_app_1.2.3.json.fixture",
           "target": "trivy-fixture/images/registry.example.com_app_1.2.3.json"
@@ -791,7 +1294,13 @@
         "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: This project has no repository-root skills/ directory; the skill exists only as an npx-installed copy. Invoke its bundled scanner against registry.example.com/app:1.2.3 from this working directory.",
         "approvals": []
       },
-      "outputSchema": null
+      "outputSchema": null,
+      "assessment": "outcome",
+      "workFamily": "review",
+      "provenance": {
+        "source": "skills/scan-image-vulnerabilities/SKILL.md",
+        "group": "scan-image-vulnerabilities"
+      }
     },
     "assert": [
       {
@@ -846,7 +1355,7 @@
           "core": true,
           "method": "text-rubric",
           "requirements": ["expectation-004"],
-          "rubric": "Uses the installed bundled script."
+          "rubric": "Uses the installed bundled script. Require retained native command/tool evidence that the installed scan-image-vulnerabilities/scripts/trivy_latest_scan.sh actually ran and completed, including its exit status. A final claim, a SKILL.md read, or fixture logs alone do not prove bundled scanner invocation. Corroborate targets/options and outcomes with .scan-fixture-calls/trivy.log and the immutable artifacts. The report must accurately identify these as the supplied offline fixtures or recorded snapshot, not a fresh live cluster/registry/database scan; equivalent wording is acceptable. Missing native capture is unknown; a complete trace showing only a claim or direct replacement command fails this requirement."
         }
       },
       {
@@ -873,7 +1382,11 @@
           "method": "programmatic",
           "requirements": ["verification-001"],
           "rubric": "Output matches /(CVE-2024-30001|zlib)/i.",
-          "rule": { "type": "text-regex", "pattern": "(CVE-2024-30001|zlib)", "flags": "i" }
+          "rule": {
+            "type": "text-regex",
+            "pattern": "(CVE-2024-30001|zlib)",
+            "flags": "i"
+          }
         }
       }
     ]
@@ -888,27 +1401,111 @@
       "group": "scan-image-vulnerabilities",
       "kind": "task",
       "requirements": [
-        "expectation-000",
-        "expectation-001",
-        "expectation-002",
-        "expectation-003",
-        "expectation-004",
-        "expectation-005",
-        "expectation-006",
-        "expectation-007",
-        "verification-000",
-        "verification-001",
-        "verification-002",
-        "verification-003",
-        "verification-004"
+        {
+          "id": "expectation-000",
+          "capability": "review",
+          "authority": "Frozen case scan-image-vulnerabilities/7 and metadata.authorization.scope. Applicable required-skill contract: skills/scan-image-vulnerabilities/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-001",
+          "capability": "review",
+          "authority": "Frozen case scan-image-vulnerabilities/7 and metadata.authorization.scope. Applicable required-skill contract: skills/scan-image-vulnerabilities/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-002",
+          "capability": "review",
+          "authority": "Frozen case scan-image-vulnerabilities/7 and metadata.authorization.scope. Applicable required-skill contract: skills/scan-image-vulnerabilities/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-003",
+          "capability": "review",
+          "authority": "Frozen case scan-image-vulnerabilities/7 and metadata.authorization.scope. Applicable required-skill contract: skills/scan-image-vulnerabilities/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-004",
+          "capability": "review",
+          "authority": "Frozen case scan-image-vulnerabilities/7 and metadata.authorization.scope. Applicable required-skill contract: skills/scan-image-vulnerabilities/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-005",
+          "capability": "review",
+          "authority": "Frozen case scan-image-vulnerabilities/7 and metadata.authorization.scope. Applicable required-skill contract: skills/scan-image-vulnerabilities/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-006",
+          "capability": "review",
+          "authority": "Frozen case scan-image-vulnerabilities/7 and metadata.authorization.scope. Applicable required-skill contract: skills/scan-image-vulnerabilities/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-007",
+          "capability": "review",
+          "authority": "Frozen case scan-image-vulnerabilities/7 and metadata.authorization.scope. Applicable required-skill contract: skills/scan-image-vulnerabilities/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The immutable artifact snapshot, initial fixtures, and recorded native actions."
+        },
+        {
+          "id": "verification-000",
+          "capability": "review",
+          "authority": "Frozen case scan-image-vulnerabilities/7 and metadata.authorization.scope. Applicable required-skill contract: skills/scan-image-vulnerabilities/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The immutable artifact inventory and selected files."
+        },
+        {
+          "id": "verification-001",
+          "capability": "review",
+          "authority": "Frozen case scan-image-vulnerabilities/7 and metadata.authorization.scope. Applicable required-skill contract: skills/scan-image-vulnerabilities/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The captured final candidate response."
+        },
+        {
+          "id": "verification-002",
+          "capability": "review",
+          "authority": "Frozen case scan-image-vulnerabilities/7 and metadata.authorization.scope. Applicable required-skill contract: skills/scan-image-vulnerabilities/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The captured final candidate response."
+        },
+        {
+          "id": "verification-003",
+          "capability": "review",
+          "authority": "Frozen case scan-image-vulnerabilities/7 and metadata.authorization.scope. Applicable required-skill contract: skills/scan-image-vulnerabilities/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The captured final candidate response."
+        },
+        {
+          "id": "verification-004",
+          "capability": "review",
+          "authority": "Frozen case scan-image-vulnerabilities/7 and metadata.authorization.scope. Applicable required-skill contract: skills/scan-image-vulnerabilities/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The captured final candidate response."
+        }
       ],
       "fixture": [
-        { "source": "scan-image-vulnerabilities/files/bin/trivy.fixture", "target": "bin/trivy" },
+        {
+          "source": "scan-image-vulnerabilities/files/bin/trivy.fixture",
+          "target": "bin/trivy"
+        },
         {
           "source": "scan-image-vulnerabilities/files/bin/kubectl.fixture",
           "target": "bin/kubectl"
         },
-        { "source": "scan-image-vulnerabilities/files/bin/docker.fixture", "target": "bin/docker" },
+        {
+          "source": "scan-image-vulnerabilities/files/bin/docker.fixture",
+          "target": "bin/docker"
+        },
         {
           "source": "scan-image-vulnerabilities/files/trivy-fixture/images/registry.example.com_coverage_app_1.0.0.json.fixture",
           "target": "trivy-fixture/images/registry.example.com_coverage_app_1.0.0.json"
@@ -926,7 +1523,13 @@
         "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: Scan registry.example.com/coverage/app:1.0.0 with the installed skill's bundled scanner and report package coverage as well as vulnerabilities.",
         "approvals": []
       },
-      "outputSchema": null
+      "outputSchema": null,
+      "assessment": "outcome",
+      "workFamily": "review",
+      "provenance": {
+        "source": "skills/scan-image-vulnerabilities/SKILL.md",
+        "group": "scan-image-vulnerabilities"
+      }
     },
     "assert": [
       {
@@ -937,7 +1540,7 @@
           "core": true,
           "method": "text-rubric",
           "requirements": ["expectation-000"],
-          "rubric": "Invokes the installed bundled scanner with comprehensive detection options for OS and library packages, every package relationship and severity, unfixed and suppressed findings, and all package inventory. This case deliberately uses the declared offline Trivy fixture: assess the actual invocation and options, not a real registry fetch or live vulnerability database update. Do not interpret fixture results as evidence of a real external scan."
+          "rubric": "Invokes the installed bundled scanner with comprehensive detection options for OS and library packages, every package relationship and severity, unfixed and suppressed findings, and all package inventory. This case deliberately uses the declared offline Trivy fixture: assess the actual invocation and options, not a real registry fetch or live vulnerability database update. Do not interpret fixture results as evidence of a real external scan. Require retained native command/tool evidence that the installed scan-image-vulnerabilities/scripts/trivy_latest_scan.sh actually ran and completed, including its exit status. A final claim, a SKILL.md read, or fixture logs alone do not prove bundled scanner invocation. Corroborate targets/options and outcomes with .scan-fixture-calls/trivy.log and the immutable artifacts. The report must accurately identify these as the supplied offline fixtures or recorded snapshot, not a fresh live cluster/registry/database scan; equivalent wording is acceptable. Missing native capture is unknown; a complete trace showing only a claim or direct replacement command fails this requirement."
         }
       },
       {
@@ -1041,7 +1644,11 @@
           "method": "programmatic",
           "requirements": ["verification-001"],
           "rubric": "Output matches /lodash[^\\n]*4\\.17\\.20/i.",
-          "rule": { "type": "text-regex", "pattern": "lodash[^\\n]*4\\.17\\.20", "flags": "i" }
+          "rule": {
+            "type": "text-regex",
+            "pattern": "lodash[^\\n]*4\\.17\\.20",
+            "flags": "i"
+          }
         }
       },
       {
@@ -1053,7 +1660,11 @@
           "method": "programmatic",
           "requirements": ["verification-002"],
           "rubric": "Output matches /(npm|language.package)/i.",
-          "rule": { "type": "text-regex", "pattern": "(npm|language.package)", "flags": "i" }
+          "rule": {
+            "type": "text-regex",
+            "pattern": "(npm|language.package)",
+            "flags": "i"
+          }
         }
       },
       {
@@ -1065,7 +1676,11 @@
           "method": "programmatic",
           "requirements": ["verification-003"],
           "rubric": "Output matches /suppress/i.",
-          "rule": { "type": "text-regex", "pattern": "suppress", "flags": "i" }
+          "rule": {
+            "type": "text-regex",
+            "pattern": "suppress",
+            "flags": "i"
+          }
         }
       },
       {

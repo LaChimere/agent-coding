@@ -1,0 +1,7 @@
+def load_jobs(store):
+    cache = {}
+    jobs = store.list()
+    for job in jobs:
+        if job["active"]:
+            cache[job["id"]] = job
+    return list(cache.values())

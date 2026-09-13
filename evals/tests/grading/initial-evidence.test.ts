@@ -4,6 +4,7 @@ import { resolve } from 'node:path';
 import type { ICaseMetadata } from '../../src/corpus/cases.ts';
 import { initialFixtureEvidence } from '../../src/grading/initial-evidence.ts';
 import { contentHash, inventoryDirectory } from '../../src/preparation/snapshot.ts';
+import { requirement } from '../fixtures/contracts.ts';
 
 const roots: string[] = [];
 
@@ -12,7 +13,10 @@ function metadata(fixture: ICaseMetadata['fixture']): ICaseMetadata {
     id: 'initial-evidence',
     group: 'integration',
     kind: 'task',
-    requirements: ['evidence'],
+    assessment: 'outcome',
+    workFamily: 'implementation',
+    provenance: { source: 'unit-test', group: 'unit-test' },
+    requirements: [requirement('evidence')],
     fixture,
     execution: {
       networkAccess: false,

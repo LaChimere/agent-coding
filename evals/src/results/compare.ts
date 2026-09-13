@@ -73,7 +73,7 @@ export interface IOneSidedComparisonSummary {
 }
 
 export interface IComparisonReport {
-  schema: 'codex-evals/comparison-v1';
+  schema: 'codex-evals/comparison-v2';
   left: IOneSidedComparisonSummary;
   right: IOneSidedComparisonSummary;
   conditions: IComparisonConditions;
@@ -129,6 +129,19 @@ function globalConditionReasons(left: IReport, right: IReport): readonly string[
   compare('Codex executable', left.manifest.codexExecutable, right.manifest.codexExecutable);
   compare('Codex version', left.manifest.codexVersion, right.manifest.codexVersion);
   compare('Framework versions', left.manifest.framework, right.manifest.framework);
+  compare('Collection identity', left.manifest.collection.id, right.manifest.collection.id);
+  compare(
+    'Collection version',
+    left.manifest.collection.version,
+    right.manifest.collection.version,
+  );
+  // The full snapshot hash retains original grading history. Eligibility compares
+  // membership here, execution inputs per pair, and the selected current grades.
+  const members = (report: IReport) =>
+    report.manifest.collection.membership
+      .map(({ caseId, provenance }) => ({ caseId, provenance }))
+      .sort((left, right) => left.caseId.localeCompare(right.caseId));
+  compare('Collection membership', members(left), members(right));
 
   return uniqueReasons(reasons);
 }
@@ -233,7 +246,7 @@ function qualityComparison(
       ...globalReasons,
       ...(left === undefined || right === undefined
         ? ['A paired trial is unavailable.']
-        : pairConditionReasons(leftReport, rightReport, left, right, true)),
+        : [...pairConditionReasons(leftReport, rightReport, left, right, true)]),
     ];
 
     if (left !== undefined && right !== undefined) {
@@ -592,7 +605,7 @@ export function compareReports(input: {
   );
 
   return deepFreeze({
-    schema: 'codex-evals/comparison-v1',
+    schema: 'codex-evals/comparison-v2',
     left: {
       reportId: input.left.id,
       runId: input.left.runId,

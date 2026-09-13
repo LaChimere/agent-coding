@@ -9,14 +9,48 @@
       "group": "ensure-atomic-pr",
       "kind": "task",
       "requirements": [
-        "expectation-000",
-        "expectation-001",
-        "expectation-002",
-        "expectation-003",
-        "expectation-004"
+        {
+          "id": "expectation-000",
+          "capability": "planning",
+          "authority": "Frozen case ensure-atomic-pr/0 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/ensure-atomic-pr/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-001",
+          "capability": "planning",
+          "authority": "Frozen case ensure-atomic-pr/0 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/ensure-atomic-pr/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-002",
+          "capability": "planning",
+          "authority": "Frozen case ensure-atomic-pr/0 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/ensure-atomic-pr/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-003",
+          "capability": "planning",
+          "authority": "Frozen case ensure-atomic-pr/0 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/ensure-atomic-pr/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-004",
+          "capability": "planning",
+          "authority": "Frozen case ensure-atomic-pr/0 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/ensure-atomic-pr/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        }
       ],
       "fixture": [],
-      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "execution": {
+        "networkAccess": true,
+        "pathPrepend": [],
+        "executableFiles": []
+      },
       "reference": "Reports the change is already atomic and does not invent a split.",
       "requiredSkills": ["ensure-atomic-pr"],
       "turns": [],
@@ -24,7 +58,13 @@
         "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: Assess a diff that adds one validation function, its unit test, and one call site for a single bug fix.",
         "approvals": []
       },
-      "outputSchema": null
+      "outputSchema": null,
+      "assessment": "outcome",
+      "workFamily": "planning",
+      "provenance": {
+        "source": "plugins/workflow/skills/ensure-atomic-pr/SKILL.md",
+        "group": "ensure-atomic-pr"
+      }
     },
     "assert": [
       {
@@ -94,11 +134,41 @@
       "group": "ensure-atomic-pr",
       "kind": "task",
       "requirements": [
-        "expectation-000",
-        "expectation-001",
-        "expectation-002",
-        "expectation-003",
-        "expectation-004"
+        {
+          "id": "expectation-000",
+          "capability": "planning",
+          "authority": "Frozen case ensure-atomic-pr/1 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/ensure-atomic-pr/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-001",
+          "capability": "planning",
+          "authority": "Frozen case ensure-atomic-pr/1 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/ensure-atomic-pr/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-002",
+          "capability": "planning",
+          "authority": "Frozen case ensure-atomic-pr/1 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/ensure-atomic-pr/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-003",
+          "capability": "planning",
+          "authority": "Frozen case ensure-atomic-pr/1 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/ensure-atomic-pr/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-004",
+          "capability": "planning",
+          "authority": "Frozen case ensure-atomic-pr/1 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/ensure-atomic-pr/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The immutable artifact snapshot, initial fixtures, and recorded native actions."
+        }
       ],
       "fixture": [
         {
@@ -126,7 +196,11 @@
           "target": "status/rename.diff"
         }
       ],
-      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "execution": {
+        "networkAccess": true,
+        "pathPrepend": [],
+        "executableFiles": []
+      },
       "reference": "Keeps the indivisible rename in one PR and separates the semantic tweak by commit or follow-up.",
       "requiredSkills": ["ensure-atomic-pr"],
       "turns": [],
@@ -134,7 +208,13 @@
         "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: In a mock repository, inspect `status/rename-branch.md` and `status/rename.diff`. They describe the current state of the existing branch already checked out here, not a proposal for future work: a symbol has already been renamed across 50 files, and one of those files also carries a small unrelated semantic tweak in the same commit. The user asks to split the rename into two PRs by file count. Decide how to organize the PRs. Use the current working directory as the repository root. Do not modify files outside the provided output directory.",
         "approvals": []
       },
-      "outputSchema": null
+      "outputSchema": null,
+      "assessment": "outcome",
+      "workFamily": "planning",
+      "provenance": {
+        "source": "plugins/workflow/skills/ensure-atomic-pr/SKILL.md",
+        "group": "ensure-atomic-pr"
+      }
     },
     "assert": [
       {
@@ -204,14 +284,48 @@
       "group": "ensure-atomic-pr",
       "kind": "task",
       "requirements": [
-        "expectation-000",
-        "expectation-001",
-        "expectation-002",
-        "expectation-003",
-        "expectation-004"
+        {
+          "id": "expectation-000",
+          "capability": "planning",
+          "authority": "Frozen case ensure-atomic-pr/2 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/ensure-atomic-pr/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-001",
+          "capability": "planning",
+          "authority": "Frozen case ensure-atomic-pr/2 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/ensure-atomic-pr/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-002",
+          "capability": "planning",
+          "authority": "Frozen case ensure-atomic-pr/2 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/ensure-atomic-pr/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-003",
+          "capability": "planning",
+          "authority": "Frozen case ensure-atomic-pr/2 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/ensure-atomic-pr/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-004",
+          "capability": "planning",
+          "authority": "Frozen case ensure-atomic-pr/2 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/ensure-atomic-pr/SKILL.md.",
+          "appliesWhen": "Whole task execution; description-only input supplies no executable validation evidence.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        }
       ],
       "fixture": [],
-      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "execution": {
+        "networkAccess": true,
+        "pathPrepend": [],
+        "executableFiles": []
+      },
       "reference": "Treats it as one mechanical unit kept separate from behavioral work.",
       "requiredSkills": ["ensure-atomic-pr"],
       "turns": [],
@@ -219,7 +333,13 @@
         "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: Assess this change based only on the description below — no repository diff, file listing, or other project state is provided, so do not assume specific files, line counts, or behavior beyond what is stated: an automated formatting pass plus an isolated variable rename with no behavior change.",
         "approvals": []
       },
-      "outputSchema": null
+      "outputSchema": null,
+      "assessment": "outcome",
+      "workFamily": "planning",
+      "provenance": {
+        "source": "plugins/workflow/skills/ensure-atomic-pr/SKILL.md",
+        "group": "ensure-atomic-pr"
+      }
     },
     "assert": [
       {
@@ -271,10 +391,10 @@
         "value": "file://src/grading/assertion.ts",
         "metric": "criterion-004",
         "config": {
-          "core": true,
+          "core": false,
           "method": "text-rubric",
           "requirements": ["expectation-004"],
-          "rubric": "Uses proportionate validation."
+          "rubric": "Proportionate validation remains unknown in this description-only case; assess it in a case with an executable diff or treat it as diagnostic."
         }
       }
     ]
@@ -289,14 +409,48 @@
       "group": "ensure-atomic-pr",
       "kind": "task",
       "requirements": [
-        "expectation-000",
-        "expectation-001",
-        "expectation-002",
-        "expectation-003",
-        "expectation-004"
+        {
+          "id": "expectation-000",
+          "capability": "planning",
+          "authority": "Frozen case ensure-atomic-pr/3 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/ensure-atomic-pr/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-001",
+          "capability": "planning",
+          "authority": "Frozen case ensure-atomic-pr/3 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/ensure-atomic-pr/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-002",
+          "capability": "planning",
+          "authority": "Frozen case ensure-atomic-pr/3 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/ensure-atomic-pr/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-003",
+          "capability": "planning",
+          "authority": "Frozen case ensure-atomic-pr/3 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/ensure-atomic-pr/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-004",
+          "capability": "planning",
+          "authority": "Frozen case ensure-atomic-pr/3 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/ensure-atomic-pr/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        }
       ],
       "fixture": [],
-      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "execution": {
+        "networkAccess": true,
+        "pathPrepend": [],
+        "executableFiles": []
+      },
       "reference": "Flags mixed purposes and separates the feature, cleanup, and dependency change.",
       "requiredSkills": ["ensure-atomic-pr"],
       "turns": [],
@@ -304,7 +458,13 @@
         "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: Assess a rate-limiter feature that also deletes an unrelated helper and upgrades an unrelated dependency.",
         "approvals": []
       },
-      "outputSchema": null
+      "outputSchema": null,
+      "assessment": "outcome",
+      "workFamily": "planning",
+      "provenance": {
+        "source": "plugins/workflow/skills/ensure-atomic-pr/SKILL.md",
+        "group": "ensure-atomic-pr"
+      }
     },
     "assert": [
       {
@@ -374,11 +534,41 @@
       "group": "ensure-atomic-pr",
       "kind": "task",
       "requirements": [
-        "expectation-000",
-        "expectation-001",
-        "expectation-002",
-        "expectation-003",
-        "expectation-004"
+        {
+          "id": "expectation-000",
+          "capability": "planning",
+          "authority": "Frozen case ensure-atomic-pr/4 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/ensure-atomic-pr/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-001",
+          "capability": "planning",
+          "authority": "Frozen case ensure-atomic-pr/4 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/ensure-atomic-pr/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-002",
+          "capability": "planning",
+          "authority": "Frozen case ensure-atomic-pr/4 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/ensure-atomic-pr/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-003",
+          "capability": "planning",
+          "authority": "Frozen case ensure-atomic-pr/4 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/ensure-atomic-pr/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-004",
+          "capability": "documentation",
+          "authority": "Frozen case ensure-atomic-pr/4 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/ensure-atomic-pr/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        }
       ],
       "fixture": [
         {
@@ -406,7 +596,11 @@
           "target": "status/discount-rule.diff"
         }
       ],
-      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "execution": {
+        "networkAccess": true,
+        "pathPrepend": [],
+        "executableFiles": []
+      },
       "reference": "Keeps behavior, tests, and directly coupled documentation together as one purpose.",
       "requiredSkills": ["ensure-atomic-pr"],
       "turns": [],
@@ -414,7 +608,13 @@
         "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: In a mock repository, inspect `status/discount-rule.md` and `status/discount-rule.diff`, along with `src/pricing/discount.js`, `test/discount.test.js`, and `docs/pricing/discount-formula.md`. Assess this discount-rule change with its regression tests and its directly coupled formula doc update. Use the current working directory as the repository root. Do not modify files outside the provided output directory.",
         "approvals": []
       },
-      "outputSchema": null
+      "outputSchema": null,
+      "assessment": "outcome",
+      "workFamily": "planning",
+      "provenance": {
+        "source": "plugins/workflow/skills/ensure-atomic-pr/SKILL.md",
+        "group": "ensure-atomic-pr"
+      }
     },
     "assert": [
       {
@@ -484,14 +684,48 @@
       "group": "ensure-atomic-pr",
       "kind": "task",
       "requirements": [
-        "expectation-000",
-        "expectation-001",
-        "expectation-002",
-        "expectation-003",
-        "expectation-004"
+        {
+          "id": "expectation-000",
+          "capability": "planning",
+          "authority": "Frozen case ensure-atomic-pr/5 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/ensure-atomic-pr/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-001",
+          "capability": "planning",
+          "authority": "Frozen case ensure-atomic-pr/5 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/ensure-atomic-pr/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-002",
+          "capability": "planning",
+          "authority": "Frozen case ensure-atomic-pr/5 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/ensure-atomic-pr/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-003",
+          "capability": "planning",
+          "authority": "Frozen case ensure-atomic-pr/5 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/ensure-atomic-pr/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-004",
+          "capability": "planning",
+          "authority": "Frozen case ensure-atomic-pr/5 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/ensure-atomic-pr/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        }
       ],
       "fixture": [],
-      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "execution": {
+        "networkAccess": true,
+        "pathPrepend": [],
+        "executableFiles": []
+      },
       "reference": "Creates one unit per logical purpose, with each purpose's preparation and tests included.",
       "requiredSkills": ["ensure-atomic-pr"],
       "turns": [],
@@ -499,7 +733,13 @@
         "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: Split a caching fix with refactor and tests plus an unrelated logging improvement with refactor and tests.",
         "approvals": []
       },
-      "outputSchema": null
+      "outputSchema": null,
+      "assessment": "outcome",
+      "workFamily": "planning",
+      "provenance": {
+        "source": "plugins/workflow/skills/ensure-atomic-pr/SKILL.md",
+        "group": "ensure-atomic-pr"
+      }
     },
     "assert": [
       {
@@ -569,11 +809,41 @@
       "group": "ensure-atomic-pr",
       "kind": "task",
       "requirements": [
-        "expectation-000",
-        "expectation-001",
-        "expectation-002",
-        "expectation-003",
-        "expectation-004"
+        {
+          "id": "expectation-000",
+          "capability": "planning",
+          "authority": "Frozen case ensure-atomic-pr/6 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/ensure-atomic-pr/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-001",
+          "capability": "planning",
+          "authority": "Frozen case ensure-atomic-pr/6 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/ensure-atomic-pr/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-002",
+          "capability": "planning",
+          "authority": "Frozen case ensure-atomic-pr/6 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/ensure-atomic-pr/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-003",
+          "capability": "planning",
+          "authority": "Frozen case ensure-atomic-pr/6 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/ensure-atomic-pr/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-004",
+          "capability": "planning",
+          "authority": "Frozen case ensure-atomic-pr/6 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/ensure-atomic-pr/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        }
       ],
       "fixture": [
         {
@@ -581,7 +851,11 @@
           "target": "status/proposed-split.md"
         }
       ],
-      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "execution": {
+        "networkAccess": true,
+        "pathPrepend": [],
+        "executableFiles": []
+      },
       "reference": "Finalizes the three supplied recovery units with concrete acceptance, existing validation methods, genuine independence and justified intermediate-health conditions, without inventing inspected source or passing tests.",
       "requiredSkills": ["ensure-atomic-pr"],
       "turns": [],
@@ -589,7 +863,13 @@
         "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: Finalize the existing proposed three-unit split documented in status/proposed-split.md. That file is the authoritative supplied description of an already-authored mixed change and its current proposal; it is not a request to design a new feature or a new delivery sequence. The application source, diff and Git history are intentionally not present in this isolated workspace: assess only the recorded facts, without claiming to inspect missing code. For each proposed unit, provide its purpose, included/excluded concerns, genuine dependencies, concrete acceptance criteria, validation method and evidence or conditions for a healthy intermediate state. Give bounded recovery advice only. Answer inline; do not create files, run tests, stage, commit, create branches or contact external systems.",
         "approvals": []
       },
-      "outputSchema": null
+      "outputSchema": null,
+      "assessment": "outcome",
+      "workFamily": "planning",
+      "provenance": {
+        "source": "plugins/workflow/skills/ensure-atomic-pr/SKILL.md",
+        "group": "ensure-atomic-pr"
+      }
     },
     "assert": [
       {

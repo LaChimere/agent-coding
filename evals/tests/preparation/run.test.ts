@@ -3,6 +3,7 @@ import { chmod, mkdir, mkdtemp, rm, symlink } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import type { IRepositoryCase } from '../../src/corpus/cases.ts';
 import { freezeRun, type IRunRequest } from '../../src/preparation/run.ts';
+import { loadedCase } from '../fixtures/contracts.ts';
 
 async function setup(): Promise<{ root: string; input: IRunRequest }> {
   const root = await mkdtemp(resolve('.cache/freeze-test-'));
@@ -22,19 +23,14 @@ async function setup(): Promise<{ root: string; input: IRunRequest }> {
     await mkdir(resolve(candidate, path), { recursive: true });
   }
 
-  await Bun.write(
-    resolve(project, 'cases/native.json'),
-    JSON.stringify(
-      (
-        (await Bun.file(
-          resolve(import.meta.dir, '../../cases/native-interaction.json'),
-        ).json()) as IRepositoryCase[]
-      ).filter((item) => item.metadata.id === 'native/scripted-context'),
-    ),
-  );
+  await Bun.write(resolve(project, 'cases/native.json'), JSON.stringify([loadedCase().definition]));
 
   await Bun.write(resolve(project, 'src/grading/assertion.ts'), 'export default () => true;\n');
   await Bun.write(resolve(project, 'profiles/default/config.toml'), 'model="fixture"\n');
+  await Bun.write(
+    resolve(project, 'collections.json'),
+    await Bun.file(resolve(import.meta.dir, '../../collections.json')).bytes(),
+  );
   await Bun.write(resolve(project, 'package.json'), '{}\n');
   await Bun.write(resolve(project, 'bun.lock'), '{}\n');
   await Bun.write(
@@ -189,6 +185,57 @@ test('rejects invalid counts and profiles and preserves a version-query failure'
     await Bun.write(input.codexExecutable, '#!/bin/sh\necho broken >&2\nexit 9\n');
 
     await expect(freezeRun(input)).rejects.toThrow('version check failed');
+  } finally {
+    await rm(root, { recursive: true });
+  }
+});
+
+test('default freezing excludes holdout inputs before parsing or snapshotting them', async () => {
+  const { root, input } = await setup();
+  try {
+    await Bun.write(
+      resolve(input.project, 'holdout/cases/secret.json'),
+      'Invalid JSON must not be read.',
+    );
+    await Bun.write(
+      resolve(input.project, 'holdout/fixtures/secret.txt'),
+      'private holdout fixture',
+    );
+
+    const { directory, manifest } = await freezeRun(input);
+
+    expect(manifest.collection.id).toBe('development');
+    expect(manifest.collection.selection).toBe('default');
+    expect(await Bun.file(resolve(directory, 'collection.json')).json()).toEqual(
+      manifest.collection,
+    );
+    expect(await Bun.file(resolve(directory, 'private/cases/secret.json')).exists()).toBeFalse();
+    expect(await Bun.file(resolve(directory, 'private/fixtures/secret.txt')).exists()).toBeFalse();
+  } finally {
+    await rm(root, { recursive: true });
+  }
+});
+
+test('explicit acceptance freezes holdout identity and inputs without development definitions', async () => {
+  const { root, input } = await setup();
+  try {
+    await Bun.write(resolve(input.project, 'cases/native.json'), 'Invalid development definition.');
+    await Bun.write(
+      resolve(input.project, 'holdout/cases/acceptance.json'),
+      JSON.stringify([loadedCase('holdout/example').definition]),
+    );
+    await mkdir(resolve(input.project, 'holdout/fixtures'), { recursive: true });
+
+    const { directory, manifest } = await freezeRun({ ...input, collection: 'holdout' });
+
+    expect(manifest.collection).toMatchObject({
+      id: 'holdout',
+      selection: 'explicit',
+      exposure: 'unseen',
+    });
+    expect(manifest.collection.membership[0]?.caseId).toBe('holdout/example');
+    expect(await Bun.file(resolve(directory, 'private/cases/native.json')).exists()).toBeFalse();
+    expect(await Bun.file(resolve(directory, 'private/cases/acceptance.json')).exists()).toBeTrue();
   } finally {
     await rm(root, { recursive: true });
   }

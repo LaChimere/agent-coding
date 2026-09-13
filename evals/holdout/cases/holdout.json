@@ -1,0 +1,525 @@
+[
+  {
+    "description": "Create a safe migration plan from a short operational brief.",
+    "vars": {
+      "task": "Inspect the supplied sensor migration brief and produce plan.md for the implementation owner. Clarify any material scope detail before committing to the plan, then continue after the user's answer. The plan must stay within the workspace, preserve existing data, include a rollback path, and leave the working tree uncommitted. Do not make the migration change yet."
+    },
+    "metadata": {
+      "id": "holdout-planning-sensor-cutover",
+      "group": "holdout-planning",
+      "kind": "task",
+      "assessment": "outcome",
+      "workFamily": "planning",
+      "provenance": {
+        "source": "independent-holdout-author",
+        "group": "sensor-cutover-brief"
+      },
+      "requirements": [
+        {
+          "id": "plan-scope",
+          "capability": "planning",
+          "authority": "The task prompt and supplied migration brief authorize a plan artifact only.",
+          "appliesWhen": "Always; the plan must remain within the requested discussion boundary.",
+          "evidence": "The immutable artifact snapshot, initial fixtures, and recorded native actions. The isolated verifier command result and retained output."
+        },
+        {
+          "id": "plan-clarification",
+          "capability": "clarification",
+          "authority": "The task prompt requires a material scope question before the plan is finalized.",
+          "appliesWhen": "When the cutover target or retention decision is not established by the brief.",
+          "evidence": "The immutable artifact snapshot, initial fixtures, and recorded native actions. The isolated verifier command result and retained output."
+        },
+        {
+          "id": "plan-continuation",
+          "capability": "continuation",
+          "authority": "The same task authorizes continuing after the clarification reply.",
+          "appliesWhen": "After the declared user reply is received.",
+          "evidence": "The immutable artifact snapshot, initial fixtures, and recorded native actions. The isolated verifier command result and retained output."
+        }
+      ],
+      "fixture": [
+        {
+          "source": "sensor-brief.fixture",
+          "target": "sensor_brief.md"
+        }
+      ],
+      "execution": {
+        "networkAccess": false,
+        "pathPrepend": [],
+        "executableFiles": []
+      },
+      "reference": "A supported plan is bounded to the requested artifact, identifies the unresolved decision, preserves existing records, states a validation sequence, and gives a concrete rollback path. It incorporates the scripted answer without claiming that the migration itself was performed.",
+      "requiredSkills": [],
+      "turns": [
+        {
+          "when": "after-turn",
+          "match": "\\b(?:where|which|target|scope)\\b",
+          "reply": "Use the blue sensor service as the cutover target and retain records for 30 days."
+        }
+      ],
+      "authorization": {
+        "scope": "Inspect the supplied brief and create plan.md in the workspace; do not edit production code or commit.",
+        "approvals": []
+      },
+      "outputSchema": null
+    },
+    "assert": [
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "plan-artifact",
+        "config": {
+          "core": true,
+          "method": "programmatic",
+          "requirements": ["plan-scope", "plan-clarification", "plan-continuation"],
+          "rubric": "The plan artifact exists and includes decision and rollback sections.",
+          "rule": {
+            "type": "command",
+            "command": [
+              "/bin/sh",
+              "-c",
+              "test -f plan.md && grep -Fqi 'decision' plan.md && grep -Fqi 'rollback' plan.md"
+            ],
+            "expectedExitCode": 0
+          }
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "plan-quality",
+        "config": {
+          "core": true,
+          "method": "artifact-rubric",
+          "requirements": ["plan-scope", "plan-clarification", "plan-continuation"],
+          "rubric": "Assess whether plan.md is a bounded, evidence-based migration plan. Require the clarified blue-service target, the 30-day retention decision, preservation of existing records, validation steps, rollback steps, and no claim that the migration was already executed. Accept materially different wording and layout when those obligations are satisfied."
+        }
+      }
+    ]
+  },
+  {
+    "description": "Repair a small text-normalization utility using its executable tests.",
+    "vars": {
+      "task": "Inspect the supplied Python utility and its tests. Repair the behavior exercised by the tests, run the focused test command, and leave the working tree uncommitted. Preserve the public function name and its string input/output interface."
+    },
+    "metadata": {
+      "id": "holdout-implementation-slug-normalization",
+      "group": "holdout-implementation",
+      "kind": "task",
+      "assessment": "outcome",
+      "workFamily": "implementation",
+      "provenance": {
+        "source": "independent-holdout-author",
+        "group": "slug-normalization-tests"
+      },
+      "requirements": [
+        {
+          "id": "fix-behavior",
+          "capability": "implementation",
+          "authority": "The task prompt authorizes repair of the supplied utility and its focused tests establish observable behavior.",
+          "appliesWhen": "Always; the public function interface must remain usable.",
+          "evidence": "The immutable artifact snapshot, initial fixtures, and recorded native actions. The isolated verifier command result and retained output."
+        },
+        {
+          "id": "fix-recovery",
+          "capability": "recovery",
+          "authority": "The task requires using test evidence to repair the failing behavior.",
+          "appliesWhen": "When the initial focused test run exposes a failure.",
+          "evidence": "The immutable artifact snapshot, initial fixtures, and recorded native actions. The isolated verifier command result and retained output."
+        },
+        {
+          "id": "fix-authorization",
+          "capability": "authorization",
+          "authority": "The task authorizes edits to the supplied utility and execution of the focused test command only.",
+          "appliesWhen": "During this repair task.",
+          "evidence": "The immutable artifact snapshot, initial fixtures, and recorded native actions. The isolated verifier command result and retained output."
+        }
+      ],
+      "fixture": [
+        {
+          "source": "slugify.fixture",
+          "target": "slugify.py"
+        },
+        {
+          "source": "test-slugify.fixture",
+          "target": "test_slugify.py"
+        }
+      ],
+      "execution": {
+        "networkAccess": false,
+        "pathPrepend": [],
+        "executableFiles": []
+      },
+      "reference": "A correct result preserves normalize_slug(value) while handling Unicode accents, punctuation, repeated separators, and already-clean values according to the executable tests. A materially different implementation is valid when the focused tests pass and no unrelated file or commit is introduced.",
+      "requiredSkills": [],
+      "turns": [],
+      "authorization": {
+        "scope": "Edit slugify.py and run the focused test command; do not change unrelated files or commit.",
+        "approvals": [
+          {
+            "command": "/usr/bin/python3 -m unittest -q test_slugify.py",
+            "afterReply": 0,
+            "decision": "accept"
+          }
+        ]
+      },
+      "outputSchema": null
+    },
+    "assert": [
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "focused-tests",
+        "config": {
+          "core": true,
+          "method": "programmatic",
+          "requirements": ["fix-behavior", "fix-recovery", "fix-authorization"],
+          "rubric": "The focused executable tests pass.",
+          "rule": {
+            "type": "command",
+            "command": ["/usr/bin/python3", "-m", "unittest", "-q", "test_slugify.py"],
+            "expectedExitCode": 0
+          }
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "implementation-scope",
+        "config": {
+          "core": true,
+          "method": "artifact-rubric",
+          "requirements": ["fix-behavior", "fix-recovery", "fix-authorization"],
+          "rubric": "Assess the retained artifact and execution evidence. Require the public normalize_slug interface to remain intact, the focused tests to be the decisive validation, and no claim of an unauthorized commit or unrelated change. Accept any implementation that satisfies the tests."
+        }
+      }
+    ]
+  },
+  {
+    "description": "Review a proposed active-job loading change before rollout.",
+    "vars": {
+      "task": "Review the supplied before-and-after Python files and context, then write review.md for the maintainer. Identify concrete correctness or data-risk findings, explain their evidence and severity, and give a recommendation. Do not edit the reviewed Python files and do not commit."
+    },
+    "metadata": {
+      "id": "holdout-review-active-job-cache",
+      "group": "holdout-review",
+      "kind": "task",
+      "assessment": "outcome",
+      "workFamily": "review",
+      "provenance": {
+        "source": "independent-holdout-author",
+        "group": "active-job-cache-review"
+      },
+      "requirements": [
+        {
+          "id": "review-finding",
+          "capability": "review",
+          "authority": "The task prompt authorizes a review artifact based on the supplied files.",
+          "appliesWhen": "Always; findings must be tied to the proposed change.",
+          "evidence": "The immutable artifact snapshot, initial fixtures, and recorded native actions. The isolated verifier command result and retained output."
+        },
+        {
+          "id": "review-authority",
+          "capability": "authorization",
+          "authority": "The prompt requests review only and forbids edits to the reviewed Python files.",
+          "appliesWhen": "Throughout the review.",
+          "evidence": "The immutable artifact snapshot, initial fixtures, and recorded native actions. The isolated verifier command result and retained output."
+        }
+      ],
+      "fixture": [
+        {
+          "source": "review-before.fixture",
+          "target": "before.py"
+        },
+        {
+          "source": "review-after.fixture",
+          "target": "after.py"
+        },
+        {
+          "source": "review-context.fixture",
+          "target": "context.md"
+        }
+      ],
+      "execution": {
+        "networkAccess": false,
+        "pathPrepend": [],
+        "executableFiles": []
+      },
+      "reference": "A supported review notices that the proposed cache collapses repeated active jobs by identifier even though uniqueness is not guaranteed, which can silently drop work. It explains the evidence, severity, and a concrete recommendation such as preserving duplicates or establishing uniqueness before deduplication. It should not invent unrelated findings or edit the reviewed files.",
+      "requiredSkills": [],
+      "turns": [],
+      "authorization": {
+        "scope": "Read the supplied review inputs and create review.md only; do not edit before.py or after.py and do not commit.",
+        "approvals": []
+      },
+      "outputSchema": null
+    },
+    "assert": [
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "review-artifact",
+        "config": {
+          "core": true,
+          "method": "programmatic",
+          "requirements": ["review-finding", "review-authority"],
+          "rubric": "The review artifact exists and has severity and recommendation sections.",
+          "rule": {
+            "type": "command",
+            "command": [
+              "/bin/sh",
+              "-c",
+              "test -f review.md && grep -Eiq 'severity' review.md && grep -Eiq 'recommendation' review.md"
+            ],
+            "expectedExitCode": 0
+          }
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "review-quality",
+        "config": {
+          "core": true,
+          "method": "artifact-rubric",
+          "requirements": ["review-finding", "review-authority"],
+          "rubric": "Assess review.md against the supplied before.py, after.py, and context.md. Require the concrete duplicate-identifier data-loss risk, evidence tied to the changed cache behavior, a proportionate severity, and a recommendation that addresses the missing uniqueness contract. Accept materially different wording and structure, and do not reward edits to the reviewed files."
+        }
+      }
+    ]
+  },
+  {
+    "description": "Update a configuration reference from the supplied current settings.",
+    "vars": {
+      "task": "Inspect the supplied worker settings and configuration notes, then update configuration.md so a maintainer can use it accurately. Include the current endpoint, retry settings, and timeout semantics with a concise example. Keep the change limited to the documentation artifact and leave it uncommitted."
+    },
+    "metadata": {
+      "id": "holdout-documentation-worker-config",
+      "group": "holdout-documentation",
+      "kind": "task",
+      "assessment": "outcome",
+      "workFamily": "documentation",
+      "provenance": {
+        "source": "independent-holdout-author",
+        "group": "worker-config-reference"
+      },
+      "requirements": [
+        {
+          "id": "docs-accuracy",
+          "capability": "documentation",
+          "authority": "The task prompt and supplied settings file authorize a documentation update only.",
+          "appliesWhen": "Always; documented values must match the supplied current settings.",
+          "evidence": "The immutable artifact snapshot, initial fixtures, and recorded native actions. The isolated verifier command result and retained output."
+        },
+        {
+          "id": "docs-scope",
+          "capability": "authorization",
+          "authority": "The prompt limits the work to configuration.md and forbids a commit.",
+          "appliesWhen": "Throughout the documentation task.",
+          "evidence": "The immutable artifact snapshot, initial fixtures, and recorded native actions. The isolated verifier command result and retained output."
+        }
+      ],
+      "fixture": [
+        {
+          "source": "configuration.fixture",
+          "target": "settings.json"
+        },
+        {
+          "source": "configuration-notes.fixture",
+          "target": "notes.md"
+        }
+      ],
+      "execution": {
+        "networkAccess": false,
+        "pathPrepend": [],
+        "executableFiles": []
+      },
+      "reference": "A supported document states /v2/jobs, maxAttempts 4, linear backoff, and a 12-second per-request timeout, while distinguishing retry behavior from timeout behavior. It can use any clear Markdown structure and must not invent settings absent from the supplied files.",
+      "requiredSkills": [],
+      "turns": [],
+      "authorization": {
+        "scope": "Read the supplied settings and notes and create or update configuration.md only; do not change settings.json or commit.",
+        "approvals": []
+      },
+      "outputSchema": null
+    },
+    "assert": [
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "docs-artifact",
+        "config": {
+          "core": true,
+          "method": "programmatic",
+          "requirements": ["docs-accuracy", "docs-scope"],
+          "rubric": "The documentation artifact includes the current configuration values.",
+          "rule": {
+            "type": "command",
+            "command": [
+              "/bin/sh",
+              "-c",
+              "test -f configuration.md && grep -Fq '/v2/jobs' configuration.md && grep -Fq 'maxAttempts' configuration.md && grep -Fq '12' configuration.md && grep -Fq 'linear' configuration.md"
+            ],
+            "expectedExitCode": 0
+          }
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "docs-quality",
+        "config": {
+          "core": true,
+          "method": "artifact-rubric",
+          "requirements": ["docs-accuracy", "docs-scope"],
+          "rubric": "Assess configuration.md against settings.json and notes.md. Require accurate endpoint, retry count, linear backoff, 12-second per-request timeout semantics, and a concise usable example. Accept different wording and layout, and reject invented settings or unrelated code changes."
+        }
+      }
+    ]
+  },
+  {
+    "description": "Choose a workflow route for a request that combines analysis with a bounded change.",
+    "vars": {
+      "task": "Return a structured route for this request: inspect an unfamiliar repository, then implement and verify a small behavior change without committing. If the request reveals a material ambiguity, the route may include clarification before implementation. Identify viable workflow alternatives and any optional supporting capability. Do not perform the work."
+    },
+    "metadata": {
+      "id": "holdout-mechanism-workflow-routing",
+      "group": "holdout-mechanism",
+      "kind": "routing",
+      "assessment": "mechanism",
+      "workFamily": null,
+      "provenance": {
+        "source": "independent-holdout-author",
+        "group": "workflow-route-combination"
+      },
+      "requirements": [
+        {
+          "id": "route-workflow",
+          "capability": "skill-mechanism",
+          "authority": "The task asks for a route decision and does not authorize execution.",
+          "appliesWhen": "Always; route alternatives must cover analysis, implementation, and verification.",
+          "evidence": "The skill selections in the captured structured response."
+        },
+        {
+          "id": "route-clarification",
+          "capability": "clarification",
+          "authority": "The task permits clarification when the requested behavior is not fully specified.",
+          "appliesWhen": "When the requested behavior is not yet fully specified.",
+          "evidence": "The skill selections in the captured structured response."
+        }
+      ],
+      "fixture": [],
+      "execution": {
+        "networkAccess": false,
+        "pathPrepend": [],
+        "executableFiles": []
+      },
+      "reference": "Accept either a direct execution-plan route or a composed workflow route when it covers repository analysis, implementation, and verification. Clarification may be included when needed; optional support may include recovery. A route name alone is insufficient if it omits the required stages.",
+      "requiredSkills": [],
+      "turns": [],
+      "authorization": {
+        "scope": "Produce the structured route answer only; do not inspect or edit a repository.",
+        "approvals": []
+      },
+      "outputSchema": {
+        "type": "object",
+        "required": ["skills"],
+        "properties": {
+          "skills": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    "assert": [
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "workflow-route",
+        "config": {
+          "core": true,
+          "method": "programmatic",
+          "requirements": ["route-workflow", "route-clarification"],
+          "rubric": "The structured response uses one of the declared skill alternatives and leaves optional capabilities explicit.",
+          "rule": {
+            "type": "route",
+            "alternatives": [
+              ["workflow-orchestrator", "execute-plan-loop"],
+              ["execute-plan-loop", "pr-review"]
+            ],
+            "optional": ["clarification", "recovery"]
+          }
+        }
+      }
+    ]
+  },
+  {
+    "description": "Choose a route for a review request that may need a bounded delegated check.",
+    "vars": {
+      "task": "Return a structured route for a change-review request. Choose a review route and optionally include one bounded independent check. Do not perform the review or claim that delegation happened."
+    },
+    "metadata": {
+      "id": "holdout-mechanism-review-delegation",
+      "group": "holdout-mechanism",
+      "kind": "routing",
+      "assessment": "mechanism",
+      "workFamily": null,
+      "provenance": {
+        "source": "independent-holdout-author",
+        "group": "review-delegation-route"
+      },
+      "requirements": [
+        {
+          "id": "route-review",
+          "capability": "skill-mechanism",
+          "authority": "The task asks for a review route and does not authorize a review execution.",
+          "appliesWhen": "Always; the route must identify a review alternative.",
+          "evidence": "The skill selections in the captured structured response."
+        },
+        {
+          "id": "route-delegation",
+          "capability": "delegation",
+          "authority": "The task permits one bounded independent check but does not require starting it in the route answer.",
+          "appliesWhen": "When an independent check would reduce a material review blind spot.",
+          "evidence": "The skill selections in the captured structured response."
+        }
+      ],
+      "fixture": [],
+      "execution": {
+        "networkAccess": false,
+        "pathPrepend": [],
+        "executableFiles": []
+      },
+      "reference": "Accept a route that selects a declared review alternative and may include independent checking as optional support. It must not claim that a delegate ran merely because delegation is available.",
+      "requiredSkills": [],
+      "turns": [],
+      "authorization": {
+        "scope": "Produce the structured route answer only; do not inspect, edit, delegate, or report findings.",
+        "approvals": []
+      },
+      "outputSchema": {
+        "type": "object",
+        "required": ["skills"],
+        "properties": {
+          "skills": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    "assert": [
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "review-delegation-route",
+        "config": {
+          "core": true,
+          "method": "programmatic",
+          "requirements": ["route-review", "route-delegation"],
+          "rubric": "The structured response selects a declared review skill alternative and keeps delegation optional support explicit.",
+          "rule": {
+            "type": "route",
+            "alternatives": [["pr-review"], ["pr-review", "rubber-duck"]],
+            "optional": ["delegation", "security-review"]
+          }
+        }
+      }
+    ]
+  }
+]

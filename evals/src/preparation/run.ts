@@ -2,6 +2,12 @@ import { randomUUID } from 'node:crypto';
 import { chmod, mkdir, realpath } from 'node:fs/promises';
 import { basename, dirname, resolve } from 'node:path';
 import { loadCases } from '../corpus/cases.ts';
+import {
+  type CollectionId,
+  freezeCollection,
+  requireInputPath,
+  selectCollection,
+} from '../corpus/collections.ts';
 import { promptfooVersion } from '../promptfoo/library.ts';
 import { loadPriceBook } from '../results/pricing.ts';
 import type { ICandidateSnapshot, IRunManifest } from '../results/records.ts';
@@ -16,6 +22,7 @@ export interface IRunRequest {
   concurrency: number;
   repetitions: number;
   codexExecutable: string;
+  collection?: CollectionId;
 }
 
 async function executableVersion(executable: string, directory: string): Promise<string> {
@@ -97,15 +104,29 @@ export async function freezeRun(
   await writeJsonRecord(resolve(directory, 'freeze-request.json'), { startedAt, request: input });
 
   try {
+    const selectedCollection = await selectCollection(project, input.collection);
     const codexVersion = await executableVersion(executable, directory);
     const privateDirectory = resolve(directory, 'private');
     await mkdir(privateDirectory);
 
     // These are private framework inputs, never readable through the candidate profile.
-    for (const name of ['src', 'cases', 'fixtures', 'profiles', 'pricing']) {
+    for (const name of ['src', 'profiles', 'pricing']) {
       await snapshotDirectory(resolve(project, name), resolve(privateDirectory, name), {
         symlinks: 'reject',
       });
+    }
+
+    for (const [source, target] of [
+      [selectedCollection.caseRoot, 'cases'],
+      [selectedCollection.fixtureRoot, 'fixtures'],
+    ] as const) {
+      await snapshotDirectory(
+        await requireInputPath(project, source),
+        resolve(privateDirectory, target),
+        {
+          symlinks: 'reject',
+        },
+      );
     }
 
     for (const name of ['package.json', 'bun.lock']) {
@@ -127,7 +148,13 @@ export async function freezeRun(
       definitionId: judgeDefinitionId(implementation.sha256, profileInventory.sha256),
     } as const;
 
-    const cases = await loadCases(privateDirectory, input.selectedCases);
+    const cases = await loadCases(
+      privateDirectory,
+      { caseRoot: 'cases', fixtureRoot: 'fixtures' },
+      input.selectedCases,
+    );
+    const collection = freezeCollection(selectedCollection, cases, input.collection !== undefined);
+    await writeJsonRecord(resolve(directory, 'collection.json'), collection);
     const candidates: ICandidateSnapshot[] = [];
 
     for (const [index, source] of input.candidates.entries()) {
@@ -176,7 +203,8 @@ export async function freezeRun(
     );
 
     const manifest: IRunManifest = {
-      schema: 'codex-evals/run-v1',
+      schema: 'codex-evals/run-v2',
+      collection,
       id,
       createdAt: Date.now(),
       concurrency: input.concurrency,

@@ -1,4 +1,6 @@
 import { expect, test } from 'bun:test';
+import type { ILoadedCase } from '../../src/corpus/cases.ts';
+import type { ICollectionSnapshot } from '../../src/corpus/collections.ts';
 import type { IGradingRecord } from '../../src/results/quality.ts';
 import type {
   ICandidateSnapshot,
@@ -12,7 +14,11 @@ import {
   type IReportDefinitionInput,
   renderReportMarkdown,
 } from '../../src/results/report.ts';
-import type { IResourceOperation, IUsageObservation } from '../../src/results/resources.ts';
+import type {
+  IPriceBook,
+  IResourceOperation,
+  IUsageObservation,
+} from '../../src/results/resources.ts';
 
 const inventory = { sha256: 'inventory', entries: [] };
 const candidate: ICandidateSnapshot = {
@@ -24,6 +30,86 @@ const candidate: ICandidateSnapshot = {
   inventory,
   profileInventory: inventory,
 };
+
+const priceBook: IPriceBook = {
+  source: 'test-prices',
+  version: 'test-v1',
+  currency: 'USD',
+  rates: { standard: { input: 1, output: 1, cachedInput: 0 } },
+  modelMapping: { 'gpt-6-astra': 'standard' },
+};
+
+function loadedCase(
+  caseId: string,
+  assessment: 'outcome' | 'mechanism' = 'outcome',
+  workFamily: 'planning' | 'implementation' | 'review' | 'documentation' | null = 'implementation',
+): ILoadedCase {
+  return {
+    definition: {
+      description: `Test case ${caseId}`,
+      vars: { task: `Complete ${caseId}.` },
+      metadata: {
+        id: caseId,
+        group: 'results-tests',
+        kind: 'task',
+        assessment,
+        workFamily,
+        provenance: { source: 'tests', group: 'results' },
+        requirements: [
+          {
+            id: `requirement-${caseId}`,
+            capability: workFamily ?? 'skill-mechanism',
+            authority: 'test task',
+            appliesWhen: 'always',
+            evidence: 'saved result evidence',
+          },
+        ],
+        fixture: [],
+        execution: { networkAccess: false, pathPrepend: [], executableFiles: [] },
+        reference: '',
+        requiredSkills: [],
+        turns: [],
+        authorization: { scope: 'test only', approvals: [] },
+        outputSchema: null,
+      },
+      assert: [
+        {
+          type: 'javascript',
+          value: 'file://grader.ts',
+          metric: 'task',
+          config: {
+            core: true,
+            method: 'programmatic',
+            requirements: [`requirement-${caseId}`],
+            rubric: 'The result satisfies the test task.',
+          },
+        },
+      ],
+    },
+    version: `${caseId}-case-v1`,
+    executionVersion: `${caseId}-execution`,
+    source: `tests/${caseId}.json`,
+  };
+}
+
+function collection(cases: readonly ILoadedCase[]): ICollectionSnapshot {
+  return {
+    schema: 'codex-evals/collection-v1',
+    id: 'development',
+    version: 'results-tests-v1',
+    caseRoot: 'tests/cases',
+    fixtureRoot: 'tests/fixtures',
+    exposure: 'seen',
+    selection: 'default',
+    membership: cases.map((item) => ({
+      caseId: item.definition.metadata.id,
+      source: item.source,
+      version: item.version,
+      provenance: item.definition.metadata.provenance,
+    })),
+    membershipHash: 'results-tests-membership',
+  };
+}
 
 function trial(id: string, caseId = id, executionVersion = `${id}-execution`): IPlannedTrial {
   return {
@@ -44,8 +130,10 @@ function trial(id: string, caseId = id, executionVersion = `${id}-execution`): I
 }
 
 function manifest(runId: string, trials: readonly IPlannedTrial[]): IRunManifest {
+  const cases = [...new Map(trials.map((item) => [item.caseId, loadedCase(item.caseId)])).values()];
   return {
-    schema: 'codex-evals/run-v1',
+    schema: 'codex-evals/run-v2',
+    collection: collection(cases),
     id: runId,
     createdAt: 1,
     concurrency: 2,
@@ -63,8 +151,9 @@ function manifest(runId: string, trials: readonly IPlannedTrial[]): IRunManifest
       definitionId: 'judge-v1',
     },
     candidates: [candidate],
-    cases: [],
+    cases,
     trials: [...trials],
+    priceBook,
   };
 }
 
@@ -195,6 +284,8 @@ test('builds an immutable report from explicit grading and resource selections',
 
   expect(report.definition.definitionSource).toBe('explicit');
   expect(report.definition.operationIds).toEqual(['operation-trial-a']);
+  expect(report.schema).toBe('codex-evals/report-v2');
+  expect(report.runOutcome).toEqual({ status: 'unknown', error: null, evidence: null });
   expect(report.quality.summary).toMatchObject({
     planned: 1,
     passed: 1,
@@ -326,6 +417,45 @@ test('allows explicit rubric changes only when the planned execution identity is
   });
 
   expect(report.definition.definitionSource).toBe('explicit');
+});
+
+test('retains grading cases while allowing assertion and reference changes only', () => {
+  const source = inputFor(
+    'run-a',
+    [trial('trial-a')],
+    [grade('grade-trial-a', 'trial-a', 'passed', 'operation-trial-a')],
+    [operation('trial-a')],
+  );
+  const original = source.manifest.cases[0];
+  if (original === undefined) {
+    throw new Error('Test grading case missing.');
+  }
+
+  const changed = structuredClone(original);
+  changed.definition.metadata.reference = 'updated grading guidance';
+  const changedAssertion = changed.definition.assert[0];
+  if (changedAssertion === undefined) {
+    throw new Error('Test grading assertion missing.');
+  }
+  changedAssertion.config = { ...changedAssertion.config, rubric: 'Updated rubric.' };
+
+  const report = buildReport({
+    ...source,
+    definition: { ...source.definition, gradingCases: [changed] },
+  });
+
+  expect(report.definition.gradingCases[0]?.definition.metadata.reference).toBe(
+    'updated grading guidance',
+  );
+
+  const invalid = structuredClone(changed);
+  invalid.definition.vars.task = 'A changed task is a new execution input.';
+  expect(() =>
+    buildReport({
+      ...source,
+      definition: { ...source.definition, gradingCases: [invalid] },
+    }),
+  ).toThrow('changes frozen inputs');
 });
 
 test('keeps missing execution records and selected grade absence unknown', () => {

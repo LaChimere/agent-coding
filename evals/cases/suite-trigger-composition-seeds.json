@@ -8,9 +8,35 @@
       "id": "suite/trigger-composition-seeds/orchestrator-vs-direct-worker",
       "group": "suite:trigger-composition-seeds",
       "kind": "routing",
-      "requirements": ["route-answer", "expectation-000", "expectation-001"],
+      "requirements": [
+        {
+          "id": "route-answer",
+          "capability": "skill-mechanism",
+          "authority": "Frozen case suite/trigger-composition-seeds/orchestrator-vs-direct-worker and metadata.authorization.scope. No required-skill contract is declared for this case.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The skill selections in the captured structured response."
+        },
+        {
+          "id": "expectation-000",
+          "capability": "skill-mechanism",
+          "authority": "Frozen case suite/trigger-composition-seeds/orchestrator-vs-direct-worker and metadata.authorization.scope. No required-skill contract is declared for this case.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-001",
+          "capability": "skill-mechanism",
+          "authority": "Frozen case suite/trigger-composition-seeds/orchestrator-vs-direct-worker and metadata.authorization.scope. No required-skill contract is declared for this case.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        }
+      ],
       "fixture": [],
-      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "execution": {
+        "networkAccess": true,
+        "pathPrepend": [],
+        "executableFiles": []
+      },
       "reference": "",
       "requiredSkills": [],
       "turns": [],
@@ -22,10 +48,23 @@
         "type": "object",
         "additionalProperties": false,
         "properties": {
-          "skills": { "type": "array", "items": { "type": "string" } },
-          "reason": { "type": "string" }
+          "skills": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "reason": {
+            "type": "string"
+          }
         },
         "required": ["skills", "reason"]
+      },
+      "assessment": "mechanism",
+      "workFamily": null,
+      "provenance": {
+        "source": "docs/coding-orchestration/design.md",
+        "group": "suite:trigger-composition-seeds"
       }
     },
     "assert": [
@@ -37,11 +76,11 @@
           "core": true,
           "method": "programmatic",
           "requirements": ["route-answer"],
-          "rubric": "The classification answer names the expected installed route and excludes forbidden routes; this checks the answer contract, not actual skill invocation.",
+          "rubric": "This is a routing-only check. The answer must select one allowed exact route alternative and may include only explicitly optional companions; route selection does not prove downstream execution.",
           "rule": {
             "type": "route",
-            "expected": ["execute-plan-loop"],
-            "forbidden": ["workflow-orchestrator"]
+            "alternatives": [["execute-plan-loop"]],
+            "optional": []
           }
         }
       },
@@ -78,9 +117,35 @@
       "id": "suite/trigger-composition-seeds/decompose-vs-atomic",
       "group": "suite:trigger-composition-seeds",
       "kind": "routing",
-      "requirements": ["route-answer", "expectation-000", "expectation-001"],
+      "requirements": [
+        {
+          "id": "route-answer",
+          "capability": "skill-mechanism",
+          "authority": "Frozen case suite/trigger-composition-seeds/decompose-vs-atomic and metadata.authorization.scope. No required-skill contract is declared for this case.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The skill selections in the captured structured response."
+        },
+        {
+          "id": "expectation-000",
+          "capability": "skill-mechanism",
+          "authority": "Frozen case suite/trigger-composition-seeds/decompose-vs-atomic and metadata.authorization.scope. No required-skill contract is declared for this case.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-001",
+          "capability": "skill-mechanism",
+          "authority": "Frozen case suite/trigger-composition-seeds/decompose-vs-atomic and metadata.authorization.scope. No required-skill contract is declared for this case.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        }
+      ],
       "fixture": [],
-      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "execution": {
+        "networkAccess": true,
+        "pathPrepend": [],
+        "executableFiles": []
+      },
       "reference": "",
       "requiredSkills": [],
       "turns": [],
@@ -92,10 +157,23 @@
         "type": "object",
         "additionalProperties": false,
         "properties": {
-          "skills": { "type": "array", "items": { "type": "string" } },
-          "reason": { "type": "string" }
+          "skills": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "reason": {
+            "type": "string"
+          }
         },
         "required": ["skills", "reason"]
+      },
+      "assessment": "mechanism",
+      "workFamily": null,
+      "provenance": {
+        "source": "docs/coding-orchestration/design.md",
+        "group": "suite:trigger-composition-seeds"
       }
     },
     "assert": [
@@ -107,8 +185,12 @@
           "core": true,
           "method": "programmatic",
           "requirements": ["route-answer"],
-          "rubric": "The classification answer names the expected installed route and excludes forbidden routes; this checks the answer contract, not actual skill invocation.",
-          "rule": { "type": "route", "expected": ["decompose-feature"], "forbidden": [] }
+          "rubric": "This is a routing-only check. The answer must select one allowed exact route alternative and may include only explicitly optional companions; route selection does not prove downstream execution.",
+          "rule": {
+            "type": "route",
+            "alternatives": [["decompose-feature"]],
+            "optional": []
+          }
         }
       },
       {
@@ -144,9 +226,35 @@
       "id": "suite/trigger-composition-seeds/decompose-vs-parallel",
       "group": "suite:trigger-composition-seeds",
       "kind": "routing",
-      "requirements": ["route-answer", "expectation-000", "expectation-001"],
+      "requirements": [
+        {
+          "id": "route-answer",
+          "capability": "skill-mechanism",
+          "authority": "Frozen case suite/trigger-composition-seeds/decompose-vs-parallel and metadata.authorization.scope. No required-skill contract is declared for this case.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The skill selections in the captured structured response."
+        },
+        {
+          "id": "expectation-000",
+          "capability": "skill-mechanism",
+          "authority": "Frozen case suite/trigger-composition-seeds/decompose-vs-parallel and metadata.authorization.scope. No required-skill contract is declared for this case.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-001",
+          "capability": "skill-mechanism",
+          "authority": "Frozen case suite/trigger-composition-seeds/decompose-vs-parallel and metadata.authorization.scope. No required-skill contract is declared for this case.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        }
+      ],
       "fixture": [],
-      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "execution": {
+        "networkAccess": true,
+        "pathPrepend": [],
+        "executableFiles": []
+      },
       "reference": "",
       "requiredSkills": [],
       "turns": [],
@@ -158,10 +266,23 @@
         "type": "object",
         "additionalProperties": false,
         "properties": {
-          "skills": { "type": "array", "items": { "type": "string" } },
-          "reason": { "type": "string" }
+          "skills": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "reason": {
+            "type": "string"
+          }
         },
         "required": ["skills", "reason"]
+      },
+      "assessment": "mechanism",
+      "workFamily": null,
+      "provenance": {
+        "source": "docs/coding-orchestration/design.md",
+        "group": "suite:trigger-composition-seeds"
       }
     },
     "assert": [
@@ -173,8 +294,12 @@
           "core": true,
           "method": "programmatic",
           "requirements": ["route-answer"],
-          "rubric": "The classification answer names the expected installed route and excludes forbidden routes; this checks the answer contract, not actual skill invocation.",
-          "rule": { "type": "route", "expected": ["plan-parallel-work"], "forbidden": [] }
+          "rubric": "This is a routing-only check. The answer must select one allowed exact route alternative and may include only explicitly optional companions; route selection does not prove downstream execution.",
+          "rule": {
+            "type": "route",
+            "alternatives": [["plan-parallel-work"]],
+            "optional": []
+          }
         }
       },
       {
@@ -210,9 +335,35 @@
       "id": "suite/trigger-composition-seeds/docs-direct-vs-broad-refresh",
       "group": "suite:trigger-composition-seeds",
       "kind": "routing",
-      "requirements": ["route-answer", "expectation-000", "expectation-001"],
+      "requirements": [
+        {
+          "id": "route-answer",
+          "capability": "skill-mechanism",
+          "authority": "Frozen case suite/trigger-composition-seeds/docs-direct-vs-broad-refresh and metadata.authorization.scope. No required-skill contract is declared for this case.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The skill selections in the captured structured response."
+        },
+        {
+          "id": "expectation-000",
+          "capability": "skill-mechanism",
+          "authority": "Frozen case suite/trigger-composition-seeds/docs-direct-vs-broad-refresh and metadata.authorization.scope. No required-skill contract is declared for this case.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-001",
+          "capability": "skill-mechanism",
+          "authority": "Frozen case suite/trigger-composition-seeds/docs-direct-vs-broad-refresh and metadata.authorization.scope. No required-skill contract is declared for this case.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        }
+      ],
       "fixture": [],
-      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "execution": {
+        "networkAccess": true,
+        "pathPrepend": [],
+        "executableFiles": []
+      },
       "reference": "",
       "requiredSkills": [],
       "turns": [],
@@ -224,10 +375,23 @@
         "type": "object",
         "additionalProperties": false,
         "properties": {
-          "skills": { "type": "array", "items": { "type": "string" } },
-          "reason": { "type": "string" }
+          "skills": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "reason": {
+            "type": "string"
+          }
         },
         "required": ["skills", "reason"]
+      },
+      "assessment": "mechanism",
+      "workFamily": null,
+      "provenance": {
+        "source": "docs/coding-orchestration/design.md",
+        "group": "suite:trigger-composition-seeds"
       }
     },
     "assert": [
@@ -239,8 +403,12 @@
           "core": true,
           "method": "programmatic",
           "requirements": ["route-answer"],
-          "rubric": "The classification answer names the expected installed route and excludes forbidden routes; this checks the answer contract, not actual skill invocation.",
-          "rule": { "type": "route", "expected": ["refresh-related-docs"], "forbidden": [] }
+          "rubric": "This is a routing-only check. The answer must select one allowed exact route alternative and may include only explicitly optional companions; route selection does not prove downstream execution.",
+          "rule": {
+            "type": "route",
+            "alternatives": [["refresh-related-docs"]],
+            "optional": []
+          }
         }
       },
       {
@@ -276,9 +444,35 @@
       "id": "suite/trigger-composition-seeds/image-scan-vs-source-security",
       "group": "suite:trigger-composition-seeds",
       "kind": "routing",
-      "requirements": ["route-answer", "expectation-000", "expectation-001"],
+      "requirements": [
+        {
+          "id": "route-answer",
+          "capability": "skill-mechanism",
+          "authority": "Frozen case suite/trigger-composition-seeds/image-scan-vs-source-security and metadata.authorization.scope. No required-skill contract is declared for this case.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The skill selections in the captured structured response."
+        },
+        {
+          "id": "expectation-000",
+          "capability": "skill-mechanism",
+          "authority": "Frozen case suite/trigger-composition-seeds/image-scan-vs-source-security and metadata.authorization.scope. No required-skill contract is declared for this case.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-001",
+          "capability": "skill-mechanism",
+          "authority": "Frozen case suite/trigger-composition-seeds/image-scan-vs-source-security and metadata.authorization.scope. No required-skill contract is declared for this case.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        }
+      ],
       "fixture": [],
-      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "execution": {
+        "networkAccess": true,
+        "pathPrepend": [],
+        "executableFiles": []
+      },
       "reference": "",
       "requiredSkills": [],
       "turns": [],
@@ -290,10 +484,23 @@
         "type": "object",
         "additionalProperties": false,
         "properties": {
-          "skills": { "type": "array", "items": { "type": "string" } },
-          "reason": { "type": "string" }
+          "skills": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "reason": {
+            "type": "string"
+          }
         },
         "required": ["skills", "reason"]
+      },
+      "assessment": "mechanism",
+      "workFamily": null,
+      "provenance": {
+        "source": "docs/coding-orchestration/design.md",
+        "group": "suite:trigger-composition-seeds"
       }
     },
     "assert": [
@@ -305,11 +512,11 @@
           "core": true,
           "method": "programmatic",
           "requirements": ["route-answer"],
-          "rubric": "The classification answer names the expected installed route and excludes forbidden routes; this checks the answer contract, not actual skill invocation.",
+          "rubric": "This is a routing-only check. The answer must select one allowed exact route alternative and may include only explicitly optional companions; route selection does not prove downstream execution.",
           "rule": {
             "type": "route",
-            "expected": ["scan-image-vulnerabilities"],
-            "forbidden": ["security-review"]
+            "alternatives": [["scan-image-vulnerabilities"]],
+            "optional": []
           }
         }
       },
@@ -346,10 +553,36 @@
       "id": "suite/trigger-composition-seeds/pr-review-with-security-companion",
       "group": "suite:trigger-composition-seeds",
       "kind": "routing",
-      "requirements": ["route-answer", "expectation-000", "expectation-001"],
+      "requirements": [
+        {
+          "id": "route-answer",
+          "capability": "skill-mechanism",
+          "authority": "Frozen case suite/trigger-composition-seeds/pr-review-with-security-companion and metadata.authorization.scope. No required-skill contract is declared for this case.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The skill selections in the captured structured response."
+        },
+        {
+          "id": "expectation-000",
+          "capability": "skill-mechanism",
+          "authority": "Frozen case suite/trigger-composition-seeds/pr-review-with-security-companion and metadata.authorization.scope. No required-skill contract is declared for this case.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-001",
+          "capability": "skill-mechanism",
+          "authority": "Frozen case suite/trigger-composition-seeds/pr-review-with-security-companion and metadata.authorization.scope. No required-skill contract is declared for this case.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        }
+      ],
       "fixture": [],
-      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
-      "reference": "",
+      "execution": {
+        "networkAccess": true,
+        "pathPrepend": [],
+        "executableFiles": []
+      },
+      "reference": "A valid concise route selects pr-review and retains the requested security coverage, or states that the required specialist capability is unavailable. Selecting the public entrypoint alone with a generic rationale that omits this explicit scope does not satisfy the whole routing task. An optional installed security companion may be named; this classification does not execute it.",
       "requiredSkills": [],
       "turns": [],
       "authorization": {
@@ -360,10 +593,23 @@
         "type": "object",
         "additionalProperties": false,
         "properties": {
-          "skills": { "type": "array", "items": { "type": "string" } },
-          "reason": { "type": "string" }
+          "skills": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "reason": {
+            "type": "string"
+          }
         },
         "required": ["skills", "reason"]
+      },
+      "assessment": "mechanism",
+      "workFamily": null,
+      "provenance": {
+        "source": "docs/coding-orchestration/design.md",
+        "group": "suite:trigger-composition-seeds"
       }
     },
     "assert": [
@@ -375,8 +621,12 @@
           "core": true,
           "method": "programmatic",
           "requirements": ["route-answer"],
-          "rubric": "The classification answer names the expected installed route and excludes forbidden routes; this checks the answer contract, not actual skill invocation.",
-          "rule": { "type": "route", "expected": ["pr-review"], "forbidden": ["code-review"] }
+          "rubric": "This is a routing-only check. The answer must select one allowed exact route alternative and may include only explicitly optional companions; route selection does not prove downstream execution.",
+          "rule": {
+            "type": "route",
+            "alternatives": [["pr-review"]],
+            "optional": ["codex-security:security-diff-scan"]
+          }
         }
       },
       {
@@ -398,7 +648,7 @@
           "core": true,
           "method": "text-rubric",
           "requirements": ["expectation-001"],
-          "rubric": "This is a routing-only classification case. Assess whether the selected route and rationale identify how the downstream skill should handle the requirement below. Do not require actual task execution, file edits, scans, reviews, or tool calls in this classification answer. Requirement: Invoke complete diff security as a companion when available."
+          "rubric": "The routing answer preserves the explicitly requested security coverage while using pr-review as the public entrypoint. Accept a concise equivalent rationale, including an honest statement that required specialist coverage remains incomplete if unavailable. A generic PR-review route that drops the requested security scope is insufficient. Do not require a separate companion name, actual invocation, or downstream procedure recitation."
         }
       }
     ]
@@ -412,9 +662,35 @@
       "id": "suite/trigger-composition-seeds/pr-review-vs-image-scan",
       "group": "suite:trigger-composition-seeds",
       "kind": "routing",
-      "requirements": ["route-answer", "expectation-000", "expectation-001"],
+      "requirements": [
+        {
+          "id": "route-answer",
+          "capability": "skill-mechanism",
+          "authority": "Frozen case suite/trigger-composition-seeds/pr-review-vs-image-scan and metadata.authorization.scope. No required-skill contract is declared for this case.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The skill selections in the captured structured response."
+        },
+        {
+          "id": "expectation-000",
+          "capability": "skill-mechanism",
+          "authority": "Frozen case suite/trigger-composition-seeds/pr-review-vs-image-scan and metadata.authorization.scope. No required-skill contract is declared for this case.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-001",
+          "capability": "skill-mechanism",
+          "authority": "Frozen case suite/trigger-composition-seeds/pr-review-vs-image-scan and metadata.authorization.scope. No required-skill contract is declared for this case.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        }
+      ],
       "fixture": [],
-      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "execution": {
+        "networkAccess": true,
+        "pathPrepend": [],
+        "executableFiles": []
+      },
       "reference": "",
       "requiredSkills": [],
       "turns": [],
@@ -426,10 +702,23 @@
         "type": "object",
         "additionalProperties": false,
         "properties": {
-          "skills": { "type": "array", "items": { "type": "string" } },
-          "reason": { "type": "string" }
+          "skills": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "reason": {
+            "type": "string"
+          }
         },
         "required": ["skills", "reason"]
+      },
+      "assessment": "mechanism",
+      "workFamily": null,
+      "provenance": {
+        "source": "docs/coding-orchestration/design.md",
+        "group": "suite:trigger-composition-seeds"
       }
     },
     "assert": [
@@ -441,11 +730,11 @@
           "core": true,
           "method": "programmatic",
           "requirements": ["route-answer"],
-          "rubric": "The classification answer names the expected installed route and excludes forbidden routes; this checks the answer contract, not actual skill invocation.",
+          "rubric": "This is a routing-only check. The answer must select one allowed exact route alternative and may include only explicitly optional companions; route selection does not prove downstream execution.",
           "rule": {
             "type": "route",
-            "expected": ["scan-image-vulnerabilities"],
-            "forbidden": ["pr-review"]
+            "alternatives": [["scan-image-vulnerabilities"]],
+            "optional": []
           }
         }
       },
@@ -482,9 +771,35 @@
       "id": "suite/trigger-composition-seeds/pr-review-vs-atomicity",
       "group": "suite:trigger-composition-seeds",
       "kind": "routing",
-      "requirements": ["route-answer", "expectation-000", "expectation-001"],
+      "requirements": [
+        {
+          "id": "route-answer",
+          "capability": "skill-mechanism",
+          "authority": "Frozen case suite/trigger-composition-seeds/pr-review-vs-atomicity and metadata.authorization.scope. No required-skill contract is declared for this case.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The skill selections in the captured structured response."
+        },
+        {
+          "id": "expectation-000",
+          "capability": "skill-mechanism",
+          "authority": "Frozen case suite/trigger-composition-seeds/pr-review-vs-atomicity and metadata.authorization.scope. No required-skill contract is declared for this case.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-001",
+          "capability": "skill-mechanism",
+          "authority": "Frozen case suite/trigger-composition-seeds/pr-review-vs-atomicity and metadata.authorization.scope. No required-skill contract is declared for this case.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        }
+      ],
       "fixture": [],
-      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "execution": {
+        "networkAccess": true,
+        "pathPrepend": [],
+        "executableFiles": []
+      },
       "reference": "",
       "requiredSkills": [],
       "turns": [],
@@ -496,10 +811,23 @@
         "type": "object",
         "additionalProperties": false,
         "properties": {
-          "skills": { "type": "array", "items": { "type": "string" } },
-          "reason": { "type": "string" }
+          "skills": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "reason": {
+            "type": "string"
+          }
         },
         "required": ["skills", "reason"]
+      },
+      "assessment": "mechanism",
+      "workFamily": null,
+      "provenance": {
+        "source": "docs/coding-orchestration/design.md",
+        "group": "suite:trigger-composition-seeds"
       }
     },
     "assert": [
@@ -511,8 +839,12 @@
           "core": true,
           "method": "programmatic",
           "requirements": ["route-answer"],
-          "rubric": "The classification answer names the expected installed route and excludes forbidden routes; this checks the answer contract, not actual skill invocation.",
-          "rule": { "type": "route", "expected": ["ensure-atomic-pr"], "forbidden": ["pr-review"] }
+          "rubric": "This is a routing-only check. The answer must select one allowed exact route alternative and may include only explicitly optional companions; route selection does not prove downstream execution.",
+          "rule": {
+            "type": "route",
+            "alternatives": [["ensure-atomic-pr"]],
+            "optional": []
+          }
         }
       },
       {
@@ -548,9 +880,42 @@
       "id": "suite/trigger-composition-seeds/pr-review-auto-rubber-duck",
       "group": "suite:trigger-composition-seeds",
       "kind": "routing",
-      "requirements": ["route-answer", "expectation-000", "expectation-001", "expectation-002"],
+      "requirements": [
+        {
+          "id": "route-answer",
+          "capability": "skill-mechanism",
+          "authority": "Frozen case suite/trigger-composition-seeds/pr-review-auto-rubber-duck and metadata.authorization.scope. No required-skill contract is declared for this case.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The skill selections in the captured structured response."
+        },
+        {
+          "id": "expectation-000",
+          "capability": "skill-mechanism",
+          "authority": "Frozen case suite/trigger-composition-seeds/pr-review-auto-rubber-duck and metadata.authorization.scope. No required-skill contract is declared for this case.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-001",
+          "capability": "skill-mechanism",
+          "authority": "Frozen case suite/trigger-composition-seeds/pr-review-auto-rubber-duck and metadata.authorization.scope. No required-skill contract is declared for this case.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-002",
+          "capability": "skill-mechanism",
+          "authority": "Frozen case suite/trigger-composition-seeds/pr-review-auto-rubber-duck and metadata.authorization.scope. No required-skill contract is declared for this case.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        }
+      ],
       "fixture": [],
-      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "execution": {
+        "networkAccess": true,
+        "pathPrepend": [],
+        "executableFiles": []
+      },
       "reference": "",
       "requiredSkills": [],
       "turns": [],
@@ -562,10 +927,23 @@
         "type": "object",
         "additionalProperties": false,
         "properties": {
-          "skills": { "type": "array", "items": { "type": "string" } },
-          "reason": { "type": "string" }
+          "skills": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "reason": {
+            "type": "string"
+          }
         },
         "required": ["skills", "reason"]
+      },
+      "assessment": "mechanism",
+      "workFamily": null,
+      "provenance": {
+        "source": "docs/coding-orchestration/design.md",
+        "group": "suite:trigger-composition-seeds"
       }
     },
     "assert": [
@@ -577,11 +955,11 @@
           "core": true,
           "method": "programmatic",
           "requirements": ["route-answer"],
-          "rubric": "The classification answer names the expected installed route and excludes forbidden routes; this checks the answer contract, not actual skill invocation.",
+          "rubric": "This is a routing-only check. The answer must select one allowed exact route alternative and may include only explicitly optional companions; route selection does not prove downstream execution.",
           "rule": {
             "type": "route",
-            "expected": ["pr-review", "rubber-duck"],
-            "forbidden": ["spar", "code-review"]
+            "alternatives": [["pr-review", "rubber-duck"]],
+            "optional": []
           }
         }
       },
@@ -629,9 +1007,42 @@
       "id": "suite/trigger-composition-seeds/pr-review-explicit-spar",
       "group": "suite:trigger-composition-seeds",
       "kind": "routing",
-      "requirements": ["route-answer", "expectation-000", "expectation-001", "expectation-002"],
+      "requirements": [
+        {
+          "id": "route-answer",
+          "capability": "skill-mechanism",
+          "authority": "Frozen case suite/trigger-composition-seeds/pr-review-explicit-spar and metadata.authorization.scope. No required-skill contract is declared for this case.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The skill selections in the captured structured response."
+        },
+        {
+          "id": "expectation-000",
+          "capability": "skill-mechanism",
+          "authority": "Frozen case suite/trigger-composition-seeds/pr-review-explicit-spar and metadata.authorization.scope. No required-skill contract is declared for this case.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-001",
+          "capability": "skill-mechanism",
+          "authority": "Frozen case suite/trigger-composition-seeds/pr-review-explicit-spar and metadata.authorization.scope. No required-skill contract is declared for this case.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-002",
+          "capability": "skill-mechanism",
+          "authority": "Frozen case suite/trigger-composition-seeds/pr-review-explicit-spar and metadata.authorization.scope. No required-skill contract is declared for this case.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        }
+      ],
       "fixture": [],
-      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "execution": {
+        "networkAccess": true,
+        "pathPrepend": [],
+        "executableFiles": []
+      },
       "reference": "",
       "requiredSkills": [],
       "turns": [],
@@ -643,10 +1054,23 @@
         "type": "object",
         "additionalProperties": false,
         "properties": {
-          "skills": { "type": "array", "items": { "type": "string" } },
-          "reason": { "type": "string" }
+          "skills": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "reason": {
+            "type": "string"
+          }
         },
         "required": ["skills", "reason"]
+      },
+      "assessment": "mechanism",
+      "workFamily": null,
+      "provenance": {
+        "source": "docs/coding-orchestration/design.md",
+        "group": "suite:trigger-composition-seeds"
       }
     },
     "assert": [
@@ -658,11 +1082,11 @@
           "core": true,
           "method": "programmatic",
           "requirements": ["route-answer"],
-          "rubric": "The classification answer names the expected installed route and excludes forbidden routes; this checks the answer contract, not actual skill invocation.",
+          "rubric": "This is a routing-only check. The answer must select one allowed exact route alternative and may include only explicitly optional companions; route selection does not prove downstream execution.",
           "rule": {
             "type": "route",
-            "expected": ["pr-review", "spar"],
-            "forbidden": ["code-review"]
+            "alternatives": [["pr-review", "spar"]],
+            "optional": []
           }
         }
       },
@@ -693,10 +1117,10 @@
         "value": "file://src/grading/assertion.ts",
         "metric": "criterion-003",
         "config": {
-          "core": true,
+          "core": false,
           "method": "text-rubric",
           "requirements": ["expectation-002"],
-          "rubric": "This is a routing-only classification case. Assess whether the selected route and rationale identify how the downstream skill should handle the requirement below. Do not require actual task execution, file edits, scans, reviews, or tool calls in this classification answer. Requirement: Keep SPAR challenge output subject to primary confirmation."
+          "rubric": "The route may mention that the primary confirms SPAR output; omission of that downstream responsibility is diagnostic only."
         }
       }
     ]
@@ -710,9 +1134,42 @@
       "id": "suite/trigger-composition-seeds/pr-review-small-change-no-challenger",
       "group": "suite:trigger-composition-seeds",
       "kind": "routing",
-      "requirements": ["route-answer", "expectation-000", "expectation-001", "expectation-002"],
+      "requirements": [
+        {
+          "id": "route-answer",
+          "capability": "skill-mechanism",
+          "authority": "Frozen case suite/trigger-composition-seeds/pr-review-small-change-no-challenger and metadata.authorization.scope. No required-skill contract is declared for this case.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The skill selections in the captured structured response."
+        },
+        {
+          "id": "expectation-000",
+          "capability": "skill-mechanism",
+          "authority": "Frozen case suite/trigger-composition-seeds/pr-review-small-change-no-challenger and metadata.authorization.scope. No required-skill contract is declared for this case.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-001",
+          "capability": "skill-mechanism",
+          "authority": "Frozen case suite/trigger-composition-seeds/pr-review-small-change-no-challenger and metadata.authorization.scope. No required-skill contract is declared for this case.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-002",
+          "capability": "skill-mechanism",
+          "authority": "Frozen case suite/trigger-composition-seeds/pr-review-small-change-no-challenger and metadata.authorization.scope. No required-skill contract is declared for this case.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        }
+      ],
       "fixture": [],
-      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "execution": {
+        "networkAccess": true,
+        "pathPrepend": [],
+        "executableFiles": []
+      },
       "reference": "",
       "requiredSkills": [],
       "turns": [],
@@ -724,10 +1181,23 @@
         "type": "object",
         "additionalProperties": false,
         "properties": {
-          "skills": { "type": "array", "items": { "type": "string" } },
-          "reason": { "type": "string" }
+          "skills": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "reason": {
+            "type": "string"
+          }
         },
         "required": ["skills", "reason"]
+      },
+      "assessment": "mechanism",
+      "workFamily": null,
+      "provenance": {
+        "source": "docs/coding-orchestration/design.md",
+        "group": "suite:trigger-composition-seeds"
       }
     },
     "assert": [
@@ -739,11 +1209,11 @@
           "core": true,
           "method": "programmatic",
           "requirements": ["route-answer"],
-          "rubric": "The classification answer names the expected installed route and excludes forbidden routes; this checks the answer contract, not actual skill invocation.",
+          "rubric": "This is a routing-only check. The answer must select one allowed exact route alternative and may include only explicitly optional companions; route selection does not prove downstream execution.",
           "rule": {
             "type": "route",
-            "expected": ["pr-review"],
-            "forbidden": ["rubber-duck", "spar", "code-review"]
+            "alternatives": [["pr-review"]],
+            "optional": []
           }
         }
       },
@@ -791,9 +1261,42 @@
       "id": "suite/trigger-composition-seeds/pr-review-explicit-rubber-duck-exclusion",
       "group": "suite:trigger-composition-seeds",
       "kind": "routing",
-      "requirements": ["route-answer", "expectation-000", "expectation-001", "expectation-002"],
+      "requirements": [
+        {
+          "id": "route-answer",
+          "capability": "skill-mechanism",
+          "authority": "Frozen case suite/trigger-composition-seeds/pr-review-explicit-rubber-duck-exclusion and metadata.authorization.scope. No required-skill contract is declared for this case.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The skill selections in the captured structured response."
+        },
+        {
+          "id": "expectation-000",
+          "capability": "skill-mechanism",
+          "authority": "Frozen case suite/trigger-composition-seeds/pr-review-explicit-rubber-duck-exclusion and metadata.authorization.scope. No required-skill contract is declared for this case.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-001",
+          "capability": "skill-mechanism",
+          "authority": "Frozen case suite/trigger-composition-seeds/pr-review-explicit-rubber-duck-exclusion and metadata.authorization.scope. No required-skill contract is declared for this case.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-002",
+          "capability": "skill-mechanism",
+          "authority": "Frozen case suite/trigger-composition-seeds/pr-review-explicit-rubber-duck-exclusion and metadata.authorization.scope. No required-skill contract is declared for this case.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        }
+      ],
       "fixture": [],
-      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "execution": {
+        "networkAccess": true,
+        "pathPrepend": [],
+        "executableFiles": []
+      },
       "reference": "",
       "requiredSkills": [],
       "turns": [],
@@ -805,10 +1308,23 @@
         "type": "object",
         "additionalProperties": false,
         "properties": {
-          "skills": { "type": "array", "items": { "type": "string" } },
-          "reason": { "type": "string" }
+          "skills": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "reason": {
+            "type": "string"
+          }
         },
         "required": ["skills", "reason"]
+      },
+      "assessment": "mechanism",
+      "workFamily": null,
+      "provenance": {
+        "source": "docs/coding-orchestration/design.md",
+        "group": "suite:trigger-composition-seeds"
       }
     },
     "assert": [
@@ -820,11 +1336,11 @@
           "core": true,
           "method": "programmatic",
           "requirements": ["route-answer"],
-          "rubric": "The classification answer names the expected installed route and excludes forbidden routes; this checks the answer contract, not actual skill invocation.",
+          "rubric": "This is a routing-only check. The answer must select one allowed exact route alternative and may include only explicitly optional companions; route selection does not prove downstream execution.",
           "rule": {
             "type": "route",
-            "expected": ["pr-review"],
-            "forbidden": ["rubber-duck", "spar", "code-review"]
+            "alternatives": [["pr-review"]],
+            "optional": []
           }
         }
       },

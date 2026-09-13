@@ -9,11 +9,41 @@
       "group": "rubber-duck",
       "kind": "task",
       "requirements": [
-        "expectation-000",
-        "expectation-001",
-        "expectation-002",
-        "expectation-003",
-        "expectation-004"
+        {
+          "id": "expectation-000",
+          "capability": "skill-mechanism",
+          "authority": "Frozen case rubber-duck/0 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/rubber-duck/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-001",
+          "capability": "skill-mechanism",
+          "authority": "Frozen case rubber-duck/0 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/rubber-duck/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-002",
+          "capability": "skill-mechanism",
+          "authority": "Frozen case rubber-duck/0 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/rubber-duck/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The immutable artifact snapshot, initial fixtures, and recorded native actions."
+        },
+        {
+          "id": "expectation-003",
+          "capability": "skill-mechanism",
+          "authority": "Frozen case rubber-duck/0 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/rubber-duck/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-004",
+          "capability": "skill-mechanism",
+          "authority": "Frozen case rubber-duck/0 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/rubber-duck/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        }
       ],
       "fixture": [
         {
@@ -29,7 +59,11 @@
           "target": "status/change.diff"
         }
       ],
-      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "execution": {
+        "networkAccess": true,
+        "pathPrepend": [],
+        "executableFiles": []
+      },
       "reference": "Finds that the new authorization branch grants admin access to any non-empty role, explains the reachable privilege impact, and ignores cosmetic feedback.",
       "requiredSkills": ["rubber-duck"],
       "turns": [],
@@ -37,7 +71,13 @@
         "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: Use $rubber-duck to critique the implementation in `status/change.diff`. Inspect the source and test, stay read-only, and focus only on consequential issues.",
         "approvals": []
       },
-      "outputSchema": null
+      "outputSchema": null,
+      "assessment": "mechanism",
+      "workFamily": null,
+      "provenance": {
+        "source": "plugins/pr-review/skills/rubber-duck/SKILL.md",
+        "group": "rubber-duck"
+      }
     },
     "assert": [
       {
@@ -106,9 +146,47 @@
       "id": "rubber-duck/1",
       "group": "rubber-duck",
       "kind": "task",
-      "requirements": ["expectation-000", "expectation-001", "expectation-002", "expectation-003"],
-      "fixture": [{ "source": "rubber-duck/files/plan/plan.md.fixture", "target": "plan.md" }],
-      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "requirements": [
+        {
+          "id": "expectation-000",
+          "capability": "skill-mechanism",
+          "authority": "Frozen case rubber-duck/1 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/rubber-duck/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-001",
+          "capability": "skill-mechanism",
+          "authority": "Frozen case rubber-duck/1 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/rubber-duck/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-002",
+          "capability": "skill-mechanism",
+          "authority": "Frozen case rubber-duck/1 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/rubber-duck/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-003",
+          "capability": "skill-mechanism",
+          "authority": "Frozen case rubber-duck/1 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/rubber-duck/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        }
+      ],
+      "fixture": [
+        {
+          "source": "rubber-duck/files/plan/plan.md.fixture",
+          "target": "plan.md"
+        }
+      ],
+      "execution": {
+        "networkAccess": true,
+        "pathPrepend": [],
+        "executableFiles": []
+      },
       "reference": "Identifies the missing reconciliation and rollback semantics as consequential plan risks, ties them to accepted writes during cutover, and recommends bounded plan corrections.",
       "requiredSkills": ["rubber-duck"],
       "turns": [],
@@ -116,7 +194,13 @@
         "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: Use $rubber-duck to critique `plan.md`. Identify only blind spots that could prevent the migration goal; do not rewrite or execute the plan.",
         "approvals": []
       },
-      "outputSchema": null
+      "outputSchema": null,
+      "assessment": "mechanism",
+      "workFamily": null,
+      "provenance": {
+        "source": "plugins/pr-review/skills/rubber-duck/SKILL.md",
+        "group": "rubber-duck"
+      }
     },
     "assert": [
       {
@@ -175,11 +259,41 @@
       "group": "rubber-duck",
       "kind": "task",
       "requirements": [
-        "expectation-000",
-        "expectation-001",
-        "expectation-002",
-        "expectation-003",
-        "expectation-004"
+        {
+          "id": "expectation-000",
+          "capability": "skill-mechanism",
+          "authority": "Frozen case rubber-duck/2 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/rubber-duck/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The immutable artifact snapshot, initial fixtures, and recorded native actions."
+        },
+        {
+          "id": "expectation-001",
+          "capability": "skill-mechanism",
+          "authority": "Frozen case rubber-duck/2 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/rubber-duck/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-002",
+          "capability": "skill-mechanism",
+          "authority": "Frozen case rubber-duck/2 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/rubber-duck/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-003",
+          "capability": "skill-mechanism",
+          "authority": "Frozen case rubber-duck/2 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/rubber-duck/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-004",
+          "capability": "skill-mechanism",
+          "authority": "Frozen case rubber-duck/2 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/rubber-duck/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        }
       ],
       "fixture": [
         {
@@ -195,7 +309,11 @@
           "target": "status/change.diff"
         }
       ],
-      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "execution": {
+        "networkAccess": true,
+        "pathPrepend": [],
+        "executableFiles": []
+      },
       "reference": "Reports no substantive issues for the reviewed scope after checking the normalization contract and tests, without adding cosmetic suggestions or a merge recommendation.",
       "requiredSkills": ["rubber-duck"],
       "turns": [],
@@ -203,7 +321,13 @@
         "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: Use $rubber-duck on the clean change in `status/change.diff`. Inspect the implementation and tests, and do not manufacture feedback.",
         "approvals": []
       },
-      "outputSchema": null
+      "outputSchema": null,
+      "assessment": "mechanism",
+      "workFamily": null,
+      "provenance": {
+        "source": "plugins/pr-review/skills/rubber-duck/SKILL.md",
+        "group": "rubber-duck"
+      }
     },
     "assert": [
       {
@@ -273,20 +397,57 @@
       "group": "rubber-duck",
       "kind": "task",
       "requirements": [
-        "expectation-000",
-        "expectation-001",
-        "expectation-002",
-        "expectation-003",
-        "expectation-004"
+        {
+          "id": "expectation-000",
+          "capability": "skill-mechanism",
+          "authority": "Frozen case rubber-duck/3 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/rubber-duck/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-001",
+          "capability": "skill-mechanism",
+          "authority": "Frozen case rubber-duck/3 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/rubber-duck/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-002",
+          "capability": "skill-mechanism",
+          "authority": "Frozen case rubber-duck/3 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/rubber-duck/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-003",
+          "capability": "skill-mechanism",
+          "authority": "Frozen case rubber-duck/3 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/rubber-duck/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-004",
+          "capability": "skill-mechanism",
+          "authority": "Frozen case rubber-duck/3 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/rubber-duck/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        }
       ],
       "fixture": [
-        { "source": "rubber-duck/files/fallback/design.md.fixture", "target": "design.md" },
+        {
+          "source": "rubber-duck/files/fallback/design.md.fixture",
+          "target": "design.md"
+        },
         {
           "source": "rubber-duck/files/fallback/status/capabilities.md.fixture",
           "target": "status/capabilities.md"
         }
       ],
-      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "execution": {
+        "networkAccess": true,
+        "pathPrepend": [],
+        "executableFiles": []
+      },
       "reference": "Performs a distinct primary-model fallback critique, finds the ambiguous idempotency boundary, and discloses that no cross-model critic was available.",
       "requiredSkills": ["rubber-duck"],
       "turns": [],
@@ -294,7 +455,13 @@
         "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: Use $rubber-duck to critique `design.md`. Treat `status/capabilities.md` as the observable model and delegation state and do not invent another model.",
         "approvals": []
       },
-      "outputSchema": null
+      "outputSchema": null,
+      "assessment": "mechanism",
+      "workFamily": null,
+      "provenance": {
+        "source": "plugins/pr-review/skills/rubber-duck/SKILL.md",
+        "group": "rubber-duck"
+      }
     },
     "assert": [
       {
@@ -363,7 +530,36 @@
       "id": "rubber-duck/4",
       "group": "rubber-duck",
       "kind": "task",
-      "requirements": ["expectation-000", "expectation-001", "expectation-002", "expectation-003"],
+      "requirements": [
+        {
+          "id": "expectation-000",
+          "capability": "skill-mechanism",
+          "authority": "Frozen case rubber-duck/4 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/rubber-duck/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The immutable artifact snapshot, initial fixtures, and recorded native actions."
+        },
+        {
+          "id": "expectation-001",
+          "capability": "skill-mechanism",
+          "authority": "Frozen case rubber-duck/4 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/rubber-duck/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The immutable artifact snapshot, initial fixtures, and recorded native actions."
+        },
+        {
+          "id": "expectation-002",
+          "capability": "skill-mechanism",
+          "authority": "Frozen case rubber-duck/4 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/rubber-duck/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-003",
+          "capability": "skill-mechanism",
+          "authority": "Frozen case rubber-duck/4 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/rubber-duck/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        }
+      ],
       "fixture": [
         {
           "source": "rubber-duck/files/preexisting/src/client.js.fixture",
@@ -374,7 +570,11 @@
           "target": "status/change.diff"
         }
       ],
-      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "execution": {
+        "networkAccess": true,
+        "pathPrepend": [],
+        "executableFiles": []
+      },
       "reference": "Reviews the changed timeout behavior and ignores the explicitly unchanged existing debug-token issue rather than expanding scope.",
       "requiredSkills": ["rubber-duck"],
       "turns": [],
@@ -382,7 +582,13 @@
         "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: Use $rubber-duck on `status/change.diff`. The file also contains an old unrelated problem; keep the critique scoped to the changed behavior.",
         "approvals": []
       },
-      "outputSchema": null
+      "outputSchema": null,
+      "assessment": "mechanism",
+      "workFamily": null,
+      "provenance": {
+        "source": "plugins/pr-review/skills/rubber-duck/SKILL.md",
+        "group": "rubber-duck"
+      }
     },
     "assert": [
       {
@@ -440,7 +646,36 @@
       "id": "rubber-duck/5",
       "group": "rubber-duck",
       "kind": "task",
-      "requirements": ["expectation-000", "expectation-001", "expectation-002", "expectation-003"],
+      "requirements": [
+        {
+          "id": "expectation-000",
+          "capability": "skill-mechanism",
+          "authority": "Frozen case rubber-duck/5 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/rubber-duck/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-001",
+          "capability": "skill-mechanism",
+          "authority": "Frozen case rubber-duck/5 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/rubber-duck/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-002",
+          "capability": "skill-mechanism",
+          "authority": "Frozen case rubber-duck/5 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/rubber-duck/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-003",
+          "capability": "skill-mechanism",
+          "authority": "Frozen case rubber-duck/5 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/rubber-duck/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        }
+      ],
       "fixture": [
         {
           "source": "rubber-duck/files/code/src/authorize.js.fixture",
@@ -459,7 +694,11 @@
           "target": "status/synchronous-state.md"
         }
       ],
-      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "execution": {
+        "networkAccess": true,
+        "pathPrepend": [],
+        "executableFiles": []
+      },
       "reference": "Uses the recorded synchronous critic result and verifies the authorization defect without treating a missing asynchronous handle as a failure.",
       "requiredSkills": ["rubber-duck"],
       "turns": [],
@@ -467,7 +706,13 @@
         "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: Use the rubber-duck skill on status/change.diff. Treat status/synchronous-state.md as authoritative recorded execution evidence for this fixture: an independent critic already completed synchronously. Check its concern against the source and tests without launching another critic or inventing a handle.",
         "approvals": []
       },
-      "outputSchema": null
+      "outputSchema": null,
+      "assessment": "mechanism",
+      "workFamily": null,
+      "provenance": {
+        "source": "plugins/pr-review/skills/rubber-duck/SKILL.md",
+        "group": "rubber-duck"
+      }
     },
     "assert": [
       {
@@ -526,16 +771,53 @@
       "group": "rubber-duck",
       "kind": "task",
       "requirements": [
-        "expectation-000",
-        "expectation-001",
-        "expectation-002",
-        "expectation-003",
-        "expectation-004"
+        {
+          "id": "expectation-000",
+          "capability": "skill-mechanism",
+          "authority": "Frozen case rubber-duck/6 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/rubber-duck/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-001",
+          "capability": "skill-mechanism",
+          "authority": "Frozen case rubber-duck/6 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/rubber-duck/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-002",
+          "capability": "skill-mechanism",
+          "authority": "Frozen case rubber-duck/6 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/rubber-duck/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-003",
+          "capability": "skill-mechanism",
+          "authority": "Frozen case rubber-duck/6 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/rubber-duck/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-004",
+          "capability": "skill-mechanism",
+          "authority": "Frozen case rubber-duck/6 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/rubber-duck/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        }
       ],
       "fixture": [
-        { "source": "rubber-duck/files/same-family/design.md.fixture", "target": "design.md" }
+        {
+          "source": "rubber-duck/files/same-family/design.md.fixture",
+          "target": "design.md"
+        }
       ],
-      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "execution": {
+        "networkAccess": true,
+        "pathPrepend": [],
+        "executableFiles": []
+      },
       "reference": "Launches a same-family independent critic when available and distinguishes context independence from family diversity.",
       "requiredSkills": ["rubber-duck"],
       "turns": [],
@@ -543,7 +825,13 @@
         "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: Use rubber-duck on design.md. Only models from the primary model family are permitted. Use an independent critic context through actual delegation if exposed. Review only; report any unavailable capability accurately.",
         "approvals": []
       },
-      "outputSchema": null
+      "outputSchema": null,
+      "assessment": "mechanism",
+      "workFamily": null,
+      "provenance": {
+        "source": "plugins/pr-review/skills/rubber-duck/SKILL.md",
+        "group": "rubber-duck"
+      }
     },
     "assert": [
       {

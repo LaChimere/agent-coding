@@ -2,6 +2,12 @@ import { randomUUID } from 'node:crypto';
 import { resolve } from 'node:path';
 import { parseArgs } from 'node:util';
 import { loadCases } from './corpus/cases.ts';
+import {
+  assertCollectionMatch,
+  collectionId,
+  readCollectionScope,
+  selectCollection,
+} from './corpus/collections.ts';
 import { regradeRun } from './execution/regrade.ts';
 import { runWorker, saveReport } from './execution/worker.ts';
 import { calibrateGraders } from './grading/calibration.ts';
@@ -16,16 +22,20 @@ import type { IActualChargeEvidence } from './results/resources.ts';
 
 const help = `Codex evaluations
 
-  bun run start -- validate
+  bun run start -- validate [--collection development|holdout]
   bun run start -- calibrate
   bun run start -- run [--candidate REPO] [--case ID ...] [--profile default]
                       [--repeat 1] [--concurrency 2] [--codex EXECUTABLE]
-  bun run start -- regrade RUN_DIRECTORY [--case ID ...]
+                      [--collection development|holdout]
+  bun run start -- regrade RUN_DIRECTORY [--case ID ...] [--grading FILE]
+                          [--collection development|holdout]
   bun run start -- report RUN_DIRECTORY [--prices FILE] [--charges FILE]
-  bun run start -- compare LEFT_REPORT.json RIGHT_REPORT.json
-  bun run start -- view REPORT.json
+                         [--collection development|holdout]
+  bun run start -- compare LEFT_REPORT.json RIGHT_REPORT.json [--collection development|holdout]
+  bun run start -- view REPORT.json [--collection development|holdout]
 
-Run defaults: current repository, full Codex suite, one fresh trial per case.
+Run defaults: current repository, full development collection, one fresh trial per case.
+Holdout access is explicit acceptance. Saved inputs require matching collection sidecars.
 Compare two explicitly executed candidates using case ID and repetition pairing.
 There are no task time or token limits. Ctrl-C preserves available evidence.
 `;
@@ -66,20 +76,34 @@ export async function runCli(args: readonly string[], project: string): Promise<
 
   try {
     if (command === '_worker') {
-      console.log(await runWorker(requireArgument(argv, 1, 'run directory'), controller.signal));
+      console.log(
+        await runWorker(
+          requireArgument(argv, 1, 'run directory'),
+          controller.signal,
+          collectionId(argv[2]),
+        ),
+      );
       return;
     }
 
     if (command === 'validate') {
-      if (argv.length !== 1) {
+      const { values, positionals } = parseArgs({
+        args: argv.slice(1),
+        strict: true,
+        allowPositionals: true,
+        options: { collection: { type: 'string' } },
+      });
+      if (positionals.length !== 0) {
         throw new Error('validate accepts no positional arguments.');
       }
 
-      const cases = await loadCases(project);
+      const collection = await selectCollection(project, collectionId(values.collection));
+      const cases = await loadCases(project, collection);
       const checks = cases.reduce((total, item) => total + item.definition.assert.length, 0);
       console.log(
         JSON.stringify({
           valid: true,
+          collection: collection.id,
           cases: cases.length,
           checks,
         }),
@@ -108,6 +132,7 @@ export async function runCli(args: readonly string[], project: string): Promise<
           repeat: { type: 'string' },
           concurrency: { type: 'string' },
           codex: { type: 'string' },
+          collection: { type: 'string' },
         },
       });
 
@@ -128,6 +153,7 @@ export async function runCli(args: readonly string[], project: string): Promise<
         concurrency: positiveInteger(values.concurrency, 2),
         repetitions: positiveInteger(values.repeat, 1),
         codexExecutable: resolve(executable),
+        ...(values.collection === undefined ? {} : { collection: collectionId(values.collection) }),
       });
 
       controller.signal.throwIfAborted();
@@ -141,6 +167,7 @@ export async function runCli(args: readonly string[], project: string): Promise<
           resolve(frozen.directory, 'private/src/index.ts'),
           '_worker',
           frozen.directory,
+          frozen.manifest.collection.id,
         ],
         {
           cwd: project,
@@ -169,7 +196,11 @@ export async function runCli(args: readonly string[], project: string): Promise<
         args: argv.slice(1),
         strict: true,
         allowPositionals: true,
-        options: { case: { type: 'string', multiple: true } },
+        options: {
+          case: { type: 'string', multiple: true },
+          collection: { type: 'string' },
+          grading: { type: 'string' },
+        },
       });
 
       if (positionals.length !== 1) {
@@ -182,6 +213,10 @@ export async function runCli(args: readonly string[], project: string): Promise<
           requireArgument(positionals, 0, 'run directory'),
           controller.signal,
           values.case ?? [],
+          {
+            collection: collectionId(values.collection),
+            ...(values.grading === undefined ? {} : { grading: values.grading }),
+          },
         ),
       );
 
@@ -193,7 +228,11 @@ export async function runCli(args: readonly string[], project: string): Promise<
         args: argv.slice(1),
         strict: true,
         allowPositionals: true,
-        options: { prices: { type: 'string' }, charges: { type: 'string' } },
+        options: {
+          prices: { type: 'string' },
+          charges: { type: 'string' },
+          collection: { type: 'string' },
+        },
       });
 
       if (positionals.length !== 1) {
@@ -201,13 +240,19 @@ export async function runCli(args: readonly string[], project: string): Promise<
       }
 
       const runDirectory = requireArgument(positionals, 0, 'run directory');
+      const collection = collectionId(values.collection);
+      const scope = await readCollectionScope(resolve(runDirectory, 'collection.json'), collection);
       const manifest = (await Bun.file(
         resolve(runDirectory, 'manifest.json'),
       ).json()) as IRunManifest;
+      if (manifest.schema !== 'codex-evals/run-v2') {
+        throw new Error('Unsupported run manifest.');
+      }
+      assertCollectionMatch(scope, manifest.collection);
 
       const priceBook =
         values.prices === undefined
-          ? (manifest.priceBook ?? (await loadPriceBook(project)))
+          ? manifest.priceBook
           : await loadPriceBook(project, values.prices);
 
       const actualCharges =
@@ -218,6 +263,7 @@ export async function runCli(args: readonly string[], project: string): Promise<
       console.log(
         await saveReport({
           directory: runDirectory,
+          collection,
           priceBook,
           ...(actualCharges === undefined ? {} : { actualCharges }),
         }),
@@ -227,15 +273,28 @@ export async function runCli(args: readonly string[], project: string): Promise<
     }
 
     if (command === 'compare') {
-      if (argv.length !== 3) {
+      const { values, positionals } = parseArgs({
+        args: argv.slice(1),
+        strict: true,
+        allowPositionals: true,
+        options: { collection: { type: 'string' } },
+      });
+      if (positionals.length !== 2) {
         throw new Error('compare requires two saved report files.');
       }
 
-      const left = (await Bun.file(requireArgument(argv, 1, 'left report')).json()) as IReport;
-      const right = (await Bun.file(requireArgument(argv, 2, 'right report')).json()) as IReport;
-      if (left.schema !== 'codex-evals/report-v1' || right.schema !== 'codex-evals/report-v1') {
+      const collection = collectionId(values.collection);
+      const leftPath = requireArgument(positionals, 0, 'left report');
+      const rightPath = requireArgument(positionals, 1, 'right report');
+      const leftScope = await readCollectionScope(`${leftPath}.collection.json`, collection);
+      const rightScope = await readCollectionScope(`${rightPath}.collection.json`, collection);
+      const left = (await Bun.file(leftPath).json()) as IReport;
+      const right = (await Bun.file(rightPath).json()) as IReport;
+      if (left.schema !== 'codex-evals/report-v2' || right.schema !== 'codex-evals/report-v2') {
         throw new Error('Unsupported saved report.');
       }
+      assertCollectionMatch(leftScope, left.manifest.collection);
+      assertCollectionMatch(rightScope, right.manifest.collection);
       if (left.manifest.candidates.length !== 1 || right.manifest.candidates.length !== 1) {
         throw new Error('CLI comparisons require one candidate per saved run.');
       }
@@ -284,15 +343,26 @@ export async function runCli(args: readonly string[], project: string): Promise<
     }
 
     if (command === 'view') {
-      if (argv.length !== 2) {
+      const { values, positionals } = parseArgs({
+        args: argv.slice(1),
+        strict: true,
+        allowPositionals: true,
+        options: { collection: { type: 'string' } },
+      });
+      if (positionals.length !== 1) {
         throw new Error('view requires one saved report file.');
       }
 
-      const file = requireArgument(argv, 1, 'report');
+      const file = requireArgument(positionals, 0, 'report');
+      const scope = await readCollectionScope(
+        `${file}.collection.json`,
+        collectionId(values.collection),
+      );
       const report = (await Bun.file(file).json()) as IReport;
-      if (report.schema !== 'codex-evals/report-v1') {
+      if (report.schema !== 'codex-evals/report-v2') {
         throw new Error('Unsupported saved report.');
       }
+      assertCollectionMatch(scope, report.manifest.collection);
 
       const native = report.definition.nativeExport?.htmlPath;
       console.log(

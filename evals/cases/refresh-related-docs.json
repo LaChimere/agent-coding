@@ -9,11 +9,41 @@
       "group": "refresh-related-docs",
       "kind": "task",
       "requirements": [
-        "expectation-000",
-        "expectation-001",
-        "expectation-002",
-        "expectation-003",
-        "expectation-004"
+        {
+          "id": "expectation-000",
+          "capability": "documentation",
+          "authority": "Frozen case refresh-related-docs/0 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/refresh-related-docs/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-001",
+          "capability": "documentation",
+          "authority": "Frozen case refresh-related-docs/0 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/refresh-related-docs/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-002",
+          "capability": "authorization",
+          "authority": "Frozen case refresh-related-docs/0 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/refresh-related-docs/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-003",
+          "capability": "documentation",
+          "authority": "Frozen case refresh-related-docs/0 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/refresh-related-docs/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The immutable artifact snapshot, initial fixtures, and recorded native actions."
+        },
+        {
+          "id": "expectation-004",
+          "capability": "documentation",
+          "authority": "Frozen case refresh-related-docs/0 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/refresh-related-docs/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        }
       ],
       "fixture": [
         {
@@ -29,7 +59,11 @@
           "target": "package.json"
         }
       ],
-      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "execution": {
+        "networkAccess": true,
+        "pathPrepend": [],
+        "executableFiles": []
+      },
       "reference": "Refreshes both repository guidance files directly to match the established validation workflow, without per-file approval or implementation changes.",
       "requiredSkills": ["refresh-related-docs"],
       "turns": [],
@@ -37,7 +71,13 @@
         "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: In a mock repository, the completed workflow change adopted `npm run verify` (ESLint before Jest) as the pre-PR validation command. package.json defines that command, but AGENTS.md and CONTRIBUTING.md still document `npm test`. Refresh all related docs without asking again. Use the current working directory as the repository root.",
         "approvals": []
       },
-      "outputSchema": null
+      "outputSchema": null,
+      "assessment": "outcome",
+      "workFamily": "documentation",
+      "provenance": {
+        "source": "plugins/workflow/skills/refresh-related-docs/SKILL.md",
+        "group": "refresh-related-docs"
+      }
     },
     "assert": [
       {
@@ -107,11 +147,41 @@
       "group": "refresh-related-docs",
       "kind": "task",
       "requirements": [
-        "expectation-000",
-        "expectation-001",
-        "expectation-002",
-        "expectation-003",
-        "expectation-004"
+        {
+          "id": "expectation-000",
+          "capability": "documentation",
+          "authority": "Frozen case refresh-related-docs/1 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/refresh-related-docs/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-001",
+          "capability": "documentation",
+          "authority": "Frozen case refresh-related-docs/1 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/refresh-related-docs/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-002",
+          "capability": "documentation",
+          "authority": "Frozen case refresh-related-docs/1 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/refresh-related-docs/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-003",
+          "capability": "documentation",
+          "authority": "Frozen case refresh-related-docs/1 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/refresh-related-docs/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-004",
+          "capability": "documentation",
+          "authority": "Frozen case refresh-related-docs/1 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/refresh-related-docs/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        }
       ],
       "fixture": [
         {
@@ -123,7 +193,11 @@
           "target": "src/cli.ts"
         }
       ],
-      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "execution": {
+        "networkAccess": true,
+        "pathPrepend": [],
+        "executableFiles": []
+      },
       "reference": "Skips documentation edits and reports the deferred staleness.",
       "requiredSkills": ["refresh-related-docs"],
       "turns": [],
@@ -131,7 +205,13 @@
         "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: In a mock repository, README.md documents `sample-cli fetch --retry 3`, but src/cli.ts now defines the flag as `--max-retries`. The user is shown the proposed README update and declines it. Use the current working directory as the repository root.",
         "approvals": []
       },
-      "outputSchema": null
+      "outputSchema": null,
+      "assessment": "outcome",
+      "workFamily": "documentation",
+      "provenance": {
+        "source": "plugins/workflow/skills/refresh-related-docs/SKILL.md",
+        "group": "refresh-related-docs"
+      }
     },
     "assert": [
       {
@@ -201,11 +281,34 @@
       "group": "refresh-related-docs",
       "kind": "task",
       "requirements": [
-        "expectation-000",
-        "expectation-001",
-        "expectation-002",
-        "expectation-003",
-        "expectation-004"
+        {
+          "id": "expectation-000",
+          "capability": "documentation",
+          "authority": "Frozen case refresh-related-docs/2 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/refresh-related-docs/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-001",
+          "capability": "documentation",
+          "authority": "Frozen case refresh-related-docs/2 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/refresh-related-docs/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-002",
+          "capability": "documentation",
+          "authority": "Frozen case refresh-related-docs/2 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/refresh-related-docs/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-003",
+          "capability": "authorization",
+          "authority": "Frozen case refresh-related-docs/2 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/refresh-related-docs/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        }
       ],
       "fixture": [
         {
@@ -217,7 +320,11 @@
           "target": "src/retry-worker.ts"
         }
       ],
-      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "execution": {
+        "networkAccess": true,
+        "pathPrepend": [],
+        "executableFiles": []
+      },
       "reference": "Updates only the approved retry content and preserves the document's style.",
       "requiredSkills": ["refresh-related-docs"],
       "turns": [],
@@ -225,7 +332,13 @@
         "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: In a mock repository, runbook.md has a 'Retry limit' section (currently says 3, but src/retry-worker.ts now sets MAX_RETRY_ATTEMPTS to 5) and a separate 'Logging' section marked out for review under an open PR. The user approves only the retry-limit edit. Use the current working directory as the repository root.",
         "approvals": []
       },
-      "outputSchema": null
+      "outputSchema": null,
+      "assessment": "outcome",
+      "workFamily": "documentation",
+      "provenance": {
+        "source": "plugins/workflow/skills/refresh-related-docs/SKILL.md",
+        "group": "refresh-related-docs"
+      }
     },
     "assert": [
       {
@@ -271,17 +384,6 @@
           "requirements": ["expectation-003"],
           "rubric": "Does not broaden the rewrite."
         }
-      },
-      {
-        "type": "javascript",
-        "value": "file://src/grading/assertion.ts",
-        "metric": "criterion-004",
-        "config": {
-          "core": false,
-          "method": "text-rubric",
-          "requirements": ["expectation-004"],
-          "rubric": "May note a follow-up."
-        }
       }
     ]
   },
@@ -295,11 +397,41 @@
       "group": "refresh-related-docs",
       "kind": "task",
       "requirements": [
-        "expectation-000",
-        "expectation-001",
-        "expectation-002",
-        "expectation-003",
-        "expectation-004"
+        {
+          "id": "expectation-000",
+          "capability": "documentation",
+          "authority": "Frozen case refresh-related-docs/3 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/refresh-related-docs/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-001",
+          "capability": "authorization",
+          "authority": "Frozen case refresh-related-docs/3 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/refresh-related-docs/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-002",
+          "capability": "documentation",
+          "authority": "Frozen case refresh-related-docs/3 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/refresh-related-docs/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-003",
+          "capability": "authorization",
+          "authority": "Frozen case refresh-related-docs/3 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/refresh-related-docs/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-004",
+          "capability": "documentation",
+          "authority": "Frozen case refresh-related-docs/3 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/refresh-related-docs/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        }
       ],
       "fixture": [
         {
@@ -315,7 +447,11 @@
           "target": "src/auth/config.ts"
         }
       ],
-      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "execution": {
+        "networkAccess": true,
+        "pathPrepend": [],
+        "executableFiles": []
+      },
       "reference": "Treats the two named files as approved without a redundant approval question.",
       "requiredSkills": ["refresh-related-docs"],
       "turns": [],
@@ -323,7 +459,13 @@
         "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: In a mock repository, src/auth/config.ts now sets TOKEN_EXPIRY_MINUTES to 60, but README.md and docs/api/auth.md both still document a 30-minute expiry. The user says: update README.md and docs/api/auth.md for the new token expiry. Proceed. Use the current working directory as the repository root.",
         "approvals": []
       },
-      "outputSchema": null
+      "outputSchema": null,
+      "assessment": "outcome",
+      "workFamily": "documentation",
+      "provenance": {
+        "source": "plugins/workflow/skills/refresh-related-docs/SKILL.md",
+        "group": "refresh-related-docs"
+      }
     },
     "assert": [
       {
@@ -393,11 +535,41 @@
       "group": "refresh-related-docs",
       "kind": "task",
       "requirements": [
-        "expectation-000",
-        "expectation-001",
-        "expectation-002",
-        "expectation-003",
-        "expectation-004"
+        {
+          "id": "expectation-000",
+          "capability": "documentation",
+          "authority": "Frozen case refresh-related-docs/4 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/refresh-related-docs/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-001",
+          "capability": "documentation",
+          "authority": "Frozen case refresh-related-docs/4 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/refresh-related-docs/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-002",
+          "capability": "recovery",
+          "authority": "Frozen case refresh-related-docs/4 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/refresh-related-docs/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-003",
+          "capability": "documentation",
+          "authority": "Frozen case refresh-related-docs/4 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/refresh-related-docs/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-004",
+          "capability": "clarification",
+          "authority": "Frozen case refresh-related-docs/4 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/refresh-related-docs/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        }
       ],
       "fixture": [
         {
@@ -413,7 +585,11 @@
           "target": "src/config/schema.ts"
         }
       ],
-      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "execution": {
+        "networkAccess": true,
+        "pathPrepend": [],
+        "executableFiles": []
+      },
       "reference": "Finds the canonical stale documentation and reports it without editing or asking a routine approval question during this inspection-only task.",
       "requiredSkills": ["refresh-related-docs"],
       "turns": [],
@@ -421,7 +597,13 @@
         "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: In a mock repository, docs/README.md states that directory is deprecated and that canonical documentation moved to documentation/. documentation/configuration/retry.md documents `retry.maxAttempts` with a default of 3, but src/config/schema.ts now defaults it to 5. Find the stale docs. Use the current working directory as the repository root.",
         "approvals": []
       },
-      "outputSchema": null
+      "outputSchema": null,
+      "assessment": "outcome",
+      "workFamily": "documentation",
+      "provenance": {
+        "source": "plugins/workflow/skills/refresh-related-docs/SKILL.md",
+        "group": "refresh-related-docs"
+      }
     },
     "assert": [
       {
@@ -491,11 +673,41 @@
       "group": "refresh-related-docs",
       "kind": "task",
       "requirements": [
-        "expectation-000",
-        "expectation-001",
-        "expectation-002",
-        "expectation-003",
-        "expectation-004"
+        {
+          "id": "expectation-000",
+          "capability": "documentation",
+          "authority": "Frozen case refresh-related-docs/5 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/refresh-related-docs/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-001",
+          "capability": "documentation",
+          "authority": "Frozen case refresh-related-docs/5 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/refresh-related-docs/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-002",
+          "capability": "documentation",
+          "authority": "Frozen case refresh-related-docs/5 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/refresh-related-docs/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-003",
+          "capability": "documentation",
+          "authority": "Frozen case refresh-related-docs/5 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/refresh-related-docs/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-004",
+          "capability": "documentation",
+          "authority": "Frozen case refresh-related-docs/5 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/refresh-related-docs/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        }
       ],
       "fixture": [
         {
@@ -515,7 +727,11 @@
           "target": "src/rate-limiter.ts"
         }
       ],
-      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "execution": {
+        "networkAccess": true,
+        "pathPrepend": [],
+        "executableFiles": []
+      },
       "reference": "Updates the named docs and leaves the declined tutorial untouched.",
       "requiredSkills": ["refresh-related-docs"],
       "turns": [],
@@ -523,7 +739,13 @@
         "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: In a mock repository, src/rate-limiter.ts now sets REQUESTS_PER_MINUTE to 250. The user approves updating README.md and CHANGELOG.md for this. A newly discovered docs/tutorials/getting-started.md also states the old 100/minute limit, but the user declines updating it. Use the current working directory as the repository root.",
         "approvals": []
       },
-      "outputSchema": null
+      "outputSchema": null,
+      "assessment": "outcome",
+      "workFamily": "documentation",
+      "provenance": {
+        "source": "plugins/workflow/skills/refresh-related-docs/SKILL.md",
+        "group": "refresh-related-docs"
+      }
     },
     "assert": [
       {
@@ -593,11 +815,41 @@
       "group": "refresh-related-docs",
       "kind": "task",
       "requirements": [
-        "expectation-000",
-        "expectation-001",
-        "expectation-002",
-        "expectation-003",
-        "expectation-004"
+        {
+          "id": "expectation-000",
+          "capability": "documentation",
+          "authority": "Frozen case refresh-related-docs/6 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/refresh-related-docs/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-001",
+          "capability": "authorization",
+          "authority": "Frozen case refresh-related-docs/6 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/refresh-related-docs/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-002",
+          "capability": "documentation",
+          "authority": "Frozen case refresh-related-docs/6 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/refresh-related-docs/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-003",
+          "capability": "documentation",
+          "authority": "Frozen case refresh-related-docs/6 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/refresh-related-docs/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-004",
+          "capability": "documentation",
+          "authority": "Frozen case refresh-related-docs/6 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/refresh-related-docs/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        }
       ],
       "fixture": [
         {
@@ -621,7 +873,11 @@
           "target": "README.md"
         }
       ],
-      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "execution": {
+        "networkAccess": true,
+        "pathPrepend": [],
+        "executableFiles": []
+      },
       "reference": "Concludes no documentation is stale and performs no approval loop or edits.",
       "requiredSkills": ["refresh-related-docs"],
       "turns": [],
@@ -629,7 +885,13 @@
         "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: In a mock repository, src/internal/format-helpers.ts had a private, unexported helper renamed (see state/change-status.txt). src/index.ts shows the package's public exports do not include this helper, and README.md never references it. Decide whether docs need refreshing. Use the current working directory as the repository root.",
         "approvals": []
       },
-      "outputSchema": null
+      "outputSchema": null,
+      "assessment": "outcome",
+      "workFamily": "documentation",
+      "provenance": {
+        "source": "plugins/workflow/skills/refresh-related-docs/SKILL.md",
+        "group": "refresh-related-docs"
+      }
     },
     "assert": [
       {
@@ -699,11 +961,41 @@
       "group": "refresh-related-docs",
       "kind": "task",
       "requirements": [
-        "expectation-000",
-        "expectation-001",
-        "expectation-002",
-        "expectation-003",
-        "expectation-004"
+        {
+          "id": "expectation-000",
+          "capability": "documentation",
+          "authority": "Frozen case refresh-related-docs/7 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/refresh-related-docs/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-001",
+          "capability": "authorization",
+          "authority": "Frozen case refresh-related-docs/7 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/refresh-related-docs/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-002",
+          "capability": "documentation",
+          "authority": "Frozen case refresh-related-docs/7 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/refresh-related-docs/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The immutable artifact snapshot, initial fixtures, and recorded native actions."
+        },
+        {
+          "id": "expectation-003",
+          "capability": "documentation",
+          "authority": "Frozen case refresh-related-docs/7 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/refresh-related-docs/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-004",
+          "capability": "documentation",
+          "authority": "Frozen case refresh-related-docs/7 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/refresh-related-docs/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The immutable artifact snapshot, initial fixtures, and recorded native actions."
+        }
       ],
       "fixture": [
         {
@@ -723,7 +1015,11 @@
           "target": "src/rate-limiter.ts"
         }
       ],
-      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "execution": {
+        "networkAccess": true,
+        "pathPrepend": [],
+        "executableFiles": []
+      },
       "reference": "Updates all three related documents, including the newly discovered tutorial, without requesting per-file approval; preserves code and unrelated content.",
       "requiredSkills": ["refresh-related-docs"],
       "turns": [],
@@ -731,7 +1027,13 @@
         "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: The rate-limit implementation is complete: src/rate-limiter.ts sets REQUESTS_PER_MINUTE to 250. Refresh the related documentation. README.md and CHANGELOG.md are known starting points; discover any other documentation of that same rate limit and update it too. No files have been excluded. Use the current working directory as the repository root.",
         "approvals": []
       },
-      "outputSchema": null
+      "outputSchema": null,
+      "assessment": "outcome",
+      "workFamily": "documentation",
+      "provenance": {
+        "source": "plugins/workflow/skills/refresh-related-docs/SKILL.md",
+        "group": "refresh-related-docs"
+      }
     },
     "assert": [
       {
@@ -801,11 +1103,41 @@
       "group": "refresh-related-docs",
       "kind": "task",
       "requirements": [
-        "expectation-000",
-        "expectation-001",
-        "expectation-002",
-        "expectation-003",
-        "expectation-004"
+        {
+          "id": "expectation-000",
+          "capability": "documentation",
+          "authority": "Frozen case refresh-related-docs/8 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/refresh-related-docs/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The immutable artifact snapshot, initial fixtures, and recorded native actions."
+        },
+        {
+          "id": "expectation-001",
+          "capability": "documentation",
+          "authority": "Frozen case refresh-related-docs/8 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/refresh-related-docs/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-002",
+          "capability": "documentation",
+          "authority": "Frozen case refresh-related-docs/8 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/refresh-related-docs/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The immutable artifact snapshot, initial fixtures, and recorded native actions."
+        },
+        {
+          "id": "expectation-003",
+          "capability": "documentation",
+          "authority": "Frozen case refresh-related-docs/8 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/refresh-related-docs/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-004",
+          "capability": "clarification",
+          "authority": "Frozen case refresh-related-docs/8 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/refresh-related-docs/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The immutable artifact snapshot, initial fixtures, and recorded native actions."
+        }
       ],
       "fixture": [
         {
@@ -821,7 +1153,11 @@
           "target": "package.json"
         }
       ],
-      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "execution": {
+        "networkAccess": true,
+        "pathPrepend": [],
+        "executableFiles": []
+      },
       "reference": "Preserves the established mandatory pre-PR workflow. May document verify accurately as an optional shortcut, without promoting it to a requirement or changing implementation.",
       "requiredSkills": ["refresh-related-docs"],
       "turns": [],
@@ -829,7 +1165,13 @@
         "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: The completed change added an optional local `npm run verify` shortcut (lint before tests) to package.json. It did not replace the existing required pre-PR command `npm test`, which AGENTS.md and CONTRIBUTING.md document. Refresh related documentation from the supplied evidence. The presence of the optional command is not a decision to make it mandatory. Use the current working directory as the repository root.",
         "approvals": []
       },
-      "outputSchema": null
+      "outputSchema": null,
+      "assessment": "outcome",
+      "workFamily": "documentation",
+      "provenance": {
+        "source": "plugins/workflow/skills/refresh-related-docs/SKILL.md",
+        "group": "refresh-related-docs"
+      }
     },
     "assert": [
       {

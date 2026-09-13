@@ -2,11 +2,13 @@ import { expect, test } from 'bun:test';
 import { mkdir, mkdtemp, rename, rm } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import {
+  candidatePrompt,
   type IRepositoryCase,
   loadCases,
   parseCase,
   promptfooCase,
 } from '../../src/corpus/cases.ts';
+import { requirement } from '../fixtures/contracts.ts';
 
 const definition = (): IRepositoryCase => ({
   description: 'Ask for a clarification before editing the fixture.',
@@ -15,7 +17,10 @@ const definition = (): IRepositoryCase => ({
     id: 'fixture/clarification',
     group: 'interaction',
     kind: 'task',
-    requirements: ['clarify-first'],
+    assessment: 'outcome',
+    workFamily: 'implementation',
+    provenance: { source: 'unit-test', group: 'unit-test' },
+    requirements: [requirement('clarify-first')],
     fixture: [],
     execution: {
       networkAccess: false,
@@ -40,7 +45,7 @@ const definition = (): IRepositoryCase => ({
   assert: [
     {
       type: 'javascript',
-      value: 'file://grader.ts',
+      value: 'file://src/grader.ts',
       metric: 'clarification',
       config: {
         core: true,
@@ -58,8 +63,20 @@ test('keeps native Promptfoo fields and explicit requirement, criterion and inte
 
   expect(parsed).toEqual(source);
   expect(promptfooCase(parsed, '/project').assert?.[0]).toMatchObject({
-    value: 'file:///project/grader.ts',
+    value: 'file:///project/src/grader.ts',
   });
+});
+
+test('sends authorization with the task without leaking grading guidance or future replies', () => {
+  const source = definition();
+  source.metadata.reference = 'private grading answer';
+  const prompt = candidatePrompt(source);
+
+  expect(prompt).toContain(source.vars.task);
+  expect(prompt).toContain(source.metadata.authorization.scope);
+  expect(prompt).not.toContain(source.metadata.reference);
+  expect(prompt).not.toContain('Preserve order.');
+  expect(promptfooCase(source, '/project')).toMatchObject({ vars: { task: prompt } });
 });
 
 test('rejects ungraded requirements, missing core checks and duplicate criteria', () => {
@@ -70,7 +87,7 @@ test('rejects ungraded requirements, missing core checks and duplicate criteria'
   }
 
   const ungraded = definition();
-  ungraded.metadata.requirements.push('missing');
+  ungraded.metadata.requirements.push(requirement('missing'));
   const duplicate = definition();
   duplicate.assert.push(...duplicate.assert);
   const unknownRequirement = definition();
@@ -116,7 +133,7 @@ test('loads the full corpus by default and makes explicit subsets and versions i
   const root = await mkdtemp(resolve('.cache/cases-test-'));
   await mkdir(`${root}/cases`);
   await Bun.write(
-    `${root}/grader.ts`,
+    `${root}/src/grader.ts`,
     'export default () => ({ pass: true, score: 1, reason: "fixture" });',
   );
 
@@ -124,7 +141,7 @@ test('loads the full corpus by default and makes explicit subsets and versions i
   const second = definition();
   second.metadata.id = 'fixture/second';
   await Bun.write(`${root}/cases/examples.json`, JSON.stringify([first, second]));
-  const full = await loadCases(root);
+  const full = await loadCases(root, { caseRoot: 'cases', fixtureRoot: 'fixtures' });
 
   expect(full.map((item) => item.definition.metadata.id)).toEqual([
     'fixture/clarification',
@@ -139,18 +156,27 @@ test('loads the full corpus by default and makes explicit subsets and versions i
   }
 
   await Bun.write(`${root}/cases/examples.json`, JSON.stringify([first, second]));
-  const regraded = (await loadCases(root))[0];
+  const regraded = (await loadCases(root, { caseRoot: 'cases', fixtureRoot: 'fixtures' }))[0];
 
   expect(regraded?.version).not.toBe(original?.version);
   expect(regraded?.executionVersion).toBe(original?.executionVersion);
-  expect(await loadCases(root, ['fixture/second'])).toHaveLength(1);
-  await expect(loadCases(root, ['missing'])).rejects.toThrow('Unknown selected case');
-  await expect(loadCases(root, ['fixture/second', 'fixture/second'])).rejects.toThrow(
-    'Duplicate selected',
-  );
+  expect(
+    await loadCases(root, { caseRoot: 'cases', fixtureRoot: 'fixtures' }, ['fixture/second']),
+  ).toHaveLength(1);
+  await expect(
+    loadCases(root, { caseRoot: 'cases', fixtureRoot: 'fixtures' }, ['missing']),
+  ).rejects.toThrow('Unknown selected case');
+  await expect(
+    loadCases(root, { caseRoot: 'cases', fixtureRoot: 'fixtures' }, [
+      'fixture/second',
+      'fixture/second',
+    ]),
+  ).rejects.toThrow('Duplicate selected');
   await Bun.write(`${root}/cases/duplicate.json`, JSON.stringify([first]));
 
-  await expect(loadCases(root)).rejects.toThrow('Duplicate case id');
+  await expect(loadCases(root, { caseRoot: 'cases', fixtureRoot: 'fixtures' })).rejects.toThrow(
+    'Duplicate case id',
+  );
 });
 
 test('refuses missing fixtures and graders', async () => {
@@ -160,10 +186,14 @@ test('refuses missing fixtures and graders', async () => {
   source.metadata.fixture = [{ source: 'missing.txt', target: 'input.txt' }];
   await Bun.write(`${root}/cases/case.json`, JSON.stringify([source]));
 
-  await expect(loadCases(root)).rejects.toThrow('Missing fixture');
+  await expect(loadCases(root, { caseRoot: 'cases', fixtureRoot: 'fixtures' })).rejects.toThrow(
+    'Missing fixture',
+  );
   await Bun.write(`${root}/fixtures/missing.txt`, 'fixture');
 
-  await expect(loadCases(root)).rejects.toThrow('Missing grader');
+  await expect(loadCases(root, { caseRoot: 'cases', fixtureRoot: 'fixtures' })).rejects.toThrow(
+    'Missing grader',
+  );
 });
 
 test('moving fixture storage preserves execution identity when target, bytes and mode remain equal', async () => {
@@ -171,16 +201,16 @@ test('moving fixture storage preserves execution identity when target, bytes and
   try {
     await mkdir(resolve(root, 'cases'));
     await mkdir(resolve(root, 'fixtures'));
-    await Bun.write(resolve(root, 'grader.ts'), 'export default () => true;');
+    await Bun.write(resolve(root, 'src/grader.ts'), 'export default () => true;');
     await Bun.write(resolve(root, 'fixtures/old.fixture'), 'same input');
     const source = definition();
     source.metadata.fixture = [{ source: 'old.fixture', target: 'input.txt' }];
     await Bun.write(resolve(root, 'cases/example.json'), JSON.stringify([source]));
-    const before = (await loadCases(root))[0];
+    const before = (await loadCases(root, { caseRoot: 'cases', fixtureRoot: 'fixtures' }))[0];
     await rename(resolve(root, 'fixtures/old.fixture'), resolve(root, 'fixtures/moved.fixture'));
     source.metadata.fixture = [{ source: 'moved.fixture', target: 'input.txt' }];
     await Bun.write(resolve(root, 'cases/example.json'), JSON.stringify([source]));
-    const after = (await loadCases(root))[0];
+    const after = (await loadCases(root, { caseRoot: 'cases', fixtureRoot: 'fixtures' }))[0];
 
     expect(after?.executionVersion).toBe(before?.executionVersion);
     expect(after?.version).not.toBe(before?.version);

@@ -5,6 +5,7 @@ import { saveReport } from '../../src/execution/worker.ts';
 import { freezeRun, type IRunRequest } from '../../src/preparation/run.ts';
 import { inventoryDirectory, snapshotDirectory } from '../../src/preparation/snapshot.ts';
 import type { ITrialResult } from '../../src/results/records.ts';
+import { loadedCase, requirement } from '../fixtures/contracts.ts';
 
 const projectSource = resolve(import.meta.dir, '../..');
 const regradeRunner = resolve(import.meta.dir, '../fixtures/regrade-runner.ts');
@@ -35,24 +36,42 @@ async function writeJson(path: string, value: unknown): Promise<void> {
   await Bun.write(path, `${JSON.stringify(value, null, 2)}\n`);
 }
 
-async function projectFixture(
-  selectedCases = ['native/scripted-context'],
-): Promise<IRegradeFixture> {
+async function projectFixture(selectedCases = ['fixture/regrade']): Promise<IRegradeFixture> {
   const root = await mkdtemp(resolve('.cache/regrade-test-'));
   roots.push(root);
   const project = resolve(root, 'project');
   const candidate = resolve(root, 'candidate');
   await mkdir(project);
 
-  for (const name of ['src', 'cases', 'fixtures', 'profiles', 'pricing']) {
+  for (const name of ['src', 'profiles', 'pricing']) {
     await snapshotDirectory(resolve(projectSource, name), resolve(project, name), {
       symlinks: 'reject',
     });
   }
 
-  for (const name of ['package.json', 'bun.lock']) {
+  for (const name of ['package.json', 'bun.lock', 'collections.json']) {
     await Bun.write(resolve(project, name), await Bun.file(resolve(projectSource, name)).bytes());
   }
+
+  const first = loadedCase('fixture/regrade').definition;
+  first.vars.task = 'Return done and write candidate-output.txt.';
+  first.metadata.requirements.push(requirement('artifact'));
+  first.assert.push({
+    type: 'javascript',
+    value: 'file://src/grading/assertion.ts',
+    metric: 'artifact',
+    config: {
+      core: true,
+      method: 'programmatic',
+      requirements: ['artifact'],
+      rubric: 'The requested candidate output file exists.',
+      rule: { type: 'file-exists', path: 'candidate-output.txt' },
+    },
+  });
+  const second = structuredClone(first);
+  second.metadata.id = 'fixture/other';
+  await mkdir(resolve(project, 'fixtures'));
+  await writeJson(resolve(project, 'cases/regrade.json'), [first, second]);
 
   const runtimePath = resolve(project, 'profiles/default/runtime.json');
   const runtime = (await Bun.file(runtimePath).json()) as IRuntimeConfig;
@@ -105,7 +124,7 @@ async function projectFixture(
     startedAt: manifest.createdAt + 1,
     endedAt: manifest.createdAt + 2,
     errors: [],
-    output: 'Atlas 2.3 beta',
+    output: 'done',
     evidencePath: `trials/${trial.id}/evidence.json`,
     protocolPath: null,
     artifacts: {
@@ -127,7 +146,7 @@ async function projectFixture(
     root,
     project,
     runDirectory,
-    caseFile: resolve(project, 'cases/native-interaction.json'),
+    caseFile: resolve(project, 'cases/regrade.json'),
     trialId: trial.id,
     resultPath,
     artifactPath,
@@ -143,6 +162,7 @@ async function invokeRegrade(
   project: string,
   runDirectory: string,
   selectedCases: string[] = [],
+  grading?: string,
 ): Promise<string> {
   const child = Bun.spawn(
     [
@@ -151,6 +171,7 @@ async function invokeRegrade(
       project,
       runDirectory,
       ...selectedCases.flatMap((id) => ['--case', id]),
+      ...(grading === undefined ? [] : ['--grading', grading]),
     ],
     {
       cwd: project,
@@ -177,6 +198,15 @@ async function invokeRegrade(
   return reportPath;
 }
 
+async function writeGrading(input: IRegradeFixture, cases: unknown[]): Promise<string> {
+  const { collection } = JSON.parse(input.initialManifest);
+  const path = resolve(input.root, 'grading.json');
+  await writeJson(`${path}.collection.json`, collection);
+  await writeJson(path, { schema: 'codex-evals/grading-v1', collection, cases });
+
+  return path;
+}
+
 async function regradeDirectories(runDirectory: string): Promise<string[]> {
   return (await Array.fromAsync(new Bun.Glob('regrades/*/manifest.json').scan(runDirectory))).map(
     (path) => resolve(runDirectory, path, '..'),
@@ -188,22 +218,20 @@ afterEach(async () => {
 });
 
 test('explicit regrading selection keeps the full report scope and refuses unknown case IDs', async () => {
-  const input = await projectFixture(['native/scripted-context', 'native/verified-fix']);
+  const input = await projectFixture(['fixture/regrade', 'fixture/other']);
 
   const cases = (await Bun.file(input.caseFile).json()) as {
     metadata: { id: string };
     vars: { task: string };
   }[];
 
-  const unselected = cases.find((item) => item.metadata.id === 'native/verified-fix');
+  const unselected = cases.find((item) => item.metadata.id === 'fixture/other');
   if (unselected === undefined) {
     throw new Error('Missing unselected case.');
   }
   unselected.vars.task = 'Changed execution input outside the selected grading scope.';
   await Bun.write(input.caseFile, JSON.stringify(cases));
-  const reportPath = await invokeRegrade(input.project, input.runDirectory, [
-    'native/scripted-context',
-  ]);
+  const reportPath = await invokeRegrade(input.project, input.runDirectory, ['fixture/regrade']);
   const report = await Bun.file(reportPath).json();
 
   expect(report.summary.execution).toMatchObject({
@@ -298,7 +326,7 @@ test('regrades frozen artifacts when native execution evidence was not collected
     metadata: { id: string };
     assert: { config: Record<string, unknown> }[];
   }[];
-  const selected = cases.find((item) => item.metadata.id === 'native/scripted-context');
+  const selected = cases.find((item) => item.metadata.id === 'fixture/regrade');
   if (selected === undefined) {
     throw new Error('Missing selected case.');
   }
@@ -311,9 +339,11 @@ test('regrades frozen artifacts when native execution evidence was not collected
       rule: { type: 'file-exists', path: 'candidate-output.txt' },
     };
   }
-  await writeJson(input.caseFile, cases);
+  const grading = await writeGrading(input, [
+    { caseId: 'fixture/regrade', assert: selected.assert },
+  ]);
 
-  const reportPath = await invokeRegrade(input.project, input.runDirectory);
+  const reportPath = await invokeRegrade(input.project, input.runDirectory, [], grading);
   const report = await Bun.file(reportPath).json();
 
   expect(report.summary.execution.incomplete).toBe(1);
@@ -324,7 +354,7 @@ test('regrades frozen artifacts when native execution evidence was not collected
   expect(await Bun.file(input.initialReportPath).text()).toBe(input.initialReport);
 });
 
-test('invalid current rules stop regrading before a manifest, grade or native batch exists', async () => {
+test('invalid explicit rules stop regrading before a manifest, grade or native batch exists', async () => {
   const input = await projectFixture();
 
   const cases = (await Bun.file(input.caseFile).json()) as {
@@ -332,14 +362,19 @@ test('invalid current rules stop regrading before a manifest, grade or native ba
     assert: { config: Record<string, unknown> }[];
   }[];
 
-  const check = cases.find((item) => item.metadata.id === 'native/scripted-context')?.assert[0];
+  const check = cases.find((item) => item.metadata.id === 'fixture/regrade')?.assert[0];
   if (check === undefined) {
     throw new Error('Missing assertion.');
   }
   check.config = { ...check.config, rule: { type: 'invalid-rule' } };
-  await Bun.write(input.caseFile, JSON.stringify(cases));
+  const grading = await writeGrading(input, [
+    {
+      caseId: 'fixture/regrade',
+      assert: cases.find((item) => item.metadata.id === 'fixture/regrade')?.assert,
+    },
+  ]);
 
-  await expect(invokeRegrade(input.project, input.runDirectory)).rejects.toThrow(
+  await expect(invokeRegrade(input.project, input.runDirectory, [], grading)).rejects.toThrow(
     'programmatic rule',
   );
   expect(await regradeDirectories(input.runDirectory)).toEqual([]);
@@ -361,15 +396,17 @@ test('changed rubric creates a new criterion without mutating candidate evidence
     assert: { metric: string; config: Record<string, unknown> }[];
   }[];
 
-  const selected = cases.find((item) => item.metadata.id === 'native/scripted-context');
-  const assertion = selected?.assert.find((item) => item.metric === 'clarified-label');
+  const selected = cases.find((item) => item.metadata.id === 'fixture/regrade');
+  const assertion = selected?.assert.find((item) => item.metric === 'result');
   if (assertion === undefined) {
     throw new Error('Missing rubric assertion.');
   }
   assertion.config = { ...assertion.config, rubric: 'Changed rubric for the same execution.' };
-  await Bun.write(input.caseFile, `${JSON.stringify(cases, null, 2)}\n`);
+  const grading = await writeGrading(input, [
+    { caseId: 'fixture/regrade', assert: selected?.assert },
+  ]);
 
-  const reportPath = await invokeRegrade(input.project, input.runDirectory);
+  const reportPath = await invokeRegrade(input.project, input.runDirectory, [], grading);
   const directories = await regradeDirectories(input.runDirectory);
 
   expect(directories).toHaveLength(1);

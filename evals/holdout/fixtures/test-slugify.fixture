@@ -1,0 +1,18 @@
+import unittest
+
+from slugify import normalize_slug
+
+
+class NormalizeSlugTests(unittest.TestCase):
+    def test_accents_and_punctuation(self) -> None:
+        self.assertEqual(normalize_slug("  Café au lait!  "), "cafe-au-lait")
+
+    def test_repeated_separators_and_symbols(self) -> None:
+        self.assertEqual(normalize_slug("Release 2.0 / beta"), "release-2-0-beta")
+
+    def test_clean_value_is_stable(self) -> None:
+        self.assertEqual(normalize_slug("already-clean"), "already-clean")
+
+
+if __name__ == "__main__":
+    unittest.main()

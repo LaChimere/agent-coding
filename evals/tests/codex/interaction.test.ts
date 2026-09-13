@@ -1,13 +1,17 @@
 import { expect, test } from 'bun:test';
 import { type IInteractionEvent, ScriptedUser } from '../../src/codex/interaction.ts';
 import type { ICaseMetadata } from '../../src/corpus/cases.ts';
+import { requirement } from '../fixtures/contracts.ts';
 
 function metadata(turns: ICaseMetadata['turns'] = []): ICaseMetadata {
   return {
     id: 'interaction',
     group: 'native',
     kind: 'task',
-    requirements: ['scope'],
+    assessment: 'outcome',
+    workFamily: 'implementation',
+    provenance: { source: 'unit-test', group: 'unit-test' },
+    requirements: [requirement('scope')],
     fixture: [],
     execution: {
       networkAccess: false,

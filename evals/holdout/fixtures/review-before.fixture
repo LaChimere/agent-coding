@@ -1,0 +1,3 @@
+def load_jobs(store):
+    jobs = store.list()
+    return [job for job in jobs if job["active"]]

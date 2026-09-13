@@ -50,10 +50,10 @@ Seatbelt sandbox can fail during preparation.
 | --- | --- |
 | `bun run dev` | Run the entry point in watch mode. |
 | `bun run start` | Display evaluation CLI help. |
-| `bun run start -- validate` | Validate the full corpus and programmatic rules without model calls. |
-| `bun run start -- run` | Evaluate the current candidate, all cases, once each, at concurrency 2. |
+| `bun run start -- validate` | Validate the development collection and programmatic rules without model calls. |
+| `bun run start -- run` | Evaluate the current candidate on development cases, once each, at concurrency 2. |
 | `bun run start -- calibrate` | Check both grader methods against the owner-confirmed calibration labels. |
-| `bun run start -- regrade RUN [--case ID ...]` | Grade saved candidate evidence using current criteria; create a new report. |
+| `bun run start -- regrade RUN [--case ID ...] [--grading FILE]` | Grade frozen evidence with frozen criteria or explicit corrections; create a new report. |
 | `bun run start -- report RUN` | Build an immutable report from the run's original criterion definitions. |
 | `bun run start -- compare LEFT.json RIGHT.json` | Pair explicitly executed runs by case ID and repetition. |
 | `bun run start -- view REPORT.json` | Locate the project report and open its native Promptfoo export. |
@@ -71,11 +71,33 @@ test root; fake native processes and subprocess runners live in `tests/fixtures/
 Run a domain directly with, for example, `bun test tests/grading/`.
 
 Case fixtures are inert `.fixture` data and are restored to their execution
-filenames inside each trial. The coverage gate requires 80% lines per imported
-source file. Local tests use fake native child processes and deterministic
-provider responses; real native/model
-acceptance is recorded separately. The build requires the pinned installed
+filenames inside each trial. The frozen Bun test configuration requires at least
+80% line coverage for each imported file. Local tests use fake native child
+processes and deterministic provider responses; real native/model acceptance is
+recorded separately. The build requires the pinned installed
 Promptfoo package at runtime; it is not a dependency-free executable.
+
+## Collections and access
+
+`collections.json` selects separate development and holdout case/fixture roots.
+Development is the default for `validate`, `run`, `regrade`, `report`, `view` and
+`compare`. Use `--collection holdout` explicitly for holdout acceptance. Calibration
+is independent and accepts no collection selection.
+
+Selection precedes discovery and snapshots. Default operations do not inspect
+holdout task contents or copy their fixtures. A saved run has `collection.json`;
+a saved report has an adjacent `REPORT.json.collection.json`. These small scope
+records must match before the full payload is read. Preserve the sidecar when
+copying a report. Run and report schemas are `codex-evals/run-v2` and
+`codex-evals/report-v2`; the CLI does not read previous formats or migrate archives.
+
+Frozen membership, version, source grouping and known exposure describe the
+selection at that time. Do not rewrite a completed run when the live collection
+changes. Tasks exposed to tuning move to future development use, with their
+history retained; replacement holdouts must use new problem structures. Separate
+authoring/validation contexts can prepare holdouts without disclosing their
+contents or diagnostic feedback to the tuning context. These records document
+known exposure, not a guarantee about model training data.
 
 ## Running and comparing
 
@@ -106,7 +128,7 @@ candidate trial automatically.
 
 A comparison uses fixed case/repetition pairs, without selecting outcomes. Each
 metric reports eligible pairs and exclusions. Different case execution inputs,
-grading definitions, runtime tools, or framework conditions can make a pair
+grading definitions, collection membership, runtime tools, or framework conditions can make a pair
 ineligible. Candidate model, roles, and permissions may be the experiment's
 intended variables. Single trials describe observations, not reliability estimates.
 Core quality comparisons require matching selected core-grader configurations;
@@ -114,19 +136,42 @@ an absent or different diagnostic grade does not exclude a decidable core result
 
 ## Cases and judgments
 
-Each JSON file under `cases/` contains Promptfoo cases with `vars.task`, repository
-metadata and JavaScript assertions. Metadata identifies requirements, fixture
-bindings, mandatory execution conditions, scripted replies and authorization.
+Each JSON file in the selected case root contains Promptfoo cases with `vars.task`,
+repository metadata and JavaScript assertions. Metadata declares:
+
+- `assessment`: ordinary task `outcome` or skill `mechanism`.
+- `workFamily`: `planning`, `implementation`, `review` or `documentation`; it may
+  be null for a pure mechanism case.
+- `provenance`: the task source and source/fixture/solution grouping.
+- `requirements`: records with `id`, `capability`, `authority`, `appliesWhen` and
+  observable `evidence`; assertions reference their IDs.
+- Fixture bindings, execution conditions, scripted replies and authorization.
+
+The rubric and `metadata.reference` are grading guidance, not new candidate
+obligations. A valid alternative or concise result can pass. Optional skill
+omission does not fail an ordinary outcome; explicitly required processes remain
+part of its task contract.
+
+Requirement `evidence` describes stable observation sources, such as native actions
+or immutable artifacts. Keep scoring conditions only in assertions/reference;
+copying a rubric into a frozen requirement leaves stale guidance after regrading.
+
+The candidate receives `vars.task` followed by `metadata.authorization.scope`.
+Promptfoo displays that same composed prompt, and the execution fingerprint
+includes it. Future scripted replies, approval decisions, requirements, references
+and assertions are not included in the initial candidate prompt.
 Every requirement maps to a core or diagnostic assertion. See
 [`native-interaction.json`](cases/native-interaction.json) for runnable examples.
 Cases use their current skill or suite names, and fixture bindings resolve
-directly under `fixtures/`. The corpus inventory test validates the actual case
+under the selected collection's fixture root. The corpus inventory test validates the actual case
 files and rejects unreferenced fixture payloads.
-Programmatic rules are validated by the shared case loader, including during
-regrading, before a runnable grading batch is published.
+Programmatic rules are validated by the shared case parser, including explicit
+grading corrections, before a runnable grading batch is published. Grader modules
+live under shared `src/`; collection-specific answers and checks stay in the
+selected private case data, not shared framework code.
 
 Use `programmatic` checks for file existence, exact text, route classification,
-native conversation counts, or a trusted offline verification command. Commands
+native conversation evidence, or a trusted offline verification command. Commands
 run without a model or provider credentials against a separate writable artifact
 copy. Use `text-rubric` for semantic judgment over supplied evidence and
 `artifact-rubric` when an independent, read-only Codex judge must inspect files.
@@ -135,6 +180,13 @@ files are grader data; their instructions do not configure the judge.
 Only model grading resolves provider credentials. Missing model authentication
 creates an explicit unknown/error grading record; local programmatic regrading
 continues to work without those credentials.
+
+`native-conversation` rules declare `countScope: "root"` or `"all"`. Root counts
+use the main conversation's observed messages, so valid worker threads do not
+inflate a two-turn user interaction. All counts include the captured thread/turn
+set. An optional ordered `sequence` follows the root conversation in either mode;
+missing required message capture remains unknown. Worker identity and context
+reuse require their separate native-evidence checks.
 
 For generated filenames whose directory is intentionally unspecified, a
 `file-pattern` rule (for example `{"type":"file-pattern","pattern":"**/result.json"}`)
@@ -191,14 +243,23 @@ Saved reports select one grading record per check using the latest matching
 attempt by start time, then stable ID. Regrading appends records and consumption
 without adding candidate trials or changing old report bytes. A later `report`
 command uses original run definitions; the report produced by `regrade` explicitly
-selects its revised definitions. Regrading requires matching case IDs and execution
-inputs in the current corpus; changed identities or inputs require new execution.
-An explicit `regrade --case ID` selection updates only those cases' definitions;
-the project report retains the complete original trial scope and original grading
-definitions elsewhere. Its native Promptfoo export covers only that regrading
-selection. The report still accounts for all recorded work, including earlier
-grading attempts. Without `--case`, every original case is regraded and must still
-have matching execution inputs.
+selects its revised definitions. Without `--grading`, regrading uses the original
+frozen case definitions and never discovers the current corpus. `--case ID`
+selects cases within that frozen run; other trial definitions remain unchanged
+in the full project report. The native Promptfoo export covers only the selected
+regrading trials. All recorded attempts remain in resource accounting.
+
+An explicit correction file has schema `codex-evals/grading-v1`, the original
+`collection` object, and `cases` entries containing `caseId`, optional `assert`,
+and optional `metadata: { reference }`. Its adjacent `FILE.collection.json` holds
+the same original collection record and is checked before the correction payload.
+No other fields may be overridden. Assertion requirement IDs must already exist.
+A correction must preserve the original obligations even when its fields pass
+validation; changing task inputs, authority, required evidence or interactions
+requires a new execution. Review the semantic correction before applying it to
+both sides of a comparison. An increase caused by grader repair is not candidate
+improvement.
+
 Evidence sufficiency is decided per check: an unavailable native transcript does
 not prevent an artifact check from using an intact frozen artifact inventory.
 
@@ -218,9 +279,8 @@ the recorded work itself.
 New runs freeze [`pricing/openai-standard.json`](pricing/openai-standard.json)
 with the private inputs and copy its contents into the manifest. Reports and
 regrades use that frozen snapshot unless `report --prices FILE` explicitly supplies
-another book. For older runs without a frozen book, the report/regrade CLI uses
-the current repository snapshot and records it in the new report. Existing reports
-and usage records remain unchanged; loading prices makes no network/model request.
+another book. Existing reports and usage records remain unchanged; loading prices
+makes no network/model request.
 
 The supplied book uses official OpenAI Standard text-token reference rates for
 the configured Astra, Sol and Luna models, with dated source links and explicit
