@@ -3,8 +3,11 @@
 Status on 2026-09-13: implementation, local qualification and expanded human
 calibration are complete. The owner interrupted the full baseline to request
 another comprehensive review and refinement of all uncommitted changes. That
-review has now converged after two rounds. The owner then authorized atomic local
-commits followed by a fresh full baseline. The first stage is not yet accepted.
+review converged after two rounds. The owner then authorized atomic local
+commits followed by a fresh full baseline, which completed all 338 trials.
+Assessment corrections discovered during that run have been reviewed and regraded.
+First-stage measurement qualification is complete, with the candidate limitations
+below retained; this is not runtime-optimization or holdout acceptance.
 This report covers delivery on `lachimere/refine-harness`, based on
 `b19309413819690d14a02ffe9ccfe21ca1b29451`.
 
@@ -206,10 +209,90 @@ and 331 unknown/unrecorded cases. Wall time was 408,763 ms; recorded usage was
 3,030,469 tokens (partial), estimated cost USD 21.34566342 (partial), and actual
 cost unknown. These observations remain preserved and do not qualify a baseline.
 
-The patch review and its fixes are complete. A fresh full run is authorized after
-the atomic commit sequence; the earlier interrupted run remains unchanged. Required
-capability coverage, failures, unknowns and resource limitations still need review
-before stage acceptance. Until then, ordinary
-planning, documentation, recovery and remaining role paths lack fresh qualified
-baseline observations. Runtime optimization that depends on this measurement
-foundation has not started.
+The fresh committed run is `40418426-0012-4dfb-b4cc-4d5c4a70f1fb`, from clean
+source commit `6713d4629ba3e26443ae5870208af8e95c81ace6`. It completed all 338
+executions and 1,270 checks. Original report
+`80e5acab-2e42-4906-928e-0396069c7e00` records 323 passed, 12 failed and 3 unknown
+cases, with no top-level execution or grader errors. The log is
+`evals/out/refinement-baseline-committed-20260913.log`.
+
+Wall time was 8,202,705 ms (136 minutes 43 seconds). Recorded usage was 53,249,502
+tokens, partial; estimated cost was USD 411.18127376, partial; actual charge was
+unknown. Candidate operations account for 24,897,814 tokens and estimated
+USD 111.98483476; grading accounts for 28,351,688 tokens and estimated
+USD 299.196439. Parent/child usage inclusion and price conditions remain qualified
+in the saved report. These figures are reference estimates, not provider invoices.
+
+All failed and unknown cases received primary and independent evidence review.
+The review identified missing valid route alternatives, an incorrectly restricted
+composed planning workflow, scanner evidence unavailable to the selected grader,
+and a CSV contract interpretation that was not established by the supplied sources.
+The [implementation plan](refinement-plan.md#baseline-assessment-corrections)
+records the bounded corrections. They cover 22 cases / 107 checks, including prior
+passes, and preserve the original candidate executions and report.
+
+Two observations remain supported without changing their grading:
+
+- `anti-slop/0` did not state why the helper was needed, as its applicable full
+  check requires. This is a bounded candidate reporting failure.
+- `role-probes/complex-worker` invoked the configured `gpt-5.6-sol/high` child,
+  but both child turns failed with `invalid_request_body: Encrypted function output
+  content could not be decrypted or decoded.` The parent honestly reported the
+  missing worker diagnosis. Invocation/completion fails; the child boundary check
+  remains unknown. Native role and model identity are observed, but completed
+  worker behavior is not established. The retained error does not identify the
+  exact upstream cause, and no gateway or candidate configuration was changed.
+
+Fresh observations support ordered clarification, scope preservation, missing-input
+and conflicting-test handling, honest unavailable-reviewer reporting, actual child
+work and same-worker authorized repair. `critical_reviewer` and
+`deep_critical_reviewer` cases completed and passed. This does not establish that
+the failed complex-worker path is preserved or that the candidate generalizes to
+holdouts. Runtime optimization has not started.
+
+## Corrected baseline and qualification
+
+Regrade `86c48b72-91d4-45da-aabd-38b3c862853a` used the same saved candidate
+executions and existing grader implementations. All 22 selected cases / 107 checks
+passed, with no grader errors. It produced full report
+`fe8c331e-4b82-44c1-a2cd-fa346f3d1c59` in the original run's `reports/` directory.
+The native Promptfoo export covers the 22 regraded cases; the project report
+preserves all 338 planned trials and their selected grading definitions.
+
+| Assessment | Passed | Failed | Unknown cases |
+| --- | ---: | ---: | ---: |
+| All trials | 336 | 2 | 0 |
+| Ordinary outcomes | 121 | 1 | 0 |
+| Skill mechanisms | 215 | 1 | 0 |
+| Planning outcomes | 45 | 0 | 0 |
+| Implementation outcomes | 27 | 0 | 0 |
+| Review outcomes | 40 | 1 | 0 |
+| Documentation outcomes | 9 | 0 | 0 |
+
+Decidable pass rate is 99.41%, with 100% case-level decision coverage. The failed
+complex-worker case still contains one unknown core check,
+`complex-role-boundary`; no unknown case does not mean every check was decidable.
+Every agreed capability category has observed, decidable evidence. No preservation
+claim is made for the failed complex-worker execution path.
+
+This score change is an assessment correction, not a candidate improvement.
+Original and corrected definitions, grades and reports remain available; 1,949
+original manifest, completion, report, trial-result, evidence and grading records
+were checked byte-for-byte by SHA-256 and remained unchanged. No task, authority,
+fixture, runtime configuration, calibration label or core flag changed.
+
+Regrading took 363,065 ms (6 minutes 3 seconds), with 3,745,988 recorded tokens and
+estimated USD 31.480511; both resource totals have partial coverage. The corrected
+report accounts for every original and regrading operation: 56,995,490 tokens and
+estimated USD 442.66178476, partial; actual charges remain unknown. Its 9,240,469 ms
+wall span includes the interval between the original run and regrading, so it is
+not a second candidate-run duration. Neither interrupted runs nor earlier probes
+are pooled into these totals.
+
+The corrective patch passed independent review, targeted re-review, the frozen
+local gates and the actual regrade. It changes case guidance and grader selection,
+using existing framework contracts. No confirmed material assessment defect remains
+for this baseline. The justified candidate failure and native-request failure do
+not invalidate the measurement, but neither is silently converted into success.
+New-task generalization and improvements to the candidate remain unverified until
+a later authorized runtime comparison and holdout acceptance.

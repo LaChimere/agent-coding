@@ -95,7 +95,7 @@ does not qualify an unassessable required capability.
 | Independent review | Converged | Complete round 1 covered 103 uncommitted files; all confirmed findings fixed; targeted round 2 found no new material issue |
 | Holdout preparation | Statically qualified | Independent author and validator; 6 cases / 10 checks / 8 fixtures; all 6 authorization scopes checked; no model run or contents exposed to primary |
 | Expanded calibration | Passed | Owner confirmed all 10 new shared labels for both methods on 2026-09-13; all 26 observations agreed, with no grader errors |
-| Fresh full development baseline | Authorized after atomic commits | The earlier interrupted run remains retained; a fresh full run will use the committed implementation |
+| Fresh full development baseline | Qualified with recorded candidate limitations | Run `40418426-0012-4dfb-b4cc-4d5c4a70f1fb`: 338 executions; corrected report `fe8c331e-4b82-44c1-a2cd-fa346f3d1c59`: 336 passed, 2 failed, no unknown cases. Complex-worker boundary remains an unknown check after its native request failed. |
 
 Implementation began on 2026-09-13, preserving the existing refinement-document
 changes. Delegates returned owned changes from isolated clones; the primary
@@ -123,7 +123,7 @@ Candidate sources, frozen tooling, archived evidence and production installs rem
 unchanged. Atomic local commits were subsequently authorized; no push or PR action
 has occurred.
 
-## Next acceptance step
+## Confirmed calibration and interrupted pre-review run
 
 The owner confirmed all ten new sample labels for both methods on 2026-09-13.
 `labels.json` now records the complete 13-sample hash and confirmation time; the
@@ -139,10 +139,10 @@ The owner requested a comprehensive review and refinement of all uncommitted
 changes before the full baseline. The running evaluation was interrupted cleanly;
 its report is `38e60db6-13ed-4842-bf69-ae7ad28f8756`, with 9 completed executions,
 6 passed cases, 1 failed case and 331 unknown/unrecorded cases across the 338
-planned trials. All available evidence and consumption remain retained. Review
-the fixed current patch, confirm findings, apply bounded repairs, and validate
-them before starting another full baseline. The review converged, and the owner
-then authorized atomic commits and a fresh full run. Runtime optimization and
+planned trials. All available evidence and consumption remain retained. The fixed
+patch was reviewed, confirmed findings were repaired, and validation passed before
+another full baseline started. The owner then authorized atomic commits and a fresh
+full run. Runtime optimization and
 publication remain outside this authorization.
 
 ## Comprehensive patch review and corrections
@@ -216,7 +216,64 @@ contract commit keeps schema/data/readers/regrading together; report dimensions
 and new scenario groups land independently. No temporary compatibility reader or
 migration utility was added to the delivered project.
 
-The next operation is the full development baseline from the clean committed tree:
-338 cases, one repetition, concurrency two, no time/token caps. Its run ID and
-source commit will be recorded under `evals/out/`; actual results must still be
-reviewed before first-stage acceptance.
+The full development baseline ran from clean commit
+`6713d4629ba3e26443ae5870208af8e95c81ace6`: 338 cases, one repetition,
+concurrency two, and no time/token caps. Run
+`40418426-0012-4dfb-b4cc-4d5c4a70f1fb` completed with all executions and grades
+recorded. Its original report is `80e5acab-2e42-4906-928e-0396069c7e00`.
+
+## Baseline assessment corrections
+
+Continuous monitoring and independent evidence review found grading defects and
+under-specified boundaries rather than reasons to modify candidate instructions:
+
+- Exact route sets omitted documented direct handling and task-triggered quality
+  companions. The final correction keeps these allowances case-specific; focused
+  flag/evidence checks and ongoing guards retain their narrow routes.
+- The decomposition check incorrectly rejected the parallel-planning companion's
+  proposed owners and branches. Actual creation or implementation dispatch remains
+  prohibited during planning.
+- Seven scanner checks required invocation-log contents unavailable to the text
+  grader. They now use the existing artifact grader. Provenance is assessed against
+  candidate-visible knowledge, not undisclosed fixture internals.
+- The CSV reference now distinguishes raw returned headers from normalized lookup;
+  those representations alone do not establish a semantic conflict requiring
+  another alignment step.
+
+The correction changes 22 cases and regrades their 107 checks, including previously
+passed cases. Task inputs, authority, requirements, core flags, fixtures, candidate
+runtime, calibration and frozen tooling remain unchanged. Original execution
+versions are preserved; no candidate retry substitutes for a failed trial.
+The override and its collection sidecar are
+`evals/out/baseline-grading-corrections-40418426.json` and the adjacent
+`.collection.json`. Review evidence is under
+`evals/out/baseline-correction-review/`; judgment dispositions are in
+`evals/out/baseline-assessment-review-40418426.json`.
+
+After the initial correction, `bun run check`, `bun run test:coverage` (237 pass,
+0 fail, 1,047 expectations), `bun run build` and development validation (338/1,270)
+passed. Targeted route refinement removed two overly broad optional companions
+and clarified the direct-route rubric; check and development validation passed
+again. Independent targeted round 2 closed the route corrections with no surviving
+material finding. Reviewer contexts were independent; their effective model/effort
+was not exposed. No specialist security scan or holdout access was required for
+these case-guidance corrections.
+
+Regrade `86c48b72-91d4-45da-aabd-38b3c862853a` completed all 22 selected cases and
+107 checks with passed judgments and no grader errors. It produced full report
+`fe8c331e-4b82-44c1-a2cd-fa346f3d1c59`: 336 passed, 2 failed and no unknown cases.
+The original 1,949 manifest, completion, report, trial-result, evidence and grading
+records retain identical hashes. No candidate execution was added.
+
+The remaining `anti-slop/0` reporting failure and complex-worker native transport
+failure are retained. The latter's child-boundary check remains unknown; the
+report does not imply that this role completed its task. These are usable measured
+limitations rather than unresolved assessment defects. First-stage measurement
+qualification is complete; runtime optimization and holdout acceptance have not
+started. The [acceptance report](refinement-acceptance.md) records separate original,
+regrading and cumulative resource measurements.
+
+The corrections landed as separate local commits with the unchanged Lefthook lint
+gate: `7b335fa` accepts contract-backed workflow choices, and `b478186` grades
+scanner logs from retained artifacts. This documentation update records the
+completed qualification. No push or pull-request action is authorized or performed.

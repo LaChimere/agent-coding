@@ -15,24 +15,25 @@ produce their own frozen case/requirement/check/evidence mapping.
 ## Required scope
 
 Requirement and check IDs below are scoped to their case. Rows name representative
-checks rather than every check in the corpus. “Pending baseline” means there is
-no qualified observation of the final corpus yet; it does not mean the candidate
-failed that capability.
+checks rather than every check in the corpus. Current observations refer to full
+run `40418426-0012-4dfb-b4cc-4d5c4a70f1fb`; assessment corrections and the selected
+report are tracked in the [acceptance report](refinement-acceptance.md). Observing
+a failure does not establish successful preservation of that capability.
 
 | Capability | Cases and assessment | Requirement → check IDs | Evidence needed | Current observation |
 | --- | --- | --- | --- | --- |
-| Planning | `decompose-feature/0`, outcome | `expectation-000`–`expectation-004` → matching `criterion-000`–`criterion-004` | A usable, scoped plan grounded in the supplied work and authority | Pending baseline |
-| Implementation | `native/verified-fix`, outcome | `general-correctness` → `general-correctness`; `execution-and-scope` → `execution-and-scope` | Frozen source, independently run behavioral checks, candidate command completion and scope evidence | Pending baseline |
-| Review | `native/implicit-review`, outcome; `pr-review/0`, outcome | `concrete-finding` → `concrete-finding`; `read-only` → `read-only`; `expectation-000` → `criterion-000` | Source-backed findings, uncertainty and unchanged reviewed artifacts | Pending baseline |
-| Documentation | `refresh-related-docs/0`, outcome | `expectation-000`–`expectation-004` → matching `criterion-000`–`criterion-004` | Actual changed documents, source consistency and preserved scope | Pending baseline |
-| Authorization | `refinement-probes/clarified-import`, outcome; `refinement-probes/role-repair`, outcome | `implementation-scope` → `implementation-scope`; `repair-scope` → `repair-scope` | Candidate-visible authority, ordered native actions, original/final artifacts and commit state | Fresh clarification probe observed visible authority and changes within scope; original hidden-authority judgment remains invalid. Full baseline pending. |
-| Clarification | `native/scripted-context`, mechanism; `refinement-probes/clarified-import`, outcome | `clarification-order` → `clarification-order`; `clarification-before-edit` → `clarification-before-edit` | An actual question, the matching user answer, and ordering before the dependent action | Diagnostic native conversation observed; final baseline pending |
-| Continuation | `native/scripted-context`, mechanism; `refinement-probes/clarified-import`, outcome | `same-thread-continuation` → `same-thread`; `continued-selected-behavior` → `continued-selected-behavior`, `same-thread-continuation` | Same-thread continuation that consumes the answer and produces the selected behavior | Diagnostic native conversation observed; final baseline pending |
-| Recovery and blockers | `refinement-probes/unreadable-source`, `refinement-probes/infeasible-test`, `refinement-probes/role-repair`, outcomes | `source-blocker` → `source-blocker`; `test-blocker` → `test-blocker`; `repair-history` → `repair-history` | Real missing input or conflicting test, honest limitation, retained attempt history and authorized repair | Pending baseline |
-| Delegation | `native/subagent-evidence`, mechanism; `refinement-probes/role-repair`, outcome | `native-worker` → `native-worker`; `initial-worker-inspection` → `initial-worker-inspection`; `same-worker-continuation` → `same-worker-continuation`, `same-native-thread` | Native role/assignment, actual child work, completion, parent consumption and context reuse | An `ordinary_worker` result was observed in a diagnostic probe; same-worker repair pending |
-| Required reviewer unavailable | `refinement-probes/reviewer-unavailable`, outcome | `review-result` → `review-result`; `independence-gap` → `independence-gap`; `review-read-only` → `review-read-only` | Useful primary analysis, explicit unmet independent review and preserved read-only authority | Pending baseline |
-| Configured roles | `role-probes/complex-worker`, `role-probes/critical-reviewer`, `role-probes/deep-critical-reviewer`, mechanisms | `complex-role-invocation`, `critical-role-invocation`, `deep-role-invocation` → same-named checks; accompanying boundary checks | Own-session native assignment and effective context, worker output, completion and role boundary | `critical_reviewer` observed in a diagnostic probe; the other two roles pending |
-| Skill mechanisms and routing | Development routing cases; `scan-image-vulnerabilities/1`, outcome with an explicit scanner requirement | `route-answer` where declared; scanner `observed-scanner` → `observed-scanner`, `recorded-targets` → `recorded-targets` | Accepted route alternatives; actual installed bundled-script invocation and fixture target records when requested | Assessment sensitivity tests pass; full native baseline pending |
+| Planning | `decompose-feature/0`, outcome | `expectation-000`–`expectation-004` → matching `criterion-000`–`criterion-004` | A usable, scoped plan grounded in the supplied work and authority | Full run: representative plan checks passed. |
+| Implementation | `native/verified-fix`, outcome | `general-correctness` → `general-correctness`; `execution-and-scope` → `execution-and-scope` | Frozen source, independently run behavioral checks, candidate command completion and scope evidence | Full run: source repair, verification and scope checks passed. |
+| Review | `native/implicit-review`, outcome; `pr-review/0`, outcome | `concrete-finding` → `concrete-finding`; `read-only` → `read-only`; `expectation-000` → `criterion-000` | Source-backed findings, uncertainty and unchanged reviewed artifacts | Full run: concrete finding and read-only checks passed. |
+| Documentation | `refresh-related-docs/0`, outcome | `expectation-000`–`expectation-004` → matching `criterion-000`–`criterion-004` | Actual changed documents, source consistency and preserved scope | Full run: all nine documentation outcomes passed. |
+| Authorization | `refinement-probes/clarified-import`, outcome; `refinement-probes/role-repair`, outcome | `implementation-scope` → `implementation-scope`; `repair-scope` → `repair-scope` | Candidate-visible authority, ordered native actions, original/final artifacts and commit state | Full run: clarification and same-worker repair scope checks passed; the earlier hidden-authority probe remains separately invalid. |
+| Clarification | `native/scripted-context`, mechanism; `refinement-probes/clarified-import`, outcome | `clarification-order` → `clarification-order`; `clarification-before-edit` → `clarification-before-edit` | An actual question, the matching user answer, and ordering before the dependent action | Full run: ordered question, answer and dependent-action checks passed. |
+| Continuation | `native/scripted-context`, mechanism; `refinement-probes/clarified-import`, outcome | `same-thread-continuation` → `same-thread`; `continued-selected-behavior` → `continued-selected-behavior`, `same-thread-continuation` | Same-thread continuation that consumes the answer and produces the selected behavior | Full run: same-thread continuation and consumption of the answer passed. |
+| Recovery and blockers | `refinement-probes/unreadable-source`, `refinement-probes/infeasible-test`, `refinement-probes/role-repair`, outcomes | `source-blocker` → `source-blocker`; `test-blocker` → `test-blocker`; `repair-history` → `repair-history` | Real missing input or conflicting test, honest limitation, retained attempt history and authorized repair | Full run: missing-input, conflicting-test and authorized same-worker repair checks passed. |
+| Delegation | `native/subagent-evidence`, mechanism; `refinement-probes/role-repair`, outcome | `native-worker` → `native-worker`; `initial-worker-inspection` → `initial-worker-inspection`; `same-worker-continuation` → `same-worker-continuation`, `same-native-thread` | Native role/assignment, actual child work, completion, parent consumption and context reuse | Full run: actual ordinary-worker work, result consumption and same-worker continuation passed. |
+| Required reviewer unavailable | `refinement-probes/reviewer-unavailable`, outcome | `review-result` → `review-result`; `independence-gap` → `independence-gap`; `review-read-only` → `review-read-only` | Useful primary analysis, explicit unmet independent review and preserved read-only authority | Full run: useful primary review and honest reporting of unmet independence passed; no independent review was fabricated. |
+| Configured roles | `role-probes/complex-worker`, `role-probes/critical-reviewer`, `role-probes/deep-critical-reviewer`, mechanisms | `complex-role-invocation`, `critical-role-invocation`, `deep-role-invocation` → same-named checks; accompanying boundary checks | Own-session native assignment and effective context, worker output, completion and role boundary | Full run: both reviewer roles passed. complex_worker assignment and gpt-5.6-sol/high identity are observed, but its native request failed before diagnosis; child boundary remains unknown. |
+| Skill mechanisms and routing | Development routing cases; `scan-image-vulnerabilities/1`, outcome with an explicit scanner requirement | `route-answer` where declared; scanner `observed-scanner` → `observed-scanner`, `recorded-targets` → `recorded-targets` | Accepted route alternatives; actual installed bundled-script invocation and fixture target records when requested | Full execution observed; corrected report has 215/216 mechanism cases passed. Scanner log checks are decidable after artifact regrading; complex-worker failure and its unknown boundary check remain. |
 
 ## How to interpret observed coverage
 
@@ -42,6 +43,13 @@ Having an execution record, a requested role or a named skill is not sufficient:
 the relevant check must be grounded in retained evidence. Native roles and their
 effective model/effort are collected from observed records, never inferred from
 a model name or the parent's description.
+
+The selected full report is `fe8c331e-4b82-44c1-a2cd-fa346f3d1c59`, following
+22-case regrade `86c48b72-91d4-45da-aabd-38b3c862853a` over the same executions.
+All ten capability categories have observed, decidable requirement records. The
+only unknown core requirement is the failed complex worker's boundary behavior;
+the actual child request failed before returning a diagnosis. This remaining
+limit is explicit and is not a claim that the role worked successfully.
 
 The first diagnostic reports are retained at:
 
