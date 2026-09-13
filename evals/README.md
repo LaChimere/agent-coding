@@ -200,6 +200,10 @@ an otherwise successful case. Execution and grader errors remain separate.
 Decidable pass rate uses passed / (passed + failed), while decision coverage uses
 (passed + failed) / planned. There is no suite-wide all-pass gate or weighted score.
 
+Reports separate ordinary outcomes from skill mechanisms and summarize planning,
+implementation, review and documentation. Requirement coverage links checks to
+observed evidence; diagnostic-only checks do not qualify a required capability.
+
 The owner-confirmed calibration examples cover complete and missing capture,
 concise correct results, wrong routes, valid alternatives, authority boundaries,
 worker evidence and unsupported completion claims across both model methods.

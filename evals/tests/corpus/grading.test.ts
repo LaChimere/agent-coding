@@ -4,6 +4,7 @@ import { resolve } from 'node:path';
 import { loadCases } from '../../src/corpus/cases.ts';
 import { selectCollection } from '../../src/corpus/collections.ts';
 import { applyGradingOverrides } from '../../src/corpus/grading.ts';
+import { buildCoverageReport } from '../../src/results/coverage.ts';
 import { collection, loadedCase } from '../fixtures/contracts.ts';
 
 const roots: string[] = [];
@@ -44,7 +45,7 @@ test('corrects reference guidance without changing the frozen task or execution 
   expect(await applyGradingOverrides([original], scope, undefined)).toEqual([original]);
 });
 
-test('removing a diagnostic does not leave its retired scoring prose in requirements', async () => {
+test('removing a diagnostic does not leave its retired scoring prose in requirements or coverage', async () => {
   const project = resolve(import.meta.dir, '../..');
   const original = (await loadCases(project, await selectCollection(project), ['anti-slop/0']))[0];
   if (original === undefined) {
@@ -71,6 +72,26 @@ test('removing a diagnostic does not leave its retired scoring prose in requirem
     throw new Error('The corrected case is missing.');
   }
 
+  const coverage = buildCoverageReport({
+    cases: [corrected],
+    trials: [
+      {
+        id: 'trial',
+        caseId: corrected.definition.metadata.id,
+        candidateId: 'candidate',
+        caseVersion: original.version,
+        executionVersion: original.executionVersion,
+        repetition: 0,
+        criteria: corrected.definition.assert.map((assertion) => ({
+          id: assertion.metric,
+          definitionId: assertion.metric,
+          core: assertion.config.core,
+        })),
+      },
+    ],
+    observedTrials: [],
+  });
+
   expect(corrected.executionVersion).toBe(original.executionVersion);
   expect(corrected.definition.metadata.requirements).toEqual(
     original.definition.metadata.requirements,
@@ -78,6 +99,7 @@ test('removing a diagnostic does not leave its retired scoring prose in requirem
   expect(JSON.stringify(corrected.definition.metadata.requirements)).not.toContain(
     diagnostic.config.rubric,
   );
+  expect(JSON.stringify(coverage.requirements)).not.toContain(diagnostic.config.rubric);
   expect(original.definition.assert).toContain(diagnostic);
 });
 

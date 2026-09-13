@@ -18,7 +18,7 @@ export interface IComparisonConditions {
   reasons: readonly string[];
 }
 
-export interface IQualityPairComparison {
+export interface IQualityPairSummary {
   plannedPairs: number;
   eligiblePairs: number;
   excludedPairs: readonly IComparisonExclusion[];
@@ -29,6 +29,12 @@ export interface IQualityPairComparison {
   leftPassRate: number | null;
   rightPassRate: number | null;
   passRateDelta: number | null;
+}
+
+export interface IQualityPairComparison extends IQualityPairSummary {
+  allTrials: IQualityPairSummary;
+  outcome: IQualityPairSummary;
+  mechanism: IQualityPairSummary;
 }
 
 export type ResourceMetricName =
@@ -69,6 +75,9 @@ export interface IOneSidedComparisonSummary {
   reportId: string;
   runId: string;
   quality: IQualitySummary;
+  outcome: IQualitySummary;
+  mechanism: IQualitySummary;
+  workFamilies: IReport['quality']['workFamilies'];
   resources: IReport['summary']['resources'];
 }
 
@@ -224,6 +233,15 @@ function qualityStatus(value: QualityStatus): value is 'passed' | 'failed' {
   return value === 'passed' || value === 'failed';
 }
 
+type QualityDimension = 'allTrials' | 'ordinary' | 'mechanism';
+
+function assessmentFor(report: IReport, trial: IReportTrial): string | null {
+  return (
+    report.definition.gradingCases.find((item) => item.definition.metadata.id === trial.caseId)
+      ?.definition.metadata.assessment ?? null
+  );
+}
+
 function qualityComparison(
   pairs: readonly ITrialPair[],
   leftReport: IReport,
@@ -231,14 +249,29 @@ function qualityComparison(
   leftTrials: ReadonlyMap<string, IReportTrial>,
   rightTrials: ReadonlyMap<string, IReportTrial>,
   globalReasons: readonly string[],
-): IQualityPairComparison {
+  dimension: QualityDimension,
+): IQualityPairSummary {
+  const expected = dimension === 'ordinary' ? 'outcome' : 'mechanism';
+  const scopedPairs =
+    dimension === 'allTrials'
+      ? pairs
+      : pairs.filter((pair) => {
+          const left = leftTrials.get(pair.leftTrialId);
+          const right = rightTrials.get(pair.rightTrialId);
+          return (
+            left !== undefined &&
+            right !== undefined &&
+            assessmentFor(leftReport, left) === expected &&
+            assessmentFor(rightReport, right) === expected
+          );
+        });
   const excluded: IComparisonExclusion[] = [];
   let leftPassed = 0;
   let leftFailed = 0;
   let rightPassed = 0;
   let rightFailed = 0;
 
-  for (const pair of pairs) {
+  for (const pair of scopedPairs) {
     const left = leftTrials.get(pair.leftTrialId);
     const right = rightTrials.get(pair.rightTrialId);
 
@@ -282,8 +315,8 @@ function qualityComparison(
   const rightPassRate = rightDecidable === 0 ? null : rightPassed / rightDecidable;
 
   return {
-    plannedPairs: pairs.length,
-    eligiblePairs: pairs.length - excluded.length,
+    plannedPairs: scopedPairs.length,
+    eligiblePairs: scopedPairs.length - excluded.length,
     excludedPairs: excluded,
     leftPassed,
     leftFailed,
@@ -577,6 +610,25 @@ export function compareReports(input: {
     leftTrials,
     rightTrials,
     qualityGlobalReasons,
+    'allTrials',
+  );
+  const ordinaryQuality = qualityComparison(
+    input.pairs,
+    input.left,
+    input.right,
+    leftTrials,
+    rightTrials,
+    qualityGlobalReasons,
+    'ordinary',
+  );
+  const mechanismQuality = qualityComparison(
+    input.pairs,
+    input.left,
+    input.right,
+    leftTrials,
+    rightTrials,
+    qualityGlobalReasons,
+    'mechanism',
   );
 
   const metrics: readonly ResourceMetricName[] = [
@@ -610,12 +662,18 @@ export function compareReports(input: {
       reportId: input.left.id,
       runId: input.left.runId,
       quality: input.left.quality.summary,
+      outcome: input.left.quality.outcome,
+      mechanism: input.left.quality.mechanism,
+      workFamilies: input.left.quality.workFamilies,
       resources: input.left.summary.resources,
     },
     right: {
       reportId: input.right.id,
       runId: input.right.runId,
       quality: input.right.quality.summary,
+      outcome: input.right.quality.outcome,
+      mechanism: input.right.quality.mechanism,
+      workFamilies: input.right.quality.workFamilies,
       resources: input.right.summary.resources,
     },
     conditions: {
@@ -623,7 +681,12 @@ export function compareReports(input: {
       reasons: qualityGlobalReasons,
     },
     pairs: input.pairs,
-    quality,
+    quality: {
+      ...quality,
+      allTrials: quality,
+      outcome: ordinaryQuality,
+      mechanism: mechanismQuality,
+    },
     resources,
   });
 }
