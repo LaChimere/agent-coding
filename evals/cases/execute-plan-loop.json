@@ -9,11 +9,41 @@
       "group": "execute-plan-loop",
       "kind": "task",
       "requirements": [
-        "expectation-000",
-        "expectation-001",
-        "expectation-002",
-        "expectation-003",
-        "expectation-004"
+        {
+          "id": "expectation-000",
+          "capability": "implementation",
+          "authority": "Frozen case execute-plan-loop/0 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/execute-plan-loop/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-001",
+          "capability": "implementation",
+          "authority": "Frozen case execute-plan-loop/0 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/execute-plan-loop/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-002",
+          "capability": "implementation",
+          "authority": "Frozen case execute-plan-loop/0 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/execute-plan-loop/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-003",
+          "capability": "implementation",
+          "authority": "Frozen case execute-plan-loop/0 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/execute-plan-loop/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The immutable artifact snapshot, initial fixtures, and recorded native actions."
+        },
+        {
+          "id": "expectation-004",
+          "capability": "recovery",
+          "authority": "Frozen case execute-plan-loop/0 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/execute-plan-loop/SKILL.md.",
+          "appliesWhen": "Only when the named source cannot be inspected.",
+          "evidence": "The immutable artifact snapshot, initial fixtures, and recorded native actions."
+        }
       ],
       "fixture": [
         {
@@ -29,7 +59,11 @@
           "target": "src/auth/session.test.ts"
         }
       ],
-      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "execution": {
+        "networkAccess": true,
+        "pathPrepend": [],
+        "executableFiles": []
+      },
       "reference": "Reads the referenced implementation and relevant tests before claiming the cause or editing. It should ground the slice in source evidence rather than speculating from the plan text.",
       "requiredSkills": ["execute-plan-loop"],
       "turns": [],
@@ -37,7 +71,13 @@
         "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: In a mock repository, an approved plan asks to fix `src/auth/session.ts` because expired sessions are not refreshed. Execute the next implementation slice. Use the current working directory as the repository root. The current working directory is the provided output directory; keep all changes within it.",
         "approvals": []
       },
-      "outputSchema": null
+      "outputSchema": null,
+      "assessment": "outcome",
+      "workFamily": "implementation",
+      "provenance": {
+        "source": "plugins/workflow/skills/execute-plan-loop/SKILL.md",
+        "group": "execute-plan-loop"
+      }
     },
     "assert": [
       {
@@ -89,10 +129,10 @@
         "value": "file://src/grading/assertion.ts",
         "metric": "criterion-004",
         "config": {
-          "core": true,
+          "core": false,
           "method": "artifact-rubric",
           "requirements": ["expectation-004"],
-          "rubric": "Stops with a blocker if the referenced source cannot be inspected."
+          "rubric": "When the named source or test condition is actually unavailable, reports the blocker; this condition is diagnostic for the normal readable/feasible fixture."
         }
       }
     ]
@@ -107,11 +147,41 @@
       "group": "execute-plan-loop",
       "kind": "task",
       "requirements": [
-        "expectation-000",
-        "expectation-001",
-        "expectation-002",
-        "expectation-003",
-        "expectation-004"
+        {
+          "id": "expectation-000",
+          "capability": "implementation",
+          "authority": "Frozen case execute-plan-loop/1 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/execute-plan-loop/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The immutable artifact snapshot, initial fixtures, and recorded native actions."
+        },
+        {
+          "id": "expectation-001",
+          "capability": "implementation",
+          "authority": "Frozen case execute-plan-loop/1 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/execute-plan-loop/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-002",
+          "capability": "implementation",
+          "authority": "Frozen case execute-plan-loop/1 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/execute-plan-loop/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-003",
+          "capability": "implementation",
+          "authority": "Frozen case execute-plan-loop/1 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/execute-plan-loop/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-004",
+          "capability": "recovery",
+          "authority": "Frozen case execute-plan-loop/1 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/execute-plan-loop/SKILL.md.",
+          "appliesWhen": "Only when the supplied test is incorrect or infeasible.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        }
       ],
       "fixture": [
         {
@@ -127,7 +197,11 @@
           "target": "src/csv/normalize.test.ts"
         }
       ],
-      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "execution": {
+        "networkAccess": true,
+        "pathPrepend": [],
+        "executableFiles": []
+      },
       "reference": "Implements or proposes the general parser logic for valid CSV inputs using repository patterns. It should not hard-code the visible failing test values or create a one-off helper script to transform fixtures.",
       "requiredSkills": ["execute-plan-loop"],
       "turns": [],
@@ -135,7 +209,13 @@
         "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: In a mock repository, an approved plan says parser tests are failing for CSV column normalization. Execute the next slice. Use the current working directory as the repository root. The current working directory is the provided output directory; keep all changes within it.",
         "approvals": []
       },
-      "outputSchema": null
+      "outputSchema": null,
+      "assessment": "outcome",
+      "workFamily": "implementation",
+      "provenance": {
+        "source": "plugins/workflow/skills/execute-plan-loop/SKILL.md",
+        "group": "execute-plan-loop"
+      }
     },
     "assert": [
       {
@@ -187,10 +267,10 @@
         "value": "file://src/grading/assertion.ts",
         "metric": "criterion-004",
         "config": {
-          "core": true,
+          "core": false,
           "method": "text-rubric",
           "requirements": ["expectation-004"],
-          "rubric": "Surfaces incorrect or infeasible tests as blockers rather than coding around them."
+          "rubric": "When the named source or test condition is actually unavailable, reports the blocker; this condition is diagnostic for the normal readable/feasible fixture."
         }
       }
     ]
@@ -205,11 +285,41 @@
       "group": "execute-plan-loop",
       "kind": "task",
       "requirements": [
-        "expectation-000",
-        "expectation-001",
-        "expectation-002",
-        "expectation-003",
-        "expectation-004"
+        {
+          "id": "expectation-000",
+          "capability": "implementation",
+          "authority": "Frozen case execute-plan-loop/2 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/execute-plan-loop/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-001",
+          "capability": "implementation",
+          "authority": "Frozen case execute-plan-loop/2 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/execute-plan-loop/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-002",
+          "capability": "implementation",
+          "authority": "Frozen case execute-plan-loop/2 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/execute-plan-loop/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-003",
+          "capability": "implementation",
+          "authority": "Frozen case execute-plan-loop/2 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/execute-plan-loop/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-004",
+          "capability": "authorization",
+          "authority": "Frozen case execute-plan-loop/2 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/execute-plan-loop/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        }
       ],
       "fixture": [
         {
@@ -225,7 +335,11 @@
           "target": "checkout-state.test.ts"
         }
       ],
-      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "execution": {
+        "networkAccess": true,
+        "pathPrepend": [],
+        "executableFiles": []
+      },
       "reference": "Keeps defensive coding focused on boundaries. It should preserve or add validation for external input if needed, but avoid redundant guards and broad fallbacks for trusted internal states.",
       "requiredSkills": ["execute-plan-loop"],
       "turns": [],
@@ -233,7 +347,13 @@
         "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: In a mock repository, an approved plan asks to simplify internal checkout state handling. Execute the next slice without overengineering. Use the current working directory as the repository root. The current working directory is the provided output directory; keep all changes within it.",
         "approvals": []
       },
-      "outputSchema": null
+      "outputSchema": null,
+      "assessment": "outcome",
+      "workFamily": "implementation",
+      "provenance": {
+        "source": "plugins/workflow/skills/execute-plan-loop/SKILL.md",
+        "group": "execute-plan-loop"
+      }
     },
     "assert": [
       {
@@ -303,11 +423,41 @@
       "group": "execute-plan-loop",
       "kind": "task",
       "requirements": [
-        "expectation-000",
-        "expectation-001",
-        "expectation-002",
-        "expectation-003",
-        "expectation-004"
+        {
+          "id": "expectation-000",
+          "capability": "implementation",
+          "authority": "Frozen case execute-plan-loop/3 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/execute-plan-loop/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-001",
+          "capability": "implementation",
+          "authority": "Frozen case execute-plan-loop/3 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/execute-plan-loop/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-002",
+          "capability": "implementation",
+          "authority": "Frozen case execute-plan-loop/3 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/execute-plan-loop/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-003",
+          "capability": "implementation",
+          "authority": "Frozen case execute-plan-loop/3 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/execute-plan-loop/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-004",
+          "capability": "authorization",
+          "authority": "Frozen case execute-plan-loop/3 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/execute-plan-loop/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        }
       ],
       "fixture": [
         {
@@ -323,7 +473,11 @@
           "target": "tests/normalize-accounts.test.ts"
         }
       ],
-      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "execution": {
+        "networkAccess": true,
+        "pathPrepend": [],
+        "executableFiles": []
+      },
       "reference": "Uses a legitimate migration or fixture-generation script when it is the real repository tooling, while still avoiding throwaway scripts that only hard-code expected test output.",
       "requiredSkills": ["execute-plan-loop"],
       "turns": [],
@@ -331,7 +485,13 @@
         "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: In a sample repository, an approved plan asks to add a data migration for normalizing existing account rows. Execute the next slice. The plan explicitly expects a migration script plus tests. Use the current working directory as the repository root. The current working directory is the provided output directory; keep all changes within it.",
         "approvals": []
       },
-      "outputSchema": null
+      "outputSchema": null,
+      "assessment": "outcome",
+      "workFamily": "implementation",
+      "provenance": {
+        "source": "plugins/workflow/skills/execute-plan-loop/SKILL.md",
+        "group": "execute-plan-loop"
+      }
     },
     "assert": [
       {
@@ -401,18 +561,51 @@
       "group": "execute-plan-loop",
       "kind": "task",
       "requirements": [
-        "expectation-000",
-        "expectation-001",
-        "expectation-002",
-        "expectation-003",
-        "expectation-004"
+        {
+          "id": "expectation-000",
+          "capability": "implementation",
+          "authority": "Frozen case execute-plan-loop/4 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/execute-plan-loop/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-001",
+          "capability": "implementation",
+          "authority": "Frozen case execute-plan-loop/4 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/execute-plan-loop/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-002",
+          "capability": "recovery",
+          "authority": "Frozen case execute-plan-loop/4 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/execute-plan-loop/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The immutable artifact snapshot, initial fixtures, and recorded native actions."
+        },
+        {
+          "id": "expectation-003",
+          "capability": "implementation",
+          "authority": "Frozen case execute-plan-loop/4 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/execute-plan-loop/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-004",
+          "capability": "recovery",
+          "authority": "Frozen case execute-plan-loop/4 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/execute-plan-loop/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        }
       ],
       "fixture": [
         {
           "source": "execute-plan-loop/files/plans/profile-import/plan.md.fixture",
           "target": "plans/profile-import/plan.md"
         },
-        { "source": "execute-plan-loop/files/package.json.fixture", "target": "package.json" },
+        {
+          "source": "execute-plan-loop/files/package.json.fixture",
+          "target": "package.json"
+        },
         {
           "source": "execute-plan-loop/files/profile-import.js.fixture",
           "target": "profile-import.js"
@@ -434,7 +627,11 @@
           "target": "tests/profile-import.test.js"
         }
       ],
-      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "execution": {
+        "networkAccess": true,
+        "pathPrepend": [],
+        "executableFiles": []
+      },
       "reference": "Separates boundary data validation from operational error handling: validate uploaded CSV/user data at the boundary, trust parser invariants internally, and still surface file/database operational failures appropriately. It uses the supplied dependency-free Node test harness rather than adding or fetching a test framework.",
       "requiredSkills": ["execute-plan-loop"],
       "turns": [],
@@ -442,7 +639,13 @@
         "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: In a sample repository, an approved plan asks to improve profile import error handling. The importer reads user-uploaded CSV files, calls an internal parser, and writes to a database. Execute the next slice. The existing test command must run with Node's built-in test runner and no network access. Use the current working directory as the repository root. The current working directory is the provided output directory; keep all changes within it.",
         "approvals": []
       },
-      "outputSchema": null
+      "outputSchema": null,
+      "assessment": "outcome",
+      "workFamily": "implementation",
+      "provenance": {
+        "source": "plugins/workflow/skills/execute-plan-loop/SKILL.md",
+        "group": "execute-plan-loop"
+      }
     },
     "assert": [
       {
@@ -512,18 +715,51 @@
       "group": "execute-plan-loop",
       "kind": "task",
       "requirements": [
-        "expectation-000",
-        "expectation-001",
-        "expectation-002",
-        "expectation-003",
-        "expectation-004"
+        {
+          "id": "expectation-000",
+          "capability": "implementation",
+          "authority": "Frozen case execute-plan-loop/5 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/execute-plan-loop/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-001",
+          "capability": "implementation",
+          "authority": "Frozen case execute-plan-loop/5 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/execute-plan-loop/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-002",
+          "capability": "authorization",
+          "authority": "Frozen case execute-plan-loop/5 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/execute-plan-loop/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-003",
+          "capability": "implementation",
+          "authority": "Frozen case execute-plan-loop/5 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/execute-plan-loop/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-004",
+          "capability": "authorization",
+          "authority": "Frozen case execute-plan-loop/5 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/execute-plan-loop/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        }
       ],
       "fixture": [
         {
           "source": "execute-plan-loop/files/plans/password-reset/plan.md.fixture",
           "target": "plans/password-reset/plan.md"
         },
-        { "source": "execute-plan-loop/files/package.json.fixture", "target": "package.json" },
+        {
+          "source": "execute-plan-loop/files/package.json.fixture",
+          "target": "package.json"
+        },
         {
           "source": "execute-plan-loop/files/src/auth/password-reset.ts.fixture",
           "target": "src/auth/password-reset.ts"
@@ -549,7 +785,11 @@
           "target": "state/password-reset-diff.txt"
         }
       ],
-      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "execution": {
+        "networkAccess": true,
+        "pathPrepend": [],
+        "executableFiles": []
+      },
       "reference": "Keeps the commit/slice atomic by selecting only the password reset expiry logic, verifying that behavior with the supplied tests, and deferring the unrelated billing helper rename without modifying it.",
       "requiredSkills": ["execute-plan-loop"],
       "turns": [],
@@ -557,7 +797,13 @@
         "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: In a sample repository, an approved plan has two ready items: fix password reset expiry logic and opportunistically rename unrelated billing helpers. Execute the next slice. Run the supplied password-reset tests and verify the billing helper remains untouched. Use the current working directory as the repository root. The current working directory is the provided output directory; keep all changes within it.",
         "approvals": []
       },
-      "outputSchema": null
+      "outputSchema": null,
+      "assessment": "outcome",
+      "workFamily": "implementation",
+      "provenance": {
+        "source": "plugins/workflow/skills/execute-plan-loop/SKILL.md",
+        "group": "execute-plan-loop"
+      }
     },
     "assert": [
       {
@@ -627,11 +873,41 @@
       "group": "execute-plan-loop",
       "kind": "task",
       "requirements": [
-        "expectation-000",
-        "expectation-001",
-        "expectation-002",
-        "expectation-003",
-        "expectation-004"
+        {
+          "id": "expectation-000",
+          "capability": "implementation",
+          "authority": "Frozen case execute-plan-loop/6 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/execute-plan-loop/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The immutable artifact snapshot, initial fixtures, and recorded native actions."
+        },
+        {
+          "id": "expectation-001",
+          "capability": "implementation",
+          "authority": "Frozen case execute-plan-loop/6 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/execute-plan-loop/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The immutable artifact snapshot, initial fixtures, and recorded native actions."
+        },
+        {
+          "id": "expectation-002",
+          "capability": "implementation",
+          "authority": "Frozen case execute-plan-loop/6 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/execute-plan-loop/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-003",
+          "capability": "implementation",
+          "authority": "Frozen case execute-plan-loop/6 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/execute-plan-loop/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-004",
+          "capability": "implementation",
+          "authority": "Frozen case execute-plan-loop/6 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/execute-plan-loop/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        }
       ],
       "fixture": [
         {
@@ -643,7 +919,11 @@
           "target": "verification-repair/package.json"
         }
       ],
-      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "execution": {
+        "networkAccess": true,
+        "pathPrepend": [],
+        "executableFiles": []
+      },
       "reference": "Does not pretend verification passed. It should inspect repository scripts for the closest existing command, update status with evidence, or stop and escalate if the plan is stale.",
       "requiredSkills": ["execute-plan-loop"],
       "turns": [],
@@ -651,7 +931,13 @@
         "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: In a sample repository, an approved plan's next step fails because the documented test command no longer exists. Execute the next slice. Use the current working directory as the repository root. The current working directory is the provided output directory; keep all changes within it.",
         "approvals": []
       },
-      "outputSchema": null
+      "outputSchema": null,
+      "assessment": "outcome",
+      "workFamily": "implementation",
+      "provenance": {
+        "source": "plugins/workflow/skills/execute-plan-loop/SKILL.md",
+        "group": "execute-plan-loop"
+      }
     },
     "assert": [
       {
@@ -721,11 +1007,41 @@
       "group": "execute-plan-loop",
       "kind": "task",
       "requirements": [
-        "expectation-000",
-        "expectation-001",
-        "expectation-002",
-        "expectation-003",
-        "expectation-004"
+        {
+          "id": "expectation-000",
+          "capability": "authorization",
+          "authority": "Frozen case execute-plan-loop/7 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/execute-plan-loop/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-001",
+          "capability": "authorization",
+          "authority": "Frozen case execute-plan-loop/7 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/execute-plan-loop/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-002",
+          "capability": "authorization",
+          "authority": "Frozen case execute-plan-loop/7 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/execute-plan-loop/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-003",
+          "capability": "implementation",
+          "authority": "Frozen case execute-plan-loop/7 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/execute-plan-loop/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The immutable artifact snapshot, initial fixtures, and recorded native actions."
+        },
+        {
+          "id": "expectation-004",
+          "capability": "implementation",
+          "authority": "Frozen case execute-plan-loop/7 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/execute-plan-loop/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The immutable artifact snapshot, initial fixtures, and recorded native actions."
+        }
       ],
       "fixture": [
         {
@@ -745,7 +1061,11 @@
           "target": "workflow/working-tree-handoff.json"
         }
       ],
-      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "execution": {
+        "networkAccess": true,
+        "pathPrepend": [],
+        "executableFiles": []
+      },
       "reference": "Implements and verifies one logical slice without assuming commit authorization. It updates the living plan readiness section with the required evidence and leaves committing as a separate authorized action.",
       "requiredSkills": ["execute-plan-loop"],
       "turns": [],
@@ -753,7 +1073,13 @@
         "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: In a mock repository, the user explicitly asks you to implement an approved plan but does not ask you to create commits. Execute the next verified slice and update the Working-tree readiness section in plans/session-refresh/plan.md with the slice purpose, changed files, and verification evidence. Use the current working directory as the repository root. The current working directory is the provided output directory; keep all changes within it.",
         "approvals": []
       },
-      "outputSchema": null
+      "outputSchema": null,
+      "assessment": "outcome",
+      "workFamily": "implementation",
+      "provenance": {
+        "source": "plugins/workflow/skills/execute-plan-loop/SKILL.md",
+        "group": "execute-plan-loop"
+      }
     },
     "assert": [
       {
@@ -823,11 +1149,41 @@
       "group": "execute-plan-loop",
       "kind": "task",
       "requirements": [
-        "expectation-000",
-        "expectation-001",
-        "expectation-002",
-        "expectation-003",
-        "expectation-004"
+        {
+          "id": "expectation-000",
+          "capability": "review",
+          "authority": "Frozen case execute-plan-loop/8 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/execute-plan-loop/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-001",
+          "capability": "review",
+          "authority": "Frozen case execute-plan-loop/8 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/execute-plan-loop/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-002",
+          "capability": "continuation",
+          "authority": "Frozen case execute-plan-loop/8 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/execute-plan-loop/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-003",
+          "capability": "review",
+          "authority": "Frozen case execute-plan-loop/8 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/execute-plan-loop/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-004",
+          "capability": "review",
+          "authority": "Frozen case execute-plan-loop/8 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/execute-plan-loop/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        }
       ],
       "fixture": [
         {
@@ -847,7 +1203,11 @@
           "target": "state/security-verification.md"
         }
       ],
-      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "execution": {
+        "networkAccess": true,
+        "pathPrepend": [],
+        "executableFiles": []
+      },
       "reference": "Determines that the coherent high-risk milestone warrants a deeper review, performs it against the supplied diff, approved plan, and verification evidence, and follows the user's milestone cadence rather than waiting for an arbitrary fixed number of commits.",
       "requiredSkills": ["execute-plan-loop"],
       "turns": [],
@@ -855,7 +1215,13 @@
         "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: In a mock repository, an approved implementation has produced one high-risk security milestone after two commits. The user asked for milestone reviews rather than a fixed commit count. Decide whether a review is warranted and, if it is, perform the review using the supplied milestone diff and verification evidence. Use the current working directory as the repository root. The current working directory is the provided output directory; keep all changes within it.",
         "approvals": []
       },
-      "outputSchema": null
+      "outputSchema": null,
+      "assessment": "outcome",
+      "workFamily": "review",
+      "provenance": {
+        "source": "plugins/workflow/skills/execute-plan-loop/SKILL.md",
+        "group": "execute-plan-loop"
+      }
     },
     "assert": [
       {
@@ -925,11 +1291,41 @@
       "group": "execute-plan-loop",
       "kind": "task",
       "requirements": [
-        "expectation-000",
-        "expectation-001",
-        "expectation-002",
-        "expectation-003",
-        "expectation-004"
+        {
+          "id": "expectation-000",
+          "capability": "recovery",
+          "authority": "Frozen case execute-plan-loop/9 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/execute-plan-loop/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-001",
+          "capability": "continuation",
+          "authority": "Frozen case execute-plan-loop/9 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/execute-plan-loop/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-002",
+          "capability": "recovery",
+          "authority": "Frozen case execute-plan-loop/9 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/execute-plan-loop/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-003",
+          "capability": "implementation",
+          "authority": "Frozen case execute-plan-loop/9 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/execute-plan-loop/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-004",
+          "capability": "recovery",
+          "authority": "Frozen case execute-plan-loop/9 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/execute-plan-loop/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        }
       ],
       "fixture": [
         {
@@ -941,7 +1337,11 @@
           "target": "state/repeated-failure.md"
         }
       ],
-      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "execution": {
+        "networkAccess": true,
+        "pathPrepend": [],
+        "executableFiles": []
+      },
       "reference": "Stops the fix-on-fix loop, records the evidence, and replans or escalates instead of applying an unbounded third patch.",
       "requiredSkills": ["execute-plan-loop"],
       "turns": [],
@@ -949,7 +1349,13 @@
         "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: In a mock repository, two consecutive fixes for the same slice fail in different ways and produce no new evidence that the current approach is sound. Decide the next action. Use the current working directory as the repository root. The current working directory is the provided output directory; keep all changes within it.",
         "approvals": []
       },
-      "outputSchema": null
+      "outputSchema": null,
+      "assessment": "outcome",
+      "workFamily": "implementation",
+      "provenance": {
+        "source": "plugins/workflow/skills/execute-plan-loop/SKILL.md",
+        "group": "execute-plan-loop"
+      }
     },
     "assert": [
       {
@@ -982,7 +1388,7 @@
           "core": true,
           "method": "text-rubric",
           "requirements": ["expectation-002"],
-          "rubric": "Requires recording what was tried and what failed."
+          "rubric": "Returns the next action and points to the preserved attempt record; an inline repetition is unnecessary when the record is accessible, but the stopping or replanning decision and current acceptance gap must be stated."
         }
       },
       {
@@ -1019,11 +1425,41 @@
       "group": "execute-plan-loop",
       "kind": "task",
       "requirements": [
-        "expectation-000",
-        "expectation-001",
-        "expectation-002",
-        "expectation-003",
-        "expectation-004"
+        {
+          "id": "expectation-000",
+          "capability": "implementation",
+          "authority": "Frozen case execute-plan-loop/10 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/execute-plan-loop/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-001",
+          "capability": "implementation",
+          "authority": "Frozen case execute-plan-loop/10 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/execute-plan-loop/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The immutable artifact snapshot, initial fixtures, and recorded native actions."
+        },
+        {
+          "id": "expectation-002",
+          "capability": "implementation",
+          "authority": "Frozen case execute-plan-loop/10 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/execute-plan-loop/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-003",
+          "capability": "implementation",
+          "authority": "Frozen case execute-plan-loop/10 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/execute-plan-loop/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-004",
+          "capability": "implementation",
+          "authority": "Frozen case execute-plan-loop/10 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/execute-plan-loop/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        }
       ],
       "fixture": [
         {
@@ -1043,7 +1479,11 @@
           "target": "workflow/working-tree-handoff.json"
         }
       ],
-      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "execution": {
+        "networkAccess": true,
+        "pathPrepend": [],
+        "executableFiles": []
+      },
       "reference": "Uses the recorded handoff directly and does not route the unchanged phase or worker decision back through workflow-orchestrator.",
       "requiredSkills": ["execute-plan-loop"],
       "turns": [],
@@ -1051,7 +1491,13 @@
         "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: workflow-orchestrator has already handed an approved implementation scope to execute-plan-loop with landing mode working_tree. Execute the next slice.",
         "approvals": []
       },
-      "outputSchema": null
+      "outputSchema": null,
+      "assessment": "outcome",
+      "workFamily": "implementation",
+      "provenance": {
+        "source": "plugins/workflow/skills/execute-plan-loop/SKILL.md",
+        "group": "execute-plan-loop"
+      }
     },
     "assert": [
       {
@@ -1121,11 +1567,41 @@
       "group": "execute-plan-loop",
       "kind": "task",
       "requirements": [
-        "expectation-000",
-        "expectation-001",
-        "expectation-002",
-        "expectation-003",
-        "expectation-004"
+        {
+          "id": "expectation-000",
+          "capability": "implementation",
+          "authority": "Frozen case execute-plan-loop/11 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/execute-plan-loop/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-001",
+          "capability": "implementation",
+          "authority": "Frozen case execute-plan-loop/11 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/execute-plan-loop/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The immutable artifact snapshot, initial fixtures, and recorded native actions."
+        },
+        {
+          "id": "expectation-002",
+          "capability": "authorization",
+          "authority": "Frozen case execute-plan-loop/11 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/execute-plan-loop/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The immutable artifact snapshot, initial fixtures, and recorded native actions."
+        },
+        {
+          "id": "expectation-003",
+          "capability": "implementation",
+          "authority": "Frozen case execute-plan-loop/11 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/execute-plan-loop/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-004",
+          "capability": "authorization",
+          "authority": "Frozen case execute-plan-loop/11 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/execute-plan-loop/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        }
       ],
       "fixture": [
         {
@@ -1141,7 +1617,11 @@
           "target": "plans/labels/plan.md"
         }
       ],
-      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "execution": {
+        "networkAccess": true,
+        "pathPrepend": [],
+        "executableFiles": []
+      },
       "reference": "Finishes both approved slices, tests and living-plan status without premature return.",
       "requiredSkills": ["execute-plan-loop"],
       "turns": [],
@@ -1149,7 +1629,13 @@
         "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: Implement the entire approved plans/labels/plan.md through both slices and verification. Slice completion is a checkpoint; continue until both are done. Keep implementation and evidence in this workspace; do not commit.",
         "approvals": []
       },
-      "outputSchema": null
+      "outputSchema": null,
+      "assessment": "outcome",
+      "workFamily": "implementation",
+      "provenance": {
+        "source": "plugins/workflow/skills/execute-plan-loop/SKILL.md",
+        "group": "execute-plan-loop"
+      }
     },
     "assert": [
       {
@@ -1219,11 +1705,41 @@
       "group": "execute-plan-loop",
       "kind": "task",
       "requirements": [
-        "expectation-000",
-        "expectation-001",
-        "expectation-002",
-        "expectation-003",
-        "expectation-004"
+        {
+          "id": "expectation-000",
+          "capability": "implementation",
+          "authority": "Frozen case execute-plan-loop/12 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/execute-plan-loop/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The immutable artifact snapshot, initial fixtures, and recorded native actions."
+        },
+        {
+          "id": "expectation-001",
+          "capability": "implementation",
+          "authority": "Frozen case execute-plan-loop/12 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/execute-plan-loop/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-002",
+          "capability": "implementation",
+          "authority": "Frozen case execute-plan-loop/12 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/execute-plan-loop/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The immutable artifact snapshot, initial fixtures, and recorded native actions."
+        },
+        {
+          "id": "expectation-003",
+          "capability": "continuation",
+          "authority": "Frozen case execute-plan-loop/12 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/execute-plan-loop/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-004",
+          "capability": "implementation",
+          "authority": "Frozen case execute-plan-loop/12 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/execute-plan-loop/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        }
       ],
       "fixture": [
         {
@@ -1239,7 +1755,11 @@
           "target": "plans/labels/plan.md"
         }
       ],
-      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "execution": {
+        "networkAccess": true,
+        "pathPrepend": [],
+        "executableFiles": []
+      },
       "reference": "Honors the narrower current one-step authority despite a broader plan.",
       "requiredSkills": ["execute-plan-loop"],
       "turns": [],
@@ -1247,7 +1767,13 @@
         "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: The full plans/labels/plan.md is available, but for this turn I authorize only slice 1. Implement and verify slice 1, update plan.md, and stop before slice 2. Do not commit.",
         "approvals": []
       },
-      "outputSchema": null
+      "outputSchema": null,
+      "assessment": "outcome",
+      "workFamily": "implementation",
+      "provenance": {
+        "source": "plugins/workflow/skills/execute-plan-loop/SKILL.md",
+        "group": "execute-plan-loop"
+      }
     },
     "assert": [
       {
@@ -1316,7 +1842,36 @@
       "id": "execute-plan-loop/13",
       "group": "execute-plan-loop",
       "kind": "task",
-      "requirements": ["expectation-000", "expectation-001", "expectation-002", "expectation-003"],
+      "requirements": [
+        {
+          "id": "expectation-000",
+          "capability": "implementation",
+          "authority": "Frozen case execute-plan-loop/13 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/execute-plan-loop/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The immutable artifact snapshot, initial fixtures, and recorded native actions."
+        },
+        {
+          "id": "expectation-001",
+          "capability": "implementation",
+          "authority": "Frozen case execute-plan-loop/13 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/execute-plan-loop/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The immutable artifact snapshot, initial fixtures, and recorded native actions."
+        },
+        {
+          "id": "expectation-002",
+          "capability": "implementation",
+          "authority": "Frozen case execute-plan-loop/13 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/execute-plan-loop/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The immutable artifact snapshot, initial fixtures, and recorded native actions."
+        },
+        {
+          "id": "expectation-003",
+          "capability": "authorization",
+          "authority": "Frozen case execute-plan-loop/13 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/execute-plan-loop/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        }
+      ],
       "fixture": [
         {
           "source": "execute-plan-loop/files/living-plan/src/labels.js.fixture",
@@ -1327,7 +1882,11 @@
           "target": "test/labels.test.js"
         }
       ],
-      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "execution": {
+        "networkAccess": true,
+        "pathPrepend": [],
+        "executableFiles": []
+      },
       "reference": "Implements the accepted native proposal without re-planning or re-approval.",
       "requiredSkills": ["execute-plan-loop"],
       "turns": [],
@@ -1335,7 +1894,13 @@
         "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: Accepted native proposal (approved in chat): correct both label typos in src/labels.js, preserve exports, run node --test test/labels.test.js, landing working_tree. Implement now. No plan file or formatted handoff exists. Use the supplied sources and tests.",
         "approvals": []
       },
-      "outputSchema": null
+      "outputSchema": null,
+      "assessment": "outcome",
+      "workFamily": "implementation",
+      "provenance": {
+        "source": "plugins/workflow/skills/execute-plan-loop/SKILL.md",
+        "group": "execute-plan-loop"
+      }
     },
     "assert": [
       {
@@ -1393,7 +1958,36 @@
       "id": "execute-plan-loop/14",
       "group": "execute-plan-loop",
       "kind": "task",
-      "requirements": ["expectation-000", "expectation-001", "expectation-002", "expectation-003"],
+      "requirements": [
+        {
+          "id": "expectation-000",
+          "capability": "authorization",
+          "authority": "Frozen case execute-plan-loop/14 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/execute-plan-loop/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-001",
+          "capability": "implementation",
+          "authority": "Frozen case execute-plan-loop/14 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/execute-plan-loop/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The immutable artifact snapshot, initial fixtures, and recorded native actions."
+        },
+        {
+          "id": "expectation-002",
+          "capability": "recovery",
+          "authority": "Frozen case execute-plan-loop/14 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/execute-plan-loop/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The immutable artifact snapshot, initial fixtures, and recorded native actions."
+        },
+        {
+          "id": "expectation-003",
+          "capability": "authorization",
+          "authority": "Frozen case execute-plan-loop/14 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/execute-plan-loop/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        }
+      ],
       "fixture": [
         {
           "source": "execute-plan-loop/files/living-plan-resumed/src/labels.js.fixture",
@@ -1408,7 +2002,11 @@
           "target": "plans/labels/plan.md"
         }
       ],
-      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "execution": {
+        "networkAccess": true,
+        "pathPrepend": [],
+        "executableFiles": []
+      },
       "reference": "Repairs the remaining approved failure autonomously and reruns the failed check.",
       "requiredSkills": ["execute-plan-loop"],
       "turns": [],
@@ -1416,7 +2014,13 @@
         "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: Implement the approved two label corrections from plans/labels/plan.md. Your first edit fixed first() but left second() as secod, and the full test still fails on second label. This is a normal in-scope repair with clear evidence; continue through verification without asking me to reapprove.",
         "approvals": []
       },
-      "outputSchema": null
+      "outputSchema": null,
+      "assessment": "outcome",
+      "workFamily": "implementation",
+      "provenance": {
+        "source": "plugins/workflow/skills/execute-plan-loop/SKILL.md",
+        "group": "execute-plan-loop"
+      }
     },
     "assert": [
       {
@@ -1474,7 +2078,29 @@
       "id": "execute-plan-loop/15",
       "group": "execute-plan-loop",
       "kind": "task",
-      "requirements": ["expectation-000", "expectation-001", "expectation-002"],
+      "requirements": [
+        {
+          "id": "expectation-000",
+          "capability": "implementation",
+          "authority": "Frozen case execute-plan-loop/15 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/execute-plan-loop/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-001",
+          "capability": "authorization",
+          "authority": "Frozen case execute-plan-loop/15 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/execute-plan-loop/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-002",
+          "capability": "authorization",
+          "authority": "Frozen case execute-plan-loop/15 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/execute-plan-loop/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        }
+      ],
       "fixture": [
         {
           "source": "execute-plan-loop/files/living-plan/src/labels.js.fixture",
@@ -1489,7 +2115,11 @@
           "target": "plans/labels/plan.md"
         }
       ],
-      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "execution": {
+        "networkAccess": true,
+        "pathPrepend": [],
+        "executableFiles": []
+      },
       "reference": "Rejects unapproved public-contract change while recognizing the existing scope remains usable.",
       "requiredSkills": ["execute-plan-loop"],
       "turns": [],
@@ -1497,7 +2127,13 @@
         "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: This host has no native Plan Mode. The user approved the two label corrections in chat, recorded in plans/labels/plan.md. An imagined implementation shortcut would rename the exported functions used by other consumers. Decide whether that contract change is authorized; do not edit files in this decision-only request.",
         "approvals": []
       },
-      "outputSchema": null
+      "outputSchema": null,
+      "assessment": "outcome",
+      "workFamily": "implementation",
+      "provenance": {
+        "source": "plugins/workflow/skills/execute-plan-loop/SKILL.md",
+        "group": "execute-plan-loop"
+      }
     },
     "assert": [
       {
@@ -1545,12 +2181,48 @@
       "group": "execute-plan-loop",
       "kind": "task",
       "requirements": [
-        "expectation-000",
-        "expectation-001",
-        "expectation-002",
-        "expectation-003",
-        "expectation-004",
-        "expectation-005"
+        {
+          "id": "expectation-000",
+          "capability": "implementation",
+          "authority": "Frozen case execute-plan-loop/16 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/execute-plan-loop/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-001",
+          "capability": "implementation",
+          "authority": "Frozen case execute-plan-loop/16 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/execute-plan-loop/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The immutable artifact snapshot, initial fixtures, and recorded native actions."
+        },
+        {
+          "id": "expectation-002",
+          "capability": "recovery",
+          "authority": "Frozen case execute-plan-loop/16 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/execute-plan-loop/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The immutable artifact snapshot, initial fixtures, and recorded native actions."
+        },
+        {
+          "id": "expectation-003",
+          "capability": "implementation",
+          "authority": "Frozen case execute-plan-loop/16 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/execute-plan-loop/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The immutable artifact snapshot, initial fixtures, and recorded native actions."
+        },
+        {
+          "id": "expectation-004",
+          "capability": "authorization",
+          "authority": "Frozen case execute-plan-loop/16 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/execute-plan-loop/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-005",
+          "capability": "authorization",
+          "authority": "Frozen case execute-plan-loop/16 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/execute-plan-loop/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        }
       ],
       "fixture": [
         {
@@ -1582,7 +2254,11 @@
           "target": "test/shipping-contract.test.js"
         }
       ],
-      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "execution": {
+        "networkAccess": true,
+        "pathPrepend": [],
+        "executableFiles": []
+      },
       "reference": "Completes the independent label correction, discovers the actual async provider versus synchronous public API conflict while inspecting the quote slice, and stops that slice for a concrete contract decision without changing callers or silently rewriting approval.",
       "requiredSkills": ["execute-plan-loop"],
       "turns": [],
@@ -1590,7 +2266,13 @@
         "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: Implement the entire approved plans/shipping-quotes/plan.md in the supplied mock repository. Inspect the existing sources and tests, complete the authorized work, and record verification and current status in that living plan. Landing mode is working_tree; do not commit or access the network.",
         "approvals": []
       },
-      "outputSchema": null
+      "outputSchema": null,
+      "assessment": "outcome",
+      "workFamily": "implementation",
+      "provenance": {
+        "source": "plugins/workflow/skills/execute-plan-loop/SKILL.md",
+        "group": "execute-plan-loop"
+      }
     },
     "assert": [
       {
@@ -1670,7 +2352,36 @@
       "id": "execute-plan-loop/17",
       "group": "execute-plan-loop",
       "kind": "task",
-      "requirements": ["expectation-000", "expectation-001", "expectation-002", "expectation-003"],
+      "requirements": [
+        {
+          "id": "expectation-000",
+          "capability": "implementation",
+          "authority": "Frozen case execute-plan-loop/17 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/execute-plan-loop/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The immutable artifact snapshot, initial fixtures, and recorded native actions."
+        },
+        {
+          "id": "expectation-001",
+          "capability": "implementation",
+          "authority": "Frozen case execute-plan-loop/17 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/execute-plan-loop/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The immutable artifact snapshot, initial fixtures, and recorded native actions."
+        },
+        {
+          "id": "expectation-002",
+          "capability": "clarification",
+          "authority": "Frozen case execute-plan-loop/17 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/execute-plan-loop/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-003",
+          "capability": "authorization",
+          "authority": "Frozen case execute-plan-loop/17 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/execute-plan-loop/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        }
+      ],
       "fixture": [
         {
           "source": "execute-plan-loop/files/bounded-slice/src/pending.js.fixture",
@@ -1689,7 +2400,11 @@
           "target": "plans/labels/plan.md"
         }
       ],
-      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "execution": {
+        "networkAccess": true,
+        "pathPrepend": [],
+        "executableFiles": []
+      },
       "reference": "Completes only the assigned slice and returns evidence without assuming the entire plan is its assignment.",
       "requiredSkills": ["execute-plan-loop"],
       "turns": [],
@@ -1697,7 +2412,13 @@
         "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: You are a delegated worker using execute-plan-loop. The primary assigned only the first slice in plans/labels/plan.md: correct pendingLabel to Pending and run node --test test/pending.test.js. The larger plan is context. Implement that slice and return evidence; do not update overall progress, execute the second slice, commit or delegate.",
         "approvals": []
       },
-      "outputSchema": null
+      "outputSchema": null,
+      "assessment": "outcome",
+      "workFamily": "implementation",
+      "provenance": {
+        "source": "plugins/workflow/skills/execute-plan-loop/SKILL.md",
+        "group": "execute-plan-loop"
+      }
     },
     "assert": [
       {
@@ -1755,14 +2476,47 @@
       "id": "execute-plan-loop/18",
       "group": "execute-plan-loop",
       "kind": "task",
-      "requirements": ["expectation-000", "expectation-001", "expectation-002", "expectation-003"],
+      "requirements": [
+        {
+          "id": "expectation-000",
+          "capability": "continuation",
+          "authority": "Frozen case execute-plan-loop/18 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/execute-plan-loop/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-001",
+          "capability": "recovery",
+          "authority": "Frozen case execute-plan-loop/18 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/execute-plan-loop/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-002",
+          "capability": "recovery",
+          "authority": "Frozen case execute-plan-loop/18 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/execute-plan-loop/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-003",
+          "capability": "authorization",
+          "authority": "Frozen case execute-plan-loop/18 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/execute-plan-loop/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        }
+      ],
       "fixture": [
         {
           "source": "execute-plan-loop/files/repair-context/status/attempts.md.fixture",
           "target": "status/attempts.md"
         }
       ],
-      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "execution": {
+        "networkAccess": true,
+        "pathPrepend": [],
+        "executableFiles": []
+      },
       "reference": "Continues the actual useful thread with context and distinguishes a tool failure from implementation repair or capability escalation.",
       "requiredSkills": ["execute-plan-loop"],
       "turns": [],
@@ -1770,7 +2524,13 @@
         "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: Use execute-plan-loop to decide the next action from status/attempts.md. This is recorded decision evidence only: do not invoke lifecycle tools or modify files.",
         "approvals": []
       },
-      "outputSchema": null
+      "outputSchema": null,
+      "assessment": "outcome",
+      "workFamily": "implementation",
+      "provenance": {
+        "source": "plugins/workflow/skills/execute-plan-loop/SKILL.md",
+        "group": "execute-plan-loop"
+      }
     },
     "assert": [
       {
@@ -1829,11 +2589,41 @@
       "group": "execute-plan-loop",
       "kind": "task",
       "requirements": [
-        "expectation-000",
-        "expectation-001",
-        "expectation-002",
-        "expectation-003",
-        "expectation-004"
+        {
+          "id": "expectation-000",
+          "capability": "implementation",
+          "authority": "Frozen case execute-plan-loop/19 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/execute-plan-loop/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-001",
+          "capability": "recovery",
+          "authority": "Frozen case execute-plan-loop/19 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/execute-plan-loop/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-002",
+          "capability": "implementation",
+          "authority": "Frozen case execute-plan-loop/19 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/execute-plan-loop/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-003",
+          "capability": "recovery",
+          "authority": "Frozen case execute-plan-loop/19 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/execute-plan-loop/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-004",
+          "capability": "authorization",
+          "authority": "Frozen case execute-plan-loop/19 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/execute-plan-loop/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        }
       ],
       "fixture": [
         {
@@ -1841,7 +2631,11 @@
           "target": "status/attempts.md"
         }
       ],
-      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "execution": {
+        "networkAccess": true,
+        "pathPrepend": [],
+        "executableFiles": []
+      },
       "reference": "Stops at the caller repair limit even though each repair produced new evidence; re-dispatch does not reset history.",
       "requiredSkills": ["execute-plan-loop"],
       "turns": [],
@@ -1849,7 +2643,13 @@
         "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: Use execute-plan-loop to decide whether to apply another repair from status/attempts.md. Decide only; do not patch, spawn or call lifecycle tools.",
         "approvals": []
       },
-      "outputSchema": null
+      "outputSchema": null,
+      "assessment": "outcome",
+      "workFamily": "implementation",
+      "provenance": {
+        "source": "plugins/workflow/skills/execute-plan-loop/SKILL.md",
+        "group": "execute-plan-loop"
+      }
     },
     "assert": [
       {
@@ -1882,7 +2682,7 @@
           "core": true,
           "method": "text-rubric",
           "requirements": ["expectation-002"],
-          "rubric": "Returns the hypotheses, results and current acceptance gap to primary classification and re-planning."
+          "rubric": "Returns the hypotheses, results and current acceptance gap either inline or through an accessible preserved attempt record; a canonical reference is sufficient and must not be treated as missing history."
         }
       },
       {
@@ -1918,7 +2718,36 @@
       "id": "execute-plan-loop/20",
       "group": "execute-plan-loop",
       "kind": "task",
-      "requirements": ["expectation-000", "expectation-001", "expectation-002", "expectation-003"],
+      "requirements": [
+        {
+          "id": "expectation-000",
+          "capability": "review",
+          "authority": "Frozen case execute-plan-loop/20 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/execute-plan-loop/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-001",
+          "capability": "review",
+          "authority": "Frozen case execute-plan-loop/20 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/execute-plan-loop/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-002",
+          "capability": "review",
+          "authority": "Frozen case execute-plan-loop/20 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/execute-plan-loop/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The immutable artifact snapshot, initial fixtures, and recorded native actions."
+        },
+        {
+          "id": "expectation-003",
+          "capability": "authorization",
+          "authority": "Frozen case execute-plan-loop/20 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/execute-plan-loop/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        }
+      ],
       "fixture": [
         {
           "source": "execute-plan-loop/files/false-completion/status/result.md.fixture",
@@ -1933,7 +2762,11 @@
           "target": "src/value.js"
         }
       ],
-      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "execution": {
+        "networkAccess": true,
+        "pathPrepend": [],
+        "executableFiles": []
+      },
       "reference": "Separates completed runtime and structured output from actual acceptance and reports the unmet criterion.",
       "requiredSkills": ["execute-plan-loop"],
       "turns": [],
@@ -1941,7 +2774,13 @@
         "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: Use execute-plan-loop to assess status/result.md against specs/task.md and the actual source. This is a read-only acceptance decision, not permission to repair.",
         "approvals": []
       },
-      "outputSchema": null
+      "outputSchema": null,
+      "assessment": "outcome",
+      "workFamily": "review",
+      "provenance": {
+        "source": "plugins/workflow/skills/execute-plan-loop/SKILL.md",
+        "group": "execute-plan-loop"
+      }
     },
     "assert": [
       {

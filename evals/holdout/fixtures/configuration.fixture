@@ -1,0 +1,5 @@
+{
+  "endpoint": "/v2/jobs",
+  "retry": { "maxAttempts": 4, "backoff": "linear" },
+  "timeoutSeconds": 12
+}

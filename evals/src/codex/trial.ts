@@ -1,6 +1,7 @@
 import { appendFile, chmod, mkdir, stat } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
 import type { ILoadedCase } from '../corpus/cases.ts';
+import { candidatePrompt } from '../corpus/cases.ts';
 import { prepareNativeTrial } from '../preparation/native.ts';
 import {
   containedPath,
@@ -164,7 +165,7 @@ export async function executeTrial(input: ITrialInput): Promise<ITrialResult> {
     });
 
     result.status = 'completed';
-    let prompt: string | null = input.case.definition.vars.task;
+    let prompt: string | null = candidatePrompt(input.case.definition);
 
     while (prompt !== null) {
       const turn = await preparation.session.runTurn(prompt, {

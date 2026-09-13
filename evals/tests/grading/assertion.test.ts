@@ -3,11 +3,13 @@ import { randomUUID } from 'node:crypto';
 import { mkdir, mkdtemp, rm } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import type { AssertionValueFunctionContext } from 'promptfoo';
+import type { INativeActorEvidence } from '../../src/codex/evidence.ts';
 import type { ICaseAssertion, ICaseMetadata, ILoadedCase } from '../../src/corpus/cases.ts';
 import type { IGradeRubricInput, IGradeRubricResult } from '../../src/grading/rubric.ts';
 import { inventoryDirectory, writeJsonRecord } from '../../src/preparation/snapshot.ts';
 import type { IPlannedTrial, IRunManifest, ITrialResult } from '../../src/results/records.ts';
 import type { IResourceOperation } from '../../src/results/resources.ts';
+import { collection, priceBook, requirement, writeManifest } from '../fixtures/contracts.ts';
 
 const roots: string[] = [];
 const rubricModulePath = resolve(import.meta.dir, '../../src/grading/rubric.ts');
@@ -18,6 +20,10 @@ const originalGradeRubric = originalRubricModule.gradeRubric;
 const originalRunCommandCheck = originalCommandModule.runCommandCheck;
 
 interface IModelEvidenceInput {
+  actors?: unknown;
+  actorRelations?: unknown;
+  conversation?: unknown;
+  requirements?: unknown;
   toolRecords?: unknown;
   initialFixtures?: unknown;
   executionConditions?: unknown;
@@ -56,7 +62,10 @@ function metadata(fixture: ICaseMetadata['fixture'] = []): ICaseMetadata {
     id: 'assertion-fixture',
     group: 'integration',
     kind: 'task',
-    requirements: ['criterion'],
+    assessment: 'outcome',
+    workFamily: 'implementation',
+    provenance: { source: 'unit-test', group: 'unit-test' },
+    requirements: [requirement('criterion')],
     fixture,
     execution: {
       networkAccess: false,
@@ -139,7 +148,9 @@ function trial(assertionValue: ICaseAssertion): IPlannedTrial {
 
 function manifest(assertionValue: ICaseAssertion): IRunManifest {
   return {
-    schema: 'codex-evals/run-v1',
+    schema: 'codex-evals/run-v2',
+    collection: collection([loadedCase(assertionValue)]),
+    priceBook,
     id: 'run-assertion',
     createdAt: 1,
     concurrency: 1,
@@ -408,8 +419,73 @@ test('propagates model grader evidence, initial fixtures, tool records, and miss
   });
   await Bun.write(resolve(runDirectory, protocolPath), '');
   const evidencePath = 'trials/trial-assertion/evidence.json';
+  const rootActor: INativeActorEvidence = {
+    threadId: 'thread-1',
+    parentThreadId: null,
+    childThreadIds: ['worker-thread'],
+    assignment: {
+      role: null,
+      agentPath: null,
+      agentNickname: null,
+      modelProvider: 'fixture-provider',
+      source: 'root-session#L1',
+    },
+    role: null,
+    model: 'gpt-6-astra',
+    reasoningEffort: 'high',
+    modelsByTurn: { 'root-turn': 'gpt-6-astra' },
+    reasoningEffortByTurn: { 'root-turn': 'high' },
+    includedActorIds: null,
+    contexts: [{ privateInstructions: 'unprojected turn context' }],
+    sources: {
+      sessionMeta: ['root-session#L1'],
+      turnContexts: ['root-session#L2'],
+      toolRecords: ['root-session#L3'],
+      parentChild: [],
+    },
+  };
+  const childActor: INativeActorEvidence = {
+    ...rootActor,
+    threadId: 'worker-thread',
+    parentThreadId: 'thread-1',
+    childThreadIds: [],
+    assignment: {
+      role: 'ordinary_worker',
+      agentPath: '/root/fixture_worker',
+      agentNickname: 'fixture-worker',
+      modelProvider: 'fixture-provider',
+      source: 'worker-session#L1',
+    },
+    role: 'ordinary_worker',
+    model: 'gpt-5.6-luna',
+    reasoningEffort: 'max',
+    modelsByTurn: { 'worker-turn': 'gpt-5.6-luna' },
+    reasoningEffortByTurn: { 'worker-turn': 'max' },
+    sources: {
+      sessionMeta: ['worker-session#L1'],
+      turnContexts: ['worker-session#L2'],
+      toolRecords: ['worker-session#L3'],
+      parentChild: ['worker-session#L1'],
+    },
+  };
+  const actorRelations = [
+    { parentThreadId: 'thread-1', childThreadId: 'worker-thread', source: 'worker-session#L1' },
+  ];
+  const conversation = [
+    {
+      actor: 'candidate',
+      content: 'The worker result was used.',
+      threadId: 'thread-1',
+      turnId: 'root-turn',
+      source: `${protocolPath}#L4`,
+    },
+  ];
+
   await writeJsonRecord(resolve(runDirectory, evidencePath), {
     items: [],
+    actors: [rootActor, childActor],
+    actorRelations,
+    conversation,
     activation: {
       status: 'unknown',
       references: [],
@@ -446,6 +522,25 @@ test('propagates model grader evidence, initial fixtures, tool records, and miss
 
   const evidenceInput = JSON.parse(modelEvidence[0] ?? '{}') as IModelEvidenceInput;
 
+  expect(evidenceInput.actors).toMatchObject([
+    { threadId: 'thread-1', role: null, assignment: rootActor.assignment },
+    {
+      threadId: 'worker-thread',
+      parentThreadId: 'thread-1',
+      childThreadIds: [],
+      role: 'ordinary_worker',
+      assignment: childActor.assignment,
+      model: 'gpt-5.6-luna',
+      reasoningEffort: 'max',
+      modelsByTurn: { 'worker-turn': 'gpt-5.6-luna' },
+      reasoningEffortByTurn: { 'worker-turn': 'max' },
+      sources: childActor.sources,
+    },
+  ]);
+  expect(evidenceInput.actorRelations).toEqual(actorRelations);
+  expect(evidenceInput.conversation).toEqual(conversation);
+  expect(evidenceInput.requirements).toEqual(metadata().requirements);
+  expect(modelEvidence[0]).not.toContain('unprojected turn context');
   expect(evidenceInput.toolRecords).toEqual([]);
   expect(evidenceInput.executionConditions).toEqual({
     networkAccess: false,
@@ -469,7 +564,7 @@ test('propagates model grader evidence, initial fixtures, tool records, and miss
     case: loadedCase(currentAssertion, [{ source: 'fixture.txt', target: 'fixture.txt' }]),
     initialMetadata: metadata([{ source: 'fixture.txt', target: 'fixture.txt' }]),
     result: result({
-      evidencePath,
+      evidencePath: null,
       protocolPath,
       threadIds: ['thread-1'],
       artifacts,
@@ -482,6 +577,7 @@ test('propagates model grader evidence, initial fixtures, tool records, and miss
     status: 'unknown',
     reason: 'The model judge returned no concrete evidence reference.',
   });
+  expect(JSON.parse(modelEvidence[1] ?? '{}').actors).toBeNull();
 });
 
 test('exposes the public assertion callback and preserves missing-context errors', async () => {
@@ -489,7 +585,7 @@ test('exposes the public assertion callback and preserves missing-context errors
   await missingAuthentication(runDirectory);
   const currentAssertion = assertion('programmatic', { type: 'text-contains', value: 'output' });
   const currentManifest = manifest(currentAssertion);
-  await writeJsonRecord(resolve(runDirectory, 'manifest.json'), currentManifest);
+  await writeManifest(runDirectory, currentManifest);
   await writeJsonRecord(resolve(runDirectory, 'trials/trial-assertion/result.json'), result());
 
   const verdict = await gradeAssertion('ignored output', {
@@ -521,7 +617,7 @@ test('programmatic command grading works with unavailable provider credentials',
   const currentManifest = manifest(currentAssertion);
   const artifacts = await writeArtifact(runDirectory);
   commandResult = { exitCode: 7, evidence: ['command-result.json'] };
-  await writeJsonRecord(resolve(runDirectory, 'manifest.json'), currentManifest);
+  await writeManifest(runDirectory, currentManifest);
   await writeJsonRecord(
     resolve(runDirectory, 'trials/trial-assertion/result.json'),
     result({ artifacts }),
@@ -542,7 +638,7 @@ test('model authentication failure is retained as an unknown grade before model 
   const currentAssertion = assertion('text-rubric');
   const currentManifest = manifest(currentAssertion);
   const artifacts = await writeArtifact(runDirectory);
-  await writeJsonRecord(resolve(runDirectory, 'manifest.json'), currentManifest);
+  await writeManifest(runDirectory, currentManifest);
   await writeJsonRecord(
     resolve(runDirectory, 'trials/trial-assertion/result.json'),
     result({ artifacts }),
@@ -592,7 +688,7 @@ test('regrading reads initial bindings from the execution manifest after fixture
   await Bun.write(resolve(runDirectory, 'private/fixtures/moved.fixture'), 'unrelated old file\n');
   const artifacts = await writeArtifact(runDirectory);
   const gradingManifestPath = resolve(runDirectory, 'regrades/moved/manifest.json');
-  await writeJsonRecord(resolve(runDirectory, 'manifest.json'), original);
+  await writeManifest(runDirectory, original);
   await writeJsonRecord(gradingManifestPath, grading);
   await writeJsonRecord(
     resolve(runDirectory, 'trials/trial-assertion/result.json'),

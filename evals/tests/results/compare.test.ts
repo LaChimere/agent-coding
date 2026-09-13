@@ -1,4 +1,11 @@
 import { expect, test } from 'bun:test';
+import type { ILoadedCase } from '../../src/corpus/cases.ts';
+import {
+  freezeCollection,
+  type ICollectionSnapshot,
+  parseCollectionSnapshot,
+} from '../../src/corpus/collections.ts';
+import { contentHash } from '../../src/preparation/snapshot.ts';
 import { compareReports } from '../../src/results/compare.ts';
 import type { IGradingRecord } from '../../src/results/quality.ts';
 import type {
@@ -27,6 +34,74 @@ const candidate: ICandidateSnapshot = {
   profileInventory: inventory,
 };
 
+function loadedCase(
+  caseId: string,
+  assessment: 'outcome' | 'mechanism' = 'outcome',
+  workFamily: 'planning' | 'implementation' | 'review' | 'documentation' | null = 'implementation',
+): ILoadedCase {
+  return {
+    definition: {
+      description: `Test case ${caseId}`,
+      vars: { task: `Complete ${caseId}.` },
+      metadata: {
+        id: caseId,
+        group: 'results-tests',
+        kind: 'task',
+        assessment,
+        workFamily,
+        provenance: { source: 'tests', group: 'compare' },
+        requirements: [
+          {
+            id: `requirement-${caseId}`,
+            capability: workFamily ?? 'skill-mechanism',
+            authority: 'test task',
+            appliesWhen: 'always',
+            evidence: 'saved result evidence',
+          },
+        ],
+        fixture: [],
+        execution: { networkAccess: false, pathPrepend: [], executableFiles: [] },
+        reference: '',
+        requiredSkills: [],
+        turns: [],
+        authorization: { scope: 'test only', approvals: [] },
+        outputSchema: null,
+      },
+      assert: [
+        {
+          type: 'javascript',
+          value: 'file://src/grading/assertion.ts',
+          metric: 'task',
+          config: {
+            core: true,
+            method: 'programmatic',
+            requirements: [`requirement-${caseId}`],
+            rubric: 'The result satisfies the test task.',
+            rule: { type: 'text-contains', value: 'done' },
+          },
+        },
+      ],
+    },
+    version: `${caseId}-case-v1`,
+    executionVersion: `${caseId}-execution`,
+    source: `tests/${caseId}.json`,
+  };
+}
+
+function collection(cases: readonly ILoadedCase[]): ICollectionSnapshot {
+  return freezeCollection(
+    {
+      id: 'development',
+      version: 'compare-tests-v1',
+      caseRoot: 'tests/cases',
+      fixtureRoot: 'tests/fixtures',
+      exposure: 'seen',
+    },
+    cases,
+    false,
+  );
+}
+
 function trial(id: string, caseId: string, executionVersion: string): IPlannedTrial {
   return {
     id,
@@ -46,8 +121,10 @@ function trial(id: string, caseId: string, executionVersion: string): IPlannedTr
 }
 
 function manifest(runId: string, trials: readonly IPlannedTrial[], concurrency = 2): IRunManifest {
+  const cases = [...new Map(trials.map((item) => [item.caseId, loadedCase(item.caseId)])).values()];
   return {
-    schema: 'codex-evals/run-v1',
+    schema: 'codex-evals/run-v2',
+    collection: collection(cases),
     id: runId,
     createdAt: 1,
     concurrency,
@@ -65,8 +142,9 @@ function manifest(runId: string, trials: readonly IPlannedTrial[], concurrency =
       definitionId: 'judge-v1',
     },
     candidates: [candidate],
-    cases: [],
+    cases,
     trials: [...trials],
+    priceBook: priceBook('USD'),
   };
 }
 
@@ -435,6 +513,61 @@ test('reports global noncomparability without silently pairing favorable trials'
   expect(comparison.conditions.reasons).toContain('Concurrency differs.');
   expect(comparison.quality.eligiblePairs).toBe(0);
   expect(comparison.quality.excludedPairs[0]?.reasons).toContain('Concurrency differs.');
+});
+
+test('requires matching collection identity, version and membership for paired quality', () => {
+  const leftTrial = trial('left', 'case', 'execution');
+  const rightTrial = trial('right', 'case', 'execution');
+  const left = makeReport('left-run', [leftTrial], { left: 'passed' }, [operation('left')]);
+  const right = structuredClone(
+    makeReport('right-run', [rightTrial], { right: 'passed' }, [operation('right')]),
+  );
+  right.manifest.collection.version = 'different-collection-version';
+
+  const comparison = compareReports({
+    left,
+    right,
+    pairs: [{ leftTrialId: 'left', rightTrialId: 'right' }],
+  });
+
+  expect(comparison.conditions).toMatchObject({ comparable: false });
+  expect(comparison.conditions.reasons).toContain('Collection version differs.');
+  expect(comparison.quality.eligiblePairs).toBe(0);
+});
+
+test('compares common final grades when frozen original grading versions differ', () => {
+  const leftTrial = trial('left', 'case', 'same-execution');
+  const rightTrial = trial('right', 'case', 'same-execution');
+  const left = structuredClone(
+    makeReport('left-run', [leftTrial], { left: 'passed' }, [operation('left')]),
+  );
+  const right = structuredClone(
+    makeReport('right-run', [rightTrial], { right: 'passed' }, [operation('right')]),
+  );
+  const original = left.manifest.collection.membership[0];
+  if (original === undefined) {
+    throw new Error('Missing collection fixture.');
+  }
+  original.version = 'original-g1-definition';
+  left.manifest.collection.membershipHash = contentHash(
+    JSON.stringify(left.manifest.collection.membership),
+  );
+  parseCollectionSnapshot(left.manifest.collection);
+  parseCollectionSnapshot(right.manifest.collection);
+  const before = structuredClone(left.manifest.collection);
+
+  const comparison = compareReports({
+    left,
+    right,
+    pairs: [{ leftTrialId: 'left', rightTrialId: 'right' }],
+  });
+
+  expect(comparison.conditions.comparable).toBeTrue();
+  expect(comparison.quality.eligiblePairs).toBe(1);
+  expect(
+    comparison.resources.find((metric) => metric.metric === 'usage.input')?.eligiblePairs,
+  ).toBe(1);
+  expect(left.manifest.collection).toEqual(before);
 });
 
 test('keeps absolute report timestamps out of quality and resource eligibility', () => {
@@ -850,10 +983,14 @@ test('reports pair-level execution and criterion incompatibility', () => {
     pairs: [{ leftTrialId: 'left', rightTrialId: 'right' }],
   });
 
-  expect(comparison.conditions.comparable).toBe(true);
+  expect(comparison.conditions.comparable).toBe(false);
+  expect(comparison.conditions.reasons).toContain('Collection membership differs.');
   expect(comparison.quality.eligiblePairs).toBe(0);
-  expect(comparison.quality.excludedPairs[0]?.reasons).toEqual([
-    'Execution version differs.',
-    'Case id differs.',
-  ]);
+  expect(comparison.quality.excludedPairs[0]?.reasons).toEqual(
+    expect.arrayContaining([
+      'Collection membership differs.',
+      'Execution version differs.',
+      'Case id differs.',
+    ]),
+  );
 });

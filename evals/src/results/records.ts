@@ -1,4 +1,5 @@
 import type { ILoadedCase } from '../corpus/cases.ts';
+import type { ICollectionSnapshot } from '../corpus/collections.ts';
 import type { ISnapshot } from '../preparation/snapshot.ts';
 import type { IGradingRecord, ITrialDefinition } from './quality.ts';
 import type { IPriceBook } from './resources.ts';
@@ -21,7 +22,8 @@ export interface IPlannedTrial extends ITrialDefinition {
 }
 
 export interface IRunManifest {
-  schema: 'codex-evals/run-v1';
+  schema: 'codex-evals/run-v2';
+  collection: ICollectionSnapshot;
   id: string;
   createdAt: number;
   concurrency: number;
@@ -33,8 +35,7 @@ export interface IRunManifest {
   candidates: ICandidateSnapshot[];
   cases: ILoadedCase[];
   trials: IPlannedTrial[];
-  /** Absent only in runs created before automatic reference pricing was introduced. */
-  priceBook?: IPriceBook;
+  priceBook: IPriceBook;
 }
 
 export type TrialExecutionStatus = 'not-run' | 'completed' | 'error' | 'incomplete';

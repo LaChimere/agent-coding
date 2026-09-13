@@ -1,0 +1,5 @@
+# Proposed change context
+
+The service returns active jobs to a scheduler. Job identifiers are intended to
+be stable, but the store contract does not state that they are unique. The
+change is being reviewed before rollout.

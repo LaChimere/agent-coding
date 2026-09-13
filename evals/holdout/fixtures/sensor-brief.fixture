@@ -1,0 +1,8 @@
+# Sensor migration brief
+
+The watcher writes one JSON record per minute to `sensor_state.json`.
+The blue service reads that file during its normal maintenance window.
+
+The migration must preserve existing records, allow an operator to roll back,
+and avoid network access. The cutover order and retention window are still open
+decisions for the implementation owner.

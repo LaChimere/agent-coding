@@ -1,3 +1,4 @@
+import type { ILoadedCase } from '../corpus/cases.ts';
 import {
   buildQualityReport,
   type GradingSelection,
@@ -28,6 +29,8 @@ export interface IReportDefinitionInput {
 
   /** Omit to use the manifest definitions; supplying it is the explicit rubric choice. */
   trialDefinitions?: readonly IPlannedTrial[];
+  /** Omit to use the manifest cases; supplying it changes assertions/reference only. */
+  gradingCases?: readonly ILoadedCase[];
   gradingSelection: GradingSelection;
 
   operationIds: readonly string[];
@@ -51,6 +54,7 @@ export interface IReportDefinition {
 
   definitionSource: 'manifest' | 'explicit';
   trialDefinitions: readonly IPlannedTrial[];
+  gradingCases: readonly ILoadedCase[];
   gradingSelection: GradingSelection;
 
   operationIds: readonly string[];
@@ -119,13 +123,12 @@ export interface IRunOutcome {
 }
 
 export interface IReport {
-  schema: 'codex-evals/report-v1';
+  schema: 'codex-evals/report-v2';
   id: string;
   runId: string;
   createdAt: number;
 
-  /** Absent in older reports; absence does not establish a successful run. */
-  runOutcome?: IRunOutcome;
+  runOutcome: IRunOutcome;
   definition: IReportDefinition;
   manifest: IRunManifest;
 
@@ -238,6 +241,48 @@ function definitionsFor(
   }
 
   return { definitions, source: explicit === undefined ? 'manifest' : 'explicit' };
+}
+
+function gradingCaseId(item: ILoadedCase): string {
+  return item.definition.metadata.id;
+}
+
+function gradingCaseFingerprint(item: ILoadedCase): string {
+  const { assert: _assertions, metadata, ...definition } = item.definition;
+  const { reference: _reference, ...frozenMetadata } = metadata;
+
+  return JSON.stringify({
+    executionVersion: item.executionVersion,
+    definition: { ...definition, metadata: frozenMetadata },
+  });
+}
+
+function gradingCasesFor(
+  manifest: IRunManifest,
+  explicit: readonly ILoadedCase[] | undefined,
+): readonly ILoadedCase[] {
+  const cases = explicit ?? manifest.cases;
+  const manifestById = new Map(manifest.cases.map((item) => [gradingCaseId(item), item]));
+  const gradingById = new Map(cases.map((item) => [gradingCaseId(item), item]));
+
+  if (manifestById.size !== manifest.cases.length || gradingById.size !== cases.length) {
+    throw new Error('Report grading cases must have unique case ids.');
+  }
+  if (manifestById.size !== gradingById.size) {
+    throw new Error('Report grading cases must preserve the manifest case set.');
+  }
+
+  for (const [caseId, manifestCase] of manifestById) {
+    const gradingCase = gradingById.get(caseId);
+    if (gradingCase === undefined) {
+      throw new Error(`Report grading case is missing manifest case ${caseId}.`);
+    }
+    if (gradingCaseFingerprint(gradingCase) !== gradingCaseFingerprint(manifestCase)) {
+      throw new Error(`Report grading case changes frozen inputs for ${caseId}.`);
+    }
+  }
+
+  return cases;
 }
 
 function selectedGradeIds(selection: GradingSelection): readonly string[] {
@@ -376,6 +421,7 @@ export function buildReport(input: {
   validateAccountingPolicy(definition.accountingPolicy);
 
   const trialDefinitions = definitionsFor(manifest, definition.trialDefinitions);
+  const gradingCases = gradingCasesFor(manifest, definition.gradingCases);
   const trialIds = new Set(trialDefinitions.definitions.map((trial) => trial.id));
 
   const operationIds = new Set(definition.operationIds);
@@ -490,6 +536,7 @@ export function buildReport(input: {
     definitionSource: trialDefinitions.source,
     ...(definition.nativeExport === undefined ? {} : { nativeExport: definition.nativeExport }),
     trialDefinitions: trialDefinitions.definitions,
+    gradingCases,
     gradingSelection: definition.gradingSelection,
     operationIds: definition.operationIds,
     accountingPolicy: definition.accountingPolicy,
@@ -513,7 +560,7 @@ export function buildReport(input: {
   };
 
   return deepFreeze({
-    schema: 'codex-evals/report-v1',
+    schema: 'codex-evals/report-v2',
     id: definition.id,
     runId: definition.runId,
     createdAt: definition.createdAt,
@@ -587,9 +634,9 @@ export function renderReportMarkdown(report: IReport): string {
     `# Evaluation report ${report.id}`,
     '',
     `- Run: ${report.runId}`,
-    `- Run status: ${report.runOutcome?.status ?? 'unknown'}`,
-    ...(report.runOutcome?.error == null ? [] : [`- Run error: ${report.runOutcome.error}`]),
-    ...(report.runOutcome?.evidence == null
+    `- Run status: ${report.runOutcome.status}`,
+    ...(report.runOutcome.error == null ? [] : [`- Run error: ${report.runOutcome.error}`]),
+    ...(report.runOutcome.evidence == null
       ? []
       : [`- Run evidence: ${markdownLink(report.runOutcome.evidence)}`]),
     `- Planned trials: ${report.summary.plannedTrials}`,

@@ -102,6 +102,7 @@ export async function gradeCriterion(input: {
             ? ((await Bun.file(resolve(input.runDirectory, result.evidencePath)).json()) as {
                 turnIds: string[];
                 threadIds: string[];
+                conversation?: import('../codex/evidence.ts').INativeConversationMessage[];
               })
             : null;
 
@@ -167,6 +168,9 @@ export async function gradeCriterion(input: {
           items,
           activation,
           issues,
+          actors: savedActors,
+          actorRelations,
+          conversation,
           toolRecords: savedToolRecords,
         } = objectRecord(evidence) ?? {};
 
@@ -189,6 +193,9 @@ export async function gradeCriterion(input: {
 
         const rubricEvidence = JSON.stringify({
           task: input.case.definition.vars.task,
+          requirements: input.case.definition.metadata.requirements.filter((requirement) =>
+            assertion.config.requirements.includes(requirement.id),
+          ),
           reference: input.case.definition.metadata.reference,
           authorization: input.case.definition.metadata.authorization.scope,
           executionStatus: result.status,
@@ -198,6 +205,37 @@ export async function gradeCriterion(input: {
           outputReference: `trials/${trial.id}/result.json#output`,
           items,
           toolRecords,
+          actors: Array.isArray(savedActors)
+            ? savedActors.map((value: unknown) => {
+                const {
+                  threadId,
+                  parentThreadId,
+                  childThreadIds,
+                  assignment,
+                  role,
+                  model,
+                  reasoningEffort,
+                  modelsByTurn,
+                  reasoningEffortByTurn,
+                  sources,
+                } = objectRecord(value) ?? {};
+
+                return {
+                  threadId,
+                  parentThreadId,
+                  childThreadIds,
+                  assignment,
+                  role,
+                  model,
+                  reasoningEffort,
+                  modelsByTurn,
+                  reasoningEffortByTurn,
+                  sources,
+                };
+              })
+            : null,
+          actorRelations,
+          conversation,
           activation,
           issues,
           artifacts: result.artifacts,

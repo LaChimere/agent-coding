@@ -1,0 +1,17 @@
+{
+  "schema": "codex-evals/collections-v1",
+  "collections": {
+    "development": {
+      "version": "2026-09-13",
+      "caseRoot": "cases",
+      "fixtureRoot": "fixtures",
+      "exposure": "seen"
+    },
+    "holdout": {
+      "version": "2026-09-13",
+      "caseRoot": "holdout/cases",
+      "fixtureRoot": "holdout/fixtures",
+      "exposure": "unseen"
+    }
+  }
+}

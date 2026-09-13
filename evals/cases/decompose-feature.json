@@ -9,14 +9,48 @@
       "group": "decompose-feature",
       "kind": "task",
       "requirements": [
-        "expectation-000",
-        "expectation-001",
-        "expectation-002",
-        "expectation-003",
-        "expectation-004"
+        {
+          "id": "expectation-000",
+          "capability": "planning",
+          "authority": "Frozen case decompose-feature/0 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/decompose-feature/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-001",
+          "capability": "planning",
+          "authority": "Frozen case decompose-feature/0 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/decompose-feature/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-002",
+          "capability": "planning",
+          "authority": "Frozen case decompose-feature/0 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/decompose-feature/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-003",
+          "capability": "planning",
+          "authority": "Frozen case decompose-feature/0 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/decompose-feature/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-004",
+          "capability": "planning",
+          "authority": "Frozen case decompose-feature/0 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/decompose-feature/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        }
       ],
       "fixture": [],
-      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "execution": {
+        "networkAccess": true,
+        "pathPrepend": [],
+        "executableFiles": []
+      },
       "reference": "Each PR has one purpose, remains trunk-safe, and carries the tests that verify its behavior.",
       "requiredSkills": ["decompose-feature"],
       "turns": [],
@@ -24,7 +58,13 @@
         "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: Decompose a saved-searches feature spanning a data model, service logic, API endpoint, and UI panel into small reviewable PRs.",
         "approvals": []
       },
-      "outputSchema": null
+      "outputSchema": null,
+      "assessment": "outcome",
+      "workFamily": "planning",
+      "provenance": {
+        "source": "plugins/workflow/skills/decompose-feature/SKILL.md",
+        "group": "decompose-feature"
+      }
     },
     "assert": [
       {
@@ -94,14 +134,48 @@
       "group": "decompose-feature",
       "kind": "task",
       "requirements": [
-        "expectation-000",
-        "expectation-001",
-        "expectation-002",
-        "expectation-003",
-        "expectation-004"
+        {
+          "id": "expectation-000",
+          "capability": "planning",
+          "authority": "Frozen case decompose-feature/1 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/decompose-feature/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-001",
+          "capability": "planning",
+          "authority": "Frozen case decompose-feature/1 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/decompose-feature/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-002",
+          "capability": "planning",
+          "authority": "Frozen case decompose-feature/1 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/decompose-feature/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-003",
+          "capability": "authorization",
+          "authority": "Frozen case decompose-feature/1 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/decompose-feature/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-004",
+          "capability": "planning",
+          "authority": "Frozen case decompose-feature/1 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/decompose-feature/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        }
       ],
       "fixture": [],
-      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "execution": {
+        "networkAccess": true,
+        "pathPrepend": [],
+        "executableFiles": []
+      },
       "reference": "Recognizes the change as indivisible and recommends one PR rather than a split that breaks trunk.",
       "requiredSkills": ["decompose-feature"],
       "turns": [],
@@ -109,7 +183,13 @@
         "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: On the existing `feature/wire-protocol-v2` branch, real code already implements a wire-protocol version change: the shared constant, client encoder, and server decoder already exist in the repository and must change together, or every message fails to parse. This is work already underway on that branch, not a proposal for a future or not-yet-started feature. Decide how to split it into PRs for review.",
         "approvals": []
       },
-      "outputSchema": null
+      "outputSchema": null,
+      "assessment": "outcome",
+      "workFamily": "planning",
+      "provenance": {
+        "source": "plugins/workflow/skills/decompose-feature/SKILL.md",
+        "group": "decompose-feature"
+      }
     },
     "assert": [
       {
@@ -179,14 +259,48 @@
       "group": "decompose-feature",
       "kind": "task",
       "requirements": [
-        "expectation-000",
-        "expectation-001",
-        "expectation-002",
-        "expectation-003",
-        "expectation-004"
+        {
+          "id": "expectation-000",
+          "capability": "planning",
+          "authority": "Frozen case decompose-feature/2 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/decompose-feature/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-001",
+          "capability": "authorization",
+          "authority": "Frozen case decompose-feature/2 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/decompose-feature/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-002",
+          "capability": "planning",
+          "authority": "Frozen case decompose-feature/2 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/decompose-feature/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-003",
+          "capability": "planning",
+          "authority": "Frozen case decompose-feature/2 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/decompose-feature/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-004",
+          "capability": "planning",
+          "authority": "Frozen case decompose-feature/2 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/decompose-feature/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        }
       ],
       "fixture": [],
-      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "execution": {
+        "networkAccess": true,
+        "pathPrepend": [],
+        "executableFiles": []
+      },
       "reference": "Orders schema compatibility, code adoption, and cleanup so every intermediate state is safe.",
       "requiredSkills": ["decompose-feature"],
       "turns": [],
@@ -194,7 +308,13 @@
         "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: Decompose adding archived_at, migrating code to use it, and removing the existing archived boolean.",
         "approvals": []
       },
-      "outputSchema": null
+      "outputSchema": null,
+      "assessment": "outcome",
+      "workFamily": "planning",
+      "provenance": {
+        "source": "plugins/workflow/skills/decompose-feature/SKILL.md",
+        "group": "decompose-feature"
+      }
     },
     "assert": [
       {
@@ -264,14 +384,48 @@
       "group": "decompose-feature",
       "kind": "task",
       "requirements": [
-        "expectation-000",
-        "expectation-001",
-        "expectation-002",
-        "expectation-003",
-        "expectation-004"
+        {
+          "id": "expectation-000",
+          "capability": "planning",
+          "authority": "Frozen case decompose-feature/3 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/decompose-feature/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-001",
+          "capability": "planning",
+          "authority": "Frozen case decompose-feature/3 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/decompose-feature/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-002",
+          "capability": "planning",
+          "authority": "Frozen case decompose-feature/3 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/decompose-feature/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-003",
+          "capability": "authorization",
+          "authority": "Frozen case decompose-feature/3 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/decompose-feature/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-004",
+          "capability": "planning",
+          "authority": "Frozen case decompose-feature/3 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/decompose-feature/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        }
       ],
       "fixture": [],
-      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "execution": {
+        "networkAccess": true,
+        "pathPrepend": [],
+        "executableFiles": []
+      },
       "reference": "Uses a justified shared base followed by independent consumer slices and hands ownership planning to plan-parallel-work.",
       "requiredSkills": ["decompose-feature"],
       "turns": [],
@@ -279,7 +433,13 @@
         "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: A shared GraphQL type and resolver will support independent web, mobile, and admin consumers. Produce the PR sequence and parallelization readiness.",
         "approvals": []
       },
-      "outputSchema": null
+      "outputSchema": null,
+      "assessment": "outcome",
+      "workFamily": "planning",
+      "provenance": {
+        "source": "plugins/workflow/skills/decompose-feature/SKILL.md",
+        "group": "decompose-feature"
+      }
     },
     "assert": [
       {
@@ -349,14 +509,48 @@
       "group": "decompose-feature",
       "kind": "task",
       "requirements": [
-        "expectation-000",
-        "expectation-001",
-        "expectation-002",
-        "expectation-003",
-        "expectation-004"
+        {
+          "id": "expectation-000",
+          "capability": "planning",
+          "authority": "Frozen case decompose-feature/4 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/decompose-feature/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-001",
+          "capability": "planning",
+          "authority": "Frozen case decompose-feature/4 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/decompose-feature/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-002",
+          "capability": "planning",
+          "authority": "Frozen case decompose-feature/4 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/decompose-feature/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-003",
+          "capability": "planning",
+          "authority": "Frozen case decompose-feature/4 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/decompose-feature/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-004",
+          "capability": "planning",
+          "authority": "Frozen case decompose-feature/4 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/decompose-feature/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        }
       ],
       "fixture": [],
-      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "execution": {
+        "networkAccess": true,
+        "pathPrepend": [],
+        "executableFiles": []
+      },
       "reference": "Defaults to independent vertical slices rather than artificial horizontal layers.",
       "requiredSkills": ["decompose-feature"],
       "turns": [],
@@ -364,7 +558,13 @@
         "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: Decompose three low-coupling improvements: a settings export button, shortcut help dialog, and copy-to-clipboard action. They share no contract.",
         "approvals": []
       },
-      "outputSchema": null
+      "outputSchema": null,
+      "assessment": "outcome",
+      "workFamily": "planning",
+      "provenance": {
+        "source": "plugins/workflow/skills/decompose-feature/SKILL.md",
+        "group": "decompose-feature"
+      }
     },
     "assert": [
       {
@@ -434,14 +634,48 @@
       "group": "decompose-feature",
       "kind": "task",
       "requirements": [
-        "expectation-000",
-        "expectation-001",
-        "expectation-002",
-        "expectation-003",
-        "expectation-004"
+        {
+          "id": "expectation-000",
+          "capability": "planning",
+          "authority": "Frozen case decompose-feature/5 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/decompose-feature/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-001",
+          "capability": "planning",
+          "authority": "Frozen case decompose-feature/5 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/decompose-feature/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-002",
+          "capability": "planning",
+          "authority": "Frozen case decompose-feature/5 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/decompose-feature/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-003",
+          "capability": "planning",
+          "authority": "Frozen case decompose-feature/5 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/decompose-feature/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-004",
+          "capability": "planning",
+          "authority": "Frozen case decompose-feature/5 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/decompose-feature/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        }
       ],
       "fixture": [],
-      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "execution": {
+        "networkAccess": true,
+        "pathPrepend": [],
+        "executableFiles": []
+      },
       "reference": "Uses one small PR or a vertical slice and does not manufacture base scaffolding.",
       "requiredSkills": ["decompose-feature"],
       "turns": [],
@@ -449,7 +683,13 @@
         "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: Create a staged plan for CSV export on one report page. There is no shared schema, feature flag requirement, or second consumer.",
         "approvals": []
       },
-      "outputSchema": null
+      "outputSchema": null,
+      "assessment": "outcome",
+      "workFamily": "planning",
+      "provenance": {
+        "source": "plugins/workflow/skills/decompose-feature/SKILL.md",
+        "group": "decompose-feature"
+      }
     },
     "assert": [
       {
@@ -519,14 +759,48 @@
       "group": "decompose-feature",
       "kind": "task",
       "requirements": [
-        "expectation-000",
-        "expectation-001",
-        "expectation-002",
-        "expectation-003",
-        "expectation-004"
+        {
+          "id": "expectation-000",
+          "capability": "planning",
+          "authority": "Frozen case decompose-feature/6 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/decompose-feature/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-001",
+          "capability": "planning",
+          "authority": "Frozen case decompose-feature/6 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/decompose-feature/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-002",
+          "capability": "planning",
+          "authority": "Frozen case decompose-feature/6 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/decompose-feature/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-003",
+          "capability": "planning",
+          "authority": "Frozen case decompose-feature/6 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/decompose-feature/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-004",
+          "capability": "planning",
+          "authority": "Frozen case decompose-feature/6 and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/decompose-feature/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        }
       ],
       "fixture": [],
-      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "execution": {
+        "networkAccess": true,
+        "pathPrepend": [],
+        "executableFiles": []
+      },
       "reference": "Provides advisory decomposition inline without forcing plan artifacts or approval gates.",
       "requiredSkills": ["decompose-feature"],
       "turns": [],
@@ -534,7 +808,13 @@
         "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: The user asks conversationally for a rough PR breakdown of a notifications rewrite and says they are not ready to start.",
         "approvals": []
       },
-      "outputSchema": null
+      "outputSchema": null,
+      "assessment": "outcome",
+      "workFamily": "planning",
+      "provenance": {
+        "source": "plugins/workflow/skills/decompose-feature/SKILL.md",
+        "group": "decompose-feature"
+      }
     },
     "assert": [
       {

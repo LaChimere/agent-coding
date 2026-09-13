@@ -34,7 +34,7 @@ async function projectFixture(): Promise<{
     });
   }
 
-  for (const name of ['package.json', 'bun.lock']) {
+  for (const name of ['package.json', 'bun.lock', 'collections.json']) {
     await Bun.write(resolve(project, name), await Bun.file(resolve(projectSource, name)).bytes());
   }
 

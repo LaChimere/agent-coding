@@ -2,7 +2,12 @@ import { randomUUID } from 'node:crypto';
 import { relative, resolve } from 'node:path';
 import type { ApiProvider } from 'promptfoo';
 import { executeTrial } from '../codex/trial.ts';
-import { promptfooCase } from '../corpus/cases.ts';
+import { type ILoadedCase, promptfooCase } from '../corpus/cases.ts';
+import {
+  assertCollectionMatch,
+  type CollectionId,
+  readCollectionScope,
+} from '../corpus/collections.ts';
 import { setGradingSignal } from '../grading/assertion.ts';
 import { resolveAuthentication } from '../preparation/authentication.ts';
 import { writeJsonRecord } from '../preparation/snapshot.ts';
@@ -18,8 +23,10 @@ export async function saveReport(input: {
   priceBook?: IPriceBook;
   actualCharges?: readonly IActualChargeEvidence[];
   nativeExportDirectory?: string;
+  collection?: CollectionId;
+  gradingCases?: readonly ILoadedCase[];
 }): Promise<string> {
-  const ledger = await loadLedger(input.directory);
+  const ledger = await loadLedger(input.directory, input.collection);
   const priceBook = input.priceBook ?? ledger.manifest.priceBook;
 
   const id = randomUUID();
@@ -71,6 +78,7 @@ export async function saveReport(input: {
       runId: ledger.manifest.id,
       createdAt,
       trialDefinitions: definitions,
+      ...(input.gradingCases === undefined ? {} : { gradingCases: input.gradingCases }),
       gradingSelection: selectGrades(definitions, ledger.grades, ledger.operations),
       operationIds: ledger.operations.map((operation) => operation.id),
       accountingPolicy: { mode: 'all-available', cutoffAt: ledger.cutoffAt },
@@ -84,6 +92,7 @@ export async function saveReport(input: {
   });
 
   const path = resolve(input.directory, 'reports', `${id}.json`);
+  await writeJsonRecord(`${path}.collection.json`, ledger.manifest.collection);
   await writeJsonRecord(path, report);
   await Bun.write(resolve(input.directory, 'reports', `${id}.md`), renderReportMarkdown(report));
 
@@ -91,11 +100,17 @@ export async function saveReport(input: {
 }
 
 /** The only case scheduler is Promptfoo. This provider resolves its planned row identity. */
-export async function runWorker(directory: string, signal: AbortSignal): Promise<string> {
+export async function runWorker(
+  directory: string,
+  signal: AbortSignal,
+  collection: CollectionId = 'development',
+): Promise<string> {
+  const scope = await readCollectionScope(resolve(directory, 'collection.json'), collection);
   const manifest = (await Bun.file(resolve(directory, 'manifest.json')).json()) as IRunManifest;
-  if (manifest.schema !== 'codex-evals/run-v1') {
+  if (manifest.schema !== 'codex-evals/run-v2') {
     throw new Error('Unsupported run manifest.');
   }
+  assertCollectionMatch(scope, manifest.collection);
 
   await writeJsonRecord(resolve(directory, 'run-started.json'), { startedAt: Date.now() });
   setGradingSignal(signal);
@@ -185,7 +200,7 @@ export async function runWorker(directory: string, signal: AbortSignal): Promise
     });
   }
 
-  const report = await saveReport({ directory });
+  const report = await saveReport({ directory, collection });
   if (failure !== null) {
     console.error(`Run ${manifest.id} failed: ${failure}`);
     process.exitCode = 1;

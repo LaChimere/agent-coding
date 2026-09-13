@@ -1,0 +1,4 @@
+# Configuration notes
+
+The worker reads the JSON settings at startup. Retry settings apply to failed
+job requests, and the timeout is measured per request.

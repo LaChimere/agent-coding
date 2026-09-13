@@ -9,21 +9,69 @@
       "group": "pr-review",
       "kind": "task",
       "requirements": [
-        "expectation-000",
-        "expectation-001",
-        "expectation-002",
-        "expectation-003",
-        "expectation-004",
-        "expectation-005",
-        "expectation-006"
+        {
+          "id": "expectation-000",
+          "capability": "review",
+          "authority": "Frozen case pr-review/0 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-001",
+          "capability": "review",
+          "authority": "Frozen case pr-review/0 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-002",
+          "capability": "recovery",
+          "authority": "Frozen case pr-review/0 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-003",
+          "capability": "review",
+          "authority": "Frozen case pr-review/0 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-004",
+          "capability": "review",
+          "authority": "Frozen case pr-review/0 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The immutable artifact snapshot, initial fixtures, and recorded native actions."
+        },
+        {
+          "id": "expectation-005",
+          "capability": "review",
+          "authority": "Frozen case pr-review/0 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The immutable artifact snapshot, initial fixtures, and recorded native actions."
+        },
+        {
+          "id": "expectation-006",
+          "capability": "authorization",
+          "authority": "Frozen case pr-review/0 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        }
       ],
       "fixture": [
-        { "source": "pr-review/files/auth-fallback/AGENTS.md.fixture", "target": "AGENTS.md" },
+        {
+          "source": "pr-review/files/auth-fallback/AGENTS.md.fixture",
+          "target": "AGENTS.md"
+        },
         {
           "source": "pr-review/files/auth-fallback/specs/auth.md.fixture",
           "target": "specs/auth.md"
         },
-        { "source": "pr-review/files/auth-fallback/src/auth.js.fixture", "target": "src/auth.js" },
+        {
+          "source": "pr-review/files/auth-fallback/src/auth.js.fixture",
+          "target": "src/auth.js"
+        },
         {
           "source": "pr-review/files/auth-fallback/test/auth.test.js.fixture",
           "target": "test/auth.test.js"
@@ -37,7 +85,11 @@
           "target": "status/capabilities.md"
         }
       ],
-      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "execution": {
+        "networkAccess": true,
+        "pathPrepend": [],
+        "executableFiles": []
+      },
       "reference": "Reviews the pinned auth change with applicable code, tests, errors, spec, and security handling; traces verifier rejection through the catch to a success-shaped guest identity, checks the unchanged tests for denial-path coverage, reports the root cause once, and accurately reports unavailable full security coverage.",
       "requiredSkills": ["pr-review"],
       "turns": [],
@@ -45,7 +97,13 @@
         "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: Use $pr-review on the supplied change described by `status/change.diff`. Inspect `AGENTS.md`, `specs/auth.md`, the source, and tests. Treat `status/capabilities.md` as the observable capability state for this fixture. Review only; do not modify files. Use the current working directory as the repository root.",
         "approvals": []
       },
-      "outputSchema": null
+      "outputSchema": null,
+      "assessment": "outcome",
+      "workFamily": "review",
+      "provenance": {
+        "source": "plugins/pr-review/skills/pr-review/SKILL.md",
+        "group": "pr-review"
+      }
     },
     "assert": [
       {
@@ -137,24 +195,61 @@
       "group": "pr-review",
       "kind": "task",
       "requirements": [
-        "expectation-000",
-        "expectation-001",
-        "expectation-002",
-        "expectation-003",
-        "expectation-004"
+        {
+          "id": "expectation-000",
+          "capability": "review",
+          "authority": "Frozen case pr-review/1 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-001",
+          "capability": "recovery",
+          "authority": "Frozen case pr-review/1 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-002",
+          "capability": "recovery",
+          "authority": "Frozen case pr-review/1 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-003",
+          "capability": "review",
+          "authority": "Frozen case pr-review/1 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-004",
+          "capability": "review",
+          "authority": "Frozen case pr-review/1 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The immutable artifact snapshot, initial fixtures, and recorded native actions."
+        }
       ],
       "fixture": [
         {
           "source": "pr-review/files/docs-no-spec/src/client.js.fixture",
           "target": "src/client.js"
         },
-        { "source": "pr-review/files/docs-no-spec/README.md.fixture", "target": "README.md" },
+        {
+          "source": "pr-review/files/docs-no-spec/README.md.fixture",
+          "target": "README.md"
+        },
         {
           "source": "pr-review/files/docs-no-spec/status/change.diff.fixture",
           "target": "status/change.diff"
         }
       ],
-      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "execution": {
+        "networkAccess": true,
+        "pathPrepend": [],
+        "executableFiles": []
+      },
       "reference": "Runs the applicable code/comments/errors review, verifies the README's retry and failure claims against the implementation, identifies the inaccurate claim, and skips spec with an explicit coverage reason instead of asking for or inventing requirements.",
       "requiredSkills": ["pr-review"],
       "turns": [],
@@ -162,7 +257,13 @@
         "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: Use $pr-review to review the documentation change in `status/change.diff`. Inspect the current implementation and README. No issue, specification, plan, or other authoritative requirements exist for this change. Review only.",
         "approvals": []
       },
-      "outputSchema": null
+      "outputSchema": null,
+      "assessment": "outcome",
+      "workFamily": "review",
+      "provenance": {
+        "source": "plugins/pr-review/skills/pr-review/SKILL.md",
+        "group": "pr-review"
+      }
     },
     "assert": [
       {
@@ -231,7 +332,36 @@
       "id": "pr-review/2",
       "group": "pr-review",
       "kind": "task",
-      "requirements": ["expectation-000", "expectation-001", "expectation-002", "expectation-003"],
+      "requirements": [
+        {
+          "id": "expectation-000",
+          "capability": "authorization",
+          "authority": "Frozen case pr-review/2 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-001",
+          "capability": "clarification",
+          "authority": "Frozen case pr-review/2 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-002",
+          "capability": "review",
+          "authority": "Frozen case pr-review/2 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-003",
+          "capability": "review",
+          "authority": "Frozen case pr-review/2 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        }
+      ],
       "fixture": [
         {
           "source": "pr-review/files/only-aspects/src/profile.ts.fixture",
@@ -242,7 +372,11 @@
           "target": "status/change.diff"
         }
       ],
-      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "execution": {
+        "networkAccess": true,
+        "pathPrepend": [],
+        "executableFiles": []
+      },
       "reference": "Honors only comments and types, permits one reviewer to apply both complete methods, and reports their evidence separately without adding other aspects.",
       "requiredSkills": ["pr-review"],
       "turns": [],
@@ -250,7 +384,13 @@
         "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: Use $pr-review, but only review comments and types in the supplied patch. Do not run any other aspect. Inspect `status/change.diff` and the changed source.",
         "approvals": []
       },
-      "outputSchema": null
+      "outputSchema": null,
+      "assessment": "outcome",
+      "workFamily": "review",
+      "provenance": {
+        "source": "plugins/pr-review/skills/pr-review/SKILL.md",
+        "group": "pr-review"
+      }
     },
     "assert": [
       {
@@ -272,7 +412,7 @@
           "core": true,
           "method": "text-rubric",
           "requirements": ["expectation-001"],
-          "rubric": "Finds that the always-complete documentation claim conflicts with the optional id field and explains the invalid state the type permits."
+          "rubric": "Does not assert a type invariant absent from the supplied source, callers or specification. When the invariant is unresolved, records the question and the optional-id counterexample."
         }
       },
       {
@@ -309,11 +449,41 @@
       "group": "pr-review",
       "kind": "task",
       "requirements": [
-        "expectation-000",
-        "expectation-001",
-        "expectation-002",
-        "expectation-003",
-        "expectation-004"
+        {
+          "id": "expectation-000",
+          "capability": "review",
+          "authority": "Frozen case pr-review/3 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The immutable artifact snapshot, initial fixtures, and recorded native actions."
+        },
+        {
+          "id": "expectation-001",
+          "capability": "authorization",
+          "authority": "Frozen case pr-review/3 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-002",
+          "capability": "review",
+          "authority": "Frozen case pr-review/3 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-003",
+          "capability": "review",
+          "authority": "Frozen case pr-review/3 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-004",
+          "capability": "review",
+          "authority": "Frozen case pr-review/3 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        }
       ],
       "fixture": [
         {
@@ -333,7 +503,11 @@
           "target": "status/change.diff"
         }
       ],
-      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "execution": {
+        "networkAccess": true,
+        "pathPrepend": [],
+        "executableFiles": []
+      },
       "reference": "Double-confirms the candidate by tracing the unchanged caller and test, finds the null guard, distinguishes reachable inputs from theoretical ones, and does not report a disproved null-input finding.",
       "requiredSkills": ["pr-review"],
       "turns": [],
@@ -341,7 +515,13 @@
         "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: Use $pr-review on `status/change.diff`. A preliminary reviewer might suspect that `formatUser` receives null. Independently inspect the caller and tests before deciding whether that is a real finding. Review only.",
         "approvals": []
       },
-      "outputSchema": null
+      "outputSchema": null,
+      "assessment": "outcome",
+      "workFamily": "review",
+      "provenance": {
+        "source": "plugins/pr-review/skills/pr-review/SKILL.md",
+        "group": "pr-review"
+      }
     },
     "assert": [
       {
@@ -410,9 +590,41 @@
       "id": "pr-review/4",
       "group": "pr-review",
       "kind": "task",
-      "requirements": ["expectation-000", "expectation-001", "expectation-002", "expectation-003"],
+      "requirements": [
+        {
+          "id": "expectation-000",
+          "capability": "review",
+          "authority": "Frozen case pr-review/4 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The immutable artifact snapshot, initial fixtures, and recorded native actions."
+        },
+        {
+          "id": "expectation-001",
+          "capability": "review",
+          "authority": "Frozen case pr-review/4 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The immutable artifact snapshot, initial fixtures, and recorded native actions."
+        },
+        {
+          "id": "expectation-002",
+          "capability": "review",
+          "authority": "Frozen case pr-review/4 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The immutable artifact snapshot, initial fixtures, and recorded native actions."
+        },
+        {
+          "id": "expectation-003",
+          "capability": "review",
+          "authority": "Frozen case pr-review/4 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The immutable artifact snapshot, initial fixtures, and recorded native actions."
+        }
+      ],
       "fixture": [
-        { "source": "pr-review/files/required-test/AGENTS.md.fixture", "target": "AGENTS.md" },
+        {
+          "source": "pr-review/files/required-test/AGENTS.md.fixture",
+          "target": "AGENTS.md"
+        },
         {
           "source": "pr-review/files/required-test/bin/check-tests.fixture",
           "target": "bin/check-tests"
@@ -442,7 +654,13 @@
         "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: Use $pr-review on `status/change.diff`. The repository's `AGENTS.md` requires `bin/check-tests` for this class of change, so execute that exact check and report its decisive result separately from review judgement. Do not modify files.",
         "approvals": []
       },
-      "outputSchema": null
+      "outputSchema": null,
+      "assessment": "outcome",
+      "workFamily": "review",
+      "provenance": {
+        "source": "plugins/pr-review/skills/pr-review/SKILL.md",
+        "group": "pr-review"
+      }
     },
     "assert": [
       {
@@ -500,7 +718,29 @@
       "id": "pr-review/5",
       "group": "pr-review",
       "kind": "task",
-      "requirements": ["expectation-000", "expectation-001", "expectation-002"],
+      "requirements": [
+        {
+          "id": "expectation-000",
+          "capability": "recovery",
+          "authority": "Frozen case pr-review/5 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-001",
+          "capability": "review",
+          "authority": "Frozen case pr-review/5 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-002",
+          "capability": "review",
+          "authority": "Frozen case pr-review/5 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        }
+      ],
       "fixture": [
         {
           "source": "pr-review/files/security-required/src/webhook.js.fixture",
@@ -511,7 +751,11 @@
           "target": "status/change.diff"
         }
       ],
-      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "execution": {
+        "networkAccess": true,
+        "pathPrepend": [],
+        "executableFiles": []
+      },
       "reference": "Stops and reports the missing required security capability without substituting a lightweight scan or claiming complete PR coverage.",
       "requiredSkills": ["pr-review"],
       "turns": [],
@@ -519,7 +763,13 @@
         "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: Use $pr-review and explicitly require a security review of `status/change.diff`. For this fixture, `$codex-security:security-diff-scan` is not installed or otherwise available. Review only.",
         "approvals": []
       },
-      "outputSchema": null
+      "outputSchema": null,
+      "assessment": "outcome",
+      "workFamily": "review",
+      "provenance": {
+        "source": "plugins/pr-review/skills/pr-review/SKILL.md",
+        "group": "pr-review"
+      }
     },
     "assert": [
       {
@@ -566,7 +816,36 @@
       "id": "pr-review/6",
       "group": "pr-review",
       "kind": "task",
-      "requirements": ["expectation-000", "expectation-001", "expectation-002", "expectation-003"],
+      "requirements": [
+        {
+          "id": "expectation-000",
+          "capability": "review",
+          "authority": "Frozen case pr-review/6 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-001",
+          "capability": "review",
+          "authority": "Frozen case pr-review/6 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-002",
+          "capability": "authorization",
+          "authority": "Frozen case pr-review/6 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-003",
+          "capability": "recovery",
+          "authority": "Frozen case pr-review/6 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        }
+      ],
       "fixture": [
         {
           "source": "pr-review/files/design-focus/docs/retry-design.md.fixture",
@@ -581,7 +860,11 @@
           "target": "status/change.diff"
         }
       ],
-      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "execution": {
+        "networkAccess": true,
+        "pathPrepend": [],
+        "executableFiles": []
+      },
       "reference": "Treats design as a focus for applicable code, comments, errors, and spec reviewers, traces the operation-scoped idempotency requirement to the proposed per-retry identifier, identifies the unsafe boundary, and does not invent a public design aspect.",
       "requiredSkills": ["pr-review"],
       "turns": [],
@@ -589,7 +872,13 @@
         "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: Use $pr-review to review the retry design in `docs/retry-design.md` against `specs/retry.md` and the supplied patch. Focus on design, but keep the public review aspect vocabulary unchanged.",
         "approvals": []
       },
-      "outputSchema": null
+      "outputSchema": null,
+      "assessment": "outcome",
+      "workFamily": "review",
+      "provenance": {
+        "source": "plugins/pr-review/skills/pr-review/SKILL.md",
+        "group": "pr-review"
+      }
     },
     "assert": [
       {
@@ -648,15 +937,54 @@
       "group": "pr-review",
       "kind": "task",
       "requirements": [
-        "expectation-000",
-        "expectation-001",
-        "expectation-002",
-        "expectation-003",
-        "expectation-004",
-        "expectation-005"
+        {
+          "id": "expectation-000",
+          "capability": "clarification",
+          "authority": "Frozen case pr-review/7 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-001",
+          "capability": "recovery",
+          "authority": "Frozen case pr-review/7 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-002",
+          "capability": "review",
+          "authority": "Frozen case pr-review/7 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-003",
+          "capability": "review",
+          "authority": "Frozen case pr-review/7 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-004",
+          "capability": "review",
+          "authority": "Frozen case pr-review/7 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-005",
+          "capability": "authorization",
+          "authority": "Frozen case pr-review/7 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        }
       ],
       "fixture": [
-        { "source": "pr-review/files/clean-change/src/slug.js.fixture", "target": "src/slug.js" },
+        {
+          "source": "pr-review/files/clean-change/src/slug.js.fixture",
+          "target": "src/slug.js"
+        },
         {
           "source": "pr-review/files/clean-change/test/slug.test.js.fixture",
           "target": "test/slug.test.js"
@@ -666,7 +994,11 @@
           "target": "status/change.diff"
         }
       ],
-      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "execution": {
+        "networkAccess": true,
+        "pathPrepend": [],
+        "executableFiles": []
+      },
       "reference": "Produces the stable human- and agent-readable Markdown report with zero counts, coverage limits, and a natural-language Recommended Action; treats unestablished whitespace, punctuation, empty-input, and non-string behavior as undefined rather than inventing findings or a PASS/FAIL verdict.",
       "requiredSkills": ["pr-review"],
       "turns": [],
@@ -674,7 +1006,13 @@
         "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: Use $pr-review on the small clean change in `status/change.diff`. Inspect the implementation and test, double-confirm any candidates, and return the normal final report without modifying files.",
         "approvals": []
       },
-      "outputSchema": null
+      "outputSchema": null,
+      "assessment": "outcome",
+      "workFamily": "review",
+      "provenance": {
+        "source": "plugins/pr-review/skills/pr-review/SKILL.md",
+        "group": "pr-review"
+      }
     },
     "assert": [
       {
@@ -755,12 +1093,48 @@
       "group": "pr-review",
       "kind": "task",
       "requirements": [
-        "expectation-000",
-        "expectation-001",
-        "expectation-002",
-        "expectation-003",
-        "expectation-004",
-        "expectation-005"
+        {
+          "id": "expectation-000",
+          "capability": "review",
+          "authority": "Frozen case pr-review/8 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-001",
+          "capability": "recovery",
+          "authority": "Frozen case pr-review/8 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-002",
+          "capability": "recovery",
+          "authority": "Frozen case pr-review/8 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-003",
+          "capability": "recovery",
+          "authority": "Frozen case pr-review/8 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-004",
+          "capability": "continuation",
+          "authority": "Frozen case pr-review/8 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-005",
+          "capability": "authorization",
+          "authority": "Frozen case pr-review/8 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        }
       ],
       "fixture": [
         {
@@ -776,7 +1150,11 @@
           "target": "status/launch-state.md"
         }
       ],
-      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "execution": {
+        "networkAccess": true,
+        "pathPrepend": [],
+        "executableFiles": []
+      },
       "reference": "Preserves primary-selected recovery and actual effective configuration evidence. Accounts for capacity deferral, one retry per assignment and primary fallback without treating fallback as independent.",
       "requiredSkills": ["pr-review"],
       "turns": [],
@@ -784,7 +1162,13 @@
         "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: Use $pr-review to continue the partially completed review recorded in `status/launch-state.md`. Treat that file as the authoritative observable launcher state for this fixture: do not call collaboration tools or invent different handles. Inspect `status/change.diff` and the changed source, finish every selected aspect using the documented retry and fallback rules, and return the normal final report without modifying files.",
         "approvals": []
       },
-      "outputSchema": null
+      "outputSchema": null,
+      "assessment": "outcome",
+      "workFamily": "review",
+      "provenance": {
+        "source": "plugins/pr-review/skills/pr-review/SKILL.md",
+        "group": "pr-review"
+      }
     },
     "assert": [
       {
@@ -865,12 +1249,48 @@
       "group": "pr-review",
       "kind": "task",
       "requirements": [
-        "expectation-000",
-        "expectation-001",
-        "expectation-002",
-        "expectation-003",
-        "expectation-004",
-        "expectation-005"
+        {
+          "id": "expectation-000",
+          "capability": "review",
+          "authority": "Frozen case pr-review/9 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-001",
+          "capability": "recovery",
+          "authority": "Frozen case pr-review/9 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-002",
+          "capability": "review",
+          "authority": "Frozen case pr-review/9 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-003",
+          "capability": "authorization",
+          "authority": "Frozen case pr-review/9 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The immutable artifact snapshot, initial fixtures, and recorded native actions."
+        },
+        {
+          "id": "expectation-004",
+          "capability": "review",
+          "authority": "Frozen case pr-review/9 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-005",
+          "capability": "authorization",
+          "authority": "Frozen case pr-review/9 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        }
       ],
       "fixture": [
         {
@@ -890,7 +1310,11 @@
           "target": "status/capabilities.md"
         }
       ],
-      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "execution": {
+        "networkAccess": true,
+        "pathPrepend": [],
+        "executableFiles": []
+      },
       "reference": "Recognizes substantive payment risk, chooses and explains necessary review coverage and optional Rubber Duck use, reports any primary fallback as non-independent, and confirms the operation-idempotency defect.",
       "requiredSkills": ["pr-review"],
       "turns": [],
@@ -898,7 +1322,13 @@
         "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: Use $pr-review on `status/change.diff` against `specs/payments.md`. This public payment-interface change is substantial. Treat `status/capabilities.md` as the observable model and delegation state. Review only and do not modify files.",
         "approvals": []
       },
-      "outputSchema": null
+      "outputSchema": null,
+      "assessment": "outcome",
+      "workFamily": "review",
+      "provenance": {
+        "source": "plugins/pr-review/skills/pr-review/SKILL.md",
+        "group": "pr-review"
+      }
     },
     "assert": [
       {
@@ -906,10 +1336,10 @@
         "value": "file://src/grading/assertion.ts",
         "metric": "criterion-000",
         "config": {
-          "core": true,
+          "core": false,
           "method": "text-rubric",
           "requirements": ["expectation-000"],
-          "rubric": "Recognizes the payment/idempotency risk and explicitly decides whether Rubber Duck adds necessary coverage rather than treating it as an automatic extra stage."
+          "rubric": "If Rubber Duck is discussed, explains its incremental value or limits as diagnostic context; omission of that rationale alone does not fail the review when the payment risk and review coverage are otherwise evidenced."
         }
       },
       {
@@ -979,11 +1409,41 @@
       "group": "pr-review",
       "kind": "task",
       "requirements": [
-        "expectation-000",
-        "expectation-001",
-        "expectation-002",
-        "expectation-003",
-        "expectation-004"
+        {
+          "id": "expectation-000",
+          "capability": "review",
+          "authority": "Frozen case pr-review/10 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-001",
+          "capability": "review",
+          "authority": "Frozen case pr-review/10 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-002",
+          "capability": "review",
+          "authority": "Frozen case pr-review/10 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-003",
+          "capability": "review",
+          "authority": "Frozen case pr-review/10 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-004",
+          "capability": "authorization",
+          "authority": "Frozen case pr-review/10 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        }
       ],
       "fixture": [
         {
@@ -999,7 +1459,11 @@
           "target": "status/change.diff"
         }
       ],
-      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "execution": {
+        "networkAccess": true,
+        "pathPrepend": [],
+        "executableFiles": []
+      },
       "reference": "Completes the applicable ordinary review, skips SPAR because it was not requested and Rubber Duck because the change is not substantial, and returns the normal zero-finding report.",
       "requiredSkills": ["pr-review"],
       "turns": [],
@@ -1007,7 +1471,13 @@
         "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: Use $pr-review on the small change in `status/change.diff`. No specification exists. Review only and do not add optional challenge passes that are not applicable.",
         "approvals": []
       },
-      "outputSchema": null
+      "outputSchema": null,
+      "assessment": "outcome",
+      "workFamily": "review",
+      "provenance": {
+        "source": "plugins/pr-review/skills/pr-review/SKILL.md",
+        "group": "pr-review"
+      }
     },
     "assert": [
       {
@@ -1088,14 +1558,62 @@
       "group": "pr-review",
       "kind": "task",
       "requirements": [
-        "expectation-000",
-        "expectation-001",
-        "expectation-002",
-        "expectation-003",
-        "expectation-004",
-        "expectation-005",
-        "expectation-006",
-        "expectation-007"
+        {
+          "id": "expectation-000",
+          "capability": "review",
+          "authority": "Frozen case pr-review/11 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-001",
+          "capability": "delegation",
+          "authority": "Frozen case pr-review/11 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-002",
+          "capability": "skill-mechanism",
+          "authority": "Frozen case pr-review/11 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The immutable artifact snapshot, initial fixtures, and recorded native actions."
+        },
+        {
+          "id": "expectation-003",
+          "capability": "recovery",
+          "authority": "Frozen case pr-review/11 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-004",
+          "capability": "clarification",
+          "authority": "Frozen case pr-review/11 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-005",
+          "capability": "review",
+          "authority": "Frozen case pr-review/11 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-006",
+          "capability": "review",
+          "authority": "Frozen case pr-review/11 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-007",
+          "capability": "authorization",
+          "authority": "Frozen case pr-review/11 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        }
       ],
       "fixture": [
         {
@@ -1115,7 +1633,11 @@
           "target": "status/capabilities.md"
         }
       ],
-      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "execution": {
+        "networkAccess": true,
+        "pathPrepend": [],
+        "executableFiles": []
+      },
       "reference": "Runs the design-focused ordinary reviews and an explicitly requested SPAR primary-model fallback, reports the missing consistency mechanism as a finding, and does not invent an unresolved guarantee boundary that is absent from the specification.",
       "requiredSkills": ["pr-review"],
       "turns": [],
@@ -1123,7 +1645,13 @@
         "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: Use $pr-review on the design in `docs/cache-design.md` against `specs/cache.md` and explicitly include $spar. Treat `status/capabilities.md` as the observable model and delegation state. Review only.",
         "approvals": []
       },
-      "outputSchema": null
+      "outputSchema": null,
+      "assessment": "outcome",
+      "workFamily": "review",
+      "provenance": {
+        "source": "plugins/pr-review/skills/pr-review/SKILL.md",
+        "group": "pr-review"
+      }
     },
     "assert": [
       {
@@ -1226,11 +1754,41 @@
       "group": "pr-review",
       "kind": "task",
       "requirements": [
-        "expectation-000",
-        "expectation-001",
-        "expectation-002",
-        "expectation-003",
-        "expectation-004"
+        {
+          "id": "expectation-000",
+          "capability": "review",
+          "authority": "Frozen case pr-review/12 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-001",
+          "capability": "review",
+          "authority": "Frozen case pr-review/12 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-002",
+          "capability": "review",
+          "authority": "Frozen case pr-review/12 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-003",
+          "capability": "review",
+          "authority": "Frozen case pr-review/12 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-004",
+          "capability": "authorization",
+          "authority": "Frozen case pr-review/12 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        }
       ],
       "fixture": [
         {
@@ -1246,7 +1804,11 @@
           "target": "status/change.diff"
         }
       ],
-      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "execution": {
+        "networkAccess": true,
+        "pathPrepend": [],
+        "executableFiles": []
+      },
       "reference": "Honors the explicit Rubber Duck exclusion while completing ordinary review and reporting the independent challenge exclusion without weakening the verified finding.",
       "requiredSkills": ["pr-review"],
       "turns": [],
@@ -1254,7 +1816,13 @@
         "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: Use $pr-review on the substantial payment change in `status/change.diff` against `specs/payments.md`, but explicitly exclude Rubber Duck. Review only.",
         "approvals": []
       },
-      "outputSchema": null
+      "outputSchema": null,
+      "assessment": "outcome",
+      "workFamily": "review",
+      "provenance": {
+        "source": "plugins/pr-review/skills/pr-review/SKILL.md",
+        "group": "pr-review"
+      }
     },
     "assert": [
       {
@@ -1324,11 +1892,41 @@
       "group": "pr-review",
       "kind": "task",
       "requirements": [
-        "expectation-000",
-        "expectation-001",
-        "expectation-002",
-        "expectation-003",
-        "expectation-004"
+        {
+          "id": "expectation-000",
+          "capability": "review",
+          "authority": "Frozen case pr-review/13 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-001",
+          "capability": "authorization",
+          "authority": "Frozen case pr-review/13 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-002",
+          "capability": "review",
+          "authority": "Frozen case pr-review/13 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-003",
+          "capability": "review",
+          "authority": "Frozen case pr-review/13 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The immutable artifact snapshot, initial fixtures, and recorded native actions."
+        },
+        {
+          "id": "expectation-004",
+          "capability": "authorization",
+          "authority": "Frozen case pr-review/13 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        }
       ],
       "fixture": [
         {
@@ -1348,7 +1946,11 @@
           "target": "status/challenge-state.md"
         }
       ],
-      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "execution": {
+        "networkAccess": true,
+        "pathPrepend": [],
+        "executableFiles": []
+      },
       "reference": "Records the completed Rubber Duck pass as cross-model using the named contrasting family, independently confirms its candidate against the source and specification, and reports it with canonical aspect labels rather than a Rubber Duck source label.",
       "requiredSkills": ["pr-review"],
       "turns": [],
@@ -1356,7 +1958,13 @@
         "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: Use $pr-review to aggregate the completed substantial review recorded in `status/challenge-state.md`. Treat that file as authoritative observable agent state: do not call collaboration tools or invent a different model. Inspect the source, specification, and patch before deciding whether the Rubber Duck candidate survives.",
         "approvals": []
       },
-      "outputSchema": null
+      "outputSchema": null,
+      "assessment": "outcome",
+      "workFamily": "review",
+      "provenance": {
+        "source": "plugins/pr-review/skills/pr-review/SKILL.md",
+        "group": "pr-review"
+      }
     },
     "assert": [
       {
@@ -1426,11 +2034,41 @@
       "group": "pr-review",
       "kind": "task",
       "requirements": [
-        "expectation-000",
-        "expectation-001",
-        "expectation-002",
-        "expectation-003",
-        "expectation-004"
+        {
+          "id": "expectation-000",
+          "capability": "review",
+          "authority": "Frozen case pr-review/14 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-001",
+          "capability": "review",
+          "authority": "Frozen case pr-review/14 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-002",
+          "capability": "recovery",
+          "authority": "Frozen case pr-review/14 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-003",
+          "capability": "review",
+          "authority": "Frozen case pr-review/14 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-004",
+          "capability": "authorization",
+          "authority": "Frozen case pr-review/14 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        }
       ],
       "fixture": [
         {
@@ -1450,7 +2088,11 @@
           "target": "status/capabilities.md"
         }
       ],
-      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "execution": {
+        "networkAccess": true,
+        "pathPrepend": [],
+        "executableFiles": []
+      },
       "reference": "Infers the material public-payment risk, makes an explicit primary decision on Rubber Duck while retaining necessary checking, and consolidates evidenced findings without claiming a primary fallback is independent.",
       "requiredSkills": ["pr-review"],
       "turns": [],
@@ -1458,7 +2100,13 @@
         "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: Use $pr-review on `status/change.diff` against `specs/payments.md`. Treat `status/capabilities.md` as the observable model and delegation state. Review only and do not modify files.",
         "approvals": []
       },
-      "outputSchema": null
+      "outputSchema": null,
+      "assessment": "outcome",
+      "workFamily": "review",
+      "provenance": {
+        "source": "plugins/pr-review/skills/pr-review/SKILL.md",
+        "group": "pr-review"
+      }
     },
     "assert": [
       {
@@ -1528,11 +2176,41 @@
       "group": "pr-review",
       "kind": "task",
       "requirements": [
-        "expectation-000",
-        "expectation-001",
-        "expectation-002",
-        "expectation-003",
-        "expectation-004"
+        {
+          "id": "expectation-000",
+          "capability": "review",
+          "authority": "Frozen case pr-review/15 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-001",
+          "capability": "continuation",
+          "authority": "Frozen case pr-review/15 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-002",
+          "capability": "review",
+          "authority": "Frozen case pr-review/15 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-003",
+          "capability": "review",
+          "authority": "Frozen case pr-review/15 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-004",
+          "capability": "authorization",
+          "authority": "Frozen case pr-review/15 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        }
       ],
       "fixture": [
         {
@@ -1552,7 +2230,11 @@
           "target": "status/synchronous-state.md"
         }
       ],
-      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "execution": {
+        "networkAccess": true,
+        "pathPrepend": [],
+        "executableFiles": []
+      },
       "reference": "Accepts the synchronous result without a handle, confirms its candidate, and reports cross-model evidence from the recorded execution metadata without relaunching or waiting.",
       "requiredSkills": ["pr-review"],
       "turns": [],
@@ -1560,7 +2242,13 @@
         "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: Use the pr-review skill to aggregate status/synchronous-state.md as authoritative recorded execution evidence for this fixture. Do not launch agents or invent task handles. Inspect the source, specification and patch before accepting the completed synchronous Rubber Duck result.",
         "approvals": []
       },
-      "outputSchema": null
+      "outputSchema": null,
+      "assessment": "outcome",
+      "workFamily": "review",
+      "provenance": {
+        "source": "plugins/pr-review/skills/pr-review/SKILL.md",
+        "group": "pr-review"
+      }
     },
     "assert": [
       {
@@ -1629,7 +2317,36 @@
       "id": "pr-review/16",
       "group": "pr-review",
       "kind": "task",
-      "requirements": ["expectation-000", "expectation-001", "expectation-002", "expectation-003"],
+      "requirements": [
+        {
+          "id": "expectation-000",
+          "capability": "review",
+          "authority": "Frozen case pr-review/16 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-001",
+          "capability": "recovery",
+          "authority": "Frozen case pr-review/16 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The immutable artifact snapshot, initial fixtures, and recorded native actions."
+        },
+        {
+          "id": "expectation-002",
+          "capability": "review",
+          "authority": "Frozen case pr-review/16 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-003",
+          "capability": "authorization",
+          "authority": "Frozen case pr-review/16 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The immutable artifact snapshot, initial fixtures, and recorded native actions."
+        }
+      ],
       "fixture": [
         {
           "source": "pr-review/files/combined-aspects/src/import.js.fixture",
@@ -1648,7 +2365,11 @@
           "target": "status/review.md"
         }
       ],
-      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "execution": {
+        "networkAccess": true,
+        "pathPrepend": [],
+        "executableFiles": []
+      },
       "reference": "Uses all three methods from a single returned reviewer, verifies candidates, and keeps per-aspect coverage.",
       "requiredSkills": ["pr-review"],
       "turns": [],
@@ -1656,7 +2377,13 @@
         "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: Use pr-review only for code, tests and errors in status/change.diff. The primary has assigned all three aspects to one independent reviewer as recorded in status/review.md. Verify its candidates and report each aspect separately; do not launch another reviewer or run test/build/lint checks. Read-only inspection commands are permitted.",
         "approvals": []
       },
-      "outputSchema": null
+      "outputSchema": null,
+      "assessment": "outcome",
+      "workFamily": "review",
+      "provenance": {
+        "source": "plugins/pr-review/skills/pr-review/SKILL.md",
+        "group": "pr-review"
+      }
     },
     "assert": [
       {
@@ -1715,20 +2442,57 @@
       "group": "pr-review",
       "kind": "task",
       "requirements": [
-        "expectation-000",
-        "expectation-001",
-        "expectation-002",
-        "expectation-003",
-        "expectation-004"
+        {
+          "id": "expectation-000",
+          "capability": "delegation",
+          "authority": "Frozen case pr-review/17 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-001",
+          "capability": "delegation",
+          "authority": "Frozen case pr-review/17 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-002",
+          "capability": "review",
+          "authority": "Frozen case pr-review/17 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-003",
+          "capability": "delegation",
+          "authority": "Frozen case pr-review/17 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-004",
+          "capability": "authorization",
+          "authority": "Frozen case pr-review/17 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        }
       ],
       "fixture": [
-        { "source": "pr-review/files/same-family/src/value.js.fixture", "target": "src/value.js" },
+        {
+          "source": "pr-review/files/same-family/src/value.js.fixture",
+          "target": "src/value.js"
+        },
         {
           "source": "pr-review/files/same-family/status/change.diff.fixture",
           "target": "status/change.diff"
         }
       ],
-      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "execution": {
+        "networkAccess": true,
+        "pathPrepend": [],
+        "executableFiles": []
+      },
       "reference": "Uses a same-family independent context when available, confirms the defect and reports actual model/family evidence; missing native delegation stays incomplete.",
       "requiredSkills": ["pr-review"],
       "turns": [],
@@ -1736,7 +2500,13 @@
         "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: Use pr-review on status/change.diff and explicitly include rubber-duck. Only models from the current primary model family are permitted for this fixture. Delegate an independent critic if the actual host supports it; do not replace a missing other family with a primary-only pass. Review only.",
         "approvals": []
       },
-      "outputSchema": null
+      "outputSchema": null,
+      "assessment": "outcome",
+      "workFamily": "review",
+      "provenance": {
+        "source": "plugins/pr-review/skills/pr-review/SKILL.md",
+        "group": "pr-review"
+      }
     },
     "assert": [
       {
@@ -1805,7 +2575,36 @@
       "id": "pr-review/18",
       "group": "pr-review",
       "kind": "task",
-      "requirements": ["expectation-000", "expectation-001", "expectation-002", "expectation-003"],
+      "requirements": [
+        {
+          "id": "expectation-000",
+          "capability": "recovery",
+          "authority": "Frozen case pr-review/18 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-001",
+          "capability": "recovery",
+          "authority": "Frozen case pr-review/18 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-002",
+          "capability": "review",
+          "authority": "Frozen case pr-review/18 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-003",
+          "capability": "continuation",
+          "authority": "Frozen case pr-review/18 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        }
+      ],
       "fixture": [
         {
           "source": "pr-review/files/explicit-recovery/src/value.js.fixture",
@@ -1820,7 +2619,11 @@
           "target": "status/launch.md"
         }
       ],
-      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "execution": {
+        "networkAccess": true,
+        "pathPrepend": [],
+        "executableFiles": []
+      },
       "reference": "Does not treat an unverified fallback model as the explicit chosen reviewer or complete required independent coverage.",
       "requiredSkills": ["pr-review"],
       "turns": [],
@@ -1828,7 +2631,13 @@
         "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: Use pr-review to complete the recorded review state in status/launch.md. Do not call collaboration tools or invent execution. Inspect the patch, perform useful primary checks and state acceptance limits. Read-only.",
         "approvals": []
       },
-      "outputSchema": null
+      "outputSchema": null,
+      "assessment": "outcome",
+      "workFamily": "review",
+      "provenance": {
+        "source": "plugins/pr-review/skills/pr-review/SKILL.md",
+        "group": "pr-review"
+      }
     },
     "assert": [
       {
@@ -1887,11 +2696,41 @@
       "group": "pr-review",
       "kind": "task",
       "requirements": [
-        "expectation-000",
-        "expectation-001",
-        "expectation-002",
-        "expectation-003",
-        "expectation-004"
+        {
+          "id": "expectation-000",
+          "capability": "skill-mechanism",
+          "authority": "Frozen case pr-review/19 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-001",
+          "capability": "skill-mechanism",
+          "authority": "Frozen case pr-review/19 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-002",
+          "capability": "skill-mechanism",
+          "authority": "Frozen case pr-review/19 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-003",
+          "capability": "skill-mechanism",
+          "authority": "Frozen case pr-review/19 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-004",
+          "capability": "skill-mechanism",
+          "authority": "Frozen case pr-review/19 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        }
       ],
       "fixture": [
         {
@@ -1907,7 +2746,11 @@
           "target": "status/report-2.md"
         }
       ],
-      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "execution": {
+        "networkAccess": true,
+        "pathPrepend": [],
+        "executableFiles": []
+      },
       "reference": "Preserves completed evidence, closes open threads through supported controls before required review, and never assumes turn completion released capacity.",
       "requiredSkills": ["pr-review"],
       "turns": [],
@@ -1915,7 +2758,13 @@
         "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: Use pr-review to decide the next action from status/capacity.md. This fixture records lifecycle decisions, not native execution: do not call tools to launch, close or wait, and do not fabricate results. Return the pending review status without editing files.",
         "approvals": []
       },
-      "outputSchema": null
+      "outputSchema": null,
+      "assessment": "mechanism",
+      "workFamily": null,
+      "provenance": {
+        "source": "plugins/pr-review/skills/pr-review/SKILL.md",
+        "group": "pr-review"
+      }
     },
     "assert": [
       {
@@ -1984,7 +2833,36 @@
       "id": "pr-review/20",
       "group": "pr-review",
       "kind": "task",
-      "requirements": ["expectation-000", "expectation-001", "expectation-002", "expectation-003"],
+      "requirements": [
+        {
+          "id": "expectation-000",
+          "capability": "review",
+          "authority": "Frozen case pr-review/20 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The immutable artifact snapshot, initial fixtures, and recorded native actions."
+        },
+        {
+          "id": "expectation-001",
+          "capability": "review",
+          "authority": "Frozen case pr-review/20 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "expectation-002",
+          "capability": "authorization",
+          "authority": "Frozen case pr-review/20 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The immutable artifact snapshot, initial fixtures, and recorded native actions."
+        },
+        {
+          "id": "expectation-003",
+          "capability": "authorization",
+          "authority": "Frozen case pr-review/20 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        }
+      ],
       "fixture": [
         {
           "source": "pr-review/files/combined-aspects/src/import.js.fixture",
@@ -1999,7 +2877,11 @@
           "target": "test/import.test.js"
         }
       ],
-      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "execution": {
+        "networkAccess": true,
+        "pathPrepend": [],
+        "executableFiles": []
+      },
       "reference": "Returns an evidence-based review directly in the response without inventing a report-file request or writing review artifacts.",
       "requiredSkills": ["pr-review"],
       "turns": [],
@@ -2007,7 +2889,13 @@
         "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: Use pr-review on status/change.diff and the supplied source/test. Review code, errors and tests; return the findings and coverage. Malformed JSON must continue to propagate its parse error to the caller; returning an empty profile on failure violates the required contract. Keep the reviewed files unchanged. Any authorized output must stay in this task directory.",
         "approvals": []
       },
-      "outputSchema": null
+      "outputSchema": null,
+      "assessment": "outcome",
+      "workFamily": "review",
+      "provenance": {
+        "source": "plugins/pr-review/skills/pr-review/SKILL.md",
+        "group": "pr-review"
+      }
     },
     "assert": [
       {
@@ -2065,7 +2953,36 @@
       "id": "pr-review/21",
       "group": "pr-review",
       "kind": "task",
-      "requirements": ["expectation-000", "expectation-001", "expectation-002", "expectation-003"],
+      "requirements": [
+        {
+          "id": "expectation-000",
+          "capability": "review",
+          "authority": "Frozen case pr-review/21 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The immutable artifact snapshot, initial fixtures, and recorded native actions."
+        },
+        {
+          "id": "expectation-001",
+          "capability": "authorization",
+          "authority": "Frozen case pr-review/21 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The immutable artifact snapshot, initial fixtures, and recorded native actions."
+        },
+        {
+          "id": "expectation-002",
+          "capability": "authorization",
+          "authority": "Frozen case pr-review/21 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The immutable artifact snapshot, initial fixtures, and recorded native actions."
+        },
+        {
+          "id": "expectation-003",
+          "capability": "review",
+          "authority": "Frozen case pr-review/21 and metadata.authorization.scope. Applicable required-skill contract: plugins/pr-review/skills/pr-review/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The immutable artifact snapshot, initial fixtures, and recorded native actions."
+        }
+      ],
       "fixture": [
         {
           "source": "pr-review/files/combined-aspects/src/import.js.fixture",
@@ -2080,7 +2997,11 @@
           "target": "test/import.test.js"
         }
       ],
-      "execution": { "networkAccess": true, "pathPrepend": [], "executableFiles": [] },
+      "execution": {
+        "networkAccess": true,
+        "pathPrepend": [],
+        "executableFiles": []
+      },
       "reference": "Saves only the explicitly requested report artifact while preserving read-only review of the source.",
       "requiredSkills": ["pr-review"],
       "turns": [],
@@ -2088,7 +3009,13 @@
         "scope": "The task request is the authority boundary. Preserve its exact scope and exclusions: Use pr-review on status/change.diff and the supplied source/test. Review code, errors and tests. I explicitly authorize saving the final report as review.md in this task directory. Malformed JSON must continue to propagate its parse error to the caller; returning an empty profile on failure violates the required contract. Keep the reviewed files unchanged and write no other files.",
         "approvals": []
       },
-      "outputSchema": null
+      "outputSchema": null,
+      "assessment": "outcome",
+      "workFamily": "review",
+      "provenance": {
+        "source": "plugins/pr-review/skills/pr-review/SKILL.md",
+        "group": "pr-review"
+      }
     },
     "assert": [
       {

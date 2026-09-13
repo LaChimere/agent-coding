@@ -1,4 +1,9 @@
 import { basename, dirname, resolve } from 'node:path';
+import {
+  assertCollectionMatch,
+  type CollectionId,
+  readCollectionScope,
+} from '../corpus/collections.ts';
 import type { GradingSelection } from '../results/quality.ts';
 import type {
   IPlannedTrial,
@@ -36,11 +41,16 @@ async function publishedRecords(directory: string): Promise<string[]> {
   return paths.flat().sort();
 }
 
-export async function loadLedger(directory: string): Promise<IRunLedger> {
+export async function loadLedger(
+  directory: string,
+  collection: CollectionId = 'development',
+): Promise<IRunLedger> {
+  const scope = await readCollectionScope(resolve(directory, 'collection.json'), collection);
   const manifest = (await Bun.file(resolve(directory, 'manifest.json')).json()) as IRunManifest;
-  if (manifest.schema !== 'codex-evals/run-v1') {
+  if (manifest.schema !== 'codex-evals/run-v2') {
     throw new Error('Unsupported run manifest.');
   }
+  assertCollectionMatch(scope, manifest.collection);
 
   const publishedPaths = await publishedRecords(directory);
   const trials: ITrialResult[] = [];

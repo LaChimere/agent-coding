@@ -58,11 +58,11 @@ test('reports success, failure, and unknown for complete and incomplete output c
   });
 });
 
-test('matches route names by identity and plugin namespace without substring matches', async () => {
+test('matches route alternatives and rejects arbitrary extras', async () => {
   const rule = parseRule({
     type: 'route',
-    expected: ['review', 'standalone'],
-    forbidden: ['blocked'],
+    alternatives: [['review', 'standalone'], []],
+    optional: ['optional'],
   });
 
   await expect(
@@ -73,20 +73,158 @@ test('matches route names by identity and plugin namespace without substring mat
 
   await expect(
     checkProgrammatic(
+      input(rule, {
+        output: JSON.stringify({ skills: ['plugin:review', 'standalone', 'optional'] }),
+      }),
+    ),
+  ).resolves.toMatchObject({ status: 'passed' });
+
+  await expect(
+    checkProgrammatic(
       input(rule, { output: JSON.stringify({ skills: ['plugin:review', 'blocked'] }) }),
     ),
   ).resolves.toMatchObject({ status: 'failed' });
+
+  await expect(
+    checkProgrammatic(input(rule, { output: JSON.stringify({ skills: [] }) })),
+  ).resolves.toMatchObject({ status: 'passed' });
 
   await expect(
     checkProgrammatic(
       input(rule, { output: JSON.stringify({ skills: ['review-extra', 'standalone'] }) }),
     ),
   ).resolves.toMatchObject({ status: 'failed' });
+
+  await expect(
+    checkProgrammatic(input(rule, { output: 'not-json', completed: false })),
+  ).resolves.toMatchObject({ status: 'unknown' });
+
+  expect(() => parseRule({ type: 'route', expected: ['review'], forbidden: [] })).toThrow(
+    'Invalid or unsupported programmatic rule.',
+  );
+  expect(() =>
+    parseRule({ type: 'route', alternatives: [['review']], optional: [], expected: ['review'] }),
+  ).toThrow('Invalid or unsupported programmatic rule.');
+  expect(() => parseRule({ type: 'route', alternatives: [], optional: [] })).toThrow(
+    'Invalid or unsupported programmatic rule.',
+  );
 });
 
-test('grades native conversation counts using the native evidence reference', async () => {
+test('rejects duplicate route identities and accepts optional companions', async () => {
+  const rule = parseRule({
+    type: 'route',
+    alternatives: [['review']],
+    optional: ['rubber-duck'],
+  });
+
+  await expect(
+    checkProgrammatic(
+      input(rule, { output: JSON.stringify({ skills: ['review', 'rubber-duck'] }) }),
+    ),
+  ).resolves.toMatchObject({ status: 'passed' });
+
+  await expect(
+    checkProgrammatic(
+      input(rule, { output: JSON.stringify({ skills: ['review', 'plugin:review'] }) }),
+    ),
+  ).resolves.toMatchObject({ status: 'failed' });
+});
+
+test('grades native conversation counts and ordered candidate/user content', async () => {
   const rule = parseRule({
     type: 'native-conversation',
+    countScope: 'root',
+    turns: 2,
+    threads: 1,
+    sequence: [
+      { actor: 'candidate', pattern: 'question|clarify' },
+      { actor: 'user', pattern: 'reply' },
+      { actor: 'candidate', pattern: '^answer$' },
+    ],
+  });
+
+  const nativeReference = 'trials/trial/native-evidence.json';
+  const conversation = [
+    {
+      actor: 'user' as const,
+      content: 'request',
+      threadId: 'thread-1',
+      turnId: 'turn-1',
+      source: 'protocol#1',
+    },
+    {
+      actor: 'candidate' as const,
+      content: 'Please clarify the channel.',
+      threadId: 'thread-1',
+      turnId: 'turn-1',
+      source: 'protocol#2',
+    },
+    {
+      actor: 'user' as const,
+      content: 'reply',
+      threadId: 'thread-1',
+      turnId: 'turn-2',
+      source: 'protocol#3',
+    },
+    {
+      actor: 'candidate' as const,
+      content: 'worker result',
+      threadId: 'worker-thread',
+      turnId: 'worker-turn',
+      source: 'worker-protocol#1',
+    },
+    {
+      actor: 'candidate' as const,
+      content: 'answer',
+      threadId: 'thread-1',
+      turnId: 'turn-2',
+      source: 'protocol#4',
+    },
+  ];
+
+  await expect(
+    checkProgrammatic(
+      input(rule, {
+        nativeEvidence: {
+          turnIds: ['turn-1', 'worker-turn', 'turn-2'],
+          threadIds: ['thread-1', 'worker-thread'],
+          conversation,
+        },
+        nativeReference,
+      }),
+    ),
+  ).resolves.toMatchObject({
+    status: 'passed',
+    evidence: [nativeReference, 'protocol#2', 'protocol#3', 'protocol#4'],
+  });
+
+  await expect(
+    checkProgrammatic(
+      input(rule, {
+        nativeEvidence: {
+          turnIds: ['turn-1', 'turn-2'],
+          threadIds: ['thread-1'],
+          conversation: [...conversation].reverse(),
+        },
+        nativeReference,
+      }),
+    ),
+  ).resolves.toMatchObject({ status: 'failed', evidence: [nativeReference] });
+
+  await expect(
+    checkProgrammatic(
+      input(rule, {
+        nativeEvidence: { turnIds: ['turn-1', 'turn-2'], threadIds: ['thread-1'] },
+        nativeReference,
+      }),
+    ),
+  ).resolves.toMatchObject({ status: 'unknown' });
+});
+
+test('grades explicit thread and turn count requirements', async () => {
+  const rule = parseRule({
+    type: 'native-conversation',
+    countScope: 'all',
     turns: 2,
     threads: 1,
   });

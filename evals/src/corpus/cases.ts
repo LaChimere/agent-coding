@@ -3,14 +3,37 @@ import { resolve } from 'node:path';
 import type { TestCase } from 'promptfoo';
 import { parseRule } from '../grading/programmatic.ts';
 import { containedPath, contentHash } from '../preparation/snapshot.ts';
+import { type ICaseRoots, requireInputPath } from './collections.ts';
 
 export type GradingMethod = 'programmatic' | 'text-rubric' | 'artifact-rubric';
+
+export type WorkFamily = 'planning' | 'implementation' | 'review' | 'documentation';
+export type Capability =
+  | WorkFamily
+  | 'authorization'
+  | 'clarification'
+  | 'continuation'
+  | 'recovery'
+  | 'delegation'
+  | 'skill-mechanism';
+
+export interface IRequirement {
+  id: string;
+  capability: Capability;
+  authority: string;
+  appliesWhen: string;
+  /** Stable observation sources; scoring predicates belong in versioned assertions. */
+  evidence: string;
+}
 
 export interface ICaseMetadata {
   id: string;
   group: string;
   kind: 'task' | 'routing';
-  requirements: string[];
+  assessment: 'outcome' | 'mechanism';
+  workFamily: WorkFamily | null;
+  provenance: { source: string; group: string };
+  requirements: IRequirement[];
   fixture: { source: string; target: string }[];
   execution: { networkAccess: boolean; pathPrepend: string[]; executableFiles: string[] };
   reference: string;
@@ -118,6 +141,12 @@ function parseAssertion(value: unknown, requirements: readonly string[]): ICaseA
     throw new Error('An assertion must name a grader file.');
   }
 
+  if (
+    !containedPath('/framework', graderPath.slice('file://'.length)).startsWith('/framework/src/')
+  ) {
+    throw new Error('Graders must be shared framework modules under src/.');
+  }
+
   const settings = table(config, 'assertion config');
   const { method, core, rubric, rule, requirements: mapped } = settings;
   if (method !== 'programmatic' && method !== 'text-rubric' && method !== 'artifact-rubric') {
@@ -159,6 +188,9 @@ export function parseCase(value: unknown): IRepositoryCase {
     id,
     group,
     kind,
+    assessment,
+    workFamily,
+    provenance,
     requirements,
     fixture,
     execution,
@@ -173,6 +205,9 @@ export function parseCase(value: unknown): IRepositoryCase {
       'id',
       'group',
       'kind',
+      'assessment',
+      'workFamily',
+      'provenance',
       'requirements',
       'fixture',
       'execution',
@@ -189,12 +224,64 @@ export function parseCase(value: unknown): IRepositoryCase {
     throw new Error('Unknown case kind.');
   }
 
-  const mapped = strings(requirements, 'case requirements');
+  if (assessment !== 'outcome' && assessment !== 'mechanism') {
+    throw new Error('Unknown assessment type.');
+  }
+
+  if (
+    workFamily !== 'planning' &&
+    workFamily !== 'implementation' &&
+    workFamily !== 'review' &&
+    workFamily !== 'documentation' &&
+    !(assessment === 'mechanism' && workFamily === null)
+  ) {
+    throw new Error('An outcome case must declare a work family.');
+  }
+
+  const { source: originSource, group: originGroup } = knownFields(
+    provenance,
+    ['source', 'group'],
+    'case provenance',
+  );
+  const mapped = array(requirements, 'case requirements').map((value): IRequirement => {
+    const { id, capability, authority, appliesWhen, evidence } = knownFields(
+      value,
+      ['id', 'capability', 'authority', 'appliesWhen', 'evidence'],
+      'requirement',
+    );
+    if (
+      capability !== 'planning' &&
+      capability !== 'implementation' &&
+      capability !== 'review' &&
+      capability !== 'documentation' &&
+      capability !== 'authorization' &&
+      capability !== 'clarification' &&
+      capability !== 'continuation' &&
+      capability !== 'recovery' &&
+      capability !== 'delegation' &&
+      capability !== 'skill-mechanism'
+    ) {
+      throw new Error('Unknown requirement capability.');
+    }
+
+    return {
+      id: text(id, 'requirement id'),
+      capability,
+      authority: text(authority, 'requirement authority'),
+      appliesWhen: text(appliesWhen, 'requirement condition'),
+      evidence: text(evidence, 'requirement evidence'),
+    };
+  });
   if (mapped.length === 0) {
     throw new Error('A case must declare requirements.');
   }
 
-  const criteria = array(assert, 'assertions').map((item) => parseAssertion(item, mapped));
+  const requirementIds = mapped.map((requirement) => requirement.id);
+  if (new Set(requirementIds).size !== requirementIds.length) {
+    throw new Error('Duplicate requirement id.');
+  }
+
+  const criteria = array(assert, 'assertions').map((item) => parseAssertion(item, requirementIds));
   if (!criteria.some((criterion) => criterion.config.core)) {
     throw new Error('A case needs a core check.');
   }
@@ -203,7 +290,7 @@ export function parseCase(value: unknown): IRepositoryCase {
   }
 
   const checked = new Set(criteria.flatMap((criterion) => criterion.config.requirements));
-  if (mapped.some((requirement) => !checked.has(requirement))) {
+  if (requirementIds.some((requirement) => !checked.has(requirement))) {
     throw new Error('A declared requirement has no assertion.');
   }
 
@@ -279,6 +366,12 @@ export function parseCase(value: unknown): IRepositoryCase {
       id: text(id, 'case id'),
       group: text(group, 'case group'),
       kind,
+      assessment,
+      workFamily,
+      provenance: {
+        source: text(originSource, 'provenance source'),
+        group: text(originGroup, 'provenance group'),
+      },
       requirements: mapped,
       fixture: files,
       execution: {
@@ -299,6 +392,7 @@ export function parseCase(value: unknown): IRepositoryCase {
 /** Native Promptfoo performs expansion and scheduling; this only loads and validates inputs. */
 export async function loadCases(
   project: string,
+  roots: ICaseRoots,
   selectedIds: readonly string[] = [],
 ): Promise<ILoadedCase[]> {
   if (new Set(selectedIds).size !== selectedIds.length) {
@@ -309,12 +403,16 @@ export async function loadCases(
   const loaded: ILoadedCase[] = [];
   const ids = new Set<string>();
 
-  for (const name of (await readdir(`${root}/cases`)).sort()) {
+  const caseRoot = await requireInputPath(root, roots.caseRoot);
+  const fixtureRoot = containedPath(root, roots.fixtureRoot);
+
+  for (const name of (await readdir(caseRoot)).sort()) {
     if (!name.endsWith('.json')) {
       continue;
     }
 
-    const source = `cases/${name}`;
+    const source = `${roots.caseRoot}/${name}`;
+    await requireInputPath(root, source);
     const definitions: unknown = await Bun.file(`${root}/${source}`).json();
 
     for (const value of array(definitions, source)) {
@@ -327,7 +425,7 @@ export async function loadCases(
       const fixtureHashes: { target: string; sha256: string; mode: number }[] = [];
 
       for (const file of definition.metadata.fixture) {
-        const path = containedPath(`${root}/fixtures`, file.source);
+        const path = containedPath(fixtureRoot, file.source);
         if (!(await Bun.file(path).exists())) {
           throw new Error(`Missing fixture: ${file.source}`);
         }
@@ -336,6 +434,7 @@ export async function loadCases(
         if (!info.isFile()) {
           throw new Error(`Fixture must be a regular file: ${file.source}`);
         }
+        await requireInputPath(root, `${roots.fixtureRoot}/${file.source}`);
         fixtureHashes.push({
           target: file.target,
           sha256: contentHash(await Bun.file(path).bytes()),
@@ -344,21 +443,24 @@ export async function loadCases(
       }
 
       for (const assertion of definition.assert) {
-        const path = containedPath(root, assertion.value.slice('file://'.length));
+        const grader = assertion.value.slice('file://'.length);
+        const path = containedPath(root, grader);
         if (!(await Bun.file(path).exists())) {
           throw new Error(`Missing grader: ${assertion.value}`);
         }
+        await requireInputPath(root, grader);
       }
 
-      const { kind, execution, requiredSkills, turns, authorization, outputSchema } =
+      const { kind, requirements, execution, requiredSkills, turns, authorization, outputSchema } =
         definition.metadata;
       loaded.push({
         definition,
         version: contentHash(JSON.stringify({ definition, fixtureHashes })),
         executionVersion: contentHash(
           JSON.stringify({
-            task: definition.vars.task,
+            prompt: candidatePrompt(definition),
             kind,
+            requirements,
             fixtureHashes,
             execution,
             requiredSkills,
@@ -390,9 +492,15 @@ export async function loadCases(
 export function promptfooCase(definition: IRepositoryCase, project: string): TestCase {
   return {
     ...definition,
+    vars: { task: candidatePrompt(definition) },
     assert: definition.assert.map((assertion) => ({
       ...assertion,
       value: `file://${containedPath(project, assertion.value.slice('file://'.length))}`,
     })),
   };
+}
+
+/** Authorization is candidate-visible input; references, checks and future replies stay private. */
+export function candidatePrompt(definition: IRepositoryCase): string {
+  return `${definition.vars.task}\n\nAuthorization scope:\n${definition.metadata.authorization.scope}`;
 }

@@ -10,6 +10,7 @@ import type {
 import { writeJsonRecord } from '../../src/preparation/snapshot.ts';
 import type { IPromptfooArtifacts, IPromptfooBatch } from '../../src/promptfoo/batch.ts';
 import type { IPlannedTrial, IRunManifest } from '../../src/results/records.ts';
+import { collection, priceBook, requirement, writeManifest } from '../fixtures/contracts.ts';
 
 const roots: string[] = [];
 const nativeModulePath = resolve(import.meta.dir, '../../src/preparation/native.ts');
@@ -92,7 +93,7 @@ class FakeSession {
     this._writeArtifact = writeArtifact;
   }
 
-  async runTurn(_text: string): Promise<{ id: string; status: TurnStatus; response: unknown }> {
+  async runTurn(text: string): Promise<{ id: string; status: TurnStatus; response: unknown }> {
     const step = this._steps[this._index];
     if (step === undefined) {
       throw new Error('Fake session received an unexpected turn.');
@@ -139,7 +140,20 @@ class FakeSession {
       },
     };
 
-    await appendFile(this._protocolPath, `${JSON.stringify(usage)}\n${JSON.stringify(item)}\n`);
+    const userMessage = {
+      ...item,
+      parsed: {
+        ...item.parsed,
+        params: {
+          ...item.parsed.params,
+          item: { id: `user-${step.id}`, type: 'userMessage', content: [{ type: 'text', text }] },
+        },
+      },
+    };
+    await appendFile(
+      this._protocolPath,
+      `${JSON.stringify(usage)}\n${JSON.stringify(userMessage)}\n${JSON.stringify(item)}\n`,
+    );
 
     return {
       id: step.id,
@@ -181,7 +195,10 @@ function metadata(): ICaseMetadata {
     id: 'execution-fixture',
     group: 'integration',
     kind: 'task',
-    requirements: ['output'],
+    assessment: 'outcome',
+    workFamily: 'implementation',
+    provenance: { source: 'unit-test', group: 'unit-test' },
+    requirements: [requirement('output')],
     fixture: [{ source: 'input.txt', target: 'copied.txt' }],
     execution: {
       networkAccess: false,
@@ -244,7 +261,9 @@ function candidate() {
 
 function manifest(trial: IPlannedTrial, loaded: ILoadedCase): IRunManifest {
   return {
-    schema: 'codex-evals/run-v1',
+    schema: 'codex-evals/run-v2',
+    collection: collection([loadedCase()]),
+    priceBook,
     id: 'run-execution',
     createdAt: 1,
     concurrency: 1,
@@ -313,7 +332,7 @@ async function executeFixture(): Promise<{
     '',
   );
 
-  await writeJsonRecord(resolve(runDirectory, 'manifest.json'), manifest(trial, loaded));
+  await writeManifest(runDirectory, manifest(trial, loaded));
 
   return {
     root,
@@ -451,7 +470,13 @@ test('executes completed scripted turns in one native thread and records evidenc
   expect(evidence.actors[0]).toMatchObject({
     modelsByTurn: { 'turn-1': 'gpt-6-astra', 'turn-2': 'gpt-6-astra' },
   });
-  expect(evidence.actors[0].contexts).toHaveLength(2);
+  expect(evidence.actors[0].sources.turnContexts).toHaveLength(2);
+  expect(evidence.actors[0].sources.sessionMeta).toHaveLength(1);
+  expect(
+    evidence.conversation
+      .filter((message: { actor: string }) => message.actor === 'user')
+      .map((message: { content: string }) => message.content),
+  ).toEqual(['first task\n\nAuthorization scope:\nfixture', 'second task']);
   const candidateOperation = await Bun.file(
     resolve(fixture.runDirectory, 'operations/trial-execution-candidate/record.json'),
   ).json();
@@ -753,7 +778,7 @@ async function createWorkerFixture(): Promise<{ root: string; directory: string 
     '{"authentication":[]}\n',
   );
 
-  await writeJsonRecord(resolve(directory, 'manifest.json'), {
+  await writeManifest(directory, {
     ...manifest(trial, loaded),
     id: 'worker-run',
     trials: [trial],

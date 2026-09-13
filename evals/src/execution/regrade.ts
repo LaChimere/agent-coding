@@ -2,11 +2,12 @@ import { randomUUID } from 'node:crypto';
 import { mkdir } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import type { ApiProvider } from 'promptfoo';
-import { loadCases, promptfooCase } from '../corpus/cases.ts';
+import { promptfooCase } from '../corpus/cases.ts';
+import type { CollectionId } from '../corpus/collections.ts';
+import { applyGradingOverrides } from '../corpus/grading.ts';
 import { criterionDefinitionId, judgeDefinitionId } from '../preparation/run.ts';
 import { inventoryDirectory, snapshotDirectory, writeJsonRecord } from '../preparation/snapshot.ts';
 import { runPromptfooBatch } from '../promptfoo/batch.ts';
-import { loadPriceBook } from '../results/pricing.ts';
 import type { IRunManifest } from '../results/records.ts';
 import { loadLedger } from './ledger.ts';
 import { saveReport } from './worker.ts';
@@ -17,8 +18,9 @@ export async function regradeRun(
   runDirectory: string,
   signal: AbortSignal,
   selectedCases: readonly string[] = [],
+  options: { collection?: CollectionId; grading?: string } = {},
 ): Promise<string> {
-  const ledger = await loadLedger(runDirectory);
+  const ledger = await loadLedger(runDirectory, options.collection);
   const originalIds = ledger.manifest.cases.map((item) => item.definition.metadata.id);
   const caseIds = selectedCases.length === 0 ? originalIds : selectedCases;
   if (new Set(caseIds).size !== caseIds.length) {
@@ -31,26 +33,18 @@ export async function regradeRun(
     }
   }
 
+  const selected = ledger.manifest.cases.filter((item) =>
+    caseIds.includes(item.definition.metadata.id),
+  );
+  const cases = await applyGradingOverrides(selected, ledger.manifest.collection, options.grading);
+
   const id = randomUUID();
   const directory = resolve(runDirectory, 'regrades', id);
   await mkdir(directory, { recursive: true });
   const frozen = resolve(directory, 'private');
   await mkdir(frozen);
 
-  for (const name of ['src', 'cases', 'fixtures']) {
-    await snapshotDirectory(resolve(project, name), resolve(frozen, name), { symlinks: 'reject' });
-  }
-
-  const cases = await loadCases(frozen, caseIds);
-
-  for (const item of cases) {
-    const previous = ledger.manifest.cases.find(
-      (entry) => entry.definition.metadata.id === item.definition.metadata.id,
-    );
-    if (item.executionVersion !== previous?.executionVersion) {
-      throw new Error(`Regrading cannot change execution inputs: ${item.definition.metadata.id}`);
-    }
-  }
+  await snapshotDirectory(resolve(project, 'src'), resolve(frozen, 'src'), { symlinks: 'reject' });
 
   const implementation = await inventoryDirectory(resolve(frozen, 'src'));
   const profile = ledger.manifest.candidates[0]?.profileInventory.sha256;
@@ -91,6 +85,7 @@ export async function regradeRun(
   };
 
   const gradingManifestPath = resolve(directory, 'manifest.json');
+  await writeJsonRecord(resolve(directory, 'collection.json'), ledger.manifest.collection);
   await writeJsonRecord(gradingManifestPath, manifest);
 
   const providers: ApiProvider[] = manifest.candidates.map((candidate) => ({
@@ -156,7 +151,13 @@ export async function regradeRun(
 
   const report = await saveReport({
     directory: runDirectory,
-    priceBook: ledger.manifest.priceBook ?? (await loadPriceBook(project)),
+    collection: ledger.manifest.collection.id,
+    priceBook: ledger.manifest.priceBook,
+    gradingCases: ledger.manifest.cases.map(
+      (original) =>
+        cases.find((item) => item.definition.metadata.id === original.definition.metadata.id) ??
+        original,
+    ),
     // Preserve the full original scope and its definitions outside this explicit selection.
     trialDefinitions: ledger.manifest.trials.map(
       (original) => trials.find((trial) => trial.id === original.id) ?? original,

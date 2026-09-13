@@ -8,7 +8,29 @@
       "id": "native/scripted-context",
       "group": "native-interaction",
       "kind": "task",
-      "requirements": ["clarified-label", "same-thread-continuation"],
+      "requirements": [
+        {
+          "id": "clarified-label",
+          "capability": "continuation",
+          "authority": "Frozen case native/scripted-context and metadata.authorization.scope. No required-skill contract is declared for this case.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The captured final candidate response."
+        },
+        {
+          "id": "same-thread-continuation",
+          "capability": "continuation",
+          "authority": "Frozen case native/scripted-context and metadata.authorization.scope. No required-skill contract is declared for this case.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "Native thread and turn identities and recorded conversation messages."
+        },
+        {
+          "id": "clarification-order",
+          "capability": "clarification",
+          "authority": "Frozen case native/scripted-context and metadata.authorization.scope. No required-skill contract is declared for this case.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        }
+      ],
       "fixture": [],
       "execution": {
         "networkAccess": false,
@@ -20,7 +42,7 @@
       "turns": [
         {
           "when": "after-turn",
-          "match": "channel|通道",
+          "match": "channel|通道|渠道|频道",
           "reply": "Include the channel beta. Return exactly: Atlas 2.3 beta"
         }
       ],
@@ -28,7 +50,13 @@
         "scope": "Conversation only. No file changes, commands, subagents, commits or external actions.",
         "approvals": []
       },
-      "outputSchema": null
+      "outputSchema": null,
+      "assessment": "mechanism",
+      "workFamily": null,
+      "provenance": {
+        "source": "docs/evaluation/design.md",
+        "group": "native-interaction"
+      }
     },
     "assert": [
       {
@@ -55,12 +83,38 @@
           "core": true,
           "method": "programmatic",
           "requirements": ["same-thread-continuation"],
-          "rubric": "Two actual native turns belong to one native thread.",
+          "rubric": "The channel question, declared user reply and final label occur in order in the same native thread; equivalent question wording is allowed.",
           "rule": {
             "type": "native-conversation",
             "turns": 2,
-            "threads": 1
+            "threads": 1,
+            "sequence": [
+              {
+                "actor": "candidate",
+                "pattern": "channel|通道|渠道|频道"
+              },
+              {
+                "actor": "user",
+                "pattern": "beta"
+              },
+              {
+                "actor": "candidate",
+                "pattern": "^Atlas 2\\.3 beta$"
+              }
+            ],
+            "countScope": "root"
           }
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "clarification-order",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["clarification-order"],
+          "rubric": "Retained native evidence shows the assistant asked for the channel before consuming the scripted reply and only then returned the final label; the final answer alone is insufficient evidence of ordering."
         }
       }
     ]
@@ -74,7 +128,29 @@
       "id": "native/verified-fix",
       "group": "native-interaction",
       "kind": "task",
-      "requirements": ["general-correctness", "execution-and-scope", "composition"],
+      "requirements": [
+        {
+          "id": "general-correctness",
+          "capability": "implementation",
+          "authority": "Frozen case native/verified-fix and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/execute-plan-loop/SKILL.md, plugins/workflow/skills/anti-slop/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The isolated verifier command result and retained output."
+        },
+        {
+          "id": "execution-and-scope",
+          "capability": "authorization",
+          "authority": "Frozen case native/verified-fix and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/execute-plan-loop/SKILL.md, plugins/workflow/skills/anti-slop/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "composition",
+          "capability": "implementation",
+          "authority": "Frozen case native/verified-fix and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/execute-plan-loop/SKILL.md, plugins/workflow/skills/anti-slop/SKILL.md.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        }
+      ],
       "fixture": [
         {
           "source": "native/amounts.js.fixture",
@@ -97,7 +173,13 @@
         "scope": "Only amounts.js may change. Offline local tests and the requested evaluation of the patch are authorized. No commits or external actions.",
         "approvals": []
       },
-      "outputSchema": null
+      "outputSchema": null,
+      "assessment": "outcome",
+      "workFamily": "implementation",
+      "provenance": {
+        "source": "docs/evaluation/design.md",
+        "group": "native-interaction"
+      }
     },
     "assert": [
       {
@@ -154,7 +236,22 @@
       "id": "native/implicit-review",
       "group": "native-interaction",
       "kind": "task",
-      "requirements": ["concrete-finding", "read-only"],
+      "requirements": [
+        {
+          "id": "concrete-finding",
+          "capability": "review",
+          "authority": "Frozen case native/implicit-review and metadata.authorization.scope. No required-skill contract is declared for this case.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        },
+        {
+          "id": "read-only",
+          "capability": "authorization",
+          "authority": "Frozen case native/implicit-review and metadata.authorization.scope. No required-skill contract is declared for this case.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        }
+      ],
       "fixture": [
         {
           "source": "native/amounts.js.fixture",
@@ -177,7 +274,13 @@
         "scope": "Read-only correctness review. Local read-only inspection is authorized. No file edits or commits.",
         "approvals": []
       },
-      "outputSchema": null
+      "outputSchema": null,
+      "assessment": "outcome",
+      "workFamily": "review",
+      "provenance": {
+        "source": "docs/evaluation/design.md",
+        "group": "native-interaction"
+      }
     },
     "assert": [
       {
@@ -207,13 +310,28 @@
   {
     "description": "One native worker reads a fixture and returns an independently obtained answer.",
     "vars": {
-      "task": "Assign exactly one ordinary_worker a read-only task: read numbers.txt and report its largest integer. Wait for its result, then return exactly \"Largest: 21\". Do not read numbers.txt yourself, modify files, run other tasks, or create additional workers."
+      "task": "Assign exactly one ordinary_worker a read-only task: read numbers.txt and report its largest integer. Wait for its result, then return exactly the value reported by the worker in the form \"Largest: <value>\". Do not read numbers.txt yourself, modify files, run other tasks, or create additional workers."
     },
     "metadata": {
       "id": "native/subagent-evidence",
       "group": "native-interaction",
       "kind": "task",
-      "requirements": ["answer", "native-worker"],
+      "requirements": [
+        {
+          "id": "answer",
+          "capability": "skill-mechanism",
+          "authority": "Frozen case native/subagent-evidence and metadata.authorization.scope. No required-skill contract is declared for this case.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The captured final candidate response."
+        },
+        {
+          "id": "native-worker",
+          "capability": "delegation",
+          "authority": "Frozen case native/subagent-evidence and metadata.authorization.scope. No required-skill contract is declared for this case.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
+        }
+      ],
       "fixture": [
         {
           "source": "native/numbers.txt.fixture",
@@ -225,14 +343,20 @@
         "pathPrepend": [],
         "executableFiles": []
       },
-      "reference": "One native worker reads a fixture and returns an independently obtained answer.",
+      "reference": "One native worker reads a fixture and returns an independently obtained answer; the parent must not receive the answer from the task prompt itself.",
       "requiredSkills": [],
       "turns": [],
       "authorization": {
         "scope": "One read-only ordinary_worker task is authorized. No edits, commits, extra workers or network.",
         "approvals": []
       },
-      "outputSchema": null
+      "outputSchema": null,
+      "assessment": "mechanism",
+      "workFamily": null,
+      "provenance": {
+        "source": "docs/evaluation/design.md",
+        "group": "native-interaction"
+      }
     },
     "assert": [
       {
