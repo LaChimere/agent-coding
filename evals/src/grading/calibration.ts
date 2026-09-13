@@ -30,6 +30,7 @@ interface ICalibrationLabels {
   sampleHash: string;
   confirmedAt: string;
   source: 'repository-owner';
+  methods: string[];
   labels: Record<string, QualityStatus>;
 }
 
@@ -68,6 +69,10 @@ export async function calibrateGraders(project: string, signal: AbortSignal): Pr
     labels !== null &&
     (labels.sampleHash !== sampleHash ||
       labels.source !== 'repository-owner' ||
+      !Array.isArray(labels.methods) ||
+      labels.methods.length !== 2 ||
+      !labels.methods.includes('text-rubric') ||
+      !labels.methods.includes('artifact-rubric') ||
       !Number.isFinite(Date.parse(labels.confirmedAt)) ||
       samples.some(
         (sample) => !['passed', 'failed', 'unknown'].includes(labels.labels[sample.id] ?? ''),
@@ -194,6 +199,7 @@ export async function calibrateGraders(project: string, signal: AbortSignal): Pr
   const operations = observations.map((item) => item.result.operation);
   await writeJsonRecord(report, {
     schema: 'codex-evals/calibration-v1',
+    scope: 'calibration',
     sampleHash,
     labelsConfirmed: labels !== null,
     planned: tests.length,

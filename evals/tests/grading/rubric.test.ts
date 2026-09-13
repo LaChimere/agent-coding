@@ -1,7 +1,7 @@
 import { afterEach, beforeAll, expect, test } from 'bun:test';
 import { mkdir, mkdtemp, readdir, rm } from 'node:fs/promises';
 import { resolve } from 'node:path';
-import { gradeRubric, type IGradeRubricInput } from '../../src/grading/rubric.ts';
+import { gradeRubric, type IGradeRubricInput, rubricPrompt } from '../../src/grading/rubric.ts';
 
 const roots: string[] = [];
 const originalFetch = globalThis.fetch;
@@ -198,6 +198,16 @@ test('grades text evidence through the public Promptfoo rubric assertion and rec
 
     expect(stored).not.toContain('super-secret-fixture');
   }
+});
+
+test('instructs the independent judge to require source-backed native actor evidence', () => {
+  expect(rubricPrompt).toContain(
+    'candidate task, authorization, and public contract are authoritative',
+  );
+  expect(rubricPrompt).toContain('Accept concise valid alternatives');
+  expect(rubricPrompt).toContain('Native actor assignment, role, model, reasoning effort');
+  expect(rubricPrompt).toContain('never infer a role from a model name');
+  expect(rubricPrompt).toContain('parent answer as proof');
 });
 
 test('keeps a valid unknown verdict distinct from grader errors and never invents missing usage', async () => {

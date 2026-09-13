@@ -148,12 +148,17 @@ an otherwise successful case. Execution and grader errors remain separate.
 Decidable pass rate uses passed / (passed + failed), while decision coverage uses
 (passed + failed) / planned. There is no suite-wide all-pass gate or weighted score.
 
-The six owner-confirmed calibration labels cover complete success, complete
-failure, and missing capture across both model methods. Agreement on this small
-set establishes these distinctions, not the accuracy of every domain rubric.
+The owner-confirmed calibration examples cover complete and missing capture,
+concise correct results, wrong routes, valid alternatives, authority boundaries,
+worker evidence and unsupported completion claims across both model methods.
+Agreement on this finite set does not establish accuracy for every domain rubric.
 Review disagreements and add representative human-labeled examples as criteria evolve.
 Each calibration run freezes its price snapshot and records grader time, tokens
 and estimated cost. Calibration does not add candidate execution samples.
+
+Each human confirmation covers both grader methods and the exact sample hash.
+Calibration rejects mismatched or incomplete confirmations; proposed labels do
+not count as confirmed human judgments.
 
 ## Evidence and resource accounting
 
