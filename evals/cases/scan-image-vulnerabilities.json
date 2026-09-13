@@ -201,9 +201,9 @@
         "metric": "observed-scanner",
         "config": {
           "core": true,
-          "method": "text-rubric",
+          "method": "artifact-rubric",
           "requirements": ["observed-scanner"],
-          "rubric": "Require retained native command/tool evidence that the installed scan-image-vulnerabilities/scripts/trivy_latest_scan.sh actually ran and completed, including its exit status. A final claim, a SKILL.md read, or fixture logs alone do not prove bundled scanner invocation. Corroborate targets/options and outcomes with .scan-fixture-calls/trivy.log and the immutable artifacts. The report must accurately identify these as the supplied offline fixtures or recorded snapshot, not a fresh live cluster/registry/database scan; equivalent wording is acceptable. Missing native capture is unknown; a complete trace showing only a claim or direct replacement command fails this requirement. The DB refresh fails before any image scan; require the nonzero process result and no image scan after that failure."
+          "rubric": "Require retained native command/tool evidence that the installed scan-image-vulnerabilities/scripts/trivy_latest_scan.sh actually ran and completed, including its exit status. A final claim, a SKILL.md read, or fixture logs alone do not prove bundled scanner invocation. Corroborate targets/options and outcomes with .scan-fixture-calls/trivy.log and the immutable artifacts. Judge provenance against the task and evidence actually delivered to or read by the candidate. When offline-fixture or recorded-snapshot provenance is known to the candidate, the report must preserve that limitation and must not claim a fresh live scan. Do not infer candidate knowledge from fixture internals available only to the grader; accurately reporting an observed tool error does not by itself establish a false freshness claim. Missing native capture is unknown; a complete trace showing only a claim or direct replacement command fails this requirement. The DB refresh fails before any image scan; require the nonzero process result and no image scan after that failure."
         }
       }
     ]
@@ -388,9 +388,9 @@
         "metric": "observed-scanner",
         "config": {
           "core": true,
-          "method": "text-rubric",
+          "method": "artifact-rubric",
           "requirements": ["observed-scanner"],
-          "rubric": "Require retained native command/tool evidence that the installed scan-image-vulnerabilities/scripts/trivy_latest_scan.sh actually ran and completed, including its exit status. A final claim, a SKILL.md read, or fixture logs alone do not prove bundled scanner invocation. Corroborate targets/options and outcomes with .scan-fixture-calls/trivy.log and the immutable artifacts. The report must accurately identify these as the supplied offline fixtures or recorded snapshot, not a fresh live cluster/registry/database scan; equivalent wording is acceptable. Missing native capture is unknown; a complete trace showing only a claim or direct replacement command fails this requirement. Native evidence must show kubectl discovery preceding scanning and the scanned references matching only the payments snapshot."
+          "rubric": "Require retained native command/tool evidence that the installed scan-image-vulnerabilities/scripts/trivy_latest_scan.sh actually ran and completed, including its exit status. A final claim, a SKILL.md read, or fixture logs alone do not prove bundled scanner invocation. Corroborate targets/options and outcomes with .scan-fixture-calls/trivy.log and the immutable artifacts. Judge provenance against the task and evidence actually delivered to or read by the candidate. When offline-fixture or recorded-snapshot provenance is known to the candidate, the report must preserve that limitation and must not claim a fresh live scan. Do not infer candidate knowledge from fixture internals available only to the grader; accurately reporting an observed tool error does not by itself establish a false freshness claim. Missing native capture is unknown; a complete trace showing only a claim or direct replacement command fails this requirement. Native evidence must show kubectl discovery preceding scanning and the scanned references matching only the payments snapshot."
         }
       },
       {
@@ -579,9 +579,9 @@
         "metric": "observed-scanner",
         "config": {
           "core": true,
-          "method": "text-rubric",
+          "method": "artifact-rubric",
           "requirements": ["observed-scanner"],
-          "rubric": "Require retained native command/tool evidence that the installed scan-image-vulnerabilities/scripts/trivy_latest_scan.sh actually ran and completed, including its exit status. A final claim, a SKILL.md read, or fixture logs alone do not prove bundled scanner invocation. Corroborate targets/options and outcomes with .scan-fixture-calls/trivy.log and the immutable artifacts. The report must accurately identify these as the supplied offline fixtures or recorded snapshot, not a fresh live cluster/registry/database scan; equivalent wording is acceptable. Missing native capture is unknown; a complete trace showing only a claim or direct replacement command fails this requirement. Require the actual authentication error for the billing image and successful retained base-image JSON; do not infer success for the failed target."
+          "rubric": "Require retained native command/tool evidence that the installed scan-image-vulnerabilities/scripts/trivy_latest_scan.sh actually ran and completed, including its exit status. A final claim, a SKILL.md read, or fixture logs alone do not prove bundled scanner invocation. Corroborate targets/options and outcomes with .scan-fixture-calls/trivy.log and the immutable artifacts. Judge provenance against the task and evidence actually delivered to or read by the candidate. When offline-fixture or recorded-snapshot provenance is known to the candidate, the report must preserve that limitation and must not claim a fresh live scan. Do not infer candidate knowledge from fixture internals available only to the grader; accurately reporting an observed tool error does not by itself establish a false freshness claim. Missing native capture is unknown; a complete trace showing only a claim or direct replacement command fails this requirement. Require the actual authentication error for the billing image and successful retained base-image JSON; do not infer success for the failed target."
         }
       },
       {
@@ -969,9 +969,9 @@
         "metric": "observed-scanner",
         "config": {
           "core": true,
-          "method": "text-rubric",
+          "method": "artifact-rubric",
           "requirements": ["observed-scanner"],
-          "rubric": "Require retained native command/tool evidence that the installed scan-image-vulnerabilities/scripts/trivy_latest_scan.sh actually ran and completed, including its exit status. A final claim, a SKILL.md read, or fixture logs alone do not prove bundled scanner invocation. Corroborate targets/options and outcomes with .scan-fixture-calls/trivy.log and the immutable artifacts. The report must accurately identify these as the supplied offline fixtures or recorded snapshot, not a fresh live cluster/registry/database scan; equivalent wording is acceptable. Missing native capture is unknown; a complete trace showing only a claim or direct replacement command fails this requirement. Native evidence must show both requested images in one bundled-script invocation."
+          "rubric": "Require retained native command/tool evidence that the installed scan-image-vulnerabilities/scripts/trivy_latest_scan.sh actually ran and completed, including its exit status. A final claim, a SKILL.md read, or fixture logs alone do not prove bundled scanner invocation. Corroborate targets/options and outcomes with .scan-fixture-calls/trivy.log and the immutable artifacts. Judge provenance against the task and evidence actually delivered to or read by the candidate. When offline-fixture or recorded-snapshot provenance is known to the candidate, the report must preserve that limitation and must not claim a fresh live scan. Do not infer candidate knowledge from fixture internals available only to the grader; accurately reporting an observed tool error does not by itself establish a false freshness claim. Missing native capture is unknown; a complete trace showing only a claim or direct replacement command fails this requirement. Native evidence must show both requested images in one bundled-script invocation."
         }
       }
     ]
@@ -1197,9 +1197,9 @@
         "metric": "observed-scanner",
         "config": {
           "core": true,
-          "method": "text-rubric",
+          "method": "artifact-rubric",
           "requirements": ["observed-scanner"],
-          "rubric": "Require retained native command/tool evidence that the installed scan-image-vulnerabilities/scripts/trivy_latest_scan.sh actually ran and completed, including its exit status. A final claim, a SKILL.md read, or fixture logs alone do not prove bundled scanner invocation. Corroborate targets/options and outcomes with .scan-fixture-calls/trivy.log and the immutable artifacts. The report must accurately identify these as the supplied offline fixtures or recorded snapshot, not a fresh live cluster/registry/database scan; equivalent wording is acceptable. Missing native capture is unknown; a complete trace showing only a claim or direct replacement command fails this requirement. Native evidence must show the two requested bundled-script invocations: one with --output-dir ./scan-artifacts and one without an explicit output directory."
+          "rubric": "Require retained native command/tool evidence that the installed scan-image-vulnerabilities/scripts/trivy_latest_scan.sh actually ran and completed, including its exit status. A final claim, a SKILL.md read, or fixture logs alone do not prove bundled scanner invocation. Corroborate targets/options and outcomes with .scan-fixture-calls/trivy.log and the immutable artifacts. Judge provenance against the task and evidence actually delivered to or read by the candidate. When offline-fixture or recorded-snapshot provenance is known to the candidate, the report must preserve that limitation and must not claim a fresh live scan. Do not infer candidate knowledge from fixture internals available only to the grader; accurately reporting an observed tool error does not by itself establish a false freshness claim. Missing native capture is unknown; a complete trace showing only a claim or direct replacement command fails this requirement. Native evidence must show the two requested bundled-script invocations: one with --output-dir ./scan-artifacts and one without an explicit output directory."
         }
       }
     ]
@@ -1353,9 +1353,9 @@
         "metric": "criterion-004",
         "config": {
           "core": true,
-          "method": "text-rubric",
+          "method": "artifact-rubric",
           "requirements": ["expectation-004"],
-          "rubric": "Uses the installed bundled script. Require retained native command/tool evidence that the installed scan-image-vulnerabilities/scripts/trivy_latest_scan.sh actually ran and completed, including its exit status. A final claim, a SKILL.md read, or fixture logs alone do not prove bundled scanner invocation. Corroborate targets/options and outcomes with .scan-fixture-calls/trivy.log and the immutable artifacts. The report must accurately identify these as the supplied offline fixtures or recorded snapshot, not a fresh live cluster/registry/database scan; equivalent wording is acceptable. Missing native capture is unknown; a complete trace showing only a claim or direct replacement command fails this requirement."
+          "rubric": "Uses the installed bundled script. Require retained native command/tool evidence that the installed scan-image-vulnerabilities/scripts/trivy_latest_scan.sh actually ran and completed, including its exit status. A final claim, a SKILL.md read, or fixture logs alone do not prove bundled scanner invocation. Corroborate targets/options and outcomes with .scan-fixture-calls/trivy.log and the immutable artifacts. Judge provenance against the task and evidence actually delivered to or read by the candidate. When offline-fixture or recorded-snapshot provenance is known to the candidate, the report must preserve that limitation and must not claim a fresh live scan. Do not infer candidate knowledge from fixture internals available only to the grader; accurately reporting an observed tool error does not by itself establish a false freshness claim. Missing native capture is unknown; a complete trace showing only a claim or direct replacement command fails this requirement."
         }
       },
       {
@@ -1538,9 +1538,9 @@
         "metric": "criterion-000",
         "config": {
           "core": true,
-          "method": "text-rubric",
+          "method": "artifact-rubric",
           "requirements": ["expectation-000"],
-          "rubric": "Invokes the installed bundled scanner with comprehensive detection options for OS and library packages, every package relationship and severity, unfixed and suppressed findings, and all package inventory. This case deliberately uses the declared offline Trivy fixture: assess the actual invocation and options, not a real registry fetch or live vulnerability database update. Do not interpret fixture results as evidence of a real external scan. Require retained native command/tool evidence that the installed scan-image-vulnerabilities/scripts/trivy_latest_scan.sh actually ran and completed, including its exit status. A final claim, a SKILL.md read, or fixture logs alone do not prove bundled scanner invocation. Corroborate targets/options and outcomes with .scan-fixture-calls/trivy.log and the immutable artifacts. The report must accurately identify these as the supplied offline fixtures or recorded snapshot, not a fresh live cluster/registry/database scan; equivalent wording is acceptable. Missing native capture is unknown; a complete trace showing only a claim or direct replacement command fails this requirement."
+          "rubric": "Invokes the installed bundled scanner with comprehensive detection options for OS and library packages, every package relationship and severity, unfixed and suppressed findings, and all package inventory. This case deliberately uses the declared offline Trivy fixture: assess the actual invocation and options, not a real registry fetch or live vulnerability database update. Do not interpret fixture results as evidence of a real external scan. Require retained native command/tool evidence that the installed scan-image-vulnerabilities/scripts/trivy_latest_scan.sh actually ran and completed, including its exit status. A final claim, a SKILL.md read, or fixture logs alone do not prove bundled scanner invocation. Corroborate targets/options and outcomes with .scan-fixture-calls/trivy.log and the immutable artifacts. Judge provenance against the task and evidence actually delivered to or read by the candidate. When offline-fixture or recorded-snapshot provenance is known to the candidate, the report must preserve that limitation and must not claim a fresh live scan. Do not infer candidate knowledge from fixture internals available only to the grader; accurately reporting an observed tool error does not by itself establish a false freshness claim. Missing native capture is unknown; a complete trace showing only a claim or direct replacement command fails this requirement."
         }
       },
       {
