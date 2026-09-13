@@ -1,12 +1,45 @@
 import { resolve } from 'node:path';
 import type { ICodexTransportRecord } from './transport.ts';
-import type { IObservedActor } from './usage.ts';
 
 export interface IEvidenceItem {
   threadId: string;
   turnId: string;
   item: Record<string, unknown>;
   source: string;
+}
+
+export interface INativeConversationMessage {
+  actor: 'candidate' | 'user';
+  content: string;
+  threadId: string;
+  turnId: string;
+  source: string;
+}
+
+export interface INativeActorEvidence {
+  threadId: string;
+  parentThreadId: string | null;
+  childThreadIds: string[];
+  assignment: {
+    role: string | null;
+    agentPath: string | null;
+    agentNickname: string | null;
+    modelProvider: string | null;
+    source: string | null;
+  };
+  role: string | null;
+  model: string | null;
+  reasoningEffort: string | null;
+  reasoningEffortByTurn: Readonly<Record<string, string | null>>;
+  sources: {
+    sessionMeta: string[];
+    turnContexts: string[];
+    toolRecords: string[];
+    parentChild: string[];
+  };
+  modelsByTurn: Readonly<Record<string, string | null>>;
+  includedActorIds: readonly string[] | null;
+  contexts: Record<string, unknown>[];
 }
 
 export interface INativeEvidence {
@@ -17,7 +50,10 @@ export interface INativeEvidence {
     record: Record<string, unknown>;
     source: string;
   }[];
-  actors: (IObservedActor & { contexts: Record<string, unknown>[] })[];
+  actors: INativeActorEvidence[];
+  conversation: INativeConversationMessage[];
+  actorRelations: { parentThreadId: string; childThreadId: string; source: string }[];
+  /** The root thread is first; remaining entries include observed worker threads. */
   threadIds: string[];
   turnIds: string[];
   output: string;
@@ -67,6 +103,11 @@ export function projectEvidence(
   const items = new Map<string, IEvidenceItem>();
   const threads = new Set([rootThreadId]);
   const turns = new Set<string>();
+  const actorRelations: {
+    parentThreadId: string;
+    childThreadId: string;
+    source: string;
+  }[] = [];
 
   for (const [index, record] of records.entries()) {
     if (record.direction !== 'incoming' || record.stream !== 'stdout') {
@@ -122,9 +163,22 @@ export function projectEvidence(
   const last = answers.at(-1)?.item;
   const { text } = last ?? {};
   const references: { path: string; source: string }[] = [];
+  const conversation: INativeConversationMessage[] = [];
 
   for (const event of result) {
-    const { type, command, exitCode } = event.item;
+    const { type, command, exitCode, phase } = event.item;
+    if ((type === 'userMessage' || type === 'agentMessage') && phase !== 'commentary') {
+      const content = messageContent(event.item);
+      if (content !== null) {
+        conversation.push({
+          actor: type === 'userMessage' ? 'user' : 'candidate',
+          content,
+          threadId: event.threadId,
+          turnId: event.turnId,
+          source: event.source,
+        });
+      }
+    }
     if (type !== 'commandExecution' || exitCode !== 0 || typeof command !== 'string') {
       continue;
     }
@@ -135,6 +189,7 @@ export function projectEvidence(
 
   return {
     items: result,
+    conversation,
     threadIds: [...threads],
     turnIds: [...turns],
     output: typeof text === 'string' ? text : '',
@@ -145,6 +200,7 @@ export function projectEvidence(
         'Successful commands mentioning SKILL.md are path-based evidence only. Missing references do not prove non-invocation; route answers are not activation evidence.',
     },
     issues: [],
+    actorRelations,
   };
 }
 
@@ -176,12 +232,31 @@ export async function collectEvidence(
     liveTurns.set(threadId, turns);
   }
 
-  const actors = new Map<string, INativeEvidence['actors'][number]>();
+  const actors = new Map<string, INativeActorEvidence>();
   const toolRecords: INativeEvidence['toolRecords'] = [];
 
   for (const threadId of projection.threadIds) {
     actors.set(threadId, {
       threadId,
+      parentThreadId: null,
+      childThreadIds: [],
+      assignment: {
+        role: null,
+        agentPath: null,
+        agentNickname: null,
+        modelProvider: null,
+        source: null,
+      },
+      role: null,
+      model: null,
+      reasoningEffort: null,
+      reasoningEffortByTurn: {},
+      sources: {
+        sessionMeta: [],
+        turnContexts: [],
+        toolRecords: [],
+        parentChild: [],
+      },
       modelsByTurn: {},
       includedActorIds: null,
       contexts: [],
@@ -232,12 +307,54 @@ export async function collectEvidence(
           continue;
         }
 
-        const { id, turn_id: turnId, model } = context;
+        const { id, turn_id: turnId, model, model_provider: modelProvider, effort } = context;
         if (type === 'session_meta' && owner === undefined && typeof id === 'string') {
           owner = id;
         }
         if (owner === undefined) {
           continue;
+        }
+        const actor = actors.get(owner);
+        const evidenceSource = `${resolve(codexHome, file)}#L${lineNumber}`;
+        if (type === 'session_meta' && actor !== undefined && id === owner) {
+          const source = objectRecord(field(context, 'source'));
+          const subagent = objectRecord(field(source, 'subagent'));
+          const threadSpawn = objectRecord(field(subagent, 'thread_spawn'));
+          const role = firstText(field(context, 'agent_role'));
+          const agentPath = firstText(field(context, 'agent_path'));
+          const agentNickname = firstText(field(context, 'agent_nickname'));
+          const provider = firstText(modelProvider);
+          const parentThreadId = firstText(field(threadSpawn, 'parent_thread_id'));
+
+          actor.contexts.push({
+            source: evidenceSource,
+            ...(redactEvidence(context, secrets) as Record<string, unknown>),
+          });
+          actor.sources.sessionMeta.push(evidenceSource);
+          actor.assignment = {
+            role,
+            agentPath,
+            agentNickname,
+            modelProvider: provider,
+            source: evidenceSource,
+          };
+          actor.role = role;
+          actor.parentThreadId ??= parentThreadId;
+          if (parentThreadId !== null && !actor.sources.parentChild.includes(evidenceSource)) {
+            actor.sources.parentChild.push(evidenceSource);
+            projection.actorRelations.push({
+              parentThreadId,
+              childThreadId: owner,
+              source: evidenceSource,
+            });
+            const parent = actors.get(parentThreadId);
+            if (parent !== undefined) {
+              if (!parent.childThreadIds.includes(owner)) {
+                parent.childThreadIds.push(owner);
+              }
+              parent.sources.parentChild.push(evidenceSource);
+            }
+          }
         }
         if (type === 'turn_context') {
           currentTurn =
@@ -262,24 +379,39 @@ export async function collectEvidence(
               threadId: owner,
               turnId: toolTurn,
               record: objectRecord(redactEvidence(context, secrets)) ?? {},
-              source: `${resolve(codexHome, file)}#L${lineNumber}`,
+              source: evidenceSource,
             });
+            if (actor !== undefined) {
+              actor.sources.toolRecords.push(evidenceSource);
+            }
           }
         }
         if (owner === undefined || type !== 'turn_context' || typeof turnId !== 'string') {
           continue;
         }
 
-        const actor = actors.get(owner);
         if (actor === undefined || !liveTurns.get(owner)?.has(turnId)) {
           continue;
         }
-        actor.contexts.push({ source: `${resolve(codexHome, file)}#L${lineNumber}`, ...context });
+        actor.contexts.push({
+          source: evidenceSource,
+          ...(redactEvidence(context, secrets) as Record<string, unknown>),
+        });
+        actor.sources.turnContexts.push(evidenceSource);
         const prior = actor.modelsByTurn[turnId];
         const effective = typeof model === 'string' ? model : null;
         actor.modelsByTurn = {
           ...actor.modelsByTurn,
           [turnId]: prior === undefined || prior === effective ? effective : null,
+        };
+        const priorReasoning = actor.reasoningEffortByTurn[turnId];
+        const effectiveReasoning = firstText(effort);
+        actor.reasoningEffortByTurn = {
+          ...actor.reasoningEffortByTurn,
+          [turnId]:
+            priorReasoning === undefined || priorReasoning === effectiveReasoning
+              ? effectiveReasoning
+              : null,
         };
       }
     }
@@ -301,7 +433,9 @@ export async function collectEvidence(
   }
 
   for (const actor of actors.values()) {
-    if (actor.contexts.length === 0) {
+    actor.model = observedValue(Object.values(actor.modelsByTurn));
+    actor.reasoningEffort = observedValue(Object.values(actor.reasoningEffortByTurn));
+    if (actor.sources.turnContexts.length === 0) {
       projection.issues.push(`No live turn-context identity was captured for ${actor.threadId}.`);
     }
   }
@@ -311,6 +445,44 @@ export async function collectEvidence(
     actors: [...actors.values()],
     toolRecords,
   };
+}
+
+function firstText(...values: unknown[]): string | null {
+  return (
+    values.find((value): value is string => typeof value === 'string' && value.length > 0) ?? null
+  );
+}
+
+function observedValue(values: readonly (string | null)[]): string | null {
+  if (values.length === 0 || values.some((value) => value === null)) {
+    return null;
+  }
+
+  const observed = [...new Set(values)];
+  return observed.length === 1 ? (observed[0] ?? null) : null;
+}
+
+function field(record: Record<string, unknown> | undefined, key: string): unknown {
+  return record?.[key];
+}
+
+function messageContent(item: Record<string, unknown>): string | null {
+  const direct = firstText(field(item, 'text'));
+  if (direct !== null) {
+    return direct;
+  }
+
+  const content = field(item, 'content');
+  if (!Array.isArray(content)) {
+    return null;
+  }
+
+  const parts = content.flatMap((part) => {
+    const record = objectRecord(part);
+    const text = field(record, 'text');
+    return typeof text !== 'string' ? [] : [text];
+  });
+  return parts.length > 0 ? parts.join('') : null;
 }
 
 function redactEvidence(value: unknown, secrets: readonly string[]): unknown {

@@ -163,6 +163,10 @@ grading/operation records, immutable JSON/Markdown reports, and native Promptfoo
 JSON/HTML exports. A private SQLite file supports those native exports; it is not
 the authoritative result store. Generated records and caches stay ignored.
 
+Native evidence retains root/worker conversations, observed role assignments,
+parent-child source references and per-turn model/effort. Missing identity stays
+null; a message recipient alone does not establish a child worker.
+
 An operation records one preparation, execution, verification or grading attempt.
 Run-level status, failure cause and the completion-record link appear in the
 project report, including errors before the first trial or during batch export.
