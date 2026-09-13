@@ -80,7 +80,7 @@
           "rule": {
             "type": "route",
             "alternatives": [["anti-slop"]],
-            "optional": []
+            "optional": ["pr-review"]
           }
         }
       },
@@ -189,7 +189,7 @@
           "rule": {
             "type": "route",
             "alternatives": [["anti-slop"]],
-            "optional": []
+            "optional": ["pr-review"]
           }
         }
       },
@@ -298,7 +298,7 @@
           "rule": {
             "type": "route",
             "alternatives": [["anti-slop"]],
-            "optional": []
+            "optional": ["pr-review"]
           }
         }
       },
@@ -625,7 +625,7 @@
           "rule": {
             "type": "route",
             "alternatives": [["anti-slop"]],
-            "optional": []
+            "optional": ["pr-review"]
           }
         }
       },
@@ -734,7 +734,7 @@
           "rule": {
             "type": "route",
             "alternatives": [["anti-slop"]],
-            "optional": []
+            "optional": ["pr-review"]
           }
         }
       },
@@ -5312,7 +5312,7 @@
           "rule": {
             "type": "route",
             "alternatives": [["execute-plan-loop"]],
-            "optional": ["ensure-atomic-pr"]
+            "optional": ["ensure-atomic-pr", "anti-slop", "pr-review"]
           }
         }
       },
@@ -7709,7 +7709,7 @@
           "rubric": "This is a routing-only check. The answer must select one allowed exact route alternative and may include only explicitly optional companions; route selection does not prove downstream execution.",
           "rule": {
             "type": "route",
-            "alternatives": [["execute-plan-loop"]],
+            "alternatives": [["execute-plan-loop"], []],
             "optional": []
           }
         }
@@ -7722,7 +7722,7 @@
           "core": true,
           "method": "text-rubric",
           "requirements": ["expectation-000"],
-          "rubric": "This is a routing-only classification case. Assess whether the selected route and rationale identify how the downstream skill should handle the requirement below. Do not require actual task execution, file edits, scans, reviews, or tool calls in this classification answer. Requirement: Selects execute-plan-loop for the approved single-agent slice without a new planning or approval round; does not claim implementation or tests ran when task files are unavailable."
+          "rubric": "This is a routing-only classification case. Assess whether the selected route and rationale identify how the downstream skill should handle the requirement below. Do not require actual task execution, file edits, scans, reviews, or tool calls in this classification answer. Requirement: Selects execute-plan-loop or handles the clear one-step slice directly under its documented exception, without a new planning or approval round; does not claim implementation or tests ran when task files are unavailable."
         }
       },
       {
@@ -8037,7 +8037,7 @@
           "rule": {
             "type": "route",
             "alternatives": [["execute-plan-loop"]],
-            "optional": []
+            "optional": ["anti-slop", "pr-review"]
           }
         }
       },
@@ -11197,7 +11197,7 @@
           "rubric": "This is a routing-only check. The answer must select one allowed exact route alternative and may include only explicitly optional companions; route selection does not prove downstream execution.",
           "rule": {
             "type": "route",
-            "alternatives": [[]],
+            "alternatives": [["pr-review"]],
             "optional": []
           }
         }
@@ -13487,7 +13487,7 @@
           "rule": {
             "type": "route",
             "alternatives": [["pr-review"]],
-            "optional": []
+            "optional": ["anti-slop"]
           }
         }
       },
@@ -13705,7 +13705,7 @@
           "rule": {
             "type": "route",
             "alternatives": [["pr-review"]],
-            "optional": []
+            "optional": ["anti-slop"]
           }
         }
       },
@@ -15770,7 +15770,7 @@
           "rule": {
             "type": "route",
             "alternatives": [["pr-review"]],
-            "optional": []
+            "optional": ["anti-slop"]
           }
         }
       },
@@ -16880,7 +16880,7 @@
           "rule": {
             "type": "route",
             "alternatives": [["rubber-duck"]],
-            "optional": []
+            "optional": ["anti-slop"]
           }
         }
       },

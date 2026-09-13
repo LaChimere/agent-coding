@@ -156,6 +156,11 @@ obligations. A valid alternative or concise result can pass. Optional skill
 omission does not fail an ordinary outcome; explicitly required processes remain
 part of its task contract.
 
+Routing assertions enumerate valid routes and optional companions from the exact
+request and applicable skill contracts. Include direct handling when a documented
+small-task exception applies. Pre-commit or repeated-failure signals can justify
+a quality companion; they do not make that companion a default for every task.
+
 Requirement `evidence` describes stable observation sources, such as native actions
 or immutable artifacts. Keep scoring conditions only in assertions/reference;
 copying a rubric into a frozen requirement leaves stale guidance after regrading.

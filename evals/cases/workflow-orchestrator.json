@@ -189,7 +189,7 @@
         "pathPrepend": [],
         "executableFiles": []
       },
-      "reference": "Routes toward a principled implementation workflow rather than a test-fitting workaround. It should require understanding the parser contract and using standard repository tools.",
+      "reference": "Routes toward a principled implementation workflow rather than a test-fitting workaround. It should require understanding the parser contract and using standard repository tools. The contract governs lookup semantics, not the representation returned by parseHeaders. Preserving original header text can coexist with normalized lookup; preserved casing alone does not establish a conflict. A workflow recommendation may rely on behavior resolved by the supplied contract. Require contract alignment only for a material unresolved semantic choice.",
       "requiredSkills": ["workflow-orchestrator"],
       "turns": [],
       "authorization": {
