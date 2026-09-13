@@ -283,6 +283,192 @@ test('retains live projection and counters when auxiliary log enumeration fails'
   }
 });
 
+test('persists observed actor assignment, parent-child links, and ordered candidate/user content', async () => {
+  const directory = await mkdtemp(resolve('.cache/evidence-test-'));
+  try {
+    await mkdir(resolve(directory, 'sessions'));
+
+    const session = (payload: Record<string, unknown>) => ({
+      type: 'session_meta',
+      payload,
+    });
+    const context = (turnId: string, model: string, reasoningEffort: string) => ({
+      type: 'turn_context',
+      payload: Object.fromEntries([
+        ['turn_id', turnId],
+        ['model', model],
+        ['effort', reasoningEffort],
+      ]),
+    });
+    const tool = (name: string, turnId: string) => ({
+      type: 'response_item',
+      payload: Object.fromEntries([
+        ['type', 'custom_tool_call'],
+        ['name', name],
+        ['input', `read ${name}`],
+        ['internal_chat_message_metadata_passthrough', Object.fromEntries([['turn_id', turnId]])],
+      ]),
+    });
+
+    await Bun.write(
+      resolve(directory, 'sessions/parent.jsonl'),
+      [
+        session(
+          Object.fromEntries([
+            ['id', 'parent'],
+            ['model_provider', 'copilot_api'],
+          ]),
+        ),
+        context('parent-turn-1', 'gpt-6-astra', 'high'),
+        tool('delegate', 'parent-turn-1'),
+      ]
+        .map((row) => JSON.stringify(row))
+        .join('\n'),
+    );
+    await Bun.write(
+      resolve(directory, 'sessions/child.jsonl'),
+      [
+        session(
+          Object.fromEntries([
+            ['id', 'child'],
+            [
+              'source',
+              {
+                subagent: Object.fromEntries([
+                  ['thread_spawn', Object.fromEntries([['parent_thread_id', 'parent']])],
+                ]),
+              },
+            ],
+            ['agent_role', 'ordinary_worker'],
+            ['agent_path', '/root/worker'],
+            ['agent_nickname', 'worker'],
+            ['model_provider', 'copilot_api'],
+          ]),
+        ),
+        session(
+          Object.fromEntries([
+            ['id', 'parent'],
+            ['model_provider', 'copilot_api'],
+          ]),
+        ),
+        context('inherited-parent-turn', 'gpt-6-astra', 'high'),
+        context('child-turn-1', 'gpt-5.6-luna', 'max'),
+        tool('read-numbers', 'child-turn-1'),
+      ]
+        .map((row) => JSON.stringify(row))
+        .join('\n'),
+    );
+
+    const records = [
+      event('item/completed', {
+        threadId: 'parent',
+        turnId: 'parent-turn-1',
+        item: {
+          id: 'user-1',
+          type: 'userMessage',
+          content: [{ type: 'text', text: 'Read numbers.txt.' }],
+        },
+      }),
+      event('item/completed', {
+        threadId: 'parent',
+        turnId: 'parent-turn-1',
+        item: { id: 'question', type: 'agentMessage', text: 'I will delegate this read.' },
+      }),
+      event('item/completed', {
+        threadId: 'parent',
+        turnId: 'parent-turn-1',
+        item: { id: 'spawn', type: 'subAgentActivity', agentThreadId: 'child' },
+      }),
+      event('item/completed', {
+        threadId: 'child',
+        turnId: 'child-turn-1',
+        item: {
+          id: 'read',
+          type: 'commandExecution',
+          command: 'sed -n 1,20p numbers.txt',
+          exitCode: 0,
+        },
+      }),
+      event('item/completed', {
+        threadId: 'child',
+        turnId: 'child-turn-1',
+        item: { id: 'worker-answer', type: 'agentMessage', text: 'Largest is 21.' },
+      }),
+      event('item/completed', {
+        threadId: 'parent',
+        turnId: 'parent-turn-1',
+        item: { id: 'answer', type: 'agentMessage', text: 'Largest: 21' },
+      }),
+    ];
+
+    const evidence = await collectEvidence(records, 'parent', 'protocol.jsonl', directory);
+    const parent = evidence.actors.find((actor) => actor.threadId === 'parent');
+    const child = evidence.actors.find((actor) => actor.threadId === 'child');
+
+    expect(evidence.conversation.map(({ actor, content }) => ({ actor, content }))).toEqual([
+      { actor: 'user', content: 'Read numbers.txt.' },
+      { actor: 'candidate', content: 'I will delegate this read.' },
+      { actor: 'candidate', content: 'Largest is 21.' },
+      { actor: 'candidate', content: 'Largest: 21' },
+    ]);
+    expect(evidence.actorRelations).toEqual([
+      {
+        parentThreadId: 'parent',
+        childThreadId: 'child',
+        source: `${resolve(directory, 'sessions/child.jsonl')}#L1`,
+      },
+    ]);
+    expect(parent).toMatchObject({
+      role: null,
+      model: 'gpt-6-astra',
+      reasoningEffort: 'high',
+      childThreadIds: ['child'],
+    });
+    expect(parent?.sources.sessionMeta[0]).toContain('sessions/parent.jsonl#L1');
+    expect(parent?.sources.turnContexts[0]).toContain('sessions/parent.jsonl#L2');
+    expect(child).toMatchObject({
+      parentThreadId: 'parent',
+      role: 'ordinary_worker',
+      model: 'gpt-5.6-luna',
+      reasoningEffort: 'max',
+      assignment: {
+        role: 'ordinary_worker',
+        agentPath: '/root/worker',
+        agentNickname: 'worker',
+      },
+    });
+    expect(child?.sources.sessionMeta[0]).toContain('sessions/child.jsonl#L1');
+    expect(child?.sources.sessionMeta).toHaveLength(1);
+    expect(child?.sources.toolRecords).toHaveLength(1);
+    expect(child?.sources.toolRecords[0]).toContain('sessions/child.jsonl#L5');
+    expect(evidence.toolRecords.some((record) => record.threadId === 'child')).toBeTrue();
+  } finally {
+    await rm(directory, { recursive: true });
+  }
+});
+
+test('communication recipients are actors, not proof of parent-child identity', () => {
+  const evidence = projectEvidence(
+    [
+      event('item/completed', {
+        threadId: 'sender',
+        turnId: 'one',
+        item: {
+          id: 'message',
+          type: 'subAgentActivity',
+          kind: 'interacted',
+          agentThreadId: 'recipient',
+        },
+      }),
+    ],
+    'sender',
+    'protocol.jsonl',
+  );
+
+  expect(evidence.threadIds).toContain('recipient');
+  expect(evidence.actorRelations).toEqual([]);
+});
+
 test('reads persisted protocol, rejects invalid records and preserves missing identity', async () => {
   const directory = await mkdtemp(resolve('.cache/evidence-test-'));
   try {
