@@ -1,5 +1,11 @@
 import type { ILoadedCase } from '../corpus/cases.ts';
 import {
+  buildCoverageReport,
+  buildQualityDimensions,
+  type ICoverageReport,
+  type IQualityDimensions,
+} from './coverage.ts';
+import {
   buildQualityReport,
   type GradingSelection,
   type IQualitySummary,
@@ -104,6 +110,7 @@ export interface IExecutionSummary {
 export interface IReportSummary {
   plannedTrials: number;
   quality: IQualitySummary;
+  qualityDimensions: IQualityDimensions;
   execution: IExecutionSummary;
   resources: Pick<
     IResourceReport,
@@ -136,7 +143,8 @@ export interface IReport {
   grades: readonly IStoredGrade[];
 
   trials: readonly IReportTrial[];
-  quality: ReturnType<typeof buildQualityReport>;
+  quality: ReturnType<typeof buildQualityReport> & IQualityDimensions;
+  coverage: ICoverageReport;
   resources: IResourceReport;
   summary: IReportSummary;
 }
@@ -485,6 +493,7 @@ export function buildReport(input: {
     input.grades,
     definition.gradingSelection,
   );
+  const qualityDimensions = buildQualityDimensions(gradingCases, quality.trials);
 
   const accountingInput: IResourceAccountingInput = {
     operations: input.operations,
@@ -548,6 +557,7 @@ export function buildReport(input: {
   const summary: IReportSummary = {
     plannedTrials: trialDefinitions.definitions.length,
     quality: quality.summary,
+    qualityDimensions,
     execution: executionSummary(input.trialResults, trialDefinitions.definitions.length),
     resources: {
       operationCount: resources.operationCount,
@@ -558,6 +568,17 @@ export function buildReport(input: {
       actualCost: resources.actualCost,
     },
   };
+
+  const coverage = buildCoverageReport({
+    cases: gradingCases,
+    trials: trialDefinitions.definitions,
+    observedTrials: trials.map((trial) => ({
+      id: trial.id,
+      caseId: trial.caseId,
+      executionStatus: trial.execution.status,
+      quality: trial.quality,
+    })),
+  });
 
   return deepFreeze({
     schema: 'codex-evals/report-v2',
@@ -574,7 +595,8 @@ export function buildReport(input: {
     trialResults: input.trialResults,
     grades: input.grades,
     trials,
-    quality,
+    quality: { ...quality, ...qualityDimensions },
+    coverage,
     resources,
     summary,
   });
@@ -640,9 +662,11 @@ export function renderReportMarkdown(report: IReport): string {
       ? []
       : [`- Run evidence: ${markdownLink(report.runOutcome.evidence)}`]),
     `- Planned trials: ${report.summary.plannedTrials}`,
-    `- Quality: ${report.summary.quality.passed} passed, ${report.summary.quality.failed} failed, ${report.summary.quality.unknown} unknown`,
+    `- Quality (all trials): ${report.quality.allTrials.passed} passed, ${report.quality.allTrials.failed} failed, ${report.quality.allTrials.unknown} unknown`,
     `- Decidable pass rate: ${report.summary.quality.passRate ?? 'unavailable'}`,
     `- Decision coverage: ${report.summary.quality.decisionCoverage ?? 'unavailable'}`,
+    `- Quality (ordinary tasks): ${report.quality.outcome.passed} passed, ${report.quality.outcome.failed} failed, ${report.quality.outcome.unknown} unknown`,
+    `- Quality (mechanisms): ${report.quality.mechanism.passed} passed, ${report.quality.mechanism.failed} failed, ${report.quality.mechanism.unknown} unknown`,
     `- Operation duration (ms): ${formatMeasurement(report.resources.operationDuration)}`,
     `- Wall elapsed (ms): ${formatMeasurement(report.resources.wallElapsed)}`,
     formatTokens('Input tokens', report.resources.usage.input),
@@ -695,6 +719,26 @@ export function renderReportMarkdown(report: IReport): string {
       '',
     );
   }
+
+  lines.push('## Quality by work family', '');
+  for (const family of ['planning', 'implementation', 'review', 'documentation'] as const) {
+    const summary = report.quality.workFamilies[family];
+    lines.push(
+      `- ${family}: ${summary.passed} passed, ${summary.failed} failed, ${summary.unknown} unknown (${summary.decidable}/${summary.planned} decidable)`,
+    );
+  }
+  lines.push('', '## Core capability coverage (requirement observations)', '');
+  lines.push(
+    `- Planned cases: ${report.coverage.plannedCases}`,
+    `- Cases with linked assessment evidence: ${report.coverage.observedCases}`,
+    `- Cases with unrecorded trials: ${report.coverage.notRecordedCases}`,
+  );
+  for (const capability of report.coverage.capabilities) {
+    lines.push(
+      `- ${capability.capability}: ${capability.decidable} decidable, ${capability.unknown} unknown, ${capability.notRecorded} not-recorded; cases ${capability.caseIds.join(', ') || 'none'}; checks ${capability.observedCheckIds.join(', ') || 'none'}`,
+    );
+  }
+  lines.push('');
 
   lines.push('## Trials', '');
 

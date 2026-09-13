@@ -291,6 +291,14 @@ test('builds an immutable report from explicit grading and resource selections',
     passed: 1,
     decisionCoverage: 1,
   });
+  expect(report.quality.allTrials).toEqual(report.quality.summary);
+  expect(report.quality.outcome).toMatchObject({ planned: 1, passed: 1 });
+  expect(report.quality.mechanism).toMatchObject({ planned: 0, decidable: 0 });
+  expect(report.coverage.requirements[0]).toMatchObject({
+    caseIds: ['trial-a'],
+    checkIds: ['task'],
+    observedCheckIds: ['task'],
+  });
 
   expect(report.trials[0]).toMatchObject({
     id: 'trial-a',
@@ -330,6 +338,9 @@ test('renders phase token/cost coverage, check reasons, evidence and execution e
 
   expect(report.trials[0]?.execution.evidence.every((path) => typeof path === 'string')).toBe(true);
   expect(markdown).toContain('## Resources by phase');
+  expect(markdown).toContain('Quality (all trials):');
+  expect(markdown).toContain('## Quality by work family');
+  expect(markdown).toContain('## Core capability coverage (requirement observations)');
   expect(markdown).toContain('### candidate');
   expect(markdown).toContain('Input tokens: 10 tokens');
   expect(markdown).toContain('Estimated cost: unknown');

@@ -570,6 +570,61 @@ test('compares common final grades when frozen original grading versions differ'
   expect(left.manifest.collection).toEqual(before);
 });
 
+test('keeps ordinary and mechanism pair totals separate', () => {
+  const leftTrials = [
+    trial('left-outcome', 'outcome-case', 'outcome-execution'),
+    trial('left-mechanism', 'mechanism-case', 'mechanism-execution'),
+  ];
+  const rightTrials = [
+    trial('right-outcome', 'outcome-case', 'outcome-execution'),
+    trial('right-mechanism', 'mechanism-case', 'mechanism-execution'),
+  ];
+  const left = structuredClone(
+    makeReport(
+      'left-run',
+      leftTrials,
+      { 'left-outcome': 'passed', 'left-mechanism': 'failed' },
+      leftTrials.map((item) => operation(item.id)),
+    ),
+  );
+  const right = structuredClone(
+    makeReport(
+      'right-run',
+      rightTrials,
+      { 'right-outcome': 'passed', 'right-mechanism': 'passed' },
+      rightTrials.map((item) => operation(item.id)),
+    ),
+  );
+  for (const report of [left, right]) {
+    const mechanism = report.manifest.cases.find(
+      (item) => item.definition.metadata.id === 'mechanism-case',
+    );
+    const gradingMechanism = report.definition.gradingCases.find(
+      (item) => item.definition.metadata.id === 'mechanism-case',
+    );
+    if (mechanism === undefined || gradingMechanism === undefined) {
+      throw new Error('Mechanism test case missing.');
+    }
+    mechanism.definition.metadata.assessment = 'mechanism';
+    mechanism.definition.metadata.workFamily = null;
+    gradingMechanism.definition.metadata.assessment = 'mechanism';
+    gradingMechanism.definition.metadata.workFamily = null;
+  }
+
+  const comparison = compareReports({
+    left,
+    right,
+    pairs: [
+      { leftTrialId: 'left-outcome', rightTrialId: 'right-outcome' },
+      { leftTrialId: 'left-mechanism', rightTrialId: 'right-mechanism' },
+    ],
+  });
+
+  expect(comparison.quality.allTrials).toMatchObject({ plannedPairs: 2, eligiblePairs: 2 });
+  expect(comparison.quality.outcome).toMatchObject({ plannedPairs: 1, eligiblePairs: 1 });
+  expect(comparison.quality.mechanism).toMatchObject({ plannedPairs: 1, eligiblePairs: 1 });
+});
+
 test('keeps absolute report timestamps out of quality and resource eligibility', () => {
   const leftTrial = trial('left', 'case', 'execution');
   const rightTrial = trial('right', 'case', 'execution');
