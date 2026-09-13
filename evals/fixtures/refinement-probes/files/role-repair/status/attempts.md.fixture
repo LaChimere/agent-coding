@@ -1,0 +1,6 @@
+# Repair attempts
+
+The first bounded implementation attempt changed the function, but the supplied
+test still fails for the fee calculation. Preserve this record, inspect the
+actual source and test, and use at most one targeted repair before returning the
+result to the primary.

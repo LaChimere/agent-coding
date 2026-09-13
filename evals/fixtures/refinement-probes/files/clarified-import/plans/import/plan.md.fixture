@@ -1,0 +1,19 @@
+# Profile import validation
+
+## Approval
+
+Approved for implementation.
+
+## Next slice
+
+Add the agreed validation for imported display names.
+
+## Verification
+
+Run `node --test test/import.test.js`.
+
+## Execution status
+
+- [ ] Apply the clarified display-name rule
+
+Evidence: none recorded.

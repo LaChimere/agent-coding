@@ -1,0 +1,8 @@
+import test from "node:test";
+import assert from "node:assert/strict";
+import { totalWithFee } from "../src/total.js";
+
+test("adds the fee for ordinary and fractional values", () => {
+  assert.equal(totalWithFee(10, 2), 12);
+  assert.equal(totalWithFee(1.25, 0.5), 1.75);
+});

@@ -1,0 +1,14 @@
+import test from "node:test";
+import assert from "node:assert/strict";
+import { validateProfile } from "../src/import.js";
+
+test("normalizes a nonblank display name", () => {
+  assert.deepEqual(validateProfile({ email: "ada@example.test", displayName: " Ada " }), {
+    email: "ada@example.test",
+    displayName: "Ada",
+  });
+});
+
+test("blank display name", () => {
+  assert.throws(() => validateProfile({ email: "ada@example.test", displayName: "   " }), /display name/i);
+});

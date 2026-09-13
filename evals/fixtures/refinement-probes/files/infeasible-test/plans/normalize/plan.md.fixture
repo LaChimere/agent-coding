@@ -1,0 +1,20 @@
+# Normalize account identifiers
+
+## Approval
+
+Approved for implementation.
+
+## Contract
+
+The supplied contract is authoritative: an empty identifier is rejected and
+surrounding whitespace is removed from non-empty identifiers.
+
+## Next slice
+
+Implement the contract and run the existing test.
+
+## Execution status
+
+- [ ] Implement identifier normalization
+
+Evidence: none recorded.

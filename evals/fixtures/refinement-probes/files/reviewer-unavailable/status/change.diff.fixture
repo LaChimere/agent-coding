@@ -1,0 +1,9 @@
+diff --git a/src/value.js b/src/value.js
+new file mode 100644
+index 0000000..a1b2c3d
+--- /dev/null
++++ b/src/value.js
+@@
++export function clamp(value, minimum, maximum) {
++  return Math.min(maximum, Math.max(minimum, value));
++}
