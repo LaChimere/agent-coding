@@ -1,0 +1,5 @@
+# Import contract
+
+Imported email addresses must be non-empty. Display-name whitespace is normalized
+before the profile is stored. The contract does not yet decide what to do with a
+blank display name.

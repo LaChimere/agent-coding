@@ -1,0 +1,8 @@
+export function normalizeDisplayName(value) {
+  return value.trim();
+}
+
+export function validateProfile(profile) {
+  if (!profile.email) throw new Error("email is required");
+  return { ...profile, displayName: normalizeDisplayName(profile.displayName) };
+}

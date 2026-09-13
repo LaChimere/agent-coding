@@ -1,0 +1,20 @@
+# Total calculation repair
+
+## Approval
+
+Approved for implementation in the working tree. Preserve the exported API and
+do not edit the test file.
+
+## Next slice
+
+Correct `totalWithFee` and verify the supplied tests.
+
+## Verification
+
+Run `node --test test/total.test.js`.
+
+## Execution status
+
+- [ ] Correct totalWithFee
+
+Evidence: the primary retains the worker's attempts and validation output.

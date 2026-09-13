@@ -1,0 +1,4 @@
+# Identifier contract
+
+`normalizeIdentifier` rejects an empty identifier and returns the trimmed value
+for a non-empty identifier.

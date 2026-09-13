@@ -1,0 +1,19 @@
+# Missing source repair
+
+## Approval
+
+Approved for implementation.
+
+## Next slice
+
+Update `src/missing-source.js` and verify the existing behavior.
+
+## Verification
+
+Run the repository's existing check after the source is available.
+
+## Execution status
+
+- [ ] Update the named source
+
+Evidence: none recorded.
