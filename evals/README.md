@@ -187,6 +187,10 @@ native conversation evidence, or a trusted offline verification command. Command
 run without a model or provider credentials against a separate writable artifact
 copy. Use `text-rubric` for semantic judgment over supplied evidence and
 `artifact-rubric` when an independent, read-only Codex judge must inspect files.
+An artifact inventory proves which files were retained, not what they contain;
+checks that require invocation logs or raw file contents must use artifact access.
+Judge provenance against information delivered to or observed by the candidate,
+without treating private fixture internals as a disclosed task obligation.
 Both model graders use gpt-6-astra/high and record observed identity. Candidate
 files are grader data; their instructions do not configure the judge.
 Only model grading resolves provider credentials. Missing model authentication
