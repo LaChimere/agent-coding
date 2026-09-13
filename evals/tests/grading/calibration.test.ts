@@ -1,8 +1,9 @@
 import { expect, test } from 'bun:test';
 import { mkdir, mkdtemp, rm } from 'node:fs/promises';
 import { resolve } from 'node:path';
+import { contentHash } from '../../src/preparation/snapshot.ts';
 
-async function runCalibration(interrupt: boolean) {
+async function runCalibration(interrupt: boolean, labels?: 'confirmed' | 'one-method') {
   const project = await mkdtemp(resolve('.cache/calibration-test-'));
 
   try {
@@ -36,6 +37,24 @@ async function runCalibration(interrupt: boolean) {
       resolve(project, 'src/grading/rubric.ts'),
       await Bun.file(resolve(import.meta.dir, '../fixtures/calibration-grader.ts')).bytes(),
     );
+
+    await Bun.write(
+      resolve(project, 'holdout/cases/private.json'),
+      'Must not be read by calibration.',
+    );
+    if (labels !== undefined) {
+      const samples = await Bun.file(resolve(project, 'calibration/samples.json')).json();
+      await Bun.write(
+        resolve(project, 'calibration/labels.json'),
+        JSON.stringify({
+          sampleHash: contentHash(JSON.stringify(samples)),
+          confirmedAt: '2026-09-13T00:00:00Z',
+          source: 'repository-owner',
+          methods: labels === 'confirmed' ? ['text-rubric', 'artifact-rubric'] : ['text-rubric'],
+          labels: { 'fixture-0': 'passed' },
+        }),
+      );
+    }
 
     const child = Bun.spawn(
       [process.execPath, resolve(import.meta.dir, '../fixtures/calibration-runner.ts'), project],
@@ -71,6 +90,7 @@ test('calibration freezes reference prices and accounts for both graders without
   const { report, frozenPriceBook } = await runCalibration(false);
 
   expect(report).toMatchObject({
+    scope: 'calibration',
     planned: 2,
     graded: 2,
     labelsConfirmed: false,
@@ -81,6 +101,15 @@ test('calibration freezes reference prices and accounts for both graders without
   expect(report.resources.estimatedCost.coverage).toBe('partial');
   expect(report.resources.actualCost.value).toBeNull();
   expect(frozenPriceBook).toEqual(report.priceBook);
+});
+
+test('requires confirmation for both methods before claiming label agreement', async () => {
+  await expect(runCalibration(false, 'one-method')).rejects.toThrow(
+    'Human calibration labels do not match',
+  );
+  const { report } = await runCalibration(false, 'confirmed');
+
+  expect(report).toMatchObject({ labelsConfirmed: true, agreementCount: 2 });
 });
 
 test('cancellation drains started graders and refuses queued rows before saving reports and exports', async () => {

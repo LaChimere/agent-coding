@@ -1,11 +1,21 @@
 {
-  "sampleHash": "702275c63b590a96fbe7041f7a1d4be676efc0fa220f90884bddfbd3140bd439",
-  "confirmedAt": "2026-09-11T18:05:40.525Z",
+  "sampleHash": "35950407c93693dada1ceccdf6b6549de899e570cd5cca0a4a1c85d28d4a90e0",
+  "confirmedAt": "2026-09-13T04:12:28Z",
   "source": "repository-owner",
   "methods": ["text-rubric", "artifact-rubric"],
   "labels": {
     "complete-success": "passed",
     "complete-failure": "failed",
-    "missing-capture": "unknown"
+    "missing-capture": "unknown",
+    "concise-correct-routing": "passed",
+    "elaborate-wrong-routing": "failed",
+    "valid-direct-alternative": "passed",
+    "review-only-edit-violation": "failed",
+    "material-clarification": "passed",
+    "template-compatible-question": "passed",
+    "unsupported-completion": "failed",
+    "observed-worker-result": "passed",
+    "missing-worker-capture": "unknown",
+    "fixture-live-claim": "failed"
   }
 }
