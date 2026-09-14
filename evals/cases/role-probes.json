@@ -133,10 +133,6 @@
         {
           "source": "pr-review/files/challenge-auto/status/change.diff.fixture",
           "target": "status/change.diff"
-        },
-        {
-          "source": "pr-review/files/challenge-auto/status/capabilities.md.fixture",
-          "target": "status/capabilities.md"
         }
       ],
       "execution": {
