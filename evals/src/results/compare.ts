@@ -261,8 +261,8 @@ function qualityComparison(
           return (
             left !== undefined &&
             right !== undefined &&
-            assessmentFor(leftReport, left) === expected &&
-            assessmentFor(rightReport, right) === expected
+            (assessmentFor(leftReport, left) === expected ||
+              assessmentFor(rightReport, right) === expected)
           );
         });
   const excluded: IComparisonExclusion[] = [];
@@ -283,6 +283,12 @@ function qualityComparison(
     ];
 
     if (left !== undefined && right !== undefined) {
+      if (
+        dimension !== 'allTrials' &&
+        assessmentFor(leftReport, left) !== assessmentFor(rightReport, right)
+      ) {
+        reasons.push('Assessment classification differs between paired trials.');
+      }
       if (!qualityStatus(left.quality.status) || !qualityStatus(right.quality.status)) {
         reasons.push('Both selected trial judgments must be decidable.');
       }

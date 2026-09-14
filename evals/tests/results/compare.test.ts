@@ -625,6 +625,60 @@ test('keeps ordinary and mechanism pair totals separate', () => {
   expect(comparison.quality.mechanism).toMatchObject({ plannedPairs: 1, eligiblePairs: 1 });
 });
 
+test('retains changed-assessment pairs as exclusions in both affected dimensions', () => {
+  const leftTrial = trial('left', 'case', 'execution');
+  const rightTrial = trial('right', 'case', 'execution');
+  const left = makeReport('left-run', [leftTrial], { left: 'passed' }, [operation('left')]);
+  const rightManifest = manifest('right-run', [rightTrial]);
+  const changedCase = rightManifest.cases[0];
+  if (changedCase === undefined) {
+    throw new Error('Comparison case missing.');
+  }
+
+  changedCase.definition.metadata.assessment = 'mechanism';
+  changedCase.definition.metadata.workFamily = null;
+  changedCase.version = 'reclassified-case';
+  rightTrial.caseVersion = changedCase.version;
+  rightManifest.collection = collection(rightManifest.cases);
+
+  const right = buildReport({
+    definition: {
+      id: 'right-report',
+      runId: rightManifest.id,
+      createdAt: 2,
+      gradingSelection: { right: { task: 'right-grade' } },
+      operationIds: ['operation-right'],
+      accountingPolicy: { mode: 'all-available', cutoffAt: 100 },
+    },
+    manifest: rightManifest,
+    trialResults: [result('right')],
+    grades: [grade('right-grade', 'right', 'passed', 'operation-right')],
+    operations: [operation('right')],
+  });
+
+  const pair = { leftTrialId: 'left', rightTrialId: 'right' };
+  const comparison = compareReports({ left, right, pairs: [pair] });
+
+  expect(comparison.quality.allTrials).toMatchObject({ plannedPairs: 1, eligiblePairs: 1 });
+  for (const dimension of [comparison.quality.outcome, comparison.quality.mechanism]) {
+    expect(dimension).toMatchObject({
+      plannedPairs: 1,
+      eligiblePairs: 0,
+      leftPassRate: null,
+      rightPassRate: null,
+      passRateDelta: null,
+      excludedPairs: [
+        { ...pair, reasons: ['Assessment classification differs between paired trials.'] },
+      ],
+    });
+  }
+  expect(comparison.left.outcome.planned).toBe(1);
+  expect(comparison.right.mechanism.planned).toBe(1);
+  expect(
+    comparison.resources.find((metric) => metric.metric === 'usage.input')?.eligiblePairs,
+  ).toBe(1);
+});
+
 test('keeps absolute report timestamps out of quality and resource eligibility', () => {
   const leftTrial = trial('left', 'case', 'execution');
   const rightTrial = trial('right', 'case', 'execution');

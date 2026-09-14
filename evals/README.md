@@ -219,6 +219,10 @@ Decidable pass rate uses passed / (passed + failed), while decision coverage use
 Reports separate ordinary outcomes from skill mechanisms and summarize planning,
 implementation, review and documentation. Requirement coverage links checks to
 observed evidence; diagnostic-only checks do not qualify a required capability.
+If a paired case changes assessment classification between runs, each affected
+dimension retains the pair in its planned denominator and records an exclusion.
+A classification change alone does not invalidate the all-trial or resource
+comparisons; their other eligibility checks still apply.
 
 The original six owner-confirmed calibration observations cover three samples
 across both model methods. The refinement adds representative positive, negative,
