@@ -51,7 +51,7 @@ structural checks; they are not a model-performance baseline.
 | `bun run test:coverage` | 238 pass, 0 fail, 1,093 expectations across 40 files after the repeated-trial fix; frozen coverage gate passed |
 | `bun run build` | 35 modules bundled successfully |
 | `bun dist/index.js validate --collection development` | 338 cases, 1,270 checks, valid |
-| `bun dist/index.js validate --collection holdout` | 6 cases, 10 checks, valid; aggregate output only |
+| `bun run start -- validate --collection holdout` | Independent implementer reported valid, 6 cases and 12 checks; aggregate output only |
 | `git diff --check` from the worktree root | Exit 0 |
 
 Targeted tests establish pre-read holdout exclusion, linked-input refusal,
@@ -101,8 +101,8 @@ The final bounded prompt-delivery review covered seven pinned implementation/tes
 files and found no material issue. It verified that only task and authorization
 scope enter the initial prompt, that native delivery and execution identity use
 the same constructor, and that the new unit tests restore their module mocks.
-Reviewers did not run models or the complete test suite; the command results above
-were produced by the primary.
+Reviewers did not run models or the complete test suite. The primary ran the
+framework gates; independent holdout validation is attributed separately above.
 
 The closeout scheduling fix received a separate read-only review of six pinned
 source/test files against `63d5d40`, covering code, comments, tests, error handling
@@ -162,7 +162,7 @@ unchanged candidate instructions.
 
 ## Holdout qualification
 
-Independent authoring and validation produced 6 cases, 10 assertions and 8 uniquely
+Initial independent authoring and validation produced 6 cases, 10 assertions and 8 uniquely
 bound fixtures: four ordinary outcomes, one per work family, and two mechanisms.
 The validator used the actual parser, checked fixture consistency, and exercised
 valid, invalid-extra and insufficient-evidence route assessments. All passed.
@@ -177,9 +177,20 @@ not demonstrated generalization.
 The patch review subsequently replaced 14 copied grading descriptions with stable
 observation sources. A different worker performed this bounded repair; independent
 re-review confirmed that only those fields changed and all eight fixtures remained
-unchanged. Current hashes and qualification are in
+unchanged. That revision's hashes and qualification are in
 `evals/out/full-patch-review/qualification.json`; the earlier qualification file
 retains its original revision's meaning.
+
+The whole-branch review later found that two route-only cases lacked a check for
+their explicitly forbidden actions. An isolated repair added one authorization
+requirement and one core artifact check to each case, using the existing grader.
+The current holdout therefore contains 6 cases, 12 assertions and the same 8
+fixtures. Independent re-review confirmed all original task data, requirements,
+checks, fixtures and exposure records were preserved. The checks permit allowed
+read-only skill inspection, require no downstream work, and retain unknown when
+decisive evidence is absent. This is a static assessment repair, not demonstrated
+holdout performance. Its pinned identity is in
+`evals/out/branch-review-20260914/round-2-scope.json`.
 
 ## Human calibration
 
