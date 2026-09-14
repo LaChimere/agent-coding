@@ -99,8 +99,8 @@ holdout execution, pushes or pull-request changes.
 | Cases and fair assessment | Complete | 338 development cases / 1,270 checks; outcome/mechanism metadata, grounded requirements, route alternatives, scanner provenance and meaningful blocker/interaction probes |
 | Native evidence and regrading | Complete | Own-session actor metadata, observed effort, actual parent-child identity, ordered conversation, restricted frozen-evidence regrading and compatible corrected comparisons |
 | Reporting and coverage | Complete | Separate quality dimensions, ordinary work families and core requirement/check/evidence observations; [coverage map](refinement-coverage.md) |
-| Local gates | Passed after the repeated-trial fix | `bun run check`; `bun run test:coverage`: 238 pass, 0 fail, 1,093 expectations across 40 files; `bun run build`; development 338/1,270 valid. Earlier independent holdout validation remains unchanged. |
-| Independent review | Converged | Complete round 1 covered 103 uncommitted files; all confirmed findings fixed; targeted round 2 found no new material issue |
+| Local gates | Passed after whole-branch review fixes | `bun run check`; `bun run test:coverage`: 239 pass, 0 fail, 1,099 expectations across 40 files; `bun run build`; development 338/1,270 valid; independent holdout validation 6/12 valid. |
+| Independent review | Converged | Earlier 103-file patch review and later 105-file whole-branch review completed; three confirmed whole-branch findings fixed; targeted round 2 found no new supported issue. |
 | Holdout preparation | Statically qualified | Independent author, implementer and reviewer; 6 cases / 12 checks / 8 unchanged fixtures after two added authorization checks; no model run or contents exposed to primary. |
 | Expanded calibration | Passed | Owner confirmed all 10 new shared labels for both methods on 2026-09-13; all 26 observations agreed, with no grader errors |
 | Fresh full development baseline | Recorded; original limitations retained | Run `40418426-0012-4dfb-b4cc-4d5c4a70f1fb`: 338 executions; corrected report `fe8c331e-4b82-44c1-a2cd-fa346f3d1c59`: 336 passed, 2 failed, no unknown cases. Its complex-worker boundary remains an unknown check after the native request failed; later probes do not rewrite this baseline. |
@@ -354,3 +354,99 @@ The documented closeout is delivered, while complex-worker stability remains an
 unmet prerequisite for using that path in second-stage acceptance. Broader runtime
 optimization, holdout execution, pushes and pull-request changes remain outside
 this closeout.
+
+## Whole-branch review and refinement
+
+The owner requested a complete branch review followed by prioritized corrections
+and re-review. Round 1 pinned `b19309413819690d14a02ffe9ccfe21ca1b29451` through
+`9d7cc567cfb150ab86f2eac4dbf4559568d53774`: 12 commits, 105 changed files and an
+initially clean working tree. A remote read confirmed the main branch still matched
+the base. The exact inventory is `evals/out/branch-review-20260914/scope.json`.
+
+Independent reviewers covered collection/CLI/frozen-input contracts, native
+evidence/grading/calibration, results/comparison, the development corpus, and
+private holdouts using all six applicable ordinary review methods. A separate
+Rubber Duck context checked design cohesion and qualification claims. The primary
+traced the shared implementations and checked each candidate against counterevidence;
+a second isolated reviewer adjudicated private holdout candidates.
+
+| Confirmed finding | Correction and evidence |
+| --- | --- |
+| Major: grouped comparisons silently lost reclassified pairs | Include either side's classification in the affected denominator and record the mismatch as an exclusion. The regression constructs valid reports, checks both dimensions and preserves independent all-trial/resource eligibility. |
+| Major: required reviewer probe included contradictory capability evidence | Remove only the unavailable-reviewer fixture binding from `role-probes/critical-reviewer`; the fixture remains referenced by its intended cases. |
+| Major: two holdout routes omitted their explicit action boundary | Add one authorization requirement and one core artifact check per case using existing grading. All original task data, checks and fixtures remain unchanged. |
+
+Three classes of candidate were rejected rather than expanded into new machinery.
+The frozen runtime actually lacks the security specialist, so an honest conditional
+unavailability statement is allowed; hypothetical future availability does not
+prove a defect in this qualification. Existing outcome artifact checks already
+receive original tests, changes, native actions and Git evidence, so the absence
+of extra programmatic checks does not establish a false case pass. Reasonable
+unmatched scripted questions retain the explicitly accepted incomplete/unknown
+state; no incorrect failure or verdict bypass was established. Their possible
+limitations are not new requirements for the candidate.
+
+Writes were serialized. The primary owned public source, regression tests, the
+development fixture binding and documentation. An ordinary worker then owned only
+the holdout case file; it returned aggregate validation without exposing task or
+answer contents. Shared contracts and tooling were unchanged. No additional
+worktree, plan ledger, schema, helper, scheduler or compatibility layer was needed.
+
+Primary validation:
+
+- `bun test tests/results/compare.test.ts` reproduced the defect: 16 pass, 1 fail;
+  the grouped denominator was zero and its exclusion list empty.
+- After correction, `bun test tests/results/compare.test.ts tests/corpus/inventory.test.ts`
+  reported 18 pass, 0 fail and 62 expectations.
+- From `evals/`, `bun run check && bun run test:coverage && bun run build && bun run start -- validate --collection development`
+  passed: 239 tests, 1,099 expectations, zero failures; 35 modules bundled;
+  development remained 338 cases and 1,270 checks. Frozen coverage and
+  warning-as-error enforcement passed without configuration changes.
+
+The holdout implementer ran `bun run start -- validate --collection holdout` and
+reported `valid:true`, 6 cases and 12 checks. Its
+`bunx biome check --error-on-warnings holdout/cases/holdout.json` checked one file
+with no fixes. The isolated reviewer confirmed two changed cases, two added
+requirements, two added checks, eight unchanged fixtures, all original fields
+preserved and a matching hash in `round-2-scope.json`.
+
+Targeted round 2 covered the four public correction files and the private holdout
+delta in separate contexts. No new supported comments survived. The primary
+accepted the corrections, checked their integration and completed the full
+anti-slop check. Only the demonstrated comparison defect and contradictory or
+missing assessment conditions were changed. Remaining additions use existing
+contracts and are necessary to keep those judgments honest.
+
+A separate local Codex Security diff workflow completed against the original
+branch pin. Capability preflight returned ready; a fresh architecture context and
+nine bounded file reviewers covered all 39 source-like inventory entries. The
+sealed report under `evals/out/branch-review-20260914/security/` has no reportable
+finding. Its source-only static limits are explicit; ordinary review covers tests,
+fixtures and prose. The primary checked the later correction for security impact;
+it introduces no new privilege boundary. No Daybreak Access request, scan service,
+native goal or candidate/grader evaluation was made. Review token usage and effective
+reviewer model/effort were not exposed. Independent contexts do not establish
+different model families.
+
+Launch recovery preserved assignments: one ordinary-review task name collision
+returned no handle and was retried once under a new name; one security shard hit
+capacity, then its single retry started after other workers completed. No role
+was silently downgraded and no review aspect was replaced by a failed launch.
+
+These corrections do not rerun, overwrite or relabel any native evaluation. The
+critical-reviewer fixture change receives a new execution identity; a later native
+qualification must use that identity. The v2 decryption limitation remains as
+recorded above. This review provides source and local validation, not a replacement
+full baseline or a new holdout performance result.
+
+The owner subsequently authorized atomic local commits:
+
+| Commit | Purpose |
+| --- | --- |
+| `1b29ab6` | Preserve reclassified comparison pairs, with the regression test and usage documentation. |
+| `d0e97dc` | Remove the contradictory capability fixture from the required reviewer probe. |
+| `466797f` | Add holdout authorization checks with their directly coupled coverage and qualification documentation. |
+
+All three eval commits passed the unchanged Lefthook pre-commit lint gate. The
+final documentation commit records the integrated review and validation evidence.
+No push or pull-request action was performed.
