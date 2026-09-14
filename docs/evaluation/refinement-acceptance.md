@@ -6,6 +6,9 @@ recheck passed both complex-worker checks without changing runtime configuration
 Closeout implementation, archival and verification are complete, but native
 stability is not qualified: after repairing a repeated-row scheduling defect,
 the fixed three-trial run passed twice and reproduced the decryption failure once.
+The subsequent whole-branch review corrected three assessment/reporting defects
+and converged after targeted re-review. Local qualification is current below;
+no new model run or replacement baseline was produced by that review.
 This report covers delivery on `lachimere/refine-harness`, based on
 `b19309413819690d14a02ffe9ccfe21ca1b29451`.
 
@@ -48,9 +51,9 @@ structural checks; they are not a model-performance baseline.
 | Command | Decisive result |
 | --- | --- |
 | `bun run check` | TypeScript passed; Biome checked 114 files with no fixes, no warnings or errors, and two informational index-access suggestions; warning-as-error enforcement retained |
-| `bun run test:coverage` | 238 pass, 0 fail, 1,093 expectations across 40 files after the repeated-trial fix; frozen coverage gate passed |
+| `bun run test:coverage` | 239 pass, 0 fail, 1,099 expectations across 40 files after whole-branch review fixes; frozen coverage gate passed |
 | `bun run build` | 35 modules bundled successfully |
-| `bun dist/index.js validate --collection development` | 338 cases, 1,270 checks, valid |
+| `bun run start -- validate --collection development` | 338 cases, 1,270 checks, valid |
 | `bun run start -- validate --collection holdout` | Independent implementer reported valid, 6 cases and 12 checks; aggregate output only |
 | `git diff --check` from the worktree root | Exit 0 |
 
@@ -121,6 +124,46 @@ Redundant outcome aliases and a needless merge helper were removed; previous-for
 fallbacks were removed instead of extended. No complexity or quality-rule exception
 was taken. Review contexts were independent; their effective model/effort was not
 independently exposed and is not claimed. This was not a full security scan.
+
+## Whole-branch review and refinement
+
+The subsequent review pinned `b193094..9d7cc56`: 12 commits and 105 changed files,
+with no initial working-tree changes. Code, comments, tests, errors, types and
+specification aspects all completed, with an independent Rubber Duck critique.
+Holdout contents stayed in separate authoring/review contexts. Three confirmed
+findings were corrected:
+
+- Paired cases with different assessment classifications disappeared from both
+  grouped denominators. Each affected dimension now retains and explicitly excludes
+  the pair; all-trial and resource eligibility keep their existing conditions.
+- The required critical-reviewer probe mounted a contradictory unavailable-reviewer
+  fixture. That binding was removed; the fixture remains used by its intended cases.
+- Two holdout routing cases could pass without checking their forbidden-action
+  boundary. Existing artifact grading now checks that separate core obligation.
+
+Targeted independent round 2 and primary integration review found no new supported
+comment. The comparison regression failed before the correction and passed after
+it. The full local gates above passed. The holdout re-review confirmed exactly two
+added requirements and checks, with all original case data and fixtures unchanged.
+The repair adds no scheduler, helper abstraction, dependency, compatibility path or
+quality-rule exception.
+
+The complete local Codex Security workflow reviewed the pinned branch's 39
+source-like files, with independent architecture and file-review contexts. Its
+sealed [local report](../../evals/out/branch-review-20260914/security/report.md) records
+zero reportable security findings and the static coverage limits. Tests, fixtures
+and prose were covered by the ordinary review. The small subsequent correction
+was checked for security impact by the primary; it adds no privilege boundary.
+The sealed scan remains an observation of its original pin. No Daybreak Access
+request, candidate/grader evaluation or native permission probe was made by this scan.
+Reviewer contexts were independent; their effective model/effort was not exposed,
+and no model-family diversity or measured review-token total is claimed.
+
+Review scope and correction identities are retained under
+`evals/out/branch-review-20260914/`. No model evaluation was rerun for these fixes.
+The changed critical-reviewer fixture has a new execution identity; its earlier
+native evidence remains attributed to the old case. Existing baseline, calibration
+and v2-failure records remain unchanged and do not become a new complete baseline.
 
 ## Native diagnostic executions
 
