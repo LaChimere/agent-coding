@@ -85,17 +85,28 @@ does not qualify an unassessable required capability.
 
 ## Execution progress
 
+The owner authorized first-stage closeout on 2026-09-14: preserve and archive the
+compatibility diagnostics, consolidate the delivery documentation, execute exactly
+three predeclared complex-worker repetitions on unchanged native v2, and commit
+the reviewed documentation. The repetition selection is recorded before execution
+in `evals/out/refinement-closeout-20260914/repetition-plan.json`; no failed trial
+will be replaced with a favorable retry. This does not authorize runtime tuning,
+holdout execution, pushes or pull-request changes.
+
 | Slice | Status | Evidence or remaining work |
 | --- | --- | --- |
 | Collection selection and frozen scope | Complete | Default pre-read exclusion, explicit holdout selection, run/report sidecars, linked-input checks and immutable provenance |
 | Cases and fair assessment | Complete | 338 development cases / 1,270 checks; outcome/mechanism metadata, grounded requirements, route alternatives, scanner provenance and meaningful blocker/interaction probes |
 | Native evidence and regrading | Complete | Own-session actor metadata, observed effort, actual parent-child identity, ordered conversation, restricted frozen-evidence regrading and compatible corrected comparisons |
 | Reporting and coverage | Complete | Separate quality dimensions, ordinary work families and core requirement/check/evidence observations; [coverage map](refinement-coverage.md) |
-| Local gates | Passed after review fixes | `bun run check`; `bun run test:coverage`: 237 pass, 0 fail, 1,047 expectations; `bun run build`; both collection validations |
+| Local gates | Passed after the repeated-trial fix | `bun run check`; `bun run test:coverage`: 238 pass, 0 fail, 1,093 expectations across 40 files; `bun run build`; development 338/1,270 valid. Earlier independent holdout validation remains unchanged. |
 | Independent review | Converged | Complete round 1 covered 103 uncommitted files; all confirmed findings fixed; targeted round 2 found no new material issue |
 | Holdout preparation | Statically qualified | Independent author and validator; 6 cases / 10 checks / 8 fixtures; all 6 authorization scopes checked; no model run or contents exposed to primary |
 | Expanded calibration | Passed | Owner confirmed all 10 new shared labels for both methods on 2026-09-13; all 26 observations agreed, with no grader errors |
-| Fresh full development baseline | Qualified with recorded candidate limitations | Run `40418426-0012-4dfb-b4cc-4d5c4a70f1fb`: 338 executions; corrected report `fe8c331e-4b82-44c1-a2cd-fa346f3d1c59`: 336 passed, 2 failed, no unknown cases. Complex-worker boundary remains an unknown check after its native request failed. |
+| Fresh full development baseline | Recorded; original limitations retained | Run `40418426-0012-4dfb-b4cc-4d5c4a70f1fb`: 338 executions; corrected report `fe8c331e-4b82-44c1-a2cd-fa346f3d1c59`: 336 passed, 2 failed, no unknown cases. Its complex-worker boundary remains an unknown check after the native request failed; later probes do not rewrite this baseline. |
+| Complex-worker closeout | Native behavior observed; stability not qualified | The original case passed in targeted run `acd8b700-86c1-4063-a983-b4b21f1bdf36`, but the fixed three-repetition run reproduced the native decryption failure once. Keep v2 and Sol/high; the transport cause remains unresolved. See [v2 review](refinement-acceptance.md#native-v2-closeout-review). |
+| Diagnostic cleanup | Archived and verified | All 86,283 entries moved intact; detailed investigation retained in the archive and current documentation consolidated. |
+| Three-repetition closeout check | Executed; stability criterion not accepted | First incomplete attempt retained. `8a93cc6` repairs execution/regrading identity. New run `aecc413e-7206-4a51-b728-ae412e174d21` recorded all three trials: two passed, one failed, with one unknown boundary check. No replacement trials. |
 
 Implementation began on 2026-09-13, preserving the existing refinement-document
 changes. Delegates returned owned changes from isolated clones; the primary
@@ -265,15 +276,81 @@ Regrade `86c48b72-91d4-45da-aabd-38b3c862853a` completed all 22 selected cases a
 The original 1,949 manifest, completion, report, trial-result, evidence and grading
 records retain identical hashes. No candidate execution was added.
 
-The remaining `anti-slop/0` reporting failure and complex-worker native transport
-failure are retained. The latter's child-boundary check remains unknown; the
-report does not imply that this role completed its task. These are usable measured
-limitations rather than unresolved assessment defects. First-stage measurement
-qualification is complete; runtime optimization and holdout acceptance have not
-started. The [acceptance report](refinement-acceptance.md) records separate original,
-regrading and cumulative resource measurements.
+The original `anti-slop/0` reporting failure and complex-worker native transport
+failure remain in that full report. Later targeted runs are separate evidence;
+no successful rerun replaces an original failure or unknown. Corrections landed
+as `7b335fa`, `b478186` and `63d5d40`, with the unchanged pre-commit lint gate.
 
-The corrections landed as separate local commits with the unchanged Lefthook lint
-gate: `7b335fa` accepts contract-backed workflow choices, and `b478186` grades
-scanner logs from retained artifacts. This documentation update records the
-completed qualification. No push or pull-request action is authorized or performed.
+## First-stage closeout
+
+The owner requires native v2 and Sol/high. The unchanged original complex-worker
+case passed both checks in targeted run `acd8b700-86c1-4063-a983-b4b21f1bdf36`,
+report `151b3c5d-f6d1-4ac4-b8d2-4aec8ad745e6`. A normal-session worker outside the
+harness also failed and later succeeded with the same model/effort/protocol.
+Independent and primary review found no encrypted-message rewriting in the
+harness. The precise intermittent transport cause remains unresolved.
+
+Compatibility experiments and raw evidence were moved intact to
+`evals/out/archives/complex-worker-diagnosis-20260914/`. All 86,283 entries, including
+59,486 files, passed the full before/after inventory comparison. The receipt and
+inventory are under `evals/out/refinement-closeout-20260914/`; the archived
+`documentation-before-closeout/` retains the detailed investigation narrative.
+No original main run record or runtime configuration was changed.
+
+The predeclared closeout check uses exactly three repetitions, concurrency one,
+with unchanged candidate, v2 model bindings and grading. Its first run,
+`73187847-d328-4ea9-b438-12d4bf007a85`, recorded one pass and two unrecorded trials:
+`--repeat` exposed incorrect mapping from Promptfoo's expanded row index to a
+case. The same lookup affects regrading repeated runs. Repair is scoped to stable
+case identity plus the existing candidate/repetition identity, with real-scheduler
+regression coverage. No additional fallback or compatibility option is needed.
+Commit `8a93cc6` repairs both lookups. A real Promptfoo regression demonstrated
+the defect before the fix (four recorded trials out of twelve) and passed after
+it (twelve execution identities, then six subset-regrade identities, with original
+records unchanged). The test implementer ran
+`bun test evals/tests/execution/repetition.test.ts`: the failing result was
+`Expected length: 12 / Received length: 4`; after the fix it reported
+`1 pass / 0 fail / 46 expect() calls`. The primary subsequently ran the full
+frozen gates: 238 tests, 1,093 expectations, no failures; check, build and
+development validation also passed.
+
+An independent read-only review covered the six pinned source/test files for
+correctness, comments, tests, errors and design alignment. It confirmed the
+installed Promptfoo row-index behavior and found no supported issue. The primary
+checked the same contracts and accepted the fix. No model call or holdout access
+was part of that review. Its scope hashes are retained in the closeout directory.
+
+The fresh three-repetition run `aecc413e-7206-4a51-b728-ae412e174d21` follows
+`repetition-plan-after-repair.json`, written before execution. The earlier run
+remains evidence of the scheduling defect, not a rejected model outcome. Native
+verification uses the reviewed source bytes later committed as `8a93cc6`: all
+36 frozen source files match that commit. Report
+`f21bf0c4-668c-4ec6-a2ae-f593281a3bc1` records two passed trials and one failed
+trial, with four passed checks, one failed invocation/completion check and one
+unknown boundary check. The second trial reproduced the original native decryption
+error. Its parent reported the unavailable worker result honestly. The other two
+workers returned scoped diagnoses; all fixtures remained unchanged.
+
+The check completed, but its stability criterion did not pass. No extra trial
+replaces the failure, and no protocol/model substitution is adopted. This run's
+wall time is 283,602 ms, recorded usage is 658,618 tokens and estimated cost is
+USD 3.3618326; usage/cost coverage is partial and actual charges are unknown.
+`repetition-verification.json` retains the checked identities and results.
+
+The full anti-slop check passed for the delivered patch. The two existing lookups
+were corrected directly; no helper, fallback, flag or new scheduling abstraction
+was added. The real-scheduler test is needed because the existing mocked callbacks
+did not reproduce Promptfoo's expanded indices. Historical diagnostic copies are
+archived, and their detailed narrative is consolidated into one current acceptance
+section. Frozen quality rules and runtime inputs are unchanged. No complexity or
+quality-rule exception was taken.
+
+The [acceptance report](refinement-acceptance.md#native-v2-closeout-review) owns the
+concise evidence and remaining-limit summary; the [coverage map](refinement-coverage.md)
+connects it to required capabilities. Implementation and documentation are separate
+atomic local commits. Both run the unchanged Lefthook pre-commit lint gate through
+a per-command temporary hooks path; no persistent shared Git setting was changed.
+The documented closeout is delivered, while complex-worker stability remains an
+unmet prerequisite for using that path in second-stage acceptance. Broader runtime
+optimization, holdout execution, pushes and pull-request changes remain outside
+this closeout.
