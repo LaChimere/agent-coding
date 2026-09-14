@@ -1,13 +1,11 @@
 # Codex Evaluation Refinement Acceptance
 
-Status on 2026-09-13: implementation, local qualification and expanded human
-calibration are complete. The owner interrupted the full baseline to request
-another comprehensive review and refinement of all uncommitted changes. That
-review converged after two rounds. The owner then authorized atomic local
-commits followed by a fresh full baseline, which completed all 338 trials.
-Assessment corrections discovered during that run have been reviewed and regraded.
-First-stage measurement qualification is complete, with the candidate limitations
-below retained; this is not runtime-optimization or holdout acceptance.
+Status on 2026-09-14: the refined full baseline and confirmed calibration are
+recorded. Native v2 and Sol/high remain the runtime contract. A targeted v2
+recheck passed both complex-worker checks without changing runtime configuration.
+Closeout implementation, archival and verification are complete, but native
+stability is not qualified: after repairing a repeated-row scheduling defect,
+the fixed three-trial run passed twice and reproduced the decryption failure once.
 This report covers delivery on `lachimere/refine-harness`, based on
 `b19309413819690d14a02ffe9ccfe21ca1b29451`.
 
@@ -49,8 +47,8 @@ structural checks; they are not a model-performance baseline.
 
 | Command | Decisive result |
 | --- | --- |
-| `bun run check` | TypeScript passed; Biome checked 112 files with no fixes and warning-as-error enforcement |
-| `bun run test:coverage` | 237 pass, 0 fail, 1,047 expectations across 39 files after the full patch review fixes; frozen coverage gate passed |
+| `bun run check` | TypeScript passed; Biome checked 114 files with no fixes, no warnings or errors, and two informational index-access suggestions; warning-as-error enforcement retained |
+| `bun run test:coverage` | 238 pass, 0 fail, 1,093 expectations across 40 files after the repeated-trial fix; frozen coverage gate passed |
 | `bun run build` | 35 modules bundled successfully |
 | `bun dist/index.js validate --collection development` | 338 cases, 1,270 checks, valid |
 | `bun dist/index.js validate --collection holdout` | 6 cases, 10 checks, valid; aggregate output only |
@@ -62,6 +60,14 @@ candidate prompt delivery, ordered conversation evidence, native actor identity,
 diagnostic coverage exclusion and positive/negative/unknown assessment behavior.
 Scanner checks additionally reject prose-only claims, absent targets and unrelated
 target records, while accepting valid target order changes.
+
+The repeated-trial regression uses the installed Promptfoo scheduler, two cases
+with identical task text, two candidates and three repetitions. It verifies all
+12 execution identities and grades, then six subset-regrade identities and new
+grades while preserving the original result and grading bytes. Only native
+candidate execution is mocked; this regression makes no model requests. Bracket
+access to Promptfoo's metadata index signature follows the frozen TypeScript
+rule; Biome's two informational suggestions are not warnings or waived checks.
 
 `git diff --quiet` over `config/codex`, `plugins`, `skills`, marketplace files and
 the frozen eval configuration returned exit 0. A root example `lefthook.yml`
@@ -97,6 +103,16 @@ scope enter the initial prompt, that native delivery and execution identity use
 the same constructor, and that the new unit tests restore their module mocks.
 Reviewers did not run models or the complete test suite; the command results above
 were produced by the primary.
+
+The closeout scheduling fix received a separate read-only review of six pinned
+source/test files against `63d5d40`, covering code, comments, tests, error handling
+and specification alignment. The reviewer checked the installed Promptfoo
+implementation and returned no supported finding; the primary independently
+checked the routing and retained-evidence behavior. The `critical_reviewer` role
+was requested with its declared Astra/high binding; effective model/effort was
+not independently exposed. No new public type or security boundary required an
+additional specialist review. Review scope hashes are retained at
+`evals/out/refinement-closeout-20260914/repeat-review-scope.json`.
 
 The primary also completed the anti-slop check. Additions are limited to the
 approved collection, requirement, evidence, reporting and qualification needs.
@@ -240,8 +256,9 @@ Two observations remain supported without changing their grading:
   content could not be decrypted or decoded.` The parent honestly reported the
   missing worker diagnosis. Invocation/completion fails; the child boundary check
   remains unknown. Native role and model identity are observed, but completed
-  worker behavior is not established. The retained error does not identify the
-  exact upstream cause, and no gateway or candidate configuration was changed.
+  worker behavior is not established. That baseline error alone does not identify
+  the exact upstream cause. The later diagnosis below preserves this failure;
+  no shared gateway or repository runtime configuration was changed.
 
 Fresh observations support ordered clarification, scope preservation, missing-input
 and conflicting-test handling, honest unavailable-reviewer reporting, actual child
@@ -296,3 +313,116 @@ for this baseline. The justified candidate failure and native-request failure do
 not invalidate the measurement, but neither is silently converted into success.
 New-task generalization and improvements to the candidate remain unverified until
 a later authorized runtime comparison and holdout acceptance.
+
+## Native v2 closeout review
+
+The runtime remains Codex CLI 0.154.0, native v2, an Astra/xhigh parent and a
+Sol/high complex_worker. No model substitution, protocol downgrade or decryption
+workaround was adopted. The harness sends task text to native Codex; it does not
+create, rewrite or replay encrypted inter-agent messages.
+
+A direct normal-session Sol/high/v2 worker outside the harness failed with the
+same decryption error and later completed work in the same thread. Historical
+normal sessions also contain successful v2 delegation and failed continuations.
+Later message replays passed with and without message ID or internal metadata,
+and through both streaming and non-streaming requests. These observations do not
+establish a missing-field defect or permanent Astra-to-Sol v2 incompatibility.
+
+The unchanged original case passed in run
+`acd8b700-86c1-4063-a983-b4b21f1bdf36`, report
+`151b3c5d-f6d1-4ac4-b8d2-4aec8ad745e6`. Both `complex-role-invocation` and
+`complex-role-boundary` passed, with actual Sol/high/v2 work, parent use of the
+result and unchanged fixture bytes. Framework, candidate, profile, case, grader,
+CLI version, price book and environment fingerprint matched failed reproduction
+`ed1b41c1-7ff6-4405-a715-1ef8fc8a3673`. No implementation patch caused that recovery.
+This separate recheck took 90,824 ms, recorded 219,173 tokens and estimated
+USD 1.1341048; usage and estimated cost are partial, and actual cost is unknown.
+
+### Predeclared repetition check
+
+The owner authorized exactly three repetitions before their outcomes were known:
+
+```sh
+bun dist/index.js run --case role-probes/complex-worker --repeat 3 --concurrency 1
+```
+
+Selection and retention rules are saved in
+`evals/out/refinement-closeout-20260914/repetition-plan.json`. The first attempt,
+run `73187847-d328-4ea9-b438-12d4bf007a85`, report
+`f44486cd-4994-43e3-a3cf-071162e6c269`, recorded one passed trial and two unrecorded
+trials. Promptfoo's expanded repetition row indices were incorrectly used as
+original case indices. This is a scheduling defect, separate from the v2
+decryption failure. That incomplete run remains intact. Commit `8a93cc6` corrects
+execution and regrading to use stable case ID with candidate and repetition ID.
+Its real-scheduler regression and independent review passed.
+
+The new fixed-size run was declared in `repetition-plan-after-repair.json` before
+execution. Run `aecc413e-7206-4a51-b728-ae412e174d21`, report
+`f21bf0c4-668c-4ec6-a2ae-f593281a3bc1`, recorded all three executions and all six
+grades:
+
+| Repetition | `complex-role-invocation` | `complex-role-boundary` | Observation |
+| --- | --- | --- | --- |
+| 1 | Passed | Passed | Actual configured worker read the three files, returned its diagnosis, and stayed within scope. |
+| 2 | Failed | Unknown | The native child failed with `Encrypted function output content could not be decrypted or decoded.` No completed worker diagnosis or boundary evidence was available. |
+| 3 | Passed | Passed | Actual configured worker read the three files, returned its diagnosis, and stayed within scope. |
+
+Case totals are two passed, one failed and zero unknown; check totals are four
+passed, one failed and one unknown. The second parent execution completed by
+honestly reporting the child failure; completed execution does not mean passed
+quality. The candidate made one follow-up in the same failed child thread within
+that trial. No replacement evaluation trials were added after the outcomes.
+
+Primary inspection confirmed native v2 task-path assignments, Astra/xhigh parents,
+Sol/high complex workers and unchanged fixtures in all three trials. Candidate,
+profile, case, CLI version, price book and environment fingerprint match the prior
+targeted recheck. All 36 frozen source files match commit `8a93cc6`; the framework
+hash changed with the scheduling repair, while grading rules and implementations
+remained unchanged. Source-hash-derived judge IDs consequently differ from the
+earlier run; this is a separate verification, not a paired improvement claim.
+
+This run took 283,602 ms (4 minutes 44 seconds), recorded 658,618 tokens and
+estimated USD 3.3618326. Usage and estimated cost have partial coverage; actual
+charges remain unknown. These resources belong to this three-trial run only.
+The checked identities, results and resources are recorded in
+`evals/out/refinement-closeout-20260914/repetition-verification.json`.
+
+The scheduling repair is accepted; the native stability criterion is not.
+The fixed-size sample proves the failure still occurs and does not establish a
+long-term failure rate or its exact cause.
+
+### Archived diagnostics
+
+Temporary proxies, model/protocol experiments, copied project sources and their
+raw evidence are archived at
+`evals/out/archives/complex-worker-diagnosis-20260914/`. The archive also retains
+the detailed documentation before consolidation. It contains 86,283 entries and
+59,486 files; all relative paths, file bytes, modes and symlink targets matched
+before and after the same-filesystem move. Verification records are:
+
+- `evals/out/refinement-closeout-20260914/diagnostic-archive.json`
+- `evals/out/refinement-closeout-20260914/diagnostic-archive-inventory.json`
+
+The original run directories under `evals/out/runs/` were not moved or rewritten.
+Absolute paths inside archived records remain original; the archive receipt maps
+the former directory prefix to its archive location. Archived prototypes are
+historical evidence, not supported project commands or compatibility modules.
+The useful v2 comparison summary is `v2-review-summary.json` in that archive.
+
+### Remaining limits
+
+The full baseline and later probes remain separate. The baseline's original
+complex-worker failure/unknown is not replaced by a successful later execution.
+The actual cause of intermittent decryption failure remains open, and the fixed
+repetition check reproduced it. Stable complex-worker comparisons cannot yet be
+used for second-stage acceptance. Resolve and qualify this path under the retained
+v2/Sol/high contract before relying on it; do not silently retry or change the
+model, protocol or grading to obtain passing results.
+
+`anti-slop/0` remains a real candidate reporting failure for runtime optimization.
+The non-core `ensure-atomic-pr/2` validation check remains unknown because its
+case contains a description rather than an executable change. Partial token/cost
+coverage and unknown actual charges remain explicit. None should be converted
+into an artificial pass or zero. Holdouts remain unexposed and unexecuted; later
+runtime acceptance still requires matched comparisons, full regression and
+explicit holdout evaluation.

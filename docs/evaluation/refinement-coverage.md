@@ -51,6 +51,26 @@ only unknown core requirement is the failed complex worker's boundary behavior;
 the actual child request failed before returning a diagnosis. This remaining
 limit is explicit and is not a claim that the role worked successfully.
 
+The [2026-09-14 v2 review](refinement-acceptance.md#native-v2-closeout-review) retains
+native v2 and Sol/high. A normal Codex worker outside the harness failed and later
+succeeded under that same configuration. The unchanged original case then passed
+both checks in targeted v2 run `acd8b700-86c1-4063-a983-b4b21f1bdf36`, supplying
+actual completed-worker and boundary evidence for this path. This does not replace
+the full baseline's failure/unknown or establish a permanent transport repair.
+The exact intermittent cause remains unresolved. V1 and model substitution were
+diagnostic experiments only and will not be adopted as the resolution.
+
+The subsequent fixed three-repetition run
+`aecc413e-7206-4a51-b728-ae412e174d21` recorded two passed trials and one failed
+trial. Its checks are four passed, one failed and one unknown: the second native
+child returned the same decryption error before any diagnosis, so its full role
+boundary remains unassessable. This confirms both successful v2 behavior and a
+continuing reliability gap; it does not qualify stable second-stage comparison of
+this path. An earlier incomplete repetition run is retained separately. Its
+Promptfoo row-index defect was repaired and covered by a real-scheduler regression;
+all three trials were recorded after that fix. The acceptance report retains both
+run/report identities, resource measurements and the archived diagnostic location.
+
 The first diagnostic reports are retained at:
 
 - Conversation ordering: run `62c15d0c-f9a3-48fa-89bf-1a678db7f646`, report
