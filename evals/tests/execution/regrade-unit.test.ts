@@ -42,7 +42,11 @@ mock.module(batchModulePath, () => ({
       throw new Error('Missing provider fixture.');
     }
     for (let index = 0; index < input.tests.length; index += 1) {
-      await lastProvider.callApi('fixture prompt', { testIdx: index, repeatIndex: 0 } as never);
+      await lastProvider.callApi('fixture prompt', {
+        test: input.tests[index],
+        testIdx: index,
+        repeatIndex: 0,
+      } as never);
     }
     return {
       evaluationId: 'regrade-unit-batch',
@@ -198,7 +202,11 @@ test('regrade preserves not-run candidate evidence as an explicit provider error
 
   expect(batchCalls).toBe(1);
   await expect(
-    lastProvider?.callApi('fixture', { testIdx: 0, repeatIndex: 0 } as never),
+    lastProvider?.callApi('fixture', {
+      test: { metadata: { id: 'fixture/0' } },
+      testIdx: 0,
+      repeatIndex: 0,
+    } as never),
   ).resolves.toMatchObject({
     error: 'No candidate evidence is available for regrading.',
     output: '',

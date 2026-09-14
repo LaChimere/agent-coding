@@ -56,7 +56,11 @@ mock.module(batchModulePath, () => ({
     if (provider === undefined) {
       throw new Error('Missing worker provider fixture.');
     }
-    await provider.callApi('worker fixture', { testIdx: 0, repeatIndex: 0 } as never);
+    await provider.callApi('worker fixture', {
+      test: input.tests[0],
+      testIdx: 0,
+      repeatIndex: 0,
+    } as never);
 
     return {
       evaluationId: 'fixture-evaluation',
