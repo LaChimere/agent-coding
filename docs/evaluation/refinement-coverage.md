@@ -86,12 +86,19 @@ delivery probe and the disposition of the invalid authorization judgment.
 
 ## Holdout coverage
 
-An independent author and validator prepared 6 holdout cases with 10 assertions
+An independent author and validator initially prepared 6 holdout cases with 10 assertions
 and 8 fixtures: one outcome case for each ordinary work family and two mechanism
 cases. Static validation, fixture bindings, route sensitivity and candidate-visible
 authorization checks passed in the independent context. No holdout model execution
 has occurred, and no task contents or diagnostic feedback entered the primary
 tuning context.
+
+After whole-branch review, an isolated repair added two explicit authorization
+checks to the route-only cases. Current coverage is 6 cases, 12 assertions and
+8 unchanged fixtures. Independent re-review verified that the original task data
+and checks are unchanged, and that the additions assess actual forbidden actions
+without requiring downstream execution or optional process. No holdout model run
+was added; this improves assessment coverage without supplying a performance result.
 
 This establishes preparation and assessment readiness for that small collection,
 not generalization or runtime preservation. Holdout task details intentionally
