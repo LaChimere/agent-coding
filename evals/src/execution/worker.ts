@@ -130,8 +130,9 @@ export async function runWorker(
         id: () => `openai:codex-app-server:${candidate.id}`,
         label: candidate.label,
         callApi: async (_prompt, context, options) => {
-          const loaded =
-            context?.testIdx === undefined ? undefined : manifest.cases[context.testIdx];
+          // Promptfoo's row index expands with repetitions; case identity does not.
+          const caseId = context?.test?.metadata?.['id'];
+          const loaded = manifest.cases.find((item) => item.definition.metadata.id === caseId);
           const planned = manifest.trials.find(
             (trial) =>
               trial.caseId === loaded?.definition.metadata.id &&

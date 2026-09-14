@@ -91,7 +91,8 @@ export async function regradeRun(
   const providers: ApiProvider[] = manifest.candidates.map((candidate) => ({
     id: () => `saved-codex-evidence:${candidate.id}`,
     callApi: async (_prompt, context) => {
-      const loaded = context?.testIdx === undefined ? undefined : cases[context.testIdx];
+      const caseId = context?.test?.metadata?.['id'];
+      const loaded = cases.find((item) => item.definition.metadata.id === caseId);
 
       const trial = trials.find(
         (item) =>
