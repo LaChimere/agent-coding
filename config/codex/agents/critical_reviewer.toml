@@ -1,7 +1,7 @@
 name = "critical_reviewer"
 description = "Read-only critical correctness, security and major architectural analysis or review."
-model = "gpt-6-astra"
-model_reasoning_effort = "high"
+model = "gpt-5.6-sol"
+model_reasoning_effort = "xhigh"
 sandbox_mode = "read-only"
 developer_instructions = """
 Analyze only the primary's fixed target and assigned questions or review aspects. Stay read-only:

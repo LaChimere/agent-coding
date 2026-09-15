@@ -3,7 +3,7 @@
 | Item | Value |
 | --- | --- |
 | Status | Delivered configuration revised to four roles and eight worker slots; experimental configuration |
-| Last updated | 2026-09-11 |
+| Last updated | 2026-09-15 |
 | Runtime foundation | Native Codex harness: the existing agent execution runtime beneath the primary and workers |
 | Personal configuration scope | Repository `config/codex` represents the target `~/.codex` configuration |
 | Shared plugin scope | Process contracts in `workflow`; review methods and constraints in `pr-review`, `rubber-duck`, and `spar`; no plugin-owned model or effort policy |
@@ -137,9 +137,9 @@ Cross-family critique is an optional technique. The agreed Codex policy permits 
                      |      +--------------------------------------------+
                      |      | WORKER POOL - current role/model mapping   |
                      |      |                                            |
-                     |      | ordinary_worker        -> Luna  / max      |
+                     |      | ordinary_worker        -> Sol   / medium   |
                      |      | complex_worker         -> Sol   / high     |
-                     |      | critical_reviewer      -> Astra / high     |
+                     |      | critical_reviewer      -> Sol   / xhigh    |
                      |      | deep_critical_reviewer -> Astra / xhigh    |
                      |      |                                            |
                      |      | Max 8 open worker threads                  |
@@ -254,14 +254,16 @@ Judge quality and complete delivery efficiency. Do not dispatch mechanically by 
 
 | Semantic role | Model | Effort | Purpose |
 | --- | --- | --- | --- |
-| `ordinary_worker` | `gpt-5.6-luna` | `max` | Clear, local implementation, fixes, tests, scoped research, and routine review |
+| `ordinary_worker` | `gpt-5.6-sol` | `medium` | Clear, local implementation, fixes, tests, scoped research, and routine review |
 | `complex_worker` | `gpt-5.6-sol` | `high` | Complex implementation, difficult diagnosis, synthesis, difficult review, and takeover after a demonstrated ordinary reasoning limitation |
-| `critical_reviewer` | `gpt-6-astra` | `high` | Read-only analysis and review of security, critical correctness, and major architectural trade-offs |
+| `critical_reviewer` | `gpt-5.6-sol` | `xhigh` | Read-only analysis and review of security, critical correctness, and major architectural trade-offs |
 | `deep_critical_reviewer` | `gpt-6-astra` | `xhigh` | Read-only analysis of a concrete critical issue left unresolved by the preceding reasoning pass |
 
 The mapping unit is always model plus effort. `high`, `xhigh`, and `max` are not a common capability ladder across different models. Policy refers to semantic roles and task needs; concrete model identifiers live in personal configuration.
 
 These four roles may change through actual use and evals. Defining a role does not require invoking it on every task. Distinct GPT models or roles also do not establish cross-family review.
+
+The `ordinary_worker` Sol/medium and `critical_reviewer` Sol/xhigh mappings have not yet undergone native runtime or behavioral evaluation. Historical Luna/max ordinary-worker and Astra/high critical-reviewer validation results do not qualify these mappings.
 
 ### 6.3 Separate complexity, risk, and review
 
@@ -485,7 +487,9 @@ is checked through native configuration loading; it was not part of the earlier 
 
 Orchestration does not fix or switch the primary model. The primary explicitly selects a semantic role and the required configuration for the task. `default_subagent_*` supplies only the fallback when no explicit choice is made; it is not the normal task classifier or specialist-review model selector.
 
-In particular, omitting `model` cannot simultaneously mean "use the global ordinary-worker default" and "inherit the primary model." Dispatch according to the actual decision and verify the effective model and effort when needed. `pr-review` does not need its own model router.
+The global fallback intentionally remains `gpt-5.6-luna` / `max`, independently of the named role mappings. Changing a role's model or effort, including `ordinary_worker`, does not change this fallback.
+
+In particular, omitting `model` cannot simultaneously mean "use the global subagent fallback" and "inherit the primary model." Dispatch according to the actual decision and verify the effective model and effort when needed. `pr-review` does not need its own model router.
 
 ### 10.3 Role files and effective configuration
 
@@ -522,7 +526,7 @@ A model release does not directly change routing. Evaluate the candidate against
 
 For ordinary work, prioritize reliable completion of clear tasks. For complex work, examine root-cause reasoning and cross-component invariants, plus use of prior failure evidence and restraint when taking over. For critical review, examine consequential errors, counterexamples, and uncertainty. For deep critical analysis, examine whether it resolves the specific issue left by the preceding pass.
 
-Normally, replace a role mapping in its TOML. If the global fallback is also intended to follow the ordinary role, update `default_subagent_*` accordingly. Do not retain duplicated values while promising that every model replacement changes only one file. Evaluate model and effort together.
+Replace a role mapping in its TOML and align the current mapping documentation. Keep `default_subagent_*` at Luna/max when changing role mappings; changing the global fallback is a separate decision. Evaluate model and effort together.
 
 Adding a role requires evidence of distinct task semantics, behavior, or verification needs, not merely a new model. Takeover now belongs to `complex_worker`; retain its handoff and repair-history requirements without a separate role. Further role changes should follow actual work and evals.
 
