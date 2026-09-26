@@ -1,7 +1,7 @@
 name = "complex_worker"
 description = "Complex implementation, diagnosis and review, including takeover after an ordinary reasoning limitation."
-model = "gpt-5.6-sol"
-model_reasoning_effort = "high"
+model = "gpt-6-sol"
+model_reasoning_effort = "medium"
 sandbox_mode = "workspace-write"
 developer_instructions = """
 Resolve the primary's bounded complex task using actual execution paths, callers, state and

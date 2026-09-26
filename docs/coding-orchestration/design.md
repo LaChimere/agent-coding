@@ -2,13 +2,13 @@
 
 | Item | Value |
 | --- | --- |
-| Status | Delivered configuration revised to four roles and eight worker slots; experimental configuration |
-| Last updated | 2026-09-15 |
+| Status | Four roles and six worker slots; experimental configuration |
+| Last updated | 2026-09-26 |
 | Runtime foundation | Native Codex harness: the existing agent execution runtime beneath the primary and workers |
 | Personal configuration scope | Repository `config/codex` represents the target `~/.codex` configuration |
 | Shared plugin scope | Process contracts in `workflow`; review methods and constraints in `pr-review`, `rubber-duck`, and `spar`; no plugin-owned model or effort policy |
 | Plugin dependencies | `workflow` and `pr-review` are recommended installations, used on demand rather than required for every task |
-| Validation status | Revised native checks, six new portable contexts and 24 new A/B trials are complete. Unchanged plugin behavior reuses preceding evidence; results and limits are recorded in [validation.md](validation.md) |
+| Validation status | Earlier native checks and A/B trials are recorded in [validation.md](validation.md); they do not validate the current role bindings |
 
 ## 1. Design decision
 
@@ -23,7 +23,7 @@ Model and reasoning-effort policy belongs to personal orchestration configuratio
 The recommended installation includes both plugins, but core orchestration can perform simple direct work and ordinary native delegation without them. A plugin becomes a dependency when the task needs its capabilities. Report a missing required capability, leave the dependent work incomplete, and continue unaffected authorized work. Do not recreate the missing plugin workflow or claim its work was completed.
 
 Keep four semantic roles in v0.1, with a model and reasoning-effort mapping for each. Complex work
-and takeover after an evidenced ordinary reasoning limitation both use `complex_worker` at Sol/high.
+and takeover after an evidenced ordinary reasoning limitation both use `complex_worker` at GPT-6 Sol/medium.
 This merges the former separate takeover role at the user's request. A task need not pass through
 every role; the current combination is not assumed to be optimal.
 
@@ -137,12 +137,12 @@ Cross-family critique is an optional technique. The agreed Codex policy permits 
                      |      +--------------------------------------------+
                      |      | WORKER POOL - current role/model mapping   |
                      |      |                                            |
-                     |      | ordinary_worker        -> Sol   / medium   |
-                     |      | complex_worker         -> Sol   / high     |
+                     |      | ordinary_worker        -> Luna  / max      |
+                     |      | complex_worker         -> Sol   / medium   |
                      |      | critical_reviewer      -> Sol   / xhigh    |
                      |      | deep_critical_reviewer -> Astra / xhigh    |
                      |      |                                            |
-                     |      | Max 8 open worker threads                  |
+                     |      | Max 6 open worker threads                  |
                      |      | No worker-to-worker delegation             |
                      |      | Review tasks remain read-only              |
                      |      +----------------------+---------------------+
@@ -254,16 +254,16 @@ Judge quality and complete delivery efficiency. Do not dispatch mechanically by 
 
 | Semantic role | Model | Effort | Purpose |
 | --- | --- | --- | --- |
-| `ordinary_worker` | `gpt-5.6-sol` | `medium` | Clear, local implementation, fixes, tests, scoped research, and routine review |
-| `complex_worker` | `gpt-5.6-sol` | `high` | Complex implementation, difficult diagnosis, synthesis, difficult review, and takeover after a demonstrated ordinary reasoning limitation |
-| `critical_reviewer` | `gpt-5.6-sol` | `xhigh` | Read-only analysis and review of security, critical correctness, and major architectural trade-offs |
+| `ordinary_worker` | `gpt-6-luna` | `max` | Clear, local implementation, fixes, tests, scoped research, and routine review |
+| `complex_worker` | `gpt-6-sol` | `medium` | Complex implementation, difficult diagnosis, synthesis, difficult review, and takeover after a demonstrated ordinary reasoning limitation |
+| `critical_reviewer` | `gpt-6-sol` | `xhigh` | Read-only analysis and review of security, critical correctness, and major architectural trade-offs |
 | `deep_critical_reviewer` | `gpt-6-astra` | `xhigh` | Read-only analysis of a concrete critical issue left unresolved by the preceding reasoning pass |
 
 The mapping unit is always model plus effort. `high`, `xhigh`, and `max` are not a common capability ladder across different models. Policy refers to semantic roles and task needs; concrete model identifiers live in personal configuration.
 
 These four roles may change through actual use and evals. Defining a role does not require invoking it on every task. Distinct GPT models or roles also do not establish cross-family review.
 
-The `ordinary_worker` Sol/medium and `critical_reviewer` Sol/xhigh mappings have not yet undergone native runtime or behavioral evaluation. Historical Luna/max ordinary-worker and Astra/high critical-reviewer validation results do not qualify these mappings.
+The current model and effort bindings were synchronized from the local `~/.codex` configuration on 2026-09-26. The earlier native and behavioral results in [validation.md](validation.md) used different bindings and do not qualify the current mapping. Configuration readback alone does not establish runtime behavior or an effectiveness advantage.
 
 ### 6.3 Separate complexity, risk, and review
 
@@ -423,11 +423,11 @@ or extra reassurance alone cannot trigger it.
 
 ### 9.3 Concurrency, takeover, and cancellation
 
-Keep at most eight worker threads open, excluding the primary. The primary decides whether to continue or close completed threads. Wait on, continue, or close only actual handles returned by successful launches; a failed launch does not establish an existing worker.
+Keep at most six worker threads open, excluding the primary. The primary decides whether to continue or close completed threads. Wait on, continue, or close only actual handles returned by successful launches; a failed launch does not establish an existing worker.
 
-Eight replaces the original limit of four at the user's request, allowing more independent work
-to remain open. It is a ceiling for work selected on its merits, not a target dispatch count.
-The earlier four-slot evaluation does not establish a speed or stability advantage at eight.
+Six is the current local limit. Earlier validation exercised an eight-worker setting; that result
+does not establish a speed or stability advantage for the current limit. The limit is a ceiling
+for work selected on its merits, not a target dispatch count.
 
 Continue the actual worker thread through the host's supported continuation or steering mechanism. Spawning another `ordinary_worker` selects the same role but does not reuse the previous thread's context. Thread identity, an individual turn's status, and the task's acceptance status are separate facts. Codex's native lifecycle distinguishes threads, turns, and work items. [App Server lifecycle](https://developers.openai.com/codex/app-server)
 
@@ -476,18 +476,19 @@ network_access = true
 
 [agents]
 enabled = true
-max_concurrent_threads_per_session = 8
-default_subagent_model = "gpt-5.6-luna"
+max_concurrent_threads_per_session = 6
+default_subagent_model = "gpt-6-luna"
 default_subagent_reasoning_effort = "max"
 ```
 
 The sandbox defaults permit workspace writes and network access, with on-request approvals routed
-through automatic review. Start a new session to use the updated defaults. This post-merge change
-is checked through native configuration loading; it was not part of the earlier frozen A/B.
+through automatic review. The earlier post-merge defaults were checked through native configuration
+loading; the current model bindings and worker limit have only been synchronized and structurally
+checked in this repository. A new session is needed to pick up changes to a real Codex config.
 
 Orchestration does not fix or switch the primary model. The primary explicitly selects a semantic role and the required configuration for the task. `default_subagent_*` supplies only the fallback when no explicit choice is made; it is not the normal task classifier or specialist-review model selector.
 
-The global fallback intentionally remains `gpt-5.6-luna` / `max`, independently of the named role mappings. Changing a role's model or effort, including `ordinary_worker`, does not change this fallback.
+The global fallback is `gpt-6-luna` / `max`, independently of the named role mappings. Changing a role's model or effort, including `ordinary_worker`, does not change this fallback.
 
 In particular, omitting `model` cannot simultaneously mean "use the global subagent fallback" and "inherit the primary model." Dispatch according to the actual decision and verify the effective model and effort when needed. `pr-review` does not need its own model router.
 
@@ -607,7 +608,7 @@ workflow contracts and the flexible review/critic contracts. Workflow is `0.1.3`
 
 | Location | Implemented state | Verification and limits |
 | --- | --- | --- |
-| `config/codex` | Mergeable fragment, preserved primary model, four role mappings, eight worker slots, implementation and intended read-only role defaults | Native loading, eight-active-worker capacity/refusal, completed-context release and pending review passed bounded checks. Later same-handle Sol/high takeover and exhausted-budget handoff passed independent audit; earlier failures remain. The new 24-trial A/B establishes no speed or monetary-cost advantage. Production activation is not authorized. |
+| `config/codex` | Mergeable fragment, preserved primary model, four role mappings, six worker slots, implementation and intended read-only role defaults | Earlier native loading, eight-active-worker capacity/refusal, completed-context release and pending review passed bounded checks under the prior mapping. Later same-handle Sol/high takeover and exhausted-budget handoff passed independent audit; earlier failures remain. The 24-trial A/B establishes no speed or monetary-cost advantage. Current role bindings have not been behaviorally qualified by those results. |
 | `workflow-orchestrator` and responsibilities | Process skills separated from runtime workers; primary coordination and on-demand dependencies explicit | Behavioral and portable regression results are recorded separately. |
 | `execute-plan-loop` | Bounded worker assignments, primary progress and acceptance, caller repair budget, thread evidence and cancellation boundaries | Preceding evidence is retained. Revised native checks confirm interruption, preserved partial work, same-handle complex takeover and a separate exhausted-task refusal without budget reset. Behavioral results remain separate. |
 | `pr-review` | Primary-selected aspects and allocation, combined methods, explicit dispatch recovery, incomplete independence reported | Independent source review completed; behavior regression remains separate. |
@@ -626,7 +627,7 @@ The coupled corpus preserves the 59 prior affected-skill cases and 12 anti-slop 
 Baseline and candidate use the same frozen revised corpus. Recorded lifecycle fixtures establish
 decisions only; native evidence establishes the controls actually exercised.
 
-The current role/model combination, eight-worker setting and ordinary fallback are not measured
+The current role/model combination, six-worker setting and ordinary fallback are not measured
 optima. The preceding repository delivery completed under the agreed Codex evaluation and existing
 read-only-behavior-check scope. Its 24 A/B trials establish no adoption advantage. Historical
 failures, four exact-name route misses and additional probe limitations remain recorded rather
