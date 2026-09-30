@@ -1,4 +1,4 @@
-import { cp, mkdir, readdir, stat } from 'node:fs/promises';
+import { cp, mkdir, readdir, stat, symlink, unlink } from 'node:fs/promises';
 import { relative, resolve, sep } from 'node:path';
 
 interface IRequest {
@@ -146,10 +146,28 @@ const commandResult = async (command: string[], profile: string) => {
 
     const allowed = access(path) === 'write' || access(path) === 'read';
     if (!allowed) {
+      if (fakeMode === 'private-readable') {
+        return { exitCode: 0, stdout: await Bun.file(path).text(), stderr: '' };
+      }
+      if (fakeMode === 'private-missing') {
+        await unlink(path);
+      }
+      if (fakeMode === 'private-changed') {
+        await Bun.write(path, 'changed');
+      }
+      if (fakeMode === 'private-symlink') {
+        await unlink(path);
+        await symlink(resolve(home, '.codex/AGENTS.md'), path);
+      }
       return {
-        exitCode: 1,
-        stdout: '',
-        stderr: 'sandbox denied',
+        exitCode: fakeMode === 'private-launcher-failure' ? 127 : 1,
+        stdout: fakeMode === 'private-output-leak' ? await Bun.file(path).text() : '',
+        stderr:
+          fakeMode === 'private-unrelated-failure'
+            ? 'unrelated command failure'
+            : fakeMode?.startsWith('private-') || fakeMode?.startsWith('linux-')
+              ? `cat: ${path}: No such file or directory\n`
+              : 'sandbox denied',
       };
     }
 
@@ -163,7 +181,7 @@ const commandResult = async (command: string[], profile: string) => {
     const url = args.at(-1);
     if (!selected.network.enabled || url === undefined) {
       return {
-        exitCode: 7,
+        exitCode: fakeMode === 'network-launcher-failure' ? 127 : 7,
         stdout: '',
         stderr: 'network denied',
       };
@@ -177,21 +195,40 @@ const commandResult = async (command: string[], profile: string) => {
   if (program === '/bin/sh') {
     const path = args[3];
     const value = args[4];
+    const started = args[5];
     if (path === undefined || value === undefined) {
       throw new Error('Invalid write probe');
     }
-    if (access(path) !== 'write') {
+    if (fakeMode === 'write-launcher-failure') {
+      return { exitCode: 1, stdout: '', stderr: 'No such file or directory' };
+    }
+    const privatePath = access(path) === 'deny';
+    if (
+      privatePath &&
+      (fakeMode === 'linux-shadow' || fakeMode === 'private-shadow-missing-readback')
+    ) {
       return {
-        exitCode: 1,
-        stdout: '',
-        stderr: 'sandbox denied',
+        exitCode: 0,
+        stdout: `${started}${fakeMode === 'linux-shadow' ? value : ''}`,
+        stderr: '',
+      };
+    }
+    if (
+      access(path) !== 'write' &&
+      fakeMode !== 'outside-write-escape' &&
+      !(privatePath && fakeMode === 'private-shadow-host-escape')
+    ) {
+      return {
+        exitCode: fakeMode === 'linux-masked' ? 2 : 1,
+        stdout: started,
+        stderr: fakeMode === 'linux-masked' ? 'No such file or directory' : 'sandbox denied',
       };
     }
     await Bun.write(path, value);
 
     return {
       exitCode: 0,
-      stdout: '',
+      stdout: args[1]?.includes('/bin/cat') ? `${started}${value}` : started,
       stderr: '',
     };
   }

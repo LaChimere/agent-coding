@@ -217,7 +217,7 @@ export async function gradeRubric(input: IGradeRubricInput): Promise<IGradeRubri
         ? await createTextJudge(judgeInput)
         : await createNativeJudge(judgeInput);
 
-    // Runtime import avoids initializing Promptfoo globals before the parent run sets its batch env.
+    // Promptfoo captures this directory during initialization, so the owning run must set it first.
     const { assertions } = await loadPromptfoo();
 
     const grading = await assertions.runAssertion({

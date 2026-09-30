@@ -35,10 +35,30 @@ weakened or bypassed.
 The versioned `profiles/default/` baseline was imported from the owner's global
 Codex configuration. Runs never reread global instructions or installed personal
 skills. `runtime.json` declares the local Codex executable, required tools and
-their code-library read paths, and credential references. Inspect these explicit
-machine dependencies when moving to another workstation. The qualified platform
-is macOS with Codex CLI 0.154.0; unsupported native capabilities cause preparation
-to refuse the trial before a model turn.
+their code-library read paths, and credential references. Shared dependencies use
+`toolReadPaths`; OS-specific dependencies use `toolReadPathsByPlatform` with
+`darwin` and `linux` entries. Only the current platform's paths are resolved and
+granted read access. Tool executables resolve through the host's `PATH`, then run
+under the trial's controlled environment. A tool may declare `codeReadPaths`
+relative to its resolved executable's directory; npm uses `[".."]` for its own
+package code. For a declared dependency with a symlink launcher, the launcher
+directory is also read-only, and covered file grants are omitted to preserve the
+link's module-resolution behavior on Linux. No dependency directory is inferred
+for tools without that declaration. Missing tools, undeclared platforms or
+unverified native isolation cause preparation to refuse the trial before a model
+turn. Inspect these explicit machine dependencies when moving workstations.
+
+Use the declared package-manager version, Bun `1.4.2`, with the frozen lockfile.
+An older Bun can fail to parse the lockfile before installing dependencies.
+Keep tool executables outside host directories denied by the trial policy;
+an explicit file declaration does not override a denied host `/tmp` mount on Linux.
+
+The test scripts use Bun's serial `--isolate` mode so each test file has a fresh
+module environment. All test files and the existing 80% line-coverage threshold
+remain checked. Promptfoo caches its configuration and database within that
+environment: set `PROMPTFOO_CONFIG_DIR` to the owning run's directory before its
+first import. Batch workers do this automatically; direct grader tests use their
+own directories under `.cache` instead of the user's HOME.
 
 The default provider is the existing gateway at `http://127.0.0.1:4141/v1`.
 `GITHUB_COPILOT_API_KEY` takes precedence over the explicit local JSON-file
@@ -46,7 +66,12 @@ reference in `runtime.json`. Credential values remain in memory and the owned
 child environment; do not place credentials in profiles or case files. Tool
 commands use controlled HOME, CODEX_HOME, TMPDIR and PATH. Machine Git config is
 disabled. Native Codex must be able to apply its sandbox; nesting it under another
-Seatbelt sandbox can fail during preparation.
+host sandbox can fail during preparation. Launching the harness outside that
+outer sandbox does not disable the trial's native permission checks. Runtime
+tool paths and probe results remain part of the environment fingerprint; running
+the same corpus on multiple platforms does not make unlike environments valid
+matched comparison pairs. See [validation evidence](../docs/coding-orchestration/validation.md)
+for tested CLI versions, platforms and limits.
 
 ## Commands
 

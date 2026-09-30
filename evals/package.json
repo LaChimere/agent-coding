@@ -16,8 +16,8 @@
     "check": "bun run typecheck && bun run lint",
     "lint": "biome check --error-on-warnings .",
     "lint:fix": "biome check --write --error-on-warnings .",
-    "test": "bun test --pass-with-no-tests",
-    "test:coverage": "bun test --coverage --pass-with-no-tests",
+    "test": "bun test --isolate --pass-with-no-tests",
+    "test:coverage": "bun test --isolate --coverage --pass-with-no-tests",
     "typecheck": "tsc --noEmit",
     "hooks": "LEFTHOOK_CONFIG=evals/lefthook.yml lefthook"
   },
