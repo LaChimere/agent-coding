@@ -1060,7 +1060,7 @@
           "rubric": "This is a routing-only check. The answer must select one allowed exact route alternative and may include only explicitly optional companions; route selection does not prove downstream execution.",
           "rule": {
             "type": "route",
-            "alternatives": [["execute-plan-loop"]],
+            "alternatives": [[]],
             "optional": []
           }
         }
@@ -1073,7 +1073,7 @@
           "core": true,
           "method": "text-rubric",
           "requirements": ["expectation-000"],
-          "rubric": "This is a routing-only classification case. Assess whether the selected route and rationale identify how the downstream skill should handle the requirement below. Do not require actual task execution, file edits, scans, reviews, or tool calls in this classification answer. Requirement: Owns execution cadence for the approved slice."
+          "rubric": "This is a routing-only classification case. Assess whether the selected route and rationale identify how the downstream skill should handle the requirement below. Do not require actual task execution, file edits, scans, reviews, or tool calls in this classification answer. Requirement: Handles the already authorized implementation directly and reports actual verification."
         }
       },
       {
@@ -1169,7 +1169,7 @@
           "rubric": "This is a routing-only check. The answer must select one allowed exact route alternative and may include only explicitly optional companions; route selection does not prove downstream execution.",
           "rule": {
             "type": "route",
-            "alternatives": [["workflow-orchestrator"]],
+            "alternatives": [[]],
             "optional": []
           }
         }
@@ -1182,7 +1182,7 @@
           "core": true,
           "method": "text-rubric",
           "requirements": ["expectation-000"],
-          "rubric": "This is a routing-only classification case. Assess whether the selected route and rationale identify how the downstream skill should handle the requirement below. Do not require actual task execution, file edits, scans, reviews, or tool calls in this classification answer. Requirement: Routes the ambiguous phase question to the front door."
+          "rubric": "This is a routing-only classification case. Assess whether the selected route and rationale identify how the downstream skill should handle the requirement below. Do not require actual task execution, file edits, scans, reviews, or tool calls in this classification answer. Requirement: Uses direct primary analysis and identifies missing scope or behavior evidence without requiring a process skill."
         }
       },
       {
@@ -2695,7 +2695,7 @@
           "rubric": "This is a routing-only check. The answer must select one allowed exact route alternative and may include only explicitly optional companions; route selection does not prove downstream execution.",
           "rule": {
             "type": "route",
-            "alternatives": [["plan-parallel-work"]],
+            "alternatives": [[]],
             "optional": []
           }
         }
@@ -2804,7 +2804,7 @@
           "rubric": "This is a routing-only check. The answer must select one allowed exact route alternative and may include only explicitly optional companions; route selection does not prove downstream execution.",
           "rule": {
             "type": "route",
-            "alternatives": [["execute-plan-loop"]],
+            "alternatives": [[]],
             "optional": []
           }
         }
@@ -2913,7 +2913,7 @@
           "rubric": "This is a routing-only check. The answer must select one allowed exact route alternative and may include only explicitly optional companions; route selection does not prove downstream execution.",
           "rule": {
             "type": "route",
-            "alternatives": [["workflow-orchestrator"]],
+            "alternatives": [[]],
             "optional": []
           }
         }
@@ -2926,7 +2926,7 @@
           "core": true,
           "method": "text-rubric",
           "requirements": ["expectation-000"],
-          "rubric": "This is a routing-only classification case. Assess whether the selected route and rationale identify how the downstream skill should handle the requirement below. Do not require actual task execution, file edits, scans, reviews, or tool calls in this classification answer. Requirement: Routes the ambiguous phase question to the front door."
+          "rubric": "This is a routing-only classification case. Assess whether the selected route and rationale identify how the downstream skill should handle the requirement below. Do not require actual task execution, file edits, scans, reviews, or tool calls in this classification answer. Requirement: Uses direct primary analysis and identifies missing scope or behavior evidence without requiring a process skill."
         }
       },
       {
@@ -3349,7 +3349,7 @@
           "rubric": "This is a routing-only check. The answer must select one allowed exact route alternative and may include only explicitly optional companions; route selection does not prove downstream execution.",
           "rule": {
             "type": "route",
-            "alternatives": [["plan-parallel-work"]],
+            "alternatives": [[]],
             "optional": []
           }
         }
@@ -4439,7 +4439,7 @@
           "rubric": "This is a routing-only check. The answer must select one allowed exact route alternative and may include only explicitly optional companions; route selection does not prove downstream execution.",
           "rule": {
             "type": "route",
-            "alternatives": [["plan-parallel-work"]],
+            "alternatives": [[]],
             "optional": []
           }
         }
@@ -4657,7 +4657,7 @@
           "rubric": "This is a routing-only check. The answer must select one allowed exact route alternative and may include only explicitly optional companions; route selection does not prove downstream execution.",
           "rule": {
             "type": "route",
-            "alternatives": [["execute-plan-loop"]],
+            "alternatives": [[]],
             "optional": []
           }
         }
@@ -4766,7 +4766,7 @@
           "rubric": "This is a routing-only check. The answer must select one allowed exact route alternative and may include only explicitly optional companions; route selection does not prove downstream execution.",
           "rule": {
             "type": "route",
-            "alternatives": [["workflow-orchestrator"]],
+            "alternatives": [[]],
             "optional": []
           }
         }
@@ -4779,7 +4779,7 @@
           "core": true,
           "method": "text-rubric",
           "requirements": ["expectation-000"],
-          "rubric": "This is a routing-only classification case. Assess whether the selected route and rationale identify how the downstream skill should handle the requirement below. Do not require actual task execution, file edits, scans, reviews, or tool calls in this classification answer. Requirement: Routes the phase question to the front door."
+          "rubric": "This is a routing-only classification case. Assess whether the selected route and rationale identify how the downstream skill should handle the requirement below. Do not require actual task execution, file edits, scans, reviews, or tool calls in this classification answer. Requirement: Uses direct primary analysis and identifies missing scope or behavior evidence without requiring a process skill."
         }
       },
       {
@@ -5093,7 +5093,7 @@
           "rubric": "This is a routing-only check. The answer must select one allowed exact route alternative and may include only explicitly optional companions; route selection does not prove downstream execution.",
           "rule": {
             "type": "route",
-            "alternatives": [["execute-plan-loop"]],
+            "alternatives": [[]],
             "optional": []
           }
         }
@@ -5202,7 +5202,7 @@
           "rubric": "This is a routing-only check. The answer must select one allowed exact route alternative and may include only explicitly optional companions; route selection does not prove downstream execution.",
           "rule": {
             "type": "route",
-            "alternatives": [["execute-plan-loop"]],
+            "alternatives": [[]],
             "optional": []
           }
         }
@@ -5311,7 +5311,7 @@
           "rubric": "This is a routing-only check. The answer must select one allowed exact route alternative and may include only explicitly optional companions; route selection does not prove downstream execution.",
           "rule": {
             "type": "route",
-            "alternatives": [["execute-plan-loop"]],
+            "alternatives": [[]],
             "optional": ["ensure-atomic-pr", "anti-slop", "pr-review"]
           }
         }
@@ -5420,7 +5420,7 @@
           "rubric": "This is a routing-only check. The answer must select one allowed exact route alternative and may include only explicitly optional companions; route selection does not prove downstream execution.",
           "rule": {
             "type": "route",
-            "alternatives": [["execute-plan-loop"]],
+            "alternatives": [[]],
             "optional": []
           }
         }
@@ -5444,7 +5444,7 @@
           "core": true,
           "method": "text-rubric",
           "requirements": ["expectation-001"],
-          "rubric": "This is a routing-only classification case. Assess whether the selected route and rationale identify how the downstream skill should handle the requirement below. Do not require actual task execution, file edits, scans, reviews, or tool calls in this classification answer. Requirement: Keeps plan and status artifacts accurate as it continues."
+          "rubric": "This is a routing-only classification case. Assess whether the selected route and rationale identify how the downstream skill should handle the requirement below. Do not require actual task execution, file edits, scans, reviews, or tool calls in this classification answer. Requirement: Reports actual current progress and verification evidence without requiring a tracker."
         }
       }
     ]
@@ -5529,7 +5529,7 @@
           "rubric": "This is a routing-only check. The answer must select one allowed exact route alternative and may include only explicitly optional companions; route selection does not prove downstream execution.",
           "rule": {
             "type": "route",
-            "alternatives": [["execute-plan-loop"]],
+            "alternatives": [[]],
             "optional": []
           }
         }
@@ -5553,7 +5553,7 @@
           "core": true,
           "method": "text-rubric",
           "requirements": ["expectation-001"],
-          "rubric": "This is a routing-only classification case. Assess whether the selected route and rationale identify how the downstream skill should handle the requirement below. Do not require actual task execution, file edits, scans, reviews, or tool calls in this classification answer. Requirement: Keeps plan/status artifacts accurate throughout."
+          "rubric": "This is a routing-only classification case. Assess whether the selected route and rationale identify how the downstream skill should handle the requirement below. Do not require actual task execution, file edits, scans, reviews, or tool calls in this classification answer. Requirement: Reports actual current progress and verification evidence without requiring a tracker."
         }
       }
     ]
@@ -5638,7 +5638,7 @@
           "rubric": "This is a routing-only check. The answer must select one allowed exact route alternative and may include only explicitly optional companions; route selection does not prove downstream execution.",
           "rule": {
             "type": "route",
-            "alternatives": [["execute-plan-loop"]],
+            "alternatives": [[]],
             "optional": []
           }
         }
@@ -5747,7 +5747,7 @@
           "rubric": "This is a routing-only check. The answer must select one allowed exact route alternative and may include only explicitly optional companions; route selection does not prove downstream execution.",
           "rule": {
             "type": "route",
-            "alternatives": [["execute-plan-loop"]],
+            "alternatives": [[]],
             "optional": []
           }
         }
@@ -5856,7 +5856,7 @@
           "rubric": "This is a routing-only check. The answer must select one allowed exact route alternative and may include only explicitly optional companions; route selection does not prove downstream execution.",
           "rule": {
             "type": "route",
-            "alternatives": [["execute-plan-loop"]],
+            "alternatives": [[]],
             "optional": []
           }
         }
@@ -5965,7 +5965,7 @@
           "rubric": "This is a routing-only check. The answer must select one allowed exact route alternative and may include only explicitly optional companions; route selection does not prove downstream execution.",
           "rule": {
             "type": "route",
-            "alternatives": [["workflow-orchestrator"]],
+            "alternatives": [[]],
             "optional": []
           }
         }
@@ -5978,7 +5978,7 @@
           "core": true,
           "method": "text-rubric",
           "requirements": ["expectation-000"],
-          "rubric": "This is a routing-only classification case. Assess whether the selected route and rationale identify how the downstream skill should handle the requirement below. Do not require actual task execution, file edits, scans, reviews, or tool calls in this classification answer. Requirement: Routes the unplanned request to the front door."
+          "rubric": "This is a routing-only classification case. Assess whether the selected route and rationale identify how the downstream skill should handle the requirement below. Do not require actual task execution, file edits, scans, reviews, or tool calls in this classification answer. Requirement: Uses direct primary analysis and identifies missing scope or behavior evidence without requiring a process skill."
         }
       },
       {
@@ -5989,7 +5989,7 @@
           "core": true,
           "method": "text-rubric",
           "requirements": ["expectation-001"],
-          "rubric": "This is a routing-only classification case. Assess whether the selected route and rationale identify how the downstream skill should handle the requirement below. Do not require actual task execution, file edits, scans, reviews, or tool calls in this classification answer. Requirement: Does not begin execution before a plan is approved."
+          "rubric": "This is a routing-only classification case. Assess whether the selected route and rationale identify how the downstream skill should handle the requirement below. Do not require actual task execution, file edits, scans, reviews, or tool calls in this classification answer. Requirement: Does not implement during this advice-only request or choose unresolved material behavior."
         }
       }
     ]
@@ -6401,7 +6401,7 @@
           "rubric": "This is a routing-only check. The answer must select one allowed exact route alternative and may include only explicitly optional companions; route selection does not prove downstream execution.",
           "rule": {
             "type": "route",
-            "alternatives": [["plan-parallel-work"]],
+            "alternatives": [[]],
             "optional": []
           }
         }
@@ -6728,7 +6728,7 @@
           "rubric": "This is a routing-only check. The answer must select one allowed exact route alternative and may include only explicitly optional companions; route selection does not prove downstream execution.",
           "rule": {
             "type": "route",
-            "alternatives": [["plan-parallel-work"]],
+            "alternatives": [[]],
             "optional": []
           }
         }
@@ -6837,7 +6837,7 @@
           "rubric": "This is a routing-only check. The answer must select one allowed exact route alternative and may include only explicitly optional companions; route selection does not prove downstream execution.",
           "rule": {
             "type": "route",
-            "alternatives": [["plan-parallel-work"]],
+            "alternatives": [[]],
             "optional": []
           }
         }
@@ -6946,7 +6946,7 @@
           "rubric": "This is a routing-only check. The answer must select one allowed exact route alternative and may include only explicitly optional companions; route selection does not prove downstream execution.",
           "rule": {
             "type": "route",
-            "alternatives": [["plan-parallel-work"]],
+            "alternatives": [[]],
             "optional": []
           }
         }
@@ -7055,7 +7055,7 @@
           "rubric": "This is a routing-only check. The answer must select one allowed exact route alternative and may include only explicitly optional companions; route selection does not prove downstream execution.",
           "rule": {
             "type": "route",
-            "alternatives": [["plan-parallel-work"]],
+            "alternatives": [[]],
             "optional": []
           }
         }
@@ -7164,7 +7164,7 @@
           "rubric": "This is a routing-only check. The answer must select one allowed exact route alternative and may include only explicitly optional companions; route selection does not prove downstream execution.",
           "rule": {
             "type": "route",
-            "alternatives": [["plan-parallel-work"]],
+            "alternatives": [["decompose-feature"]],
             "optional": []
           }
         }
@@ -7273,7 +7273,7 @@
           "rubric": "This is a routing-only check. The answer must select one allowed exact route alternative and may include only explicitly optional companions; route selection does not prove downstream execution.",
           "rule": {
             "type": "route",
-            "alternatives": [["plan-parallel-work"]],
+            "alternatives": [[]],
             "optional": []
           }
         }
@@ -7382,7 +7382,7 @@
           "rubric": "This is a routing-only check. The answer must select one allowed exact route alternative and may include only explicitly optional companions; route selection does not prove downstream execution.",
           "rule": {
             "type": "route",
-            "alternatives": [["plan-parallel-work"]],
+            "alternatives": [[]],
             "optional": []
           }
         }
@@ -7491,7 +7491,7 @@
           "rubric": "This is a routing-only check. The answer must select one allowed exact route alternative and may include only explicitly optional companions; route selection does not prove downstream execution.",
           "rule": {
             "type": "route",
-            "alternatives": [["plan-parallel-work"]],
+            "alternatives": [[]],
             "optional": []
           }
         }
@@ -7709,7 +7709,7 @@
           "rubric": "This is a routing-only check. The answer must select one allowed exact route alternative and may include only explicitly optional companions; route selection does not prove downstream execution.",
           "rule": {
             "type": "route",
-            "alternatives": [["execute-plan-loop"], []],
+            "alternatives": [[]],
             "optional": []
           }
         }
@@ -7722,7 +7722,7 @@
           "core": true,
           "method": "text-rubric",
           "requirements": ["expectation-000"],
-          "rubric": "This is a routing-only classification case. Assess whether the selected route and rationale identify how the downstream skill should handle the requirement below. Do not require actual task execution, file edits, scans, reviews, or tool calls in this classification answer. Requirement: Selects execute-plan-loop or handles the clear one-step slice directly under its documented exception, without a new planning or approval round; does not claim implementation or tests ran when task files are unavailable."
+          "rubric": "This is a routing-only classification case. Assess whether the selected route and rationale identify how the downstream skill should handle the requirement below. Do not require actual task execution, file edits, scans, reviews, or tool calls in this classification answer. Requirement: Handles the clear approved correction directly, without a new planning or approval round; does not claim implementation or tests ran when task files are unavailable."
         }
       },
       {
@@ -7818,7 +7818,7 @@
           "rubric": "This is a routing-only check. The answer must select one allowed exact route alternative and may include only explicitly optional companions; route selection does not prove downstream execution.",
           "rule": {
             "type": "route",
-            "alternatives": [["workflow-orchestrator"]],
+            "alternatives": [[]],
             "optional": []
           }
         }
@@ -7831,7 +7831,7 @@
           "core": true,
           "method": "text-rubric",
           "requirements": ["expectation-000"],
-          "rubric": "This is a routing-only classification case. Assess whether the selected route and rationale identify how the downstream skill should handle the requirement below. Do not require actual task execution, file edits, scans, reviews, or tool calls in this classification answer. Requirement: Routes the ambiguous phase question to the front door."
+          "rubric": "This is a routing-only classification case. Assess whether the selected route and rationale identify how the downstream skill should handle the requirement below. Do not require actual task execution, file edits, scans, reviews, or tool calls in this classification answer. Requirement: Uses direct primary analysis and identifies missing scope or behavior evidence without requiring a process skill."
         }
       },
       {
@@ -8036,7 +8036,7 @@
           "rubric": "This is a routing-only check. The answer must select one allowed exact route alternative and may include only explicitly optional companions; route selection does not prove downstream execution.",
           "rule": {
             "type": "route",
-            "alternatives": [["execute-plan-loop"]],
+            "alternatives": [[]],
             "optional": ["anti-slop", "pr-review"]
           }
         }
@@ -8049,7 +8049,7 @@
           "core": true,
           "method": "text-rubric",
           "requirements": ["expectation-000"],
-          "rubric": "This is a routing-only classification case. Assess whether the selected route and rationale identify how the downstream skill should handle the requirement below. Do not require actual task execution, file edits, scans, reviews, or tool calls in this classification answer. Requirement: Routes the explicit approved implementation scope to execute-plan-loop."
+          "rubric": "This is a routing-only classification case. Assess whether the selected route and rationale identify how the downstream skill should handle the requirement below. Do not require actual task execution, file edits, scans, reviews, or tool calls in this classification answer. Requirement: Routes the clear approved implementation scope to direct execution."
         }
       },
       {
@@ -9344,7 +9344,7 @@
           "rubric": "This is a routing-only check. The answer must select one allowed exact route alternative and may include only explicitly optional companions; route selection does not prove downstream execution.",
           "rule": {
             "type": "route",
-            "alternatives": [["execute-plan-loop"]],
+            "alternatives": [[]],
             "optional": []
           }
         }
@@ -9453,7 +9453,7 @@
           "rubric": "This is a routing-only check. The answer must select one allowed exact route alternative and may include only explicitly optional companions; route selection does not prove downstream execution.",
           "rule": {
             "type": "route",
-            "alternatives": [["workflow-orchestrator"]],
+            "alternatives": [[]],
             "optional": []
           }
         }
@@ -9466,7 +9466,7 @@
           "core": true,
           "method": "text-rubric",
           "requirements": ["expectation-000"],
-          "rubric": "This is a routing-only classification case. Assess whether the selected route and rationale identify how the downstream skill should handle the requirement below. Do not require actual task execution, file edits, scans, reviews, or tool calls in this classification answer. Requirement: Routes the phase question to the front door."
+          "rubric": "This is a routing-only classification case. Assess whether the selected route and rationale identify how the downstream skill should handle the requirement below. Do not require actual task execution, file edits, scans, reviews, or tool calls in this classification answer. Requirement: Uses direct primary analysis and identifies missing scope or behavior evidence without requiring a process skill."
         }
       },
       {
@@ -11524,7 +11524,7 @@
           "rubric": "This is a routing-only check. The answer must select one allowed exact route alternative and may include only explicitly optional companions; route selection does not prove downstream execution.",
           "rule": {
             "type": "route",
-            "alternatives": [["plan-parallel-work"]],
+            "alternatives": [[]],
             "optional": []
           }
         }
@@ -11742,7 +11742,7 @@
           "rubric": "This is a routing-only check. The answer must select one allowed exact route alternative and may include only explicitly optional companions; route selection does not prove downstream execution.",
           "rule": {
             "type": "route",
-            "alternatives": [["workflow-orchestrator"]],
+            "alternatives": [[]],
             "optional": []
           }
         }
@@ -11755,7 +11755,7 @@
           "core": true,
           "method": "text-rubric",
           "requirements": ["expectation-000"],
-          "rubric": "This is a routing-only classification case. Assess whether the selected route and rationale identify how the downstream skill should handle the requirement below. Do not require actual task execution, file edits, scans, reviews, or tool calls in this classification answer. Requirement: Acts as the front door for the unplanned idea."
+          "rubric": "This is a routing-only classification case. Assess whether the selected route and rationale identify how the downstream skill should handle the requirement below. Do not require actual task execution, file edits, scans, reviews, or tool calls in this classification answer. Requirement: Analyzes the actual request directly and preserves unresolved material decisions."
         }
       },
       {
@@ -11766,7 +11766,7 @@
           "core": true,
           "method": "text-rubric",
           "requirements": ["expectation-001"],
-          "rubric": "This is a routing-only classification case. Assess whether the selected route and rationale identify how the downstream skill should handle the requirement below. Do not require actual task execution, file edits, scans, reviews, or tool calls in this classification answer. Requirement: Determines the correct starting phase."
+          "rubric": "This is a routing-only classification case. Assess whether the selected route and rationale identify how the downstream skill should handle the requirement below. Do not require actual task execution, file edits, scans, reviews, or tool calls in this classification answer. Requirement: Identifies the concrete feature objective and missing evidence needed to advise on the next action; does not require a plan merely because the idea is rough."
         }
       }
     ]
@@ -11851,7 +11851,7 @@
           "rubric": "This is a routing-only check. The answer must select one allowed exact route alternative and may include only explicitly optional companions; route selection does not prove downstream execution.",
           "rule": {
             "type": "route",
-            "alternatives": [["workflow-orchestrator"]],
+            "alternatives": [[]],
             "optional": []
           }
         }
@@ -11864,7 +11864,7 @@
           "core": true,
           "method": "text-rubric",
           "requirements": ["expectation-000"],
-          "rubric": "This is a routing-only classification case. Assess whether the selected route and rationale identify how the downstream skill should handle the requirement below. Do not require actual task execution, file edits, scans, reviews, or tool calls in this classification answer. Requirement: Determines which downstream phase applies."
+          "rubric": "This is a routing-only classification case. Assess whether the selected route and rationale identify how the downstream skill should handle the requirement below. Do not require actual task execution, file edits, scans, reviews, or tool calls in this classification answer. Requirement: Identifies the actual task and any material missing evidence before selecting a specialist."
         }
       },
       {
@@ -11875,7 +11875,7 @@
           "core": true,
           "method": "text-rubric",
           "requirements": ["expectation-001"],
-          "rubric": "This is a routing-only classification case. Assess whether the selected route and rationale identify how the downstream skill should handle the requirement below. Do not require actual task execution, file edits, scans, reviews, or tool calls in this classification answer. Requirement: Resolves the ambiguity before any worker skill starts."
+          "rubric": "This is a routing-only classification case. Assess whether the selected route and rationale identify how the downstream skill should handle the requirement below. Do not require actual task execution, file edits, scans, reviews, or tool calls in this classification answer. Requirement: Does not invent a specialist assignment before the task purpose is known."
         }
       }
     ]
@@ -11960,7 +11960,7 @@
           "rubric": "This is a routing-only check. The answer must select one allowed exact route alternative and may include only explicitly optional companions; route selection does not prove downstream execution.",
           "rule": {
             "type": "route",
-            "alternatives": [["workflow-orchestrator"]],
+            "alternatives": [[]],
             "optional": []
           }
         }
@@ -11973,7 +11973,7 @@
           "core": true,
           "method": "text-rubric",
           "requirements": ["expectation-000"],
-          "rubric": "This is a routing-only classification case. Assess whether the selected route and rationale identify how the downstream skill should handle the requirement below. Do not require actual task execution, file edits, scans, reviews, or tool calls in this classification answer. Requirement: Repairs the broken workflow state."
+          "rubric": "This is a routing-only classification case. Assess whether the selected route and rationale identify how the downstream skill should handle the requirement below. Do not require actual task execution, file edits, scans, reviews, or tool calls in this classification answer. Requirement: Inspects recorded authorization and current evidence without inventing approval or treating missing process state as a new gate."
         }
       },
       {
@@ -12069,7 +12069,7 @@
           "rubric": "This is a routing-only check. The answer must select one allowed exact route alternative and may include only explicitly optional companions; route selection does not prove downstream execution.",
           "rule": {
             "type": "route",
-            "alternatives": [["workflow-orchestrator"]],
+            "alternatives": [[]],
             "optional": []
           }
         }
@@ -12082,7 +12082,7 @@
           "core": true,
           "method": "text-rubric",
           "requirements": ["expectation-000"],
-          "rubric": "This is a routing-only classification case. Assess whether the selected route and rationale identify how the downstream skill should handle the requirement below. Do not require actual task execution, file edits, scans, reviews, or tool calls in this classification answer. Requirement: Routes the ambiguous multi-phase request."
+          "rubric": "This is a routing-only classification case. Assess whether the selected route and rationale identify how the downstream skill should handle the requirement below. Do not require actual task execution, file edits, scans, reviews, or tool calls in this classification answer. Requirement: Handles the actual request directly; the generic description alone does not establish decomposition, atomicity review or implementation authority."
         }
       },
       {
@@ -12093,7 +12093,7 @@
           "core": true,
           "method": "text-rubric",
           "requirements": ["expectation-001"],
-          "rubric": "This is a routing-only classification case. Assess whether the selected route and rationale identify how the downstream skill should handle the requirement below. Do not require actual task execution, file edits, scans, reviews, or tool calls in this classification answer. Requirement: Identifies the correct next phase rather than guessing a single worker."
+          "rubric": "This is a routing-only classification case. Assess whether the selected route and rationale identify how the downstream skill should handle the requirement below. Do not require actual task execution, file edits, scans, reviews, or tool calls in this classification answer. Requirement: Reports missing concrete task and scope information rather than guessing a specialist or an execution action."
         }
       }
     ]
@@ -12178,7 +12178,7 @@
           "rubric": "This is a routing-only check. The answer must select one allowed exact route alternative and may include only explicitly optional companions; route selection does not prove downstream execution.",
           "rule": {
             "type": "route",
-            "alternatives": [["workflow-orchestrator"]],
+            "alternatives": [[]],
             "optional": []
           }
         }
@@ -12191,7 +12191,7 @@
           "core": true,
           "method": "text-rubric",
           "requirements": ["expectation-000"],
-          "rubric": "This is a routing-only classification case. Assess whether the selected route and rationale identify how the downstream skill should handle the requirement below. Do not require actual task execution, file edits, scans, reviews, or tool calls in this classification answer. Requirement: Decides between persistent-goal tracking and a single slice."
+          "rubric": "This is a routing-only classification case. Assess whether the selected route and rationale identify how the downstream skill should handle the requirement below. Do not require actual task execution, file edits, scans, reviews, or tool calls in this classification answer. Requirement: Explains that ordinary work can execute directly and a persistent goal is host-owned; goal creation requires an explicit request."
         }
       },
       {
@@ -12202,7 +12202,7 @@
           "core": true,
           "method": "text-rubric",
           "requirements": ["expectation-001"],
-          "rubric": "This is a routing-only classification case. Assess whether the selected route and rationale identify how the downstream skill should handle the requirement below. Do not require actual task execution, file edits, scans, reviews, or tool calls in this classification answer. Requirement: Acts as the front-door decision point."
+          "rubric": "This is a routing-only classification case. Assess whether the selected route and rationale identify how the downstream skill should handle the requirement below. Do not require actual task execution, file edits, scans, reviews, or tool calls in this classification answer. Requirement: Keeps native goal creation explicit and ordinary work directly executable."
         }
       }
     ]
@@ -12287,7 +12287,7 @@
           "rubric": "This is a routing-only check. The answer must select one allowed exact route alternative and may include only explicitly optional companions; route selection does not prove downstream execution.",
           "rule": {
             "type": "route",
-            "alternatives": [["workflow-orchestrator"]],
+            "alternatives": [[]],
             "optional": []
           }
         }
@@ -12300,7 +12300,7 @@
           "core": true,
           "method": "text-rubric",
           "requirements": ["expectation-000"],
-          "rubric": "This is a routing-only classification case. Assess whether the selected route and rationale identify how the downstream skill should handle the requirement below. Do not require actual task execution, file edits, scans, reviews, or tool calls in this classification answer. Requirement: Acts as the front door for the unapproved, broad request."
+          "rubric": "This is a routing-only classification case. Assess whether the selected route and rationale identify how the downstream skill should handle the requirement below. Do not require actual task execution, file edits, scans, reviews, or tool calls in this classification answer. Requirement: Analyzes the actual request directly and preserves unresolved material decisions."
         }
       },
       {
@@ -12311,7 +12311,7 @@
           "core": true,
           "method": "text-rubric",
           "requirements": ["expectation-001"],
-          "rubric": "This is a routing-only classification case. Assess whether the selected route and rationale identify how the downstream skill should handle the requirement below. Do not require actual task execution, file edits, scans, reviews, or tool calls in this classification answer. Requirement: Routes it to the correct next phase."
+          "rubric": "This is a routing-only classification case. Assess whether the selected route and rationale identify how the downstream skill should handle the requirement below. Do not require actual task execution, file edits, scans, reviews, or tool calls in this classification answer. Requirement: Does not choose material behavior or begin implementation while the broad request remains unresolved."
         }
       }
     ]
@@ -12396,7 +12396,7 @@
           "rubric": "This is a routing-only check. The answer must select one allowed exact route alternative and may include only explicitly optional companions; route selection does not prove downstream execution.",
           "rule": {
             "type": "route",
-            "alternatives": [["workflow-orchestrator"], []],
+            "alternatives": [[]],
             "optional": []
           }
         }
@@ -12409,7 +12409,7 @@
           "core": true,
           "method": "text-rubric",
           "requirements": ["expectation-000"],
-          "rubric": "If treating the request as workflow ambiguity, identifies workflow-orchestrator; if treating it as host-role selection, states that the primary selects the worker under host policy and no installed process skill is required."
+          "rubric": "The primary selects a suitable worker under host policy; no installed process skill is required."
         }
       },
       {
@@ -12505,7 +12505,7 @@
           "rubric": "This is a routing-only check. The answer must select one allowed exact route alternative and may include only explicitly optional companions; route selection does not prove downstream execution.",
           "rule": {
             "type": "route",
-            "alternatives": [["workflow-orchestrator"]],
+            "alternatives": [[]],
             "optional": []
           }
         }
@@ -12518,7 +12518,7 @@
           "core": true,
           "method": "text-rubric",
           "requirements": ["expectation-000"],
-          "rubric": "This is a routing-only classification case. Assess whether the selected route and rationale identify how the downstream skill should handle the requirement below. Do not require actual task execution, file edits, scans, reviews, or tool calls in this classification answer. Requirement: Determines the next phase for the messy request."
+          "rubric": "This is a routing-only classification case. Assess whether the selected route and rationale identify how the downstream skill should handle the requirement below. Do not require actual task execution, file edits, scans, reviews, or tool calls in this classification answer. Requirement: Identifies the next action supported by supplied evidence, or states the concrete missing task information."
         }
       },
       {
@@ -12614,7 +12614,7 @@
           "rubric": "This is a routing-only check. The answer must select one allowed exact route alternative and may include only explicitly optional companions; route selection does not prove downstream execution.",
           "rule": {
             "type": "route",
-            "alternatives": [["execute-plan-loop"]],
+            "alternatives": [[]],
             "optional": []
           }
         }
@@ -12941,7 +12941,7 @@
           "rubric": "This is a routing-only check. The answer must select one allowed exact route alternative and may include only explicitly optional companions; route selection does not prove downstream execution.",
           "rule": {
             "type": "route",
-            "alternatives": [["plan-parallel-work"]],
+            "alternatives": [[]],
             "optional": []
           }
         }
@@ -14467,7 +14467,7 @@
           "rubric": "This is a routing-only check. The answer must select one allowed exact route alternative and may include only explicitly optional companions; route selection does not prove downstream execution.",
           "rule": {
             "type": "route",
-            "alternatives": [["plan-parallel-work"]],
+            "alternatives": [[]],
             "optional": []
           }
         }
@@ -14576,7 +14576,7 @@
           "rubric": "This is a routing-only check. The answer must select one allowed exact route alternative and may include only explicitly optional companions; route selection does not prove downstream execution.",
           "rule": {
             "type": "route",
-            "alternatives": [["execute-plan-loop"]],
+            "alternatives": [[]],
             "optional": []
           }
         }
@@ -14903,7 +14903,7 @@
           "rubric": "This is a routing-only check. The answer must select one allowed exact route alternative and may include only explicitly optional companions; route selection does not prove downstream execution.",
           "rule": {
             "type": "route",
-            "alternatives": [["workflow-orchestrator"]],
+            "alternatives": [[]],
             "optional": []
           }
         }
@@ -14916,7 +14916,7 @@
           "core": true,
           "method": "text-rubric",
           "requirements": ["expectation-000"],
-          "rubric": "This is a routing-only classification case. Assess whether the selected route and rationale identify how the downstream skill should handle the requirement below. Do not require actual task execution, file edits, scans, reviews, or tool calls in this classification answer. Requirement: Determines the correct workflow phase before selecting a worker."
+          "rubric": "This is a routing-only classification case. Assess whether the selected route and rationale identify how the downstream skill should handle the requirement below. Do not require actual task execution, file edits, scans, reviews, or tool calls in this classification answer. Requirement: Identifies missing behavior evidence before selecting a specialist."
         }
       },
       {
@@ -15951,7 +15951,7 @@
           "rubric": "This is a routing-only check. The answer must select one allowed exact route alternative and may include only explicitly optional companions; route selection does not prove downstream execution.",
           "rule": {
             "type": "route",
-            "alternatives": [["plan-parallel-work"]],
+            "alternatives": [[]],
             "optional": []
           }
         }
@@ -16133,7 +16133,7 @@
           "rubric": "This is a routing-only check. The answer must select one allowed exact route alternative and may include only explicitly optional companions; route selection does not prove downstream execution.",
           "rule": {
             "type": "route",
-            "alternatives": [["execute-plan-loop"]],
+            "alternatives": [[]],
             "optional": []
           }
         }
@@ -16315,7 +16315,7 @@
           "rubric": "This is a routing-only check. The answer must select one allowed exact route alternative and may include only explicitly optional companions; route selection does not prove downstream execution.",
           "rule": {
             "type": "route",
-            "alternatives": [["workflow-orchestrator"]],
+            "alternatives": [[]],
             "optional": []
           }
         }
@@ -16328,7 +16328,7 @@
           "core": true,
           "method": "text-rubric",
           "requirements": ["expectation-000"],
-          "rubric": "This is a routing-only classification case. Assess whether the selected route and rationale identify how the downstream skill should handle the requirement below. Do not require actual task execution, file edits, scans, reviews, or tool calls in this classification answer. Requirement: Determines the next workflow phase for an underspecified concern."
+          "rubric": "This is a routing-only classification case. Assess whether the selected route and rationale identify how the downstream skill should handle the requirement below. Do not require actual task execution, file edits, scans, reviews, or tool calls in this classification answer. Requirement: Uses direct evidence gathering and asks for the concrete reliability symptom or target when the prompt lacks it."
         }
       }
     ]
@@ -17516,7 +17516,7 @@
           "rubric": "This is a routing-only check. The answer must select one allowed exact route alternative and may include only explicitly optional companions; route selection does not prove downstream execution.",
           "rule": {
             "type": "route",
-            "alternatives": [["execute-plan-loop"]],
+            "alternatives": [[]],
             "optional": []
           }
         }
@@ -17698,7 +17698,7 @@
           "rubric": "This is a routing-only check. The answer must select one allowed exact route alternative and may include only explicitly optional companions; route selection does not prove downstream execution.",
           "rule": {
             "type": "route",
-            "alternatives": [["workflow-orchestrator"]],
+            "alternatives": [[]],
             "optional": []
           }
         }
@@ -17711,7 +17711,7 @@
           "core": true,
           "method": "text-rubric",
           "requirements": ["expectation-000"],
-          "rubric": "This is a routing-only classification case. Assess whether the selected route and rationale identify how the downstream skill should handle the requirement below. Do not require actual task execution, file edits, scans, reviews, or tool calls in this classification answer. Requirement: Determines the next workflow phase for an unresolved request."
+          "rubric": "This is a routing-only classification case. Assess whether the selected route and rationale identify how the downstream skill should handle the requirement below. Do not require actual task execution, file edits, scans, reviews, or tool calls in this classification answer. Requirement: Uses direct evidence gathering and reports what concrete target or symptom is missing."
         }
       }
     ]
@@ -18274,21 +18274,21 @@
         {
           "id": "route-answer",
           "capability": "skill-mechanism",
-          "authority": "Frozen case suite/trigger-matrix/execute-plan-loop-vs-native-goal-status and metadata.authorization.scope. No required-skill contract is declared for this case.",
+          "authority": "Case suite/trigger-matrix/execute-plan-loop-vs-native-goal-status, its task and metadata.authorization.scope. No required-skill contract is declared.",
           "appliesWhen": "Whole task execution.",
           "evidence": "The skill selections in the captured structured response."
         },
         {
           "id": "expectation-000",
           "capability": "skill-mechanism",
-          "authority": "Frozen case suite/trigger-matrix/execute-plan-loop-vs-native-goal-status and metadata.authorization.scope. No required-skill contract is declared for this case.",
+          "authority": "Case suite/trigger-matrix/execute-plan-loop-vs-native-goal-status, its task and metadata.authorization.scope. No required-skill contract is declared.",
           "appliesWhen": "Whole task execution.",
           "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
         },
         {
           "id": "expectation-001",
           "capability": "skill-mechanism",
-          "authority": "Frozen case suite/trigger-matrix/execute-plan-loop-vs-native-goal-status and metadata.authorization.scope. No required-skill contract is declared for this case.",
+          "authority": "Case suite/trigger-matrix/execute-plan-loop-vs-native-goal-status, its task and metadata.authorization.scope. No required-skill contract is declared.",
           "appliesWhen": "Whole task execution.",
           "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
         }
@@ -18365,7 +18365,7 @@
           "core": true,
           "method": "text-rubric",
           "requirements": ["expectation-001"],
-          "rubric": "This is a routing-only classification case. Assess whether the selected route and rationale identify how the downstream skill should handle the requirement below. Do not require actual task execution, file edits, scans, reviews, or tool calls in this classification answer. Requirement: Does not activate execute-plan-loop for a status-only request."
+          "rubric": "This is a routing-only classification case. Assess whether the selected route and rationale identify how the downstream skill should handle the requirement below. Do not require actual task execution, file edits, scans, reviews, or tool calls in this classification answer. Requirement: Does not require a process skill or custom tracker for a host goal-status request."
         }
       }
     ]
@@ -18383,21 +18383,21 @@
         {
           "id": "route-answer",
           "capability": "skill-mechanism",
-          "authority": "Frozen case suite/trigger-matrix/plan-parallel-work-vs-native-goal-status and metadata.authorization.scope. No required-skill contract is declared for this case.",
+          "authority": "Case suite/trigger-matrix/plan-parallel-work-vs-native-goal-status, its task and metadata.authorization.scope. No required-skill contract is declared.",
           "appliesWhen": "Whole task execution.",
           "evidence": "The skill selections in the captured structured response."
         },
         {
           "id": "expectation-000",
           "capability": "skill-mechanism",
-          "authority": "Frozen case suite/trigger-matrix/plan-parallel-work-vs-native-goal-status and metadata.authorization.scope. No required-skill contract is declared for this case.",
+          "authority": "Case suite/trigger-matrix/plan-parallel-work-vs-native-goal-status, its task and metadata.authorization.scope. No required-skill contract is declared.",
           "appliesWhen": "Whole task execution.",
           "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
         },
         {
           "id": "expectation-001",
           "capability": "skill-mechanism",
-          "authority": "Frozen case suite/trigger-matrix/plan-parallel-work-vs-native-goal-status and metadata.authorization.scope. No required-skill contract is declared for this case.",
+          "authority": "Case suite/trigger-matrix/plan-parallel-work-vs-native-goal-status, its task and metadata.authorization.scope. No required-skill contract is declared.",
           "appliesWhen": "Whole task execution.",
           "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
         }
@@ -18474,7 +18474,7 @@
           "core": true,
           "method": "text-rubric",
           "requirements": ["expectation-001"],
-          "rubric": "This is a routing-only classification case. Assess whether the selected route and rationale identify how the downstream skill should handle the requirement below. Do not require actual task execution, file edits, scans, reviews, or tool calls in this classification answer. Requirement: Does not activate plan-parallel-work for a status-only request."
+          "rubric": "This is a routing-only classification case. Assess whether the selected route and rationale identify how the downstream skill should handle the requirement below. Do not require actual task execution, file edits, scans, reviews, or tool calls in this classification answer. Requirement: Does not require a process skill or custom tracker for a host goal-status request."
         }
       }
     ]
@@ -18492,21 +18492,21 @@
         {
           "id": "route-answer",
           "capability": "skill-mechanism",
-          "authority": "Frozen case suite/trigger-matrix/workflow-orchestrator-vs-native-goal-status and metadata.authorization.scope. No required-skill contract is declared for this case.",
+          "authority": "Case suite/trigger-matrix/workflow-orchestrator-vs-native-goal-status, its task and metadata.authorization.scope. No required-skill contract is declared.",
           "appliesWhen": "Whole task execution.",
           "evidence": "The skill selections in the captured structured response."
         },
         {
           "id": "expectation-000",
           "capability": "skill-mechanism",
-          "authority": "Frozen case suite/trigger-matrix/workflow-orchestrator-vs-native-goal-status and metadata.authorization.scope. No required-skill contract is declared for this case.",
+          "authority": "Case suite/trigger-matrix/workflow-orchestrator-vs-native-goal-status, its task and metadata.authorization.scope. No required-skill contract is declared.",
           "appliesWhen": "Whole task execution.",
           "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
         },
         {
           "id": "expectation-001",
           "capability": "skill-mechanism",
-          "authority": "Frozen case suite/trigger-matrix/workflow-orchestrator-vs-native-goal-status and metadata.authorization.scope. No required-skill contract is declared for this case.",
+          "authority": "Case suite/trigger-matrix/workflow-orchestrator-vs-native-goal-status, its task and metadata.authorization.scope. No required-skill contract is declared.",
           "appliesWhen": "Whole task execution.",
           "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
         }
@@ -18583,7 +18583,7 @@
           "core": true,
           "method": "text-rubric",
           "requirements": ["expectation-001"],
-          "rubric": "This is a routing-only classification case. Assess whether the selected route and rationale identify how the downstream skill should handle the requirement below. Do not require actual task execution, file edits, scans, reviews, or tool calls in this classification answer. Requirement: Does not activate workflow-orchestrator for a status-only request."
+          "rubric": "This is a routing-only classification case. Assess whether the selected route and rationale identify how the downstream skill should handle the requirement below. Do not require actual task execution, file edits, scans, reviews, or tool calls in this classification answer. Requirement: Does not require a process skill or custom tracker for a host goal-status request."
         }
       }
     ]

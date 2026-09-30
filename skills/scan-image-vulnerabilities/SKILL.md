@@ -12,7 +12,7 @@ Use it when the target is a container image: "does this image have vulnerabiliti
 
 Do not use it for source-code security audits — SQL injection, authn/authz flaws, unsafe deserialization, or any review of application code. Route those to a source-code security review capability and say so instead of scanning. The word "vulnerability" alone is not the trigger; neither are generic dependency-policy questions.
 
-This skill is read-only: it inspects images and reports findings, and never edits code, opens PRs, or produces plan artifacts. It sits outside the plan-mode/approval workflow coordinated by `workflow-orchestrator`, so invoke it directly without routing through that contract.
+Invoke this skill directly for image inspection. It is read-only: it reports findings without editing code or opening PRs.
 
 ## 1. Identify the exact targets
 

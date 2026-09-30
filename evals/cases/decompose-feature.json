@@ -426,7 +426,7 @@
         "pathPrepend": [],
         "executableFiles": []
       },
-      "reference": "Uses a justified shared base followed by independent consumer slices and hands ownership planning to plan-parallel-work.",
+      "reference": "Uses a justified shared-contract base followed by independent consumer deliveries, and identifies native isolation, ownership and integration requirements without a planning companion.",
       "requiredSkills": ["decompose-feature"],
       "turns": [],
       "authorization": {
@@ -483,7 +483,7 @@
           "core": true,
           "method": "text-rubric",
           "requirements": ["expectation-003"],
-          "rubric": "Keeps PR sequencing separate from any implementation-ownership handoff. Planned owners, branches, and isolated working copies supplied by an applicable plan-parallel-work companion are valid in the same overall plan. Does not create branches or worktrees or dispatch implementation while only planning."
+          "rubric": "Keeps PR sequencing separate from native implementation ownership and isolation. May describe required coordination boundaries, but does not create branches or worktrees or dispatch implementation during this advice-only request."
         }
       },
       {
@@ -494,7 +494,7 @@
           "core": true,
           "method": "text-rubric",
           "requirements": ["expectation-004"],
-          "rubric": "Names plan-parallel-work as the ownership handoff."
+          "rubric": "Identifies shared contract stabilization, owned and shared files, acceptance and integration evidence needed before independent contributors can write concurrently; no planning companion or shared tracker is required."
         }
       }
     ]
@@ -847,7 +847,7 @@
           "core": true,
           "method": "text-rubric",
           "requirements": ["expectation-002"],
-          "rubric": "Does not require Gate 1 before answering."
+          "rubric": "Does not require approval merely to answer the requested provisional advice."
         }
       },
       {

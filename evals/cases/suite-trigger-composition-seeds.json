@@ -79,7 +79,7 @@
           "rubric": "This is a routing-only check. The answer must select one allowed exact route alternative and may include only explicitly optional companions; route selection does not prove downstream execution.",
           "rule": {
             "type": "route",
-            "alternatives": [["execute-plan-loop"]],
+            "alternatives": [[]],
             "optional": []
           }
         }
@@ -92,7 +92,7 @@
           "core": true,
           "method": "text-rubric",
           "requirements": ["expectation-000"],
-          "rubric": "This is a routing-only classification case. Assess whether the selected route and rationale identify how the downstream skill should handle the requirement below. Do not require actual task execution, file edits, scans, reviews, or tool calls in this classification answer. Requirement: Consume clear approval from the conversation or living plan directly."
+          "rubric": "This is a routing-only classification case. Assess whether the selected route and rationale identify how the downstream skill should handle the requirement below. Do not require actual task execution, file edits, scans, reviews, or tool calls in this classification answer. Requirement: Uses already selected behavior and authorization from the conversation or existing evidence directly."
         }
       },
       {
@@ -297,7 +297,7 @@
           "rubric": "This is a routing-only check. The answer must select one allowed exact route alternative and may include only explicitly optional companions; route selection does not prove downstream execution.",
           "rule": {
             "type": "route",
-            "alternatives": [["plan-parallel-work"]],
+            "alternatives": [[]],
             "optional": []
           }
         }

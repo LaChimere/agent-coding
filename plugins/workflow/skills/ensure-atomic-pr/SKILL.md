@@ -1,60 +1,57 @@
 ---
 name: ensure-atomic-pr
-description: Assess whether a planned or existing change is one atomic unit, and recover the commit/PR boundaries of an existing diff, commit, branch, or PR. Use for atomicity questions, mixed concerns, or work that grew beyond its purpose. Not for designing the multi-PR delivery sequence — that is decompose-feature.
+description: Assess whether a proposed or existing diff, commit, branch or PR has one independently meaningful purpose, and identify recoverable boundaries when it mixes concerns.
 ---
 
 # Purpose
 
-Judge whether an existing change is atomic, and when it is not, recover it into reviewable units.
+An atomic change has one purpose and can be reviewed or reverted as a coherent unit.
+Inspect the named change and its original requirements. `decompose-feature` designs a future PR
+sequence; this skill checks or recovers boundaries of the change already under discussion.
 
-# Boundaries
+# Assess the boundaries
 
-This skill owns atomicity: whether a planned change is one coherent PR, and how to recover the boundaries of a working-tree diff, commit, branch, or open PR that mixes concerns. `decompose-feature` owns the different question of what PR sequence should deliver the work, including when an existing branch is being reorganized into a delivery stack.
+Establish the actual comparison target: working tree, named commit, range, branch or PR. Inspect
+its requirements, diff and relevant history; distinguish pre-existing or unrelated user changes
+from the work being assessed. Trace changed callers and contracts where needed to understand
+whether concerns really depend on one another.
 
-It applies during design, during execution, or as post-hoc recovery. A plain assessment is delivered directly, with no file writes or approval gates. If the split changes future execution strategy, include it in the overall native proposal or existing `plans/{slug}/plan.md` when writing is allowed and authorized; execution progress stays in that living plan alone. Invoke `workflow-orchestrator` only when phase or approval is unresolved. Assessment or recovery advice does not authorize staging, commits, history rewriting, or remote changes.
+Identify unrelated behavior, independently mergeable mechanical work and opportunistic cleanup.
+Diff size alone is not a defect. An indivisible rename across many files can stay together;
+independent formatting or renaming should separate from a semantic change only when each can
+land safely on its own. Mechanical edits with the same independently meaningful purpose can
+remain one unit; separate filenames or operations do not automatically require separate commits.
 
-# Atomicity standard
+Keep implementation, its tests and directly coupled documentation together. Avoid separate
+all-tests or all-refactors PRs spanning unrelated purposes. Test infrastructure may be separate
+when it is independently useful and can land without the feature; the feature's own acceptance
+tests still belong with its behavior. Do not manufacture tiny units or compatibility work just
+to force a split.
 
-A change is not atomic enough when:
+# Recover a mixed change
 
-- it serves more than one logical purpose
-- its description joins independent outcomes instead of one behavior with its supporting tests and docs
-- it mixes unrelated or independently mergeable mechanical work with semantic change
-- it forces a reviewer to reason about unrelated concerns together
+Map each concern to concrete paths and, when a file mixes purposes, the relevant hunks or symbols.
+Identify prerequisite edits and shared contracts before recommending extraction. A split is useful
+only when the resulting units are understandable and their intermediate states remain healthy.
 
-Diff size alone is never the test.
+Explain which concern can be extracted first, which edits must stay together, and which unrelated
+cleanup can be deferred. Interactive staging can separate independent working-tree hunks; a
+preparatory PR can isolate a genuine prerequisite. These are recovery suggestions, not authority
+to stage, rewrite history or alter a published PR. Keep existing commits when they already express
+the right boundaries; do not reorganize history merely for appearance.
 
-# Splitting rules
+If changes cannot be separated safely, explain the coupling and keep one coherent unit. Recommend
+proportionate validation for each proposed unit: behavior preservation for mechanical work and
+observable behavior for semantic changes. Validation units need not equal commit units; relevant
+evidence can cover directly related commits without claiming coverage it does not provide.
 
-Split by logical purpose first, keeping each purpose's preparation, behavior, tests, and directly coupled documentation together as one reviewable outcome. Never group all refactors, all tests, or all docs across unrelated purposes merely because they share an artifact type.
+# Return the assessment
 
-Behavior-preserving mechanical work of one purpose is **one unit**: an automated formatting pass together with an isolated rename is a single mechanical change, not two. Separate mechanical from semantic work only when it can land independently and would otherwise obscure review.
+State whether the change is atomic and identify its logical purposes. If it is already coherent,
+stop. Otherwise propose boundaries with included/excluded concerns, genuine dependencies,
+acceptance and evidence that intermediate states remain healthy. Explain when a safe split is
+not possible. Use concise prose or a table as appropriate to the requested assessment.
 
-An indivisible change stays one PR. A rename across 50 files cannot be halved by file count without a broken intermediate state: keep it whole, and move an unrelated semantic tweak that rode along into its own commit or a follow-up PR.
-
-Tests stay with the behavior they verify unless the test infrastructure is large and independently useful. Unrelated cleanup or dependency bumps get their own unit and must not block the feature. Do not over-split into trivially small units, and do not invent a split for a change that is already atomic.
-
-Validation is proportionate: a mechanical unit needs only the check proving behavior is unchanged; a behavioral unit needs tests demonstrating the new behavior.
-
-Validation units need not equal commit units. Reuse relevant evidence across directly related commits; commit and publication authority remain separate from implementation approval.
-
-# Required output
-
-## Atomicity assessment
-Whether the change is atomic enough, its logical purpose(s), and why.
-
-If it is atomic, say so, recommend proceeding, and stop — do not add a proposed split.
-
-If it is not atomic, add:
-
-## Proposed split
-One block per commit or PR: title; purpose; included concerns; excluded concerns; genuine dependencies; acceptance criteria; validation; evidence that the intermediate state stays healthy.
-
-## Recovery guidance
-Only what applies: interactive staging, a prep PR carved out first, or cleanup deferred to a follow-up. Say explicitly when a split cannot preserve a healthy intermediate state.
-
-`templates/atomic-pr-checklist.md` is available for a written artifact; the structure above stands on its own.
-
-# Strong preferences
-
-Prefer small PRs over clever commit history inside one giant PR, and one logical purpose per PR. When a change is inherently indivisible, keep one PR whose commits still separate mechanical from semantic work.
+Assessment and recovery advice are read-only. Staging, commits, history rewriting and remote
+changes need their own authority; preserve unrelated user work and never discard it to recover
+boundaries. Write a requested report only within the authorized location.

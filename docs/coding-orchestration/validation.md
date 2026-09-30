@@ -899,3 +899,128 @@ Across the original and follow-up behavioral/routing cohorts, 30 imported reques
 actual contexts; the 24 whole-workflow A/B trials are separate. Unscheduled rows are not counted
 as executions. Completion accepts these repository deliverables and their documented evidence;
 it does not promote historical failures, missing model returns or excluded capabilities to passes.
+
+## 2026-09-30: direct execution and conditional planning refinement
+
+The working-tree candidate is workflow `0.1.4`. Clear tasks, including straightforward
+multi-step work, execute directly; proposals and living plans are used for requested planning,
+consequential choices or coordinated dependencies/durable progress. Continuation reuses decisions
+and authority, verifies current target state and reports the tested environment and decisive
+evidence. Role/model mappings, concurrency, side-effect approval and risk-based review are retained.
+
+The development corpus now has 340 cases and 1,280 checks. Two new outcome cases cover direct
+multi-step correction and continuation without a plan file. Affected routing assertions were
+aligned without dropping non-routing scope, goal, evidence or companion checks; the existing
+no-handoff executor case now explicitly requests that skill. The holdout and quality configuration
+are unchanged. This revision is not behaviorally qualified.
+
+Local checks used Bun `1.4.2` from `/tmp/agent-coding-workflow-refine/toolchain/bun-linux-x64`;
+the machine's Bun `1.3.14` could not parse the frozen lockfile. With that directory prepended to
+`PATH`, the following commands ran from `evals/`:
+
+- `bun run start -- validate`: `valid: true`, 340 cases, 1,280 checks.
+- `bun test tests/distribution.test.ts tests/corpus/`: 21 pass, 0 fail.
+- `bun run check`: exit 0; two existing informational lint notices remain.
+- `git diff --check`: exit 0, no output.
+
+`python3 /tmp/agent-coding-workflow-refine/validate-distribution.py` verified isolated local
+marketplace installation/update from `0.1.3` to `0.1.4`, and candidate source identity in Codex
+`0.159.2`, Claude Code `2.1.280` and Copilot CLI `1.0.89`. Claude component inventory and Copilot
+`skill list` discovered all seven workflow skills. Copilot used its native live local-marketplace
+source; it was not a copied cache. Codex `skills/list` discovery and source verification were
+also captured by native evaluation preparation. No production configuration or plugin installation
+was switched, and no credential files were copied. Claude/Copilot model behavior was not tested.
+
+Three native Codex runs retained 11 scheduled rows, all `not_run` with quality `unknown`:
+
+- `a7f9d79f-713d-4460-b128-3e5505f191b5`: five rows on `0.159.2` stopped before model work
+  because the nested sandbox rejected the app-server socket-directory permissions.
+- `7712d09c-fd30-4254-8f91-0fdb482fce04`: five rows on `0.159.2` outside the outer sandbox
+  reached the private-file isolation probe, which returned exit 1 and `No such file or directory`.
+- `4819a121-345b-4c58-9f85-93a242a58ec7`: a one-row `0.154.0` control returned the same
+  private-file result. The framework accepts only denial-worded errors, so it reported
+  `Native profile can read private evaluation data.` That label does not establish a readable
+  private file: stdout was empty and the read failed. The isolation predicate was not weakened;
+  no candidate model turn or behavioral grading ran.
+
+The temporary WSL profile preserved the baseline policy and credential references, changing only
+tool/library paths. Its frozen copies remain with the run records; the temporary source files were
+removed. Evidence is under `evals/out/workflow-refinement-20260930/` and the named run directories.
+
+Independent correctness, authority/security and design-fit review used a separate
+`critical_reviewer` context at observed `gpt-6.1-sol/xhigh`, followed by primary inspection.
+Three rounds and two targeted repairs closed the identified route/non-routing assertion issues.
+One case remains ambiguous: `executor-resume-billing-migration-step2` requires an exact loop route
+without stating a coordination or durable-progress need. Further repair/review requires the
+caller's additional authorization under the existing limits. Current status is working-tree
+implementation with incomplete validation; no commit, publication or production activation occurred.
+
+## 2026-09-30: four independent specialists, native task lifecycle
+
+The user subsequently selected a structural replacement for the conditional-plan draft above.
+Workflow `0.2.0` retains `anti-slop`, `decompose-feature`, `ensure-atomic-pr` and
+`refresh-related-docs`; the coordinator, execution loop, parallel planner, shared contract and
+all planning/gate templates are removed. Native hosts own execution and persistent goals.
+Personal Codex defaults retain authority, verification and independent-review boundaries while
+replacing fixed repair/review approval counts with evidence-based reassessment and explicit budgets.
+The old draft's remaining exact-loop case is superseded by ordinary outcome-oriented routing;
+the earlier records above remain historical and are not qualification of this candidate.
+
+Relative to `409c3b1`, the distributed workflow package has 6 files instead of 21 and 9,048 bytes
+instead of 72,229. Those are package-size measurements, not token-cost or effectiveness results.
+Role/model mappings and the six-worker ceiling did not change.
+
+The development corpus has 338 cases and 1,265 checks. Fifty-two decision/execution/parallel
+cases were retained as ordinary agent outcomes. Relative to the preceding uncommitted draft,
+two retired coordination-task cases and seven fixed Parallel execution-template checks were
+removed; two authority/goal-status result checks were added during review. The preceding draft's
+two new direct-execution/continuation cases were retained, so relative to `409c3b1` the case count
+stays 338 and checks change from 1,270 to 1,265. Unrelated source, behavior, authorization,
+verification and isolation requirements remain. Historical input records remain where useful;
+no runtime skill depends on them. Frozen profiles, holdouts, quality rules and completed evidence
+were not changed.
+
+Local checks used the temporary Bun `1.4.2` binary recorded above, prepended to `PATH`, from `evals/`:
+
+- `bun run start -- validate`: `valid: true`, 338 cases, 1,265 checks.
+- `bun test tests/distribution.test.ts tests/corpus/`: 21 pass, 0 fail.
+- `bun run check`: exit 0; the same two pre-existing informational lint notices remain.
+- `git diff --check`: exit 0, no output.
+
+`python3 /tmp/agent-coding-workflow-refine-v02/validate-distribution.py` verified native isolated
+installation/update from `0.1.3` to `0.2.0` and candidate source identity in Codex `0.159.2`,
+Claude Code `2.1.280` and Copilot CLI `1.0.89`. Claude inventory and Copilot `skill list` discovered
+exactly the four current skills and no retired ones; Copilot used a registered live local candidate.
+Codex `skills/list` in all four fresh native preparations returned the four enabled qualified names
+`workflow:anti-slop`, `workflow:decompose-feature`, `workflow:ensure-atomic-pr` and
+`workflow:refresh-related-docs`, from the `0.2.0` cache paths. Discovery is not invocation evidence.
+Standalone skills were copied through the skills-manager CLI during native preparation.
+
+The four selected behavioral rows in run `0f53d40c-84c9-48c1-925b-6f5468553755` remain
+`not_run` and quality `unknown`. Each stopped at the existing private-file isolation predicate:
+the probe returned exit 1, empty stdout and `No such file or directory`, while the framework
+accepts only denial-worded errors. No model turn or behavioral grading started. The predicate and
+framework were not changed, and these preparations do not establish a private-data read.
+The temporary machine-path profile was removed after freezing; its input snapshot remains in
+the run. New evidence is under `evals/out/workflow-refinement-v02-20260930/` and the named run.
+
+No local production configuration or plugin installation was switched, no credential files were
+copied, and no commit or external publication is part of this working-tree delivery. Behavioral
+effectiveness and native goal lifecycle remain unverified in this environment.
+
+Independent runtime correctness, authority/security and design-fit review used a separate
+`critical_reviewer` context at observed `gpt-6.1-sol/xhigh`, with no surviving findings.
+A separate `ordinary_worker` review at observed `gpt-6-luna/max` inspected representative corpus
+changes, scope/evidence requirements and fixture coverage. It found advice/implementation ambiguity
+and missing goal-status acceptance; those were corrected and the three affected cases rechecked.
+Both are GPT-family contexts, not cross-family evidence. Primary inspection retained final judgment;
+neither static review establishes model effectiveness or a completed specialist security scan.
+
+## 2026-09-30: evaluation deferred until workflow refinement is settled
+
+The user requested that workflow refinement finish before further evaluation. No additional
+model evaluations or qualification work are scheduled. Completed WSL compatibility diagnostics
+and their run records remain available under `evals/out/`; they do not constitute acceptance
+of a final workflow revision. The optional engineering-design template is retained, while
+execution plans, task ledgers and plugin-managed lifecycle remain removed. Freeze the agreed
+revision before its formal evaluation; do not rewrite the earlier records to fit it.

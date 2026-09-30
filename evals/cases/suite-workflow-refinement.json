@@ -366,7 +366,7 @@
   {
     "description": "routing classification workflow-refinement/approved-native-implementation.",
     "vars": {
-      "task": "Classify the exact incoming request below. Return which installed skills should handle it and why. Do not execute the described task, modify files, call external systems, or create artifacts.\n\nIncoming request:\nImplement the native proposal I just approved; its scope, acceptance and working_tree landing are clear, but no handoff file exists."
+      "task": "Classify the exact incoming request below. Return which installed skills should handle it and why. Do not execute the described task, modify files, call external systems, or create artifacts.\n\nIncoming request:\nImplement the native proposal I just approved: correct the two label typos in src/labels.js, preserve exports, and run the existing test. Scope, acceptance and working_tree landing are settled; no handoff file exists."
     },
     "metadata": {
       "id": "suite/workflow-refinement/approved-native-implementation",
@@ -436,7 +436,7 @@
           "rubric": "This is a routing-only check. The answer must select one allowed exact route alternative and may include only explicitly optional companions; route selection does not prove downstream execution.",
           "rule": {
             "type": "route",
-            "alternatives": [["execute-plan-loop"]],
+            "alternatives": [[]],
             "optional": []
           }
         }
@@ -449,7 +449,7 @@
           "core": true,
           "method": "text-rubric",
           "requirements": ["expectation-000"],
-          "rubric": "This is a routing-only classification case. Assess whether the selected route and rationale identify how the downstream skill should handle the requirement below. Do not require actual task execution, file edits, scans, reviews, or tool calls in this classification answer. Requirement: Use only the route required by the stated task; no custom goal, extra gate or implementation outside scope."
+          "rubric": "This is classification only. Selects direct execution for the clear approved multi-step correction without requiring an execution loop, plan file or another approval. No downstream execution is required in this answer."
         }
       }
     ]
@@ -527,7 +527,7 @@
           "rubric": "This is a routing-only check. The answer must select one allowed exact route alternative and may include only explicitly optional companions; route selection does not prove downstream execution.",
           "rule": {
             "type": "route",
-            "alternatives": [["plan-parallel-work"]],
+            "alternatives": [[]],
             "optional": []
           }
         }
@@ -709,7 +709,7 @@
           "rubric": "This is a routing-only check. The answer must select one allowed exact route alternative and may include only explicitly optional companions; route selection does not prove downstream execution.",
           "rule": {
             "type": "route",
-            "alternatives": [["plan-parallel-work"]],
+            "alternatives": [[]],
             "optional": []
           }
         }
