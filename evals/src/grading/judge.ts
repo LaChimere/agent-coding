@@ -1,6 +1,6 @@
 import { randomUUID } from 'node:crypto';
-import { mkdir, readdir, realpath, stat, unlink } from 'node:fs/promises';
-import { relative, resolve, sep } from 'node:path';
+import { chmod, lstat, mkdir, readdir, realpath, stat, unlink } from 'node:fs/promises';
+import { delimiter, relative, resolve, sep } from 'node:path';
 import type { ApiProvider, ProviderResponse } from 'promptfoo';
 import { CodexSession, protocolObject } from '../codex/session.ts';
 import type { ICodexTransportRecord } from '../codex/transport.ts';
@@ -49,7 +49,14 @@ export interface IJudgeProvider {
 const controlTimeoutMs = 30_000;
 const cleanupGraceMs = 1_000;
 const permissionName = 'eval-grader';
-const systemPath = '/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin';
+const systemPath = [
+  ...(process.platform === 'darwin' ? ['/opt/homebrew/bin'] : []),
+  '/usr/local/bin',
+  '/usr/bin',
+  '/bin',
+  '/usr/sbin',
+  '/sbin',
+].join(delimiter);
 
 export const verdictSchema = {
   type: 'object',
@@ -567,6 +574,60 @@ function exitCode(result: Record<string, unknown>): number {
   return value;
 }
 
+interface IPrivateMarkerWitness {
+  regularFile: boolean;
+  contentsMatch: boolean;
+  device?: number;
+  inode?: number;
+  size?: number;
+  modifiedAt?: number;
+}
+
+async function privateMarkerWitness(
+  path: string,
+  expected: string,
+): Promise<IPrivateMarkerWitness> {
+  const info = await lstat(path).catch((error: unknown) => {
+    if (error instanceof Error && 'code' in error && error.code === 'ENOENT') {
+      return null;
+    }
+    throw error;
+  });
+  if (info === null || !info.isFile()) {
+    return { regularFile: false, contentsMatch: false };
+  }
+
+  return {
+    regularFile: true,
+    contentsMatch: (await Bun.file(path).text()) === expected,
+    device: info.dev,
+    inode: info.ino,
+    size: info.size,
+    modifiedAt: info.mtimeMs,
+  };
+}
+
+function intactPrivateMarker(before: IPrivateMarkerWitness, after: IPrivateMarkerWitness): boolean {
+  return (
+    before.regularFile &&
+    before.contentsMatch &&
+    after.regularFile &&
+    after.contentsMatch &&
+    before.device === after.device &&
+    before.inode === after.inode &&
+    before.size === after.size &&
+    before.modifiedAt === after.modifiedAt
+  );
+}
+
+async function removePrivateMarker(path: string): Promise<void> {
+  await unlink(path).catch((error: unknown) => {
+    if (!(error instanceof Error && 'code' in error && error.code === 'ENOENT')) {
+      throw error;
+    }
+  });
+}
+
 function listedSkills(response: unknown): Record<string, unknown>[] {
   const { data } = protocolObject(response);
   if (!Array.isArray(data)) {
@@ -690,9 +751,9 @@ async function nativeConfiguration(input: IJudgeInput): Promise<{
   const codexHome = resolve(home, '.codex');
   const temporary = resolve(native, 'tmp');
   const startup = resolve(native, 'startup');
-  await mkdir(codexHome, { recursive: true });
-  await mkdir(temporary);
-  await mkdir(startup);
+  await mkdir(codexHome, { recursive: true, mode: 0o700 });
+  await mkdir(temporary, { mode: 0o700 });
+  await mkdir(startup, { mode: 0o700 });
   const credentialNames = Object.keys(input.credentials);
 
   const configured: Record<string, unknown> = Object.fromEntries([
@@ -1000,46 +1061,85 @@ export async function createNativeJudge(input: IJudgeInput): Promise<IJudgeProvi
 
       const deniedWritePath = resolve(native.evidence, `.judge-write-${randomUUID()}`);
       const deniedWriteValue = `denied-write-${randomUUID()}`;
+      const shellStarted = `shell-${randomUUID()}`;
+      const evidenceParentBefore = await lstat(native.evidence);
 
       const evidenceWrite = await commandProbe(
         session,
-        ['/bin/sh', '-c', 'printf %s "$2" > "$1"', '_judge', deniedWritePath, deniedWriteValue],
+        [
+          '/bin/sh',
+          '-c',
+          'printf %s "$3"; printf %s "$2" > "$1"',
+          '_judge',
+          deniedWritePath,
+          deniedWriteValue,
+          shellStarted,
+        ],
         native.startup,
       );
 
+      const evidenceParentAfter = await lstat(native.evidence);
+      const hostParentIntact =
+        evidenceParentBefore.isDirectory() &&
+        evidenceParentAfter.isDirectory() &&
+        evidenceParentBefore.dev === evidenceParentAfter.dev &&
+        evidenceParentBefore.ino === evidenceParentAfter.ino;
       const deniedWriteExists = await Bun.file(deniedWritePath).exists();
       if (deniedWriteExists) {
         await unlink(deniedWritePath);
       }
 
-      const { stderr: evidenceWriteError } = evidenceWrite;
+      const { stdout: evidenceWriteOutput, stderr: evidenceWriteError } = evidenceWrite;
       if (
-        exitCode(evidenceWrite) === 0 ||
+        !hostParentIntact ||
+        ![1, 2].includes(exitCode(evidenceWrite)) ||
+        evidenceWriteOutput !== shellStarted ||
         deniedWriteExists ||
         typeof evidenceWriteError !== 'string' ||
-        !/denied|not permitted/iu.test(evidenceWriteError)
+        !/denied|not permitted|Read-only file system/iu.test(evidenceWriteError)
       ) {
-        throw new Error('Native judge can modify the frozen evidence root.');
+        throw new Error('Native judge frozen evidence write isolation was not verified.');
       }
 
       const privatePath = resolve(native.operation, `.judge-private-${randomUUID()}`);
       const privateValue = `private-${randomUUID()}`;
-      await Bun.write(privatePath, privateValue);
-      let privateRead: Record<string, unknown>;
-
-      try {
-        privateRead = await commandProbe(session, ['/bin/cat', privatePath], native.startup);
-      } finally {
-        await unlink(privatePath);
+      const privateReadControl = await commandProbe(
+        session,
+        ['/bin/cat', '/dev/null'],
+        native.startup,
+      );
+      const { stdout: privateControlOutput } = privateReadControl;
+      if (exitCode(privateReadControl) !== 0 || privateControlOutput !== '') {
+        throw new Error('Native judge private grading state isolation was not verified.');
       }
 
-      const { stderr: privateReadError } = privateRead;
+      await Bun.write(privatePath, privateValue);
+      await chmod(privatePath, 0o600);
+      let privateRead: Record<string, unknown>;
+      let privateBefore: IPrivateMarkerWitness;
+      let privateAfter: IPrivateMarkerWitness;
+
+      try {
+        privateBefore = await privateMarkerWitness(privatePath, privateValue);
+        privateRead = await commandProbe(session, ['/bin/cat', privatePath], native.startup);
+        privateAfter = await privateMarkerWitness(privatePath, privateValue);
+      } finally {
+        await removePrivateMarker(privatePath);
+      }
+
+      const { stdout: privateReadOutput, stderr: privateReadError } = privateRead;
+      const privateAccessDenied =
+        typeof privateReadError === 'string' &&
+        (/denied|not permitted/iu.test(privateReadError) ||
+          (privateReadError.includes(privatePath) &&
+            /No such file or directory/iu.test(privateReadError)));
       if (
-        exitCode(privateRead) === 0 ||
-        typeof privateReadError !== 'string' ||
-        !/denied|not permitted/iu.test(privateReadError)
+        !intactPrivateMarker(privateBefore, privateAfter) ||
+        exitCode(privateRead) !== 1 ||
+        privateReadOutput !== '' ||
+        !privateAccessDenied
       ) {
-        throw new Error('Native judge can read private grading state outside the evidence root.');
+        throw new Error('Native judge private grading state isolation was not verified.');
       }
 
       const networkValue = `network-${randomUUID()}`;
@@ -1073,14 +1173,15 @@ export async function createNativeJudge(input: IJudgeInput): Promise<IJudgeProvi
         server.stop(true);
       }
 
-      const { stderr: networkError } = network;
+      const { stdout: networkOutput, stderr: networkError } = network;
       if (
-        exitCode(network) === 0 ||
+        exitCode(network) !== 7 ||
+        networkOutput !== '' ||
         networkRequests !== 0 ||
         typeof networkError !== 'string' ||
         !/connect|denied|not permitted/iu.test(networkError)
       ) {
-        throw new Error('Native judge tool network access is not blocked.');
+        throw new Error('Native judge tool network isolation was not verified.');
       }
       await writeJson(
         resolve(input.operationDirectory, 'native-probes.json'),
@@ -1095,8 +1196,13 @@ export async function createNativeJudge(input: IJudgeInput): Promise<IJudgeProvi
             ...evidenceWrite,
             path: deniedWritePath,
             created: deniedWriteExists,
+            hostParentIntact,
           },
-          privateRead,
+          privateRead: {
+            ...privateRead,
+            hostWitness: { before: privateBefore, after: privateAfter },
+          },
+          privateReadControl,
           network: {
             ...network,
             expectedValue: networkValue,

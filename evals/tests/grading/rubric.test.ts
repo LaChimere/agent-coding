@@ -1,10 +1,13 @@
-import { afterEach, beforeAll, expect, test } from 'bun:test';
+import { afterAll, afterEach, beforeAll, expect, test } from 'bun:test';
 import { mkdir, mkdtemp, readdir, rm } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { gradeRubric, type IGradeRubricInput, rubricPrompt } from '../../src/grading/rubric.ts';
 
 const roots: string[] = [];
 const originalFetch = globalThis.fetch;
+const promptfooConfigDirectoryKey = 'PROMPTFOO_CONFIG_DIR';
+const originalPromptfooConfigDirectory = process.env[promptfooConfigDirectoryKey];
+let testPromptfooConfigDirectory: string | undefined;
 
 function replaceFetch(
   handler: (
@@ -19,7 +22,10 @@ function replaceFetch(
   });
 }
 
-beforeAll(() => {
+beforeAll(async () => {
+  testPromptfooConfigDirectory = await mkdtemp(resolve('.cache/rubric-promptfoo-test-'));
+  process.env[promptfooConfigDirectoryKey] = testPromptfooConfigDirectory;
+
   Object.assign(
     process.env,
     Object.fromEntries([
@@ -28,6 +34,18 @@ beforeAll(() => {
       ['PROMPTFOO_TRACING_ENABLED', 'false'],
     ]),
   );
+});
+
+afterAll(async () => {
+  if (originalPromptfooConfigDirectory === undefined) {
+    delete process.env[promptfooConfigDirectoryKey];
+  } else {
+    process.env[promptfooConfigDirectoryKey] = originalPromptfooConfigDirectory;
+  }
+
+  if (testPromptfooConfigDirectory !== undefined) {
+    await rm(testPromptfooConfigDirectory, { recursive: true, force: true });
+  }
 });
 
 afterEach(async () => {
@@ -100,6 +118,7 @@ function apiResponse(
 
 test('grades text evidence through the public Promptfoo rubric assertion and records API usage', async () => {
   const { root, input } = await fixture();
+  expect(process.env[promptfooConfigDirectoryKey]).toBe(testPromptfooConfigDirectory);
   const requests: { url: string; headers: Headers; body: Record<string, unknown> }[] = [];
   replaceFetch(async (request, options) => {
     requests.push({

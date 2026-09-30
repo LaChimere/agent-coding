@@ -3,6 +3,9 @@ import { mkdtemp } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import type { ApiProvider, TestCase } from 'promptfoo';
 import { type IPromptfooBatch, runPromptfooBatch } from '../../src/promptfoo/batch.ts';
+import { loadPromptfoo } from '../../src/promptfoo/library.ts';
+
+const promptfooConfigDirectoryKey = 'PROMPTFOO_CONFIG_DIR';
 
 interface INativeExport {
   results: {
@@ -107,6 +110,18 @@ test('Bun executes a real Promptfoo batch, retains metadata and exports into its
 
   const originalEnvironment = new Map(environmentKeys.map((key) => [key, process.env[key]]));
 
+  const configuredDirectory = process.env[promptfooConfigDirectoryKey];
+  try {
+    delete process.env[promptfooConfigDirectoryKey];
+    await expect(loadPromptfoo()).rejects.toThrow('PROMPTFOO_CONFIG_DIR must be set');
+  } finally {
+    if (configuredDirectory === undefined) {
+      delete process.env[promptfooConfigDirectoryKey];
+    } else {
+      process.env[promptfooConfigDirectoryKey] = configuredDirectory;
+    }
+  }
+
   for (const name of ['PROMPTFOO_EVAL_TIMEOUT_MS', 'PROMPTFOO_MAX_EVAL_TIME_MS']) {
     process.env[name] = '1';
   }
@@ -134,6 +149,7 @@ test('Bun executes a real Promptfoo batch, retains metadata and exports into its
       process.env;
 
     expect(configDirectory).toBe(resolve(directory, 'promptfoo'));
+    expect(await Bun.file(resolve(directory, 'promptfoo', 'promptfoo.db')).exists()).toBeTrue();
     expect(timeout).toBe('0');
     await expect(runPromptfooBatch(input)).rejects.toThrow('only one batch');
   } finally {

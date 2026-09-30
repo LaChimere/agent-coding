@@ -113,3 +113,153 @@ test('rejects malformed, missing and ambiguous runtime tools before native launc
     await rm(root, { recursive: true });
   }
 });
+
+test('adds only the selected platform dependencies to common tool paths', async () => {
+  const root = await mkdtemp(resolve('.cache/tools-test-'));
+  try {
+    const common = resolve(root, 'common');
+    const darwin = resolve(root, 'darwin');
+    await mkdir(common);
+    await mkdir(darwin);
+    await Bun.write(
+      resolve(root, 'runtime.json'),
+      JSON.stringify({
+        toolReadPaths: [common],
+        toolReadPathsByPlatform: { darwin: [darwin], linux: ['/not-an-installed-linux-tool'] },
+      }),
+    );
+
+    const selected = await resolveRuntimeTools(root, 'darwin');
+
+    expect(selected.readPaths).toEqual([common, darwin]);
+    expect(selected.tools).toEqual([]);
+
+    await Bun.write(
+      resolve(root, 'runtime.json'),
+      JSON.stringify({
+        toolReadPaths: [common],
+        toolReadPathsByPlatform: { darwin: ['/not-an-installed-mac-tool'], linux: [] },
+      }),
+    );
+
+    expect((await resolveRuntimeTools(root, 'linux')).readPaths).toEqual([common]);
+  } finally {
+    await rm(root, { recursive: true });
+  }
+});
+
+test('refuses absent platform declarations and malformed dependency maps', async () => {
+  const root = await mkdtemp(resolve('.cache/tools-test-'));
+  try {
+    for (const toolReadPathsByPlatform of [
+      {},
+      { darwin: [] },
+      null,
+      [],
+      'not-a-map',
+      { linux: 'not-an-array' },
+      { linux: [42] },
+      { linux: [], darwin: [false] },
+    ]) {
+      await Bun.write(resolve(root, 'runtime.json'), JSON.stringify({ toolReadPathsByPlatform }));
+
+      await expect(resolveRuntimeTools(root, 'linux')).rejects.toThrow('platform');
+    }
+
+    await Bun.write(
+      resolve(root, 'runtime.json'),
+      JSON.stringify({ toolReadPathsByPlatform: { darwin: [], linux: [] } }),
+    );
+
+    await expect(resolveRuntimeTools(root, 'win32')).rejects.toThrow('platform');
+  } finally {
+    await rm(root, { recursive: true });
+  }
+});
+
+test('preserves symlink launcher layout only for explicitly declared code dependencies', async () => {
+  const root = await mkdtemp(resolve('.cache/tools-test-'));
+  try {
+    const launcherDirectory = resolve(root, 'bin');
+    const codeRoot = resolve(root, 'package');
+    const executable = resolve(codeRoot, 'bin/entry.js');
+    const launcher = resolve(launcherDirectory, 'tool');
+    await mkdir(launcherDirectory);
+    await mkdir(resolve(codeRoot, 'bin'), { recursive: true });
+    await mkdir(resolve(codeRoot, 'lib'));
+    await Bun.write(executable, '#!/usr/bin/env node\nrequire("../lib/helper.js")\n');
+    await Bun.write(resolve(codeRoot, 'lib/helper.js'), 'console.log("fixture-tool")\n');
+    await chmod(executable, 0o755);
+    await symlink('../package/bin/entry.js', launcher);
+    const tool = { name: 'example', executable: launcher, probe: ['--version'] };
+    await Bun.write(resolve(root, 'runtime.json'), JSON.stringify({ tools: [tool] }));
+
+    const legacy = await resolveRuntimeTools(root);
+
+    expect(legacy.readPaths).toEqual([launcher, executable]);
+
+    await Bun.write(
+      resolve(root, 'runtime.json'),
+      JSON.stringify({ tools: [{ ...tool, codeReadPaths: [] }] }),
+    );
+
+    expect((await resolveRuntimeTools(root)).readPaths).toEqual(legacy.readPaths);
+
+    await Bun.write(
+      resolve(root, 'runtime.json'),
+      JSON.stringify({ tools: [{ ...tool, codeReadPaths: ['..'] }] }),
+    );
+
+    const declared = await resolveRuntimeTools(root);
+
+    expect(declared.tools[0]).toMatchObject({
+      executable: launcher,
+      resolvedExecutable: executable,
+    });
+    expect(declared.readPaths).toEqual([codeRoot, launcherDirectory]);
+    expect(declared.pathDirectories).toEqual([launcherDirectory]);
+
+    await Bun.write(
+      resolve(root, 'runtime.json'),
+      JSON.stringify({ tools: [{ ...tool, executable, codeReadPaths: ['..'] }] }),
+    );
+
+    expect((await resolveRuntimeTools(root)).readPaths).toEqual([codeRoot]);
+  } finally {
+    await rm(root, { recursive: true });
+  }
+});
+
+test('rejects malformed or missing explicitly declared tool code dependencies', async () => {
+  const root = await mkdtemp(resolve('.cache/tools-test-'));
+  try {
+    for (const codeReadPaths of [null, 'not-an-array', [false], [''], ['/']]) {
+      await Bun.write(
+        resolve(root, 'runtime.json'),
+        JSON.stringify({
+          tools: [{ name: 'example', executable: process.execPath, probe: [], codeReadPaths }],
+        }),
+      );
+
+      await expect(resolveRuntimeTools(root)).rejects.toThrow('codeReadPaths');
+    }
+
+    await Bun.write(
+      resolve(root, 'runtime.json'),
+      JSON.stringify({
+        tools: [
+          {
+            name: 'example',
+            executable: process.execPath,
+            probe: [],
+            codeReadPaths: ['missing-tool-code-fixture-791330'],
+          },
+        ],
+      }),
+    );
+
+    await expect(resolveRuntimeTools(root)).rejects.toThrow();
+  } finally {
+    await rm(root, { recursive: true });
+  }
+});

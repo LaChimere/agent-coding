@@ -118,6 +118,170 @@ afterEach(async () => {
   await Promise.all(roots.splice(0).map((root) => rm(root, { recursive: true, force: true })));
 });
 
+test('accepts a Linux masked private path only with an intact host marker', async () => {
+  const input = await fixture();
+
+  const result = await prepareNativeTrial({
+    ...input,
+    credentials: Object.fromEntries([['TEST_FAKE_MODE', 'linux-masked']]),
+    networkAccess: false,
+  });
+
+  if (result.status !== 'ready') {
+    throw new Error(result.reason);
+  }
+
+  try {
+    const evidence = await Bun.file(result.evidencePath).json();
+
+    expect(evidence.probes.privateRead.exitCode).toBe(1);
+    expect(evidence.probes.privateRead.hostWitness).toMatchObject({
+      before: { regularFile: true, contentsMatch: true },
+      after: { regularFile: true, contentsMatch: true },
+    });
+  } finally {
+    await result.finalize();
+  }
+});
+
+test('rejects readable or invalid private markers and inconclusive command failures', async () => {
+  for (const mode of [
+    'private-readable',
+    'private-missing',
+    'private-changed',
+    'private-symlink',
+    'private-unrelated-failure',
+    'private-launcher-failure',
+    'private-output-leak',
+  ]) {
+    const input = await fixture();
+
+    const result = await prepareNativeTrial({
+      ...input,
+      credentials: Object.fromEntries([['TEST_FAKE_MODE', mode]]),
+      networkAccess: false,
+    });
+
+    if (result.status === 'ready') {
+      await result.finalize();
+    }
+
+    expect(result.status).toBe('not-run');
+    expect(await Bun.file(resolve(input.directory, 'native/protocol.jsonl')).text()).not.toContain(
+      'prepared-thread',
+    );
+  }
+});
+
+test('rejects a write outside the declared workspace and temporary roots', async () => {
+  const input = await fixture();
+
+  const result = await prepareNativeTrial({
+    ...input,
+    credentials: Object.fromEntries([['TEST_FAKE_MODE', 'outside-write-escape']]),
+    networkAccess: false,
+  });
+
+  if (result.status === 'ready') {
+    await result.finalize();
+  }
+
+  expect(result).toMatchObject({ status: 'not-run' });
+});
+
+test('verifies host isolation when Linux permits a private namespace shadow write', async () => {
+  const input = await fixture();
+
+  const result = await prepareNativeTrial({
+    ...input,
+    credentials: Object.fromEntries([['TEST_FAKE_MODE', 'linux-shadow']]),
+    networkAccess: false,
+  });
+
+  if (result.status !== 'ready') {
+    throw new Error(result.reason);
+  }
+
+  try {
+    const evidence = await Bun.file(result.evidencePath).json();
+
+    expect(evidence.probes.runtimeRead.exitCode).toBe(0);
+    expect(evidence.probes.writes.runtime).toMatchObject({ exitCode: 1, observedContents: null });
+    expect(evidence.probes.writes.private).toMatchObject({
+      exitCode: 0,
+      hostParentIntact: true,
+      observedContents: null,
+      namespaceOnly: true,
+    });
+  } finally {
+    await result.finalize();
+  }
+});
+
+test('refuses zero-exit private writes without namespace proof or with host artifacts', async () => {
+  for (const mode of ['private-shadow-missing-readback', 'private-shadow-host-escape']) {
+    const input = await fixture();
+
+    const result = await prepareNativeTrial({
+      ...input,
+      credentials: Object.fromEntries([['TEST_FAKE_MODE', mode]]),
+      networkAccess: false,
+    });
+
+    if (result.status === 'ready') {
+      await result.finalize();
+    }
+
+    expect(result).toMatchObject({ status: 'not-run' });
+  }
+});
+
+test('verifies masked read-only writes with a running shell and intact host parents', async () => {
+  const input = await fixture({ sandbox: 'read-only' });
+
+  const result = await prepareNativeTrial({
+    ...input,
+    credentials: Object.fromEntries([['TEST_FAKE_MODE', 'linux-masked']]),
+    networkAccess: false,
+  });
+
+  if (result.status !== 'ready') {
+    throw new Error(result.reason);
+  }
+
+  try {
+    const evidence = await Bun.file(result.evidencePath).json();
+
+    for (const name of ['workspace', 'temporary', 'private']) {
+      expect(evidence.probes.writes[name]).toMatchObject({
+        exitCode: 2,
+        hostParentIntact: true,
+        observedContents: null,
+      });
+    }
+  } finally {
+    await result.finalize();
+  }
+});
+
+test('refuses network and write launcher failures as inconclusive probes', async () => {
+  for (const mode of ['network-launcher-failure', 'write-launcher-failure']) {
+    const input = await fixture({ sandbox: 'read-only' });
+
+    const result = await prepareNativeTrial({
+      ...input,
+      credentials: Object.fromEntries([['TEST_FAKE_MODE', mode]]),
+      networkAccess: false,
+    });
+
+    if (result.status === 'ready') {
+      await result.finalize();
+    }
+
+    expect(result.status).toBe('not-run');
+  }
+});
+
 test('prepares an isolated native thread and records verified repository capabilities', async () => {
   const input = await fixture();
 
@@ -141,6 +305,10 @@ test('prepares an isolated native thread and records verified repository capabil
   });
 
   const codexHome = result.codexHome;
+  for (const path of ['native', 'native/home', 'native/home/.codex', 'native/tmp']) {
+    expect((await stat(resolve(input.directory, path))).mode & 0o777).toBe(0o700);
+  }
+
   const derived = Bun.TOML.parse(
     await Bun.file(resolve(codexHome, 'config.toml')).text(),
   ) as Record<string, unknown>;

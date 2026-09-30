@@ -1,6 +1,6 @@
 import { randomUUID } from 'node:crypto';
 import { chmod, lstat, mkdir, readdir, realpath, stat, unlink } from 'node:fs/promises';
-import { basename, dirname, relative, resolve, sep } from 'node:path';
+import { basename, delimiter, dirname, relative, resolve, sep } from 'node:path';
 import { CodexSession, type INativeThread, protocolObject } from '../codex/session.ts';
 import type { ICodexProcessExit, JsonRpcId } from '../codex/transport.ts';
 import {
@@ -74,7 +74,14 @@ interface IPreparationEvidence {
 const controlTimeoutMs = 30_000;
 const cleanupGraceMs = 1_000;
 const skillsVersion = '1.5.25';
-const systemPath = '/opt/homebrew/bin:/usr/bin:/bin:/usr/sbin:/sbin';
+const systemPath = [
+  ...(process.platform === 'darwin' ? ['/opt/homebrew/bin'] : []),
+  '/usr/local/bin',
+  '/usr/bin',
+  '/bin',
+  '/usr/sbin',
+  '/sbin',
+].join(delimiter);
 
 function recordValue<TValue>(record: Record<string, TValue>, key: string, value: TValue): void {
   record[key] = value;
@@ -662,6 +669,57 @@ function exitCode(result: Record<string, unknown>): number {
   return value;
 }
 
+interface IMarkerWitness {
+  regularFile: boolean;
+  contentsMatch: boolean;
+  device?: number;
+  inode?: number;
+  size?: number;
+  modifiedAt?: number;
+}
+
+async function markerWitness(path: string, expected: string): Promise<IMarkerWitness> {
+  const info = await lstat(path).catch((error: unknown) => {
+    if (error instanceof Error && 'code' in error && error.code === 'ENOENT') {
+      return null;
+    }
+    throw error;
+  });
+  if (info === null || !info.isFile()) {
+    return { regularFile: false, contentsMatch: false };
+  }
+
+  return {
+    regularFile: true,
+    contentsMatch: (await Bun.file(path).text()) === expected,
+    device: info.dev,
+    inode: info.ino,
+    size: info.size,
+    modifiedAt: info.mtimeMs,
+  };
+}
+
+function intactMarker(before: IMarkerWitness, after: IMarkerWitness): boolean {
+  return (
+    before.regularFile &&
+    before.contentsMatch &&
+    after.regularFile &&
+    after.contentsMatch &&
+    before.device === after.device &&
+    before.inode === after.inode &&
+    before.size === after.size &&
+    before.modifiedAt === after.modifiedAt
+  );
+}
+
+async function removeProbe(path: string): Promise<void> {
+  await unlink(path).catch((error: unknown) => {
+    if (!(error instanceof Error && 'code' in error && error.code === 'ENOENT')) {
+      throw error;
+    }
+  });
+}
+
 /** Prepare one isolated native Codex trial without running a model turn. */
 export async function prepareNativeTrial(
   input: INativePreparationInput,
@@ -675,7 +733,7 @@ export async function prepareNativeTrial(
 
   const stateDirectory = resolve(directory, 'native');
   // One exclusive reservation owns every preparation file. Reuse cannot truncate old evidence.
-  await mkdir(stateDirectory);
+  await mkdir(stateDirectory, { mode: 0o700 });
   const home = resolve(stateDirectory, 'home');
   const codexHome = resolve(home, '.codex');
   const temporary = resolve(stateDirectory, 'tmp');
@@ -747,9 +805,9 @@ export async function prepareNativeTrial(
 
   try {
     await inventoryDirectory(resolve(input.runtimeDirectory));
-    await mkdir(home);
-    await mkdir(codexHome);
-    await mkdir(temporary);
+    await mkdir(home, { mode: 0o700 });
+    await mkdir(codexHome, { mode: 0o700 });
+    await mkdir(temporary, { mode: 0o700 });
 
     const executable = resolve(input.codexExecutable);
     const executableTarget = await realpath(executable);
@@ -1102,11 +1160,14 @@ export async function prepareNativeTrial(
     );
 
     const visiblePath = resolve(workspace, `.eval-preparation-${randomUUID()}`);
+    const runtimePath = resolve(input.runtimeDirectory, 'config/codex/AGENTS.md');
+    const runtimeValue = await Bun.file(runtimePath).text();
     const privatePath = resolve(stateDirectory, `.private-eval-${randomUUID()}`);
     const visibleValue = `visible-${randomUUID()}`;
     const privateValue = `private-${randomUUID()}`;
     await Bun.write(visiblePath, visibleValue);
     await Bun.write(privatePath, privateValue);
+    await chmod(privatePath, 0o600);
     const networkValue = `network-${randomUUID()}`;
     let networkRequests = 0;
 
@@ -1120,7 +1181,10 @@ export async function prepareNativeTrial(
     });
 
     let visible: Record<string, unknown>;
+    let runtimeRead: Record<string, unknown>;
     let privateRead: Record<string, unknown>;
+    let privateBefore: IMarkerWitness;
+    let privateAfter: IMarkerWitness;
     let network: Record<string, unknown>;
     const defaultPermissions = configValue(configured, 'default_permissions');
     if (typeof defaultPermissions !== 'string') {
@@ -1134,12 +1198,24 @@ export async function prepareNativeTrial(
         workspace,
         defaultPermissions,
       );
+      runtimeRead = await commandProbe(
+        session,
+        ['/bin/cat', runtimePath],
+        workspace,
+        defaultPermissions,
+      );
+      privateBefore = await markerWitness(privatePath, privateValue);
       privateRead = await commandProbe(
         session,
         ['/bin/cat', privatePath],
         workspace,
         defaultPermissions,
       );
+      privateAfter = await markerWitness(privatePath, privateValue);
+      recordValue(evidence.probes, 'privateRead', {
+        ...privateRead,
+        hostWitness: { before: privateBefore, after: privateAfter },
+      });
       network = await commandProbe(
         session,
         [
@@ -1155,11 +1231,11 @@ export async function prepareNativeTrial(
       );
     } finally {
       server.stop(true);
-      await Promise.all([unlink(visiblePath), unlink(privatePath)]);
+      await Promise.all([removeProbe(visiblePath), removeProbe(privatePath)]);
     }
 
     recordValue(evidence.probes, 'visibleRead', visible);
-    recordValue(evidence.probes, 'privateRead', privateRead);
+    recordValue(evidence.probes, 'runtimeRead', runtimeRead);
     recordValue(evidence.probes, 'network', {
       ...network,
       observedRequests: networkRequests,
@@ -1171,20 +1247,31 @@ export async function prepareNativeTrial(
       throw new Error('Native profile cannot read the trial workspace.');
     }
 
-    const { stderr: privateError } = privateRead;
+    const { stdout: runtimeStdout } = runtimeRead;
+    if (exitCode(runtimeRead) !== 0 || runtimeStdout !== runtimeValue) {
+      throw new Error('Native profile cannot read the frozen runtime.');
+    }
+
+    const { stdout: privateOutput, stderr: privateError } = privateRead;
+    const privateAccessDenied =
+      typeof privateError === 'string' &&
+      (/denied|not permitted/iu.test(privateError) ||
+        (privateError.includes(privatePath) && /No such file or directory/iu.test(privateError)));
     if (
-      exitCode(privateRead) === 0 ||
-      typeof privateError !== 'string' ||
-      !/denied|not permitted/iu.test(privateError)
+      !intactMarker(privateBefore, privateAfter) ||
+      exitCode(privateRead) !== 1 ||
+      privateOutput !== '' ||
+      !privateAccessDenied
     ) {
-      throw new Error('Native profile can read private evaluation data.');
+      throw new Error('Native private evaluation data isolation was not verified.');
     }
 
     const { stdout: networkOutput, stderr: networkError } = network;
     if (
       input.networkAccess
         ? exitCode(network) !== 0 || networkRequests !== 1 || networkOutput !== networkValue
-        : exitCode(network) === 0 ||
+        : exitCode(network) !== 7 ||
+          networkOutput !== '' ||
           networkRequests !== 0 ||
           typeof networkError !== 'string' ||
           !/connect|denied|not permitted/iu.test(networkError)
@@ -1194,21 +1281,33 @@ export async function prepareNativeTrial(
 
     const writeResults: Record<string, unknown> = {};
     const writeValue = `write-${randomUUID()}`;
+    const writeStarted = `shell-${randomUUID()}`;
 
     for (const [name, root] of [
       ['workspace', workspace],
       ['temporary', temporary],
+      ['runtime', resolve(input.runtimeDirectory)],
+      ['private', stateDirectory],
     ] as const) {
       const path = resolve(root, `.write-probe-${randomUUID()}`);
+      const parentBefore = await lstat(root);
 
       const result = await commandProbe(
         session,
-        ['/bin/sh', '-c', 'printf %s "$2" > "$1"', '_eval', path, writeValue],
+        [
+          '/bin/sh',
+          '-c',
+          `printf %s "$3"; printf %s "$2" > "$1"${name === 'private' ? ' && /bin/cat "$1"' : ''}`,
+          '_eval',
+          path,
+          writeValue,
+          writeStarted,
+        ],
         workspace,
         defaultPermissions,
       );
 
-      writeResults[name] = result;
+      const parentAfter = await lstat(root);
       const file = Bun.file(path);
       const exists = await file.exists();
       const contents = exists ? await file.text() : null;
@@ -1216,11 +1315,35 @@ export async function prepareNativeTrial(
         await unlink(path);
       }
 
-      const shouldWrite = defaultPermissions === 'eval';
+      const shouldWrite =
+        defaultPermissions === 'eval' && (name === 'workspace' || name === 'temporary');
+      const parentIntact =
+        parentBefore.isDirectory() &&
+        parentAfter.isDirectory() &&
+        parentBefore.dev === parentAfter.dev &&
+        parentBefore.ino === parentAfter.ino;
+      const { stdout: writeOutput } = result;
+      // A denied host directory can have a writable, discarded namespace scaffold on Linux.
+      // Read the written nonce in the same command and independently require no host artifact.
+      const namespaceOnly =
+        name === 'private' &&
+        exitCode(result) === 0 &&
+        writeOutput === `${writeStarted}${writeValue}` &&
+        !exists;
+      const deniedWrite =
+        [1, 2].includes(exitCode(result)) && writeOutput === writeStarted && !exists;
+      writeResults[name] = {
+        ...result,
+        hostParentIntact: parentIntact,
+        observedContents: contents,
+        namespaceOnly,
+      };
+      recordValue(evidence.probes, 'writes', writeResults);
       if (
-        shouldWrite
-          ? exitCode(result) !== 0 || contents !== writeValue
-          : exitCode(result) === 0 || exists
+        !parentIntact ||
+        (shouldWrite
+          ? exitCode(result) !== 0 || writeOutput !== writeStarted || contents !== writeValue
+          : !deniedWrite && !namespaceOnly)
       ) {
         throw new Error(`Native ${name} write policy differs from the selected profile.`);
       }

@@ -1,12 +1,18 @@
-import { afterEach, beforeAll, expect, test } from 'bun:test';
-import { chmod, mkdir, mkdtemp, readdir, rm } from 'node:fs/promises';
+import { afterAll, afterEach, beforeAll, expect, test } from 'bun:test';
+import { chmod, mkdir, mkdtemp, readdir, rm, stat } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { createNativeJudge } from '../../src/grading/judge.ts';
 import { gradeRubric, type IGradeRubricInput } from '../../src/grading/rubric.ts';
 
 const roots: string[] = [];
+const promptfooConfigDirectoryKey = 'PROMPTFOO_CONFIG_DIR';
+const originalPromptfooConfigDirectory = process.env[promptfooConfigDirectoryKey];
+let testPromptfooConfigDirectory: string | undefined;
 
-beforeAll(() => {
+beforeAll(async () => {
+  testPromptfooConfigDirectory = await mkdtemp(resolve('.cache/judge-promptfoo-test-'));
+  process.env[promptfooConfigDirectoryKey] = testPromptfooConfigDirectory;
+
   Object.assign(
     process.env,
     Object.fromEntries([
@@ -17,11 +23,23 @@ beforeAll(() => {
   );
 });
 
+afterAll(async () => {
+  if (originalPromptfooConfigDirectory === undefined) {
+    delete process.env[promptfooConfigDirectoryKey];
+  } else {
+    process.env[promptfooConfigDirectoryKey] = originalPromptfooConfigDirectory;
+  }
+
+  if (testPromptfooConfigDirectory !== undefined) {
+    await rm(testPromptfooConfigDirectory, { recursive: true, force: true });
+  }
+});
+
 afterEach(async () => {
   await Promise.all(roots.splice(0).map((root) => rm(root, { recursive: true, force: true })));
 });
 
-async function fixture(probeFailure?: 'instructions' | 'network' | 'permission'): Promise<{
+async function fixture(probeFailure?: string): Promise<{
   root: string;
   input: Omit<IGradeRubricInput, 'id' | 'operationDirectory' | 'evidence'>;
 }> {
@@ -88,6 +106,7 @@ async function protocol(path: string): Promise<Record<string, unknown>[]> {
 
 test('grades an empty artifact tree as evidence without adding a probe file', async () => {
   const { root, input } = await fixture();
+  expect(process.env[promptfooConfigDirectoryKey]).toBe(testPromptfooConfigDirectory);
   const empty = resolve(root, 'empty-artifacts');
   await mkdir(empty);
 
@@ -289,7 +308,7 @@ test('rejects an evidence root that contains the grader operation directory', as
 
 test('refuses failed native isolation prerequisites before starting a model turn', async () => {
   for (const [failure, error] of [
-    ['network', 'tool network access is not blocked'],
+    ['network', 'tool network isolation was not verified'],
     ['permission', 'did not apply the native judge permission profile'],
     ['instructions', 'loaded unexpected instruction sources'],
   ] as const) {
@@ -305,6 +324,73 @@ test('refuses failed native isolation prerequisites before starting a model turn
 
     expect(result).toMatchObject({ status: 'unknown', operation: { status: 'failed' } });
     expect(result.error).toContain(error);
+    const messages = await protocol(resolve(operationDirectory, 'protocol.jsonl'));
+
+    expect(messages.some((message) => field(message, 'method') === 'turn/start')).toBeFalse();
+  }
+});
+
+test('accepts Linux read-only evidence and masked private paths with host witnesses', async () => {
+  const { root, input } = await fixture('linux-errors');
+  const operationDirectory = resolve(root, 'linux-errors');
+
+  const result = await gradeRubric({
+    ...input,
+    id: 'linux-errors',
+    evidence: 'artifact.txt',
+    operationDirectory,
+  });
+
+  expect(result).toMatchObject({ status: 'passed', error: null });
+  expect(await Bun.file(resolve(operationDirectory, 'native-probes.json')).json()).toMatchObject({
+    evidenceWrite: { exitCode: 2, created: false, hostParentIntact: true },
+    privateRead: {
+      exitCode: 1,
+      stdout: '',
+      hostWitness: {
+        before: { regularFile: true, contentsMatch: true },
+        after: { regularFile: true, contentsMatch: true },
+      },
+    },
+  });
+  for (const path of [
+    'native',
+    'native/home',
+    'native/home/.codex',
+    'native/tmp',
+    'native/startup',
+  ]) {
+    expect((await stat(resolve(operationDirectory, path))).mode & 0o777).toBe(0o700);
+  }
+});
+
+test('rejects judge isolation leaks, invalid markers and inconclusive command failures', async () => {
+  for (const failure of [
+    'write-launcher',
+    'write-escape',
+    'write-unrelated',
+    'private-leak',
+    'private-missing',
+    'private-changed',
+    'private-symlink',
+    'private-launcher',
+    'private-control-launcher',
+    'private-unrelated',
+    'network-launcher',
+    'network-output-leak',
+  ]) {
+    const { root, input } = await fixture(failure);
+    const operationDirectory = resolve(root, failure);
+
+    const result = await gradeRubric({
+      ...input,
+      id: failure,
+      evidence: 'artifact.txt',
+      operationDirectory,
+    });
+
+    expect(result).toMatchObject({ status: 'unknown', operation: { status: 'failed' } });
+    expect(result.error).toContain('isolation was not verified');
     const messages = await protocol(resolve(operationDirectory, 'protocol.jsonl'));
 
     expect(messages.some((message) => field(message, 'method') === 'turn/start')).toBeFalse();

@@ -1,4 +1,4 @@
-import { readdir } from 'node:fs/promises';
+import { readdir, symlink, unlink } from 'node:fs/promises';
 import { resolve } from 'node:path';
 
 const send = (value: unknown) => process.stdout.write(`${JSON.stringify(value)}\n`);
@@ -7,10 +7,8 @@ const { FAKE_JUDGE_PROBE_FAILURE: probeFailure } = process.env;
 if (codexHome === undefined) {
   throw new Error('Missing fixture CODEX_HOME.');
 }
-const config = Bun.TOML.parse(await Bun.file(resolve(codexHome, 'config.toml')).text()) as Record<
-  string,
-  unknown
->;
+const configPath = resolve(codexHome, 'config.toml');
+const config = Bun.TOML.parse(await Bun.file(configPath).text()) as Record<string, unknown>;
 const field = (record: Record<string, unknown>, key: string): unknown => record[key];
 const judgeProfile = config;
 const providerId = String(field(judgeProfile, 'model_provider'));
@@ -23,9 +21,7 @@ interface IPendingApproval {
 }
 let pendingApprovalTurn: IPendingApproval | null = null;
 
-function commandResult(
-  command: unknown,
-): Promise<Record<string, unknown>> | Record<string, unknown> {
+async function commandResult(command: unknown): Promise<Record<string, unknown>> {
   if (!Array.isArray(command) || command.some((part) => typeof part !== 'string')) {
     throw new Error('Invalid fixture command probe.');
   }
@@ -56,17 +52,59 @@ function commandResult(
     })();
   }
   if (parts[0] === '/bin/sh') {
+    const path = parts[4];
+    const value = parts[5];
+    const started = parts[6] ?? '';
+    if (path === undefined || value === undefined) {
+      throw new Error('Missing fixture write probe.');
+    }
+    if (probeFailure === 'write-escape') {
+      await Bun.write(path, value);
+    }
     return {
-      exitCode: 1,
-      stdout: '',
-      stderr: 'operation not permitted',
+      exitCode: probeFailure === 'write-launcher' ? 127 : probeFailure === 'linux-errors' ? 2 : 1,
+      stdout: probeFailure === 'write-launcher' ? '' : started,
+      stderr:
+        probeFailure === 'linux-errors'
+          ? `_judge: 1: cannot create ${path}: Read-only file system\n`
+          : probeFailure === 'write-unrelated'
+            ? 'disk quota exceeded'
+            : 'operation not permitted',
     };
   }
   if (parts[0] === '/bin/cat') {
+    const path = parts[1];
+    if (path === undefined) {
+      throw new Error('Missing fixture private path.');
+    }
+    if (path === '/dev/null') {
+      return {
+        exitCode: probeFailure === 'private-control-launcher' ? 1 : 0,
+        stdout: '',
+        stderr: probeFailure === 'private-control-launcher' ? 'operation not permitted' : '',
+      };
+    }
+    if (probeFailure === 'private-leak') {
+      return { exitCode: 0, stdout: await Bun.file(path).text(), stderr: '' };
+    }
+    if (probeFailure === 'private-missing' || probeFailure === 'private-symlink') {
+      await unlink(path);
+    }
+    if (probeFailure === 'private-changed') {
+      await Bun.write(path, 'changed-marker');
+    }
+    if (probeFailure === 'private-symlink') {
+      await symlink(configPath, path);
+    }
     return {
-      exitCode: 1,
+      exitCode: probeFailure === 'private-launcher' ? 127 : 1,
       stdout: '',
-      stderr: 'operation not permitted',
+      stderr:
+        probeFailure === 'linux-errors' || probeFailure === 'private-missing'
+          ? `cat: ${path}: No such file or directory\n`
+          : probeFailure === 'private-unrelated'
+            ? 'unrelated command failure'
+            : 'operation not permitted',
     };
   }
   if (parts[0] === '/usr/bin/curl') {
@@ -82,8 +120,8 @@ function commandResult(
       }));
     }
     return {
-      exitCode: 7,
-      stdout: '',
+      exitCode: probeFailure === 'network-launcher' ? 127 : 7,
+      stdout: probeFailure === 'network-output-leak' ? 'unexpected-output' : '',
       stderr: 'network denied',
     };
   }
