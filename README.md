@@ -377,7 +377,7 @@ The plugin distributes all seven workflow skills and their bundled resources; it
 separate from portable plugin behavior. The primary model and effort remain user-selected. The
 worker mappings, six-open-worker limit, repair policy and permission boundaries are defined
 in the [design](docs/coding-orchestration/design.md). Complex work and takeover after an ordinary
-reasoning limitation both use `complex_worker` (GPT-6 Sol/medium). These are policy choices, not measured optima.
+reasoning limitation both use `complex_worker` (GPT-6.1 Sol/high). These are policy choices, not measured optima.
 Changes in this repository do not update the real `~/.codex` configuration or switch production plugins.
 On the tested Codex `0.154.0`, reviewer role files do not enforce read-only permissions under a
 writable primary. Read-only acceptance reuses existing subagent evals that check file modifications;

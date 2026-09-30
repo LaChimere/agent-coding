@@ -3,7 +3,7 @@
 | Item | Value |
 | --- | --- |
 | Status | Four roles and six worker slots; experimental configuration |
-| Last updated | 2026-09-26 |
+| Last updated | 2026-09-30 |
 | Runtime foundation | Native Codex harness: the existing agent execution runtime beneath the primary and workers |
 | Personal configuration scope | Repository `config/codex` represents the target `~/.codex` configuration |
 | Shared plugin scope | Process contracts in `workflow`; review methods and constraints in `pr-review`, `rubber-duck`, and `spar`; no plugin-owned model or effort policy |
@@ -23,7 +23,7 @@ Model and reasoning-effort policy belongs to personal orchestration configuratio
 The recommended installation includes both plugins, but core orchestration can perform simple direct work and ordinary native delegation without them. A plugin becomes a dependency when the task needs its capabilities. Report a missing required capability, leave the dependent work incomplete, and continue unaffected authorized work. Do not recreate the missing plugin workflow or claim its work was completed.
 
 Keep four semantic roles in v0.1, with a model and reasoning-effort mapping for each. Complex work
-and takeover after an evidenced ordinary reasoning limitation both use `complex_worker` at GPT-6 Sol/medium.
+and takeover after an evidenced ordinary reasoning limitation both use `complex_worker` at GPT-6.1 Sol/high.
 This merges the former separate takeover role at the user's request. A task need not pass through
 every role; the current combination is not assumed to be optimal.
 
@@ -255,15 +255,15 @@ Judge quality and complete delivery efficiency. Do not dispatch mechanically by 
 | Semantic role | Model | Effort | Purpose |
 | --- | --- | --- | --- |
 | `ordinary_worker` | `gpt-6-luna` | `max` | Clear, local implementation, fixes, tests, scoped research, and routine review |
-| `complex_worker` | `gpt-6-sol` | `medium` | Complex implementation, difficult diagnosis, synthesis, difficult review, and takeover after a demonstrated ordinary reasoning limitation |
-| `critical_reviewer` | `gpt-6-sol` | `xhigh` | Read-only analysis and review of security, critical correctness, and major architectural trade-offs |
+| `complex_worker` | `gpt-6.1-sol` | `high` | Complex implementation, difficult diagnosis, synthesis, difficult review, and takeover after a demonstrated ordinary reasoning limitation |
+| `critical_reviewer` | `gpt-6.1-sol` | `xhigh` | Read-only analysis and review of security, critical correctness, and major architectural trade-offs |
 | `deep_critical_reviewer` | `gpt-6-astra` | `xhigh` | Read-only analysis of a concrete critical issue left unresolved by the preceding reasoning pass |
 
 The mapping unit is always model plus effort. `high`, `xhigh`, and `max` are not a common capability ladder across different models. Policy refers to semantic roles and task needs; concrete model identifiers live in personal configuration.
 
 These four roles may change through actual use and evals. Defining a role does not require invoking it on every task. Distinct GPT models or roles also do not establish cross-family review.
 
-The current model and effort bindings were synchronized from the local `~/.codex` configuration on 2026-09-26. The earlier native and behavioral results in [validation.md](validation.md) used different bindings and do not qualify the current mapping. Configuration readback alone does not establish runtime behavior or an effectiveness advantage.
+The current model and effort bindings were synchronized from the local `~/.codex` configuration on 2026-09-30. The earlier native and behavioral results in [validation.md](validation.md) used different bindings and do not qualify the current mapping. Configuration readback alone does not establish runtime behavior or an effectiveness advantage.
 
 ### 6.3 Separate complexity, risk, and review
 
