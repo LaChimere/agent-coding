@@ -1,5 +1,5 @@
 import { randomUUID } from 'node:crypto';
-import { mkdir, realpath, unlink } from 'node:fs/promises';
+import { chmod, lstat, mkdir, realpath, unlink } from 'node:fs/promises';
 import { basename, dirname, resolve, sep } from 'node:path';
 import { objectRecord } from '../codex/evidence.ts';
 import { CodexTransport } from '../codex/transport.ts';
@@ -16,6 +16,73 @@ export interface ICommandCheckInput {
   codexExecutable: string;
   command: readonly string[];
   signal?: AbortSignal;
+}
+
+interface IPrivateCanaryWitness {
+  regularFile: boolean;
+  contentsMatch: boolean;
+  device?: number;
+  inode?: number;
+  size?: number;
+  modifiedAt?: number;
+}
+
+async function privateCanaryWitness(
+  path: string,
+  expected: string,
+): Promise<IPrivateCanaryWitness> {
+  const info = await lstat(path).catch((error: unknown) => {
+    if (error instanceof Error && 'code' in error && error.code === 'ENOENT') {
+      return null;
+    }
+    throw error;
+  });
+  if (info === null || !info.isFile()) {
+    return { regularFile: false, contentsMatch: false };
+  }
+
+  return {
+    regularFile: true,
+    contentsMatch: (await Bun.file(path).text()) === expected,
+    device: info.dev,
+    inode: info.ino,
+    size: info.size,
+    modifiedAt: info.mtimeMs,
+  };
+}
+
+function intactCanary(before: IPrivateCanaryWitness, after: IPrivateCanaryWitness): boolean {
+  return (
+    before.regularFile &&
+    before.contentsMatch &&
+    after.regularFile &&
+    after.contentsMatch &&
+    before.device === after.device &&
+    before.inode === after.inode &&
+    before.size === after.size &&
+    before.modifiedAt === after.modifiedAt
+  );
+}
+
+function privateAccessError(error: unknown, path: string): boolean {
+  if (typeof error !== 'string') {
+    return false;
+  }
+  for (const prefix of [
+    `cat: ${path}: `,
+    `/bin/cat: ${path}: `,
+    `cat: '${path}': `,
+    `/bin/cat: '${path}': `,
+    `cat: "${path}": `,
+    `/bin/cat: "${path}": `,
+  ]) {
+    if (error.startsWith(prefix)) {
+      return /^(Permission denied|Operation not permitted|No such file or directory)$/iu.test(
+        error.slice(prefix.length).trim(),
+      );
+    }
+  }
+  return false;
 }
 
 /** Execute a trusted offline check against a writable copy, without starting a model. */
@@ -40,7 +107,7 @@ export async function runCommandCheck(
   if (input.command.length === 0) {
     throw new Error('A verification command is required.');
   }
-  await mkdir(directory);
+  await mkdir(directory, { mode: 0o700 });
   await writeJsonRecord(resolve(directory, 'operation-started.json'), {
     id: input.id,
     trialId: input.trialId,
@@ -60,7 +127,7 @@ export async function runCommandCheck(
   const startup = resolve(directory, 'startup');
 
   for (const path of [codexHome, temporary, startup]) {
-    await mkdir(path, { recursive: true });
+    await mkdir(path, { recursive: true, mode: 0o700 });
   }
 
   const tools = await resolveRuntimeTools(input.profileDirectory);
@@ -183,17 +250,39 @@ export async function runCommandCheck(
 
     await transport.notify('initialized', {});
     input.signal?.throwIfAborted();
-    const privateFile = resolve(directory, 'private-canary');
-    await Bun.write(privateFile, randomUUID());
-    const privateRead = await probe(['/bin/cat', privateFile]);
-    await unlink(privateFile);
-    const { exitCode: readCode, stderr: readError } = privateRead;
-    if (
-      readCode === 0 ||
-      typeof readError !== 'string' ||
-      !/denied|not permitted/iu.test(readError)
-    ) {
+    const privateReadControl = await probe(['/bin/cat', '/dev/null']);
+    const { exitCode: controlCode, stdout: controlOutput } = privateReadControl;
+    if (controlCode !== 0 || controlOutput !== '') {
       throw new Error('Verification cannot establish private-data isolation.');
+    }
+
+    const privateFile = resolve(directory, 'private-canary');
+    const privateValue = randomUUID();
+    await Bun.write(privateFile, privateValue);
+    await chmod(privateFile, 0o600);
+    let privateRead: Record<string, unknown>;
+    let privateBefore: IPrivateCanaryWitness;
+    let privateAfter: IPrivateCanaryWitness;
+
+    try {
+      privateBefore = await privateCanaryWitness(privateFile, privateValue);
+      privateRead = await probe(['/bin/cat', privateFile]);
+      privateAfter = await privateCanaryWitness(privateFile, privateValue);
+      const { exitCode: readCode, stdout: readOutput, stderr: readError } = privateRead;
+      if (
+        !intactCanary(privateBefore, privateAfter) ||
+        readCode !== 1 ||
+        readOutput !== '' ||
+        !privateAccessError(readError, privateFile)
+      ) {
+        throw new Error('Verification cannot establish private-data isolation.');
+      }
+    } finally {
+      await unlink(privateFile).catch((error: unknown) => {
+        if (!(error instanceof Error && 'code' in error && error.code === 'ENOENT')) {
+          throw error;
+        }
+      });
     }
 
     const writeFile = resolve(workspace, `.verification-${randomUUID()}`);
@@ -243,9 +332,10 @@ export async function runCommandCheck(
       server.stop(true);
     }
 
-    const { exitCode: networkCode, stderr: networkError } = network;
+    const { exitCode: networkCode, stdout: networkOutput, stderr: networkError } = network;
     if (
-      networkCode === 0 ||
+      networkCode !== 7 ||
+      networkOutput !== '' ||
       networkRequests !== 0 ||
       typeof networkError !== 'string' ||
       !/connect|denied|not permitted/iu.test(networkError)
@@ -253,7 +343,11 @@ export async function runCommandCheck(
       throw new Error('Verification tool network is not isolated.');
     }
     await writeJsonRecord(resolve(directory, 'probes.json'), {
-      privateRead,
+      privateReadControl,
+      privateRead: {
+        ...privateRead,
+        hostWitness: { before: privateBefore, after: privateAfter },
+      },
       writable,
       network,
       networkRequests,

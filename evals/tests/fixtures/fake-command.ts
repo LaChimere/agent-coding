@@ -1,3 +1,4 @@
+import { symlink, unlink } from 'node:fs/promises';
 import { resolve } from 'node:path';
 
 type JsonRpcId = string | number;
@@ -99,6 +100,14 @@ async function handleCommand(message: IJsonMessage): Promise<void> {
 
     return;
   }
+  if (parts[0] === '/bin/cat' && parts[1] === '/dev/null') {
+    reply(message.id, {
+      exitCode: mode === 'fail-cat-control' ? 1 : 0,
+      stdout: '',
+      stderr: mode === 'fail-cat-control' ? 'operation not permitted' : '',
+    });
+    return;
+  }
   if (mode === 'fail-private' && parts[0] === '/bin/cat') {
     reply(message.id, {
       exitCode: 0,
@@ -108,10 +117,40 @@ async function handleCommand(message: IJsonMessage): Promise<void> {
     return;
   }
   if (parts[0] === '/bin/cat') {
+    const path = parts[1];
+    if (path === undefined || typeof cwd !== 'string') {
+      throw new Error('Fixture received an invalid private probe.');
+    }
+    if (mode === 'private-marker-missing' || mode === 'private-marker-symlink') {
+      await unlink(path);
+    }
+    if (mode === 'private-marker-changed') {
+      await Bun.write(path, 'changed-canary');
+    }
+    if (mode === 'private-marker-symlink') {
+      await symlink(resolve(cwd, 'original.txt'), path);
+    }
     reply(message.id, {
-      exitCode: 1,
-      stdout: '',
-      stderr: 'operation not permitted',
+      exitCode: mode === 'private-launcher' ? 127 : 1,
+      stdout: mode === 'private-output-leak' ? await Bun.file(path).text() : '',
+      stderr:
+        mode === 'private-double-quoted-enoent'
+          ? `cat: "${path}": No such file or directory\n`
+          : mode === 'private-double-quoted-program-enoent'
+            ? `/bin/cat: "${path}": No such file or directory\n`
+            : mode === 'private-double-wrong-path'
+              ? `cat: "${path}-unrelated": No such file or directory\n`
+              : mode === 'private-quoted-enoent'
+                ? `cat: '${path}': No such file or directory\n`
+                : mode === 'private-enoent' || mode === 'private-marker-missing'
+                  ? `cat: ${path}: No such file or directory\n`
+                  : mode === 'private-wrong-path'
+                    ? 'cat: /unrelated-canary: No such file or directory\n'
+                    : mode === 'private-wrong-permission-path'
+                      ? 'cat: /unrelated-canary: Permission denied\n'
+                      : mode === 'private-wrong-command'
+                        ? `ls: ${path}: No such file or directory\n`
+                        : `cat: ${path}: Operation not permitted\n`,
     });
     return;
   }
@@ -122,7 +161,9 @@ async function handleCommand(message: IJsonMessage): Promise<void> {
       replyError(message.id, 'Fixture received an invalid writable probe.');
       return;
     }
-    await Bun.write(path, value);
+    if (mode !== 'fail-writable') {
+      await Bun.write(path, value);
+    }
     reply(message.id, {
       exitCode: 0,
       stdout: '',
@@ -132,9 +173,12 @@ async function handleCommand(message: IJsonMessage): Promise<void> {
     return;
   }
   if (parts[0] === '/usr/bin/curl') {
+    if (mode === 'network-leak') {
+      await fetch(parts.at(-1) ?? '');
+    }
     reply(message.id, {
-      exitCode: 7,
-      stdout: '',
+      exitCode: mode === 'network-launcher' ? 127 : 7,
+      stdout: mode === 'network-output-leak' ? 'unexpected network output' : '',
       stderr: 'network is not permitted',
     });
     return;

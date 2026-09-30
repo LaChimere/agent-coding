@@ -1,5 +1,5 @@
 import { afterEach, expect, test } from 'bun:test';
-import { chmod, mkdir, mkdtemp, rm } from 'node:fs/promises';
+import { chmod, mkdir, mkdtemp, rm, stat } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { CodexTransportClosedError } from '../../src/codex/transport.ts';
 import { runCommandCheck } from '../../src/grading/command.ts';
@@ -23,7 +23,14 @@ async function fixture(mode: string): Promise<IFixture> {
   const root = await mkdtemp(resolve('.cache/command-test-'));
   roots.push(root);
   const artifacts = resolve(root, 'artifacts');
-  const operation = resolve(root, 'operation');
+  const operation = resolve(
+    root,
+    mode.startsWith('private-double-')
+      ? "operation's with spaces"
+      : mode === 'private-quoted-enoent'
+        ? 'operation with spaces'
+        : 'operation',
+  );
   const profile = resolve(root, 'profile');
   await Promise.all([mkdir(artifacts), mkdir(profile)]);
   await Bun.write(resolve(artifacts, 'original.txt'), 'original artifact\n');
@@ -170,6 +177,96 @@ test('returns a nonzero command result while retaining both streamed streams', a
   });
 });
 
+test('accepts Linux masked private paths only with an intact host canary', async () => {
+  const input = await fixture('private-enoent');
+
+  const result = await run(input, ['fixture', 'success']);
+
+  expect(result.exitCode).toBe(0);
+  expect(await Bun.file(resolve(input.operation, 'probes.json')).json()).toMatchObject({
+    privateReadControl: { exitCode: 0, stdout: '' },
+    privateRead: {
+      exitCode: 1,
+      stdout: '',
+      hostWitness: {
+        before: { regularFile: true, contentsMatch: true },
+        after: { regularFile: true, contentsMatch: true },
+      },
+    },
+  });
+  expect(await Bun.file(resolve(input.operation, 'private-canary')).exists()).toBeFalse();
+  for (const path of ['', 'home', 'home/.codex', 'tmp', 'startup']) {
+    expect((await stat(resolve(input.operation, path))).mode & 0o777).toBe(0o700);
+  }
+});
+
+test('recognizes the exact private target when cat quotes a path containing spaces', async () => {
+  const input = await fixture('private-quoted-enoent');
+
+  expect((await run(input, ['fixture', 'success'])).exitCode).toBe(0);
+});
+
+test('recognizes GNU double quotes for a private path containing an apostrophe and spaces', async () => {
+  for (const mode of ['private-double-quoted-enoent', 'private-double-quoted-program-enoent']) {
+    const input = await fixture(mode);
+
+    expect((await run(input, ['fixture', 'success'])).exitCode).toBe(0);
+  }
+});
+
+test('rejects private leaks, invalid canaries and inconclusive probe errors', async () => {
+  for (const mode of [
+    'fail-cat-control',
+    'private-launcher',
+    'private-marker-missing',
+    'private-marker-changed',
+    'private-marker-symlink',
+    'private-output-leak',
+    'private-wrong-path',
+    'private-wrong-permission-path',
+    'private-wrong-command',
+    'private-double-wrong-path',
+  ] as const) {
+    const input = await fixture(mode);
+
+    await expect(run(input, ['fixture', 'success'])).rejects.toThrow(
+      'Verification cannot establish private-data isolation.',
+    );
+
+    const requests = commandRequests(await protocol(input.operation));
+
+    expect(
+      requests.some((params) => Array.isArray(params.command) && params.command[0] === 'fixture'),
+    ).toBeFalse();
+    expect(await Bun.file(resolve(input.operation, 'private-canary')).exists()).toBeFalse();
+    expect(await Bun.file(resolve(input.artifacts, 'original.txt')).text()).toBe(
+      'original artifact\n',
+    );
+  }
+});
+
+test('retains copy-write and network isolation gates before launching a verifier', async () => {
+  for (const [mode, error] of [
+    ['fail-writable', 'Verification copy is not writable.'],
+    ['network-launcher', 'Verification tool network is not isolated.'],
+    ['network-output-leak', 'Verification tool network is not isolated.'],
+    ['network-leak', 'Verification tool network is not isolated.'],
+  ] as const) {
+    const input = await fixture(mode);
+
+    await expect(run(input, ['fixture', 'success'])).rejects.toThrow(error);
+
+    const requests = commandRequests(await protocol(input.operation));
+
+    expect(
+      requests.some((params) => Array.isArray(params.command) && params.command[0] === 'fixture'),
+    ).toBeFalse();
+    expect(await Bun.file(resolve(input.artifacts, 'original.txt')).text()).toBe(
+      'original artifact\n',
+    );
+  }
+});
+
 test('fails a prerequisite before launching the main command', async () => {
   const input = await fixture('fail-private');
 
@@ -178,8 +275,9 @@ test('fails a prerequisite before launching the main command', async () => {
   );
   const requests = commandRequests(await protocol(input.operation));
 
-  expect(requests).toHaveLength(1);
-  expect(requests[0]?.command).toEqual(['/bin/cat', expect.any(String)]);
+  expect(requests).toHaveLength(2);
+  expect(requests[0]?.command).toEqual(['/bin/cat', '/dev/null']);
+  expect(requests[1]?.command).toEqual(['/bin/cat', expect.any(String)]);
   expect(await Bun.file(resolve(input.operation, 'command-result.json')).exists()).toBeFalse();
   expect(await Bun.file(resolve(input.operation, 'probes.json')).exists()).toBeFalse();
   expect(await Bun.file(resolve(input.operation, 'workspace', 'original.txt')).text()).toBe(
