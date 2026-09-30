@@ -2,7 +2,7 @@
   "schema": "codex-evals/collections-v1",
   "collections": {
     "development": {
-      "version": "2026-09-13",
+      "version": "2026-09-30",
       "caseRoot": "cases",
       "fixtureRoot": "fixtures",
       "exposure": "seen"

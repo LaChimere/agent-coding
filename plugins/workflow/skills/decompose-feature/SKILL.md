@@ -1,67 +1,62 @@
 ---
 name: decompose-feature
-description: Plan what PRs should exist and how they should land as a trunk-safe sequence, for new work or an existing branch being reorganized for delivery. Use for stacked PRs, phased delivery, incremental rollout, or work that exceeds one reviewable PR. Not for judging whether a change set is atomic or recovering its commit boundaries — that is ensure-atomic-pr.
+description: Design the PR sequence for a feature, migration or existing branch being organized for delivery. Use when work needs staged landing or exceeds one independently reviewable PR.
 ---
 
 # Purpose
 
-Decide **what PRs should exist** for work that has not been written yet, and in what order they land.
+Decide what pull requests should exist and in what order they can safely land.
+`ensure-atomic-pr` answers the different question of whether an existing change has one purpose.
 
-# Boundaries
+# Understand the delivery constraints
 
-| Situation | Owner |
-|---|---|
-| Work needing a delivery sequence — including an existing branch when the question is what PRs should exist | this skill |
-| A change set whose atomicity or commit boundaries need assessment/recovery | `ensure-atomic-pr` |
-| Concurrent implementers needing isolation, path ownership, and integration decisions | `plan-parallel-work` |
+Inspect the requested behavior, selected design, existing contracts and deployment constraints.
+For an existing branch, inspect what is already implemented before proposing a new sequence.
+Identify which components can evolve independently and which must change together. Distinguish
+code dependencies from rollout dependencies such as schema availability or client compatibility.
 
-If an existing branch question mixes both concerns, decide the PR sequence here and name `ensure-atomic-pr` only for commit/diff recovery detail.
+When one coherent PR is sufficient, explain that conclusion rather than manufacture a split.
 
-Skip this skill when the planned change is already narrow and single-purpose.
+# Design the sequence
 
-For workflow-managed delivery, put the split in the overall native proposal or existing `plans/{slug}/plan.md` when writing is allowed and authorized. Use existing design constraints without repeating complete option comparisons. Keep execution progress in that living plan alone. Invoke `workflow-orchestrator` only when phase or approval is unresolved. A delivery proposal does not authorize commits, pushes, PR changes, or pipeline triggers.
+Prefer vertical slices: each PR delivers one meaningful behavior through the relevant layers,
+with its tests and directly coupled documentation. Splitting by frontend/backend, directory or
+artifact type alone does not establish useful boundaries. A genuine prerequisite or independently
+valuable infrastructure change can be its own PR when it leaves the existing system usable.
 
-# Advisory mode
+Each PR must leave trunk healthy and be understandable on its own. If components must change
+together and every partial state is invalid, propose one PR. File count and parallel workers are
+not reasons to split an indivisible change. Optimize for reviewable outcomes, not a target PR count.
 
-When the user asks for a rough, provisional, or early breakdown, or says they are not ready to start: answer inline with 3–6 concise bullets, one per candidate PR, each a name plus its one-sentence purpose, and state plainly that the split is provisional and will change as evidence arrives.
+Use a prerequisite PR only when later work genuinely depends on a schema, contract or stabilized
+interface. Keep it minimal; avoid wiring stubs, speculative flags and compatibility mechanisms
+not justified by the requested migration. Parallel implementation alone does not justify a base PR.
 
-Do not create artifacts, require approval gates, or emit the full required output below. End with at most one factual sentence that the provisional split can later be materialized into `plans/{slug}`; do not turn it into an open-ended offer of further help.
+For schema or contract migrations, check compatibility between old and new readers, writers and
+deployed versions. A compatible schema followed by consumers and eventual legacy removal is a
+common safe sequence, not proof that every migration supports it. Explain how each intermediate
+state works and what must be available before the next PR can land or deploy. If a safe partial
+state requires an unapproved product or compatibility mechanism, expose that choice rather than
+silently add the mechanism.
 
-# Decomposition model
+Include a cleanup PR only for temporary work introduced by the sequence, with its removal condition
+and acceptance evidence. Separate genuinely independent work from changes sharing an unstable
+contract; a possible implementation overlap does not change their landing dependencies.
 
-Prefer vertical slices: each PR delivers one meaningful behavior end to end with its own tests and directly coupled docs.
+# Return the proposal
 
-Use a base PR only when evidence shows later slices share a real prerequisite — a schema, public contract, compatibility layer, or stabilized interface. Keep the base to what the fan-out genuinely requires: contracts, types, and wiring stubs, never consumer logic, speculative flags, or no-op abstractions. Parallelism or partial mergeability alone never justifies a base PR. Add a cleanup PR only to remove temporary compatibility or migration work the sequence itself introduced.
+Give each PR's purpose, included and excluded concerns, relevant paths, real dependencies,
+observable acceptance and validation method. Explain intermediate-state safety and material
+rollout or rollback risks, including data changes that reverting code cannot undo. Mark assumptions
+and unresolved decisions explicitly. Cleanup PRs need the same acceptance clarity as other PRs.
 
-Schema work orders as compatible schema first, then readers and writers, then removal of the legacy path.
+A provisional breakdown can be a few bullets; a larger sequence can use a table. Reuse accepted
+decisions without reopening settled comparisons. Follow the requested output form and use the
+authorized location for any requested document.
 
-Rules that override PR count:
+A delivery proposal does not authorize implementation, staging, commits, pushes, PR changes or
+pipeline triggers. Resolve material behavior and migration choices with the user before dependent
+work; preserve decisions already made.
 
-- Never leave trunk broken in an intermediate state; every PR must be independently mergeable.
-- If the components must change together and every partial merge is invalid, recommend **one PR** — never a split by file count. Commits inside it may still separate mechanical preparation from semantic behavior. Do not invent dual-read, compatibility, or rollout mechanisms the request or codebase evidence does not provide.
-- Tests ship with the implementation they verify. There is no standalone "tests PR".
-- Optimize for reviewability, not PR count: three well-scoped PRs beat eight tiny ones.
-
-# Required output
-
-For a delivery request (not advisory mode):
-
-## Feature summary
-One sentence, main constraints, why this split.
-
-## PR sequence
-One block per PR: name; goal; likely paths; dependencies; allowed changes; prohibited changes; concrete acceptance criteria; validation command or method; mergeability note. Every block, cleanup PRs included, carries acceptance criteria and validation.
-
-If the feature is one indivisible purpose, say so and propose one PR instead of manufacturing a sequence.
-
-## Parallelization readiness
-Which PRs stay serial, which may run concurrently from a stable starting point. Readiness only; `plan-parallel-work` fills missing implementation ownership and isolation decisions in the same overall plan. Task parallelism does not require multiple PRs or a new base PR.
-
-## Risks
-Contract churn, migration hazards, conflict hotspots, rollback considerations.
-
-`templates/feature-plan-template.md` is available for a fuller written artifact; the structure above stands on its own.
-
-# Quality bar
-
-A proposed PR is good only if its purpose is singular, a reviewer understands it in isolation, it merges safely alone, and it smuggles in no unrelated cleanup.
+For an engineering design document, [templates/DESIGN.md](templates/DESIGN.md) is an optional
+writing aid. Adapt its depth and sections to the request.

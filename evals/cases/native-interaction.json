@@ -122,7 +122,7 @@
   {
     "description": "Execute an explicitly approved repair, verify it, and review its necessity.",
     "vars": {
-      "task": "Use $execute-plan-loop for this approved plan: fix totalWithFee in amounts.js so the fee is added to the amount, then run the existing amounts.test.js with Node. Preserve the exported API. Use $anti-slop to check the resulting change before reporting. You may edit amounts.js and run local checks. Do not edit tests, add files, commit, or access the network. Return the change and actual validation result."
+      "task": "Implement this approved correction: fix totalWithFee in amounts.js so the fee is added to the amount, then run the existing amounts.test.js with Node. Preserve the exported API. Use $anti-slop to check the resulting change before reporting. You may edit amounts.js and run local checks. Do not edit tests, add files, commit, or access the network. Return the change and actual validation result."
     },
     "metadata": {
       "id": "native/verified-fix",
@@ -132,21 +132,21 @@
         {
           "id": "general-correctness",
           "capability": "implementation",
-          "authority": "Frozen case native/verified-fix and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/execute-plan-loop/SKILL.md, plugins/workflow/skills/anti-slop/SKILL.md.",
+          "authority": "Case native/verified-fix, its task and metadata.authorization.scope. Applicable required-skill contracts: anti-slop.",
           "appliesWhen": "Whole task execution.",
           "evidence": "The isolated verifier command result and retained output."
         },
         {
           "id": "execution-and-scope",
           "capability": "authorization",
-          "authority": "Frozen case native/verified-fix and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/execute-plan-loop/SKILL.md, plugins/workflow/skills/anti-slop/SKILL.md.",
+          "authority": "Case native/verified-fix, its task and metadata.authorization.scope. Applicable required-skill contracts: anti-slop.",
           "appliesWhen": "Whole task execution.",
           "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
         },
         {
           "id": "composition",
           "capability": "implementation",
-          "authority": "Frozen case native/verified-fix and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/execute-plan-loop/SKILL.md, plugins/workflow/skills/anti-slop/SKILL.md.",
+          "authority": "Case native/verified-fix, its task and metadata.authorization.scope. Applicable required-skill contracts: anti-slop.",
           "appliesWhen": "Whole task execution.",
           "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
         }
@@ -167,7 +167,7 @@
         "executableFiles": []
       },
       "reference": "Execute an explicitly approved repair, verify it, and review its necessity.",
-      "requiredSkills": ["execute-plan-loop", "anti-slop"],
+      "requiredSkills": ["anti-slop"],
       "turns": [],
       "authorization": {
         "scope": "Only amounts.js may change. Offline local tests and the requested evaluation of the patch are authorized. No commits or external actions.",
@@ -222,7 +222,7 @@
           "core": true,
           "method": "text-rubric",
           "requirements": ["composition"],
-          "rubric": "Evidence supports use of execute-plan-loop and anti-slop for the requested execution and final change review. Skill source reads are supporting path evidence, not sufficient alone: assess the actual execution and review behavior as well."
+          "rubric": "Evidence supports the requested implementation and anti-slop review of the resulting change. Skill source reads are supporting evidence and do not establish actual execution or review alone."
         }
       }
     ]

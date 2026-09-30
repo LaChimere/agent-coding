@@ -4,21 +4,17 @@
 
 This file governs contributions to the **`agent-coding` repository itself**.
 
-It is **not** the portable coordination contract for downstream skills or downstream repositories. Cross-skill workflow coordination now lives in:
-
-- `plugins/workflow/skills/workflow-orchestrator/SKILL.md`
-- `plugins/workflow/skills/workflow-orchestrator/references/approval-gates.md`
-- `plugins/workflow/skills/workflow-orchestrator/references/worker-routing.md`
-- `plugins/workflow/skills/workflow-orchestrator/references/workflow-contract.md` (navigation index)
-- `plugins/workflow/skills/workflow-orchestrator/templates/`
+It is **not** a portable coordination contract for downstream repositories. Goal and plan handling
+belong to the consuming agent harness. Each distributed skill supplies its own engineering
+methods and task-specific constraints.
 
 ## Repository model
 
-- `skills/` contains standalone skills; coordinated workflow skills live only under `plugins/workflow/skills/`.
+- `skills/` contains standalone skills; the four workflow specialists live under `plugins/workflow/skills/`.
 - `plugins/` contains shared plugin skills with native distribution for Codex CLI, Claude Code and GitHub Copilot CLI.
 - `evals/` contains the Bun/TypeScript Codex evaluation framework, central cases, fixtures and versioned profiles; it is never distributed with skills. Follow its local `AGENTS.md` and frozen quality baseline.
-- `plugins/workflow/skills/workflow-orchestrator/` is the portable coordination layer and owns the shared workflow contract plus planning templates.
-- This repository does not keep a root `plans/` directory or task slugs. Use the approved conversation for maintenance scope and `evals/out/` for new generated evaluation evidence. Historical `.skill-evals/` evidence remains unchanged. Downstream planning templates and eval fixtures are separate from this repository-maintenance convention.
+- `plugins/workflow/` contains independent quality, PR structure and documentation skills. An optional engineering-design template is bundled with its consuming skill.
+- This repository does not keep a root `plans/` directory or task slugs. Use the authorized conversation for maintenance scope and `evals/out/` for new generated evaluation evidence. Historical `.skill-evals/` evidence and user-requested engineering documents remain unchanged; eval fixtures are task inputs, not runtime conventions.
 - Repo-root `AGENTS.md` is for repo-specific contributor guidance only.
 - Repo-root `templates/` should not exist; reusable templates belong with the skill that uses them.
 
@@ -31,15 +27,15 @@ It is **not** the portable coordination contract for downstream skills or downst
 - Manually invoking a skill from an unregistered source checkout is unsupported. A native plugin manager may live-load a registered local marketplace; validate that path against an isolated candidate copy.
 - Runtime references, templates, scripts, and platform adapters must be bundled under the skill that uses them and resolved relative to the installed skill directory.
 - Skills documented as standalone must work when installed alone.
-- Workflow-managed dependencies must be explicit and tested in their supported installed combinations.
+- Skill dependencies must be task-specific, explicit and tested in their supported installed combinations.
 
 ## Working rules for this repo
 
 - Prefer small, focused, reviewable changes.
 - Do not mix unrelated cleanup into the same change.
 - Back claims with repo evidence when behavior, docs, or workflow rules are changing.
-- When changing portable workflow behavior, update `workflow-orchestrator` first and then align any affected worker skills.
-- Worker skills in this repo should not cite repo-root `AGENTS.md` as their runtime coordination source.
+- Keep each skill independently usable; align directly affected skills without introducing a shared coordinator or lifecycle contract.
+- Distributed skills should not cite repo-root `AGENTS.md` as a runtime instruction source.
 - If a skill needs templates, reference docs, or helper scripts, bundle them under that skill's directory.
 - Do not use repository-root runtime paths inside distributed skills.
 
@@ -47,7 +43,7 @@ It is **not** the portable coordination contract for downstream skills or downst
 
 - Update directly coupled docs in the same change.
 - If you add, remove, or rename a skill, update `README.md`.
-- If you change the shared workflow contract, update `workflow-orchestrator` and any planning docs that depend on it.
+- If you retire a skill or change its scope, update active references and affected evaluation cases while preserving historical evidence.
 - Treat repo-root `AGENTS.md` as high-impact documentation for this repo, not as a global orchestration layer.
 
 ## Validation guidance
@@ -66,11 +62,10 @@ Use the narrowest validation that matches the change:
 
 ## Practical change map
 
-- Changing cross-skill routing or approval/gate behavior -> update `plugins/workflow/skills/workflow-orchestrator/`
-- Changing a worker skill's narrow behavior -> update that skill and keep it aligned with `workflow-orchestrator`
+- Changing a specialist's scope or methods -> update that skill and directly affected references/cases
 - Changing eval cases, fixtures, or classifications -> update `evals/cases/` and `evals/fixtures/`, never runtime skill directories
 - Changing trigger/composition coverage -> update the relevant cases and their declared requirements under `evals/cases/`
 - Changing harness contracts -> update `evals/src/` and `evals/tests/`; see `evals/README.md` and `docs/evaluation/design.md`
 - Changing repo contribution guidance -> update this `AGENTS.md`
-- Changing planning artifact formats -> update `plugins/workflow/skills/workflow-orchestrator/templates/`
+- Changing a user-requested engineering artifact -> update its owning skill only if that format is part of the skill's purpose
 - Changing a plugin -> update `plugins/<plugin>/`, its affected central cases in `evals/cases/`, and native marketplace/docs when needed

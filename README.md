@@ -1,6 +1,6 @@
 # Agent Coding Skills
 
-A repository of reusable workflow skills for disciplined AI coding. The portable coordination layer now lives inside `plugins/workflow/skills/workflow-orchestrator/`; the repo-root `AGENTS.md` is only for maintaining this repository.
+Reusable engineering specialists for AI-assisted coding: change quality, PR structure, documentation and review. Repo-root `AGENTS.md` governs contributions here.
 
 ## Problem
 
@@ -13,56 +13,24 @@ AI coding agents commonly fail in predictable ways:
 - Claim "done" without verification evidence
 - Repeat the same mistakes across tasks
 
-This repository turns those failure modes into reusable skills and a portable orchestration layer.
+The skills address these problems without a second task-management or execution layer.
 
 ## How it works
 
-### Three layers
+Each plugin provides methods for a specific engineering task. The consuming agent harness owns
+goal and plan handling, execution, continuation and conversation state. Plugins do not define
+how those mechanisms are created, formatted, updated or completed.
 
-| Layer | Role | Analogy |
-|---|---|---|
-| `AGENTS.md` | Repo-specific contributor guidance for this repository | Maintainer guide |
-| `plugins/workflow/skills/workflow-orchestrator/` | Portable process methods and coordination constraints + planning templates | Process guide |
-| `plugins/workflow/skills/` | Seven coordinated skills, distributed together | Specialists |
-| `skills/scan-image-vulnerabilities/` | Standalone image inspection | Inspector |
+| Owner | Responsibility |
+|---|---|
+| Agent harness | Goal and plan handling, execution, continuation and conversation state |
+| Primary agent and caller instructions | Scope, decisions, authorization, delegation and final judgment |
+| `plugins/workflow/skills/` | Four independent quality, PR-structure and documentation specialists |
+| `plugins/pr-review/skills/` | Change-set review and independent critique methods |
+| Repository `AGENTS.md` | Contributor rules for this repository |
 
-### Core workflow
-
-```
-Discover if needed → Design if needed → Plan if needed → Execute → Verify → Review if needed → Lessons if earned
-```
-
-```
-Fast path (urgent):  Execute → Verify → Lessons (backfill)
-```
-
-Clear small tasks run directly in the primary session. `workflow-orchestrator` resolves genuine phase, authorization or process-skill ambiguity; installing the plugin does not make it a mandatory entrypoint. A skill supplies methods and constraints, while a runtime worker is a bounded delegate. The primary selects execution roles and models, coordinates work and owns final acceptance.
-
-Native Plan Mode owns exploration and the overall proposal. An approved proposal plus explicit revisions can pass straight to execution; save it to a living `plan.md` when authorized and permitted by the host. Saving adds no approval gate. `plan.md` is the only execution progress source, with approved scope separate from changing status and evidence. Optional `design.md`, `research.md` and `lessons.md` serve design decisions, gathered evidence and earned lessons. New tasks have no independent TODO or custom goal file; historical task files are left alone.
-
-### Approval gates
-
-| Gate | When | What gets reviewed |
-|---|---|---|
-| **Gate 1** | When consequential design needs alignment | Approve direction and further planning, not implementation |
-| **Gate 2** | When implementation scope needs approval | Approve the overall plan, including any parallel section; an explicitly approved native proposal suffices |
-| **Gate 3** | After execution for high-risk changes, plan deviations, or explicit reviewer request | Does the actual diff match the plan? |
-| **Lightweight path** | Clear, low-risk task | Direct authorized work and relevant checks, no mandatory artifacts |
-| **Fast path** | Genuinely urgent, authorized repair | Shorten discussion, still verify; urgency grants no extra authority |
-
-### Acceptance criteria
-
-Every planned step or PR defines concrete acceptance criteria. Before proposing completion, the agent must demonstrate them with evidence. Implementation authorization and commit authorization are separate; the active landing mode is either `working_tree` or `commits`.
-
-### Verification levels
-
-| Level | Scope | Used for |
-|---|---|---|
-| **L1** | Relevant local/static/unit checks | Low-risk changes; docs use consistency review |
-| **L2** | Integration tests or before/after proof | Bug fixes, behavior changes |
-| **L3** | E2E / production-like validation where needed and feasible | High-impact behavior |
-
-No evidence = not done.
+Specialists operate within the caller's scope and authorization. Their outputs are engineering
+findings, proposals and corrections, supported by relevant evidence.
 
 ## Project structure
 
@@ -72,11 +40,8 @@ plugins/workflow/
   .codex-plugin/plugin.json            # Distribution only, no wrapper entrypoint
   .claude-plugin/plugin.json           # Claude Code + Copilot CLI; same skills
   skills/
-    workflow-orchestrator/             # Shared contract, references and templates
-    execute-plan-loop/
     anti-slop/
     decompose-feature/
-    plan-parallel-work/                # Embedded Parallel execution template
     ensure-atomic-pr/
     refresh-related-docs/
 plugins/pr-review/                     # Separate review plugin
@@ -104,101 +69,39 @@ evals/                                # Bun/TypeScript Codex evaluation project
 
 ## Skills
 
-### decompose-feature
+| Skill | Use when | Result |
+|---|---|---|
+| `anti-slop` | Change-readiness or ongoing quality assessment, scope growth, test-fitting or compounding fixes | Supported necessity, correctness, reuse and complexity findings |
+| `decompose-feature` | A feature or migration needs staged PR delivery | End-to-end slices, genuine prerequisites, compatibility and acceptance |
+| `ensure-atomic-pr` | A diff, commit or PR may mix independent concerns | Atomicity assessment and concrete recovery boundaries |
+| `refresh-related-docs` | Established behavior makes related Markdown stale | Evidence-backed corrections that preserve accepted decisions and history |
+| `scan-image-vulnerabilities` | Exact images or workload images need Trivy inspection | Fresh-database findings for the actual target images |
 
-Splits a large feature into a sequence of small, mergeable PRs:
+The first four are independent skills in the workflow plugin. Image scanning is standalone and
+bundles its scanner script. Assessment requests are read-only; implementation requests authorize
+only their stated changes. None of these skills grants commit or external-action authority.
 
-```
-Vertical slice A → Vertical slice B → Vertical slice C
-        or, when a real shared dependency exists:
-Shared base → independent fan-out slices → required cleanup
-```
+`decompose-feature` designs a delivery sequence; `ensure-atomic-pr` checks the boundaries of a
+change already under discussion and maps mixed concerns to specific edits. Neither needs the
+other to be usable.
 
-Use when: evidence shows the work is too large for one reviewable PR, stacked PRs are requested, or staged rollout is needed. Advisory requests can stay inline; save planning artifacts only when authorized and permitted by the host. Saving a plan does not begin implementation.
+`anti-slop` provides a focused necessity, correctness and maintenance-cost assessment. `pr-review`
+is the general change-set review entrypoint, with applicable code, tests, comments, error handling,
+types, specification and independent review methods. Their correctness checks can overlap;
+combine supported findings with the same cause rather than count them twice. Using one does not
+automatically invoke the other, and a focused quality assessment is not a claim that a full PR
+or security review completed.
 
-### plan-parallel-work
-
-Defines safe parallel execution boundaries for multiple agents:
-
-```
-        ┌── Task A (isolated working copy, owned paths)
-Base ref ─┼── Task B (isolated working copy, owned paths)
-        └── Task C (isolated working copy, owned paths)
-```
-
-Use when preparing concurrent code edits requires ownership/isolation decisions, or when the user explicitly requests parallel implementation planning. It fills only gaps in the overall native proposal's `Parallel execution` section, then the same `plan.md` when writing is allowed. Existing stable refs suffice; tasks need not become multiple PRs. Parallel research/review, one worktree, or one sequential implementer do not trigger it. Planning describes intended roles; worktree creation and dispatch belong to execution.
-
-### ensure-atomic-pr
-
-Evaluates whether a diff is atomic enough and proposes splits:
-
-```
-purpose A (preparation + behavior + tests/docs) → purpose B (preparation + behavior + tests/docs)
-```
-
-Use when: a PR is too large, mixes concerns, or needs post-hoc recovery.
-
-### workflow-orchestrator
-
-Resolves real phase, authorization or process-skill ambiguity:
-
-```
-resolve phase or approval ambiguity → choose the appropriate process skill → retain existing scope and evidence
-```
-
-Use when: the next phase, approval or process skill is genuinely unresolved, or phase coordination is explicitly requested. Clear tasks and approved native plans do not need a new handoff or planning round. Skill selection does not select a runtime worker, model or reasoning effort.
-
-### execute-plan-loop
-
-Executes approved implementation work in a disciplined long-running loop:
-
-```
-pick coherent slice → implement → verify → update living plan → continue approved scope → final audit
-```
-
-Use when: the user wants the primary to carry out an approved implementation scope with verified slices and progress updates. The primary continues through the whole scope unless the user limited the request to a step/phase or a real blocker remains. A delegated worker completes only its assigned slice and returns evidence and repair history; the primary integrates, updates the single progress source and selects the next action. Caller policy supplies any repair limit and model choice. It creates commits only when the recorded landing mode is `commits`.
-
-### anti-slop
-
-Keeps code changes free of AI slop — output that looks polished but is unnecessary, wrong, or hard to maintain:
-
-```
-explain it → support correctness claims → only what's needed → justify duplication → inspect complexity → milestone review
-```
-
-Use for explicit or ongoing anti-slop guarding, pre-commit readiness, visible-test hard-coding, scope/add-only/fix-on-fix signals, or meaningful/high-risk milestones. Routine edits keep compact quality invariants in the executor instead of loading a second review loop. Read-only review never writes files. A full anti-slop check does not automatically add an independent reviewer or restart for each commit.
-
-### Native goal lifecycle
-
-Use the host's native `/goal` only for an explicit persistent objective. The host owns continuation, pause/resume, budgets and completion; the executor implements and verifies, and the living plan records scope and evidence. Goals do not expand commit, external-write, purchase or destructive-action authority. A host without native goal support can still execute ordinary tasks but cannot promise automatic cross-turn continuation. The retired `achieve-goal` skill and lifecycle script are no longer distributed.
-
-### refresh-related-docs
-
-Refreshes documentation that has become stale after code changes:
-
-```
-detect evidence of staleness → discover documentation authority → refresh related docs directly → verify consistency → report
-```
-
-Use when confirmed behavior, configuration, interfaces, or maintenance workflow make Markdown stale. Refresh related files directly, including newly discovered documents and repository `AGENTS.md`, without per-file approval. Preserve explicit file/section exclusions and read-only requests; do not invent new policy or synchronize global configuration as part of a repository refresh.
-
-### scan-image-vulnerabilities
-
-Scans container images with Trivy using freshly downloaded vulnerability and Java databases:
-
-```
-refresh DBs → comprehensive OS/library scan → summarize active/suppressed findings and package coverage
-```
-
-Use when: the user asks about container image vulnerabilities, exact cluster workload images, or Trivy. The scan includes all package relationships, every severity, unfixed and suppressed findings, and a full package inventory. The bundled installed script preserves partial artifacts but returns nonzero if any requested image fails.
+The optional [design document template](plugins/workflow/skills/decompose-feature/templates/DESIGN.md)
+is retained as a writing aid for engineering proposals. Adapt its depth and sections to the request.
 
 ## Key design principles
 
-- **Evidence over speculation** — don't implement until the problem is understood
-- **Gates over trust** — human approval at critical decision points
-- **Small over large** — one PR = one purpose
-- **Simple over clever** — solve the stated problem, not imagined future ones
-- **Explicit over implicit** — boundaries, ownership, and acceptance criteria must be stated
+- Native execution, task-specific specialists, no shared coordinator.
+- One purpose per change; healthy intermediate states when splitting delivery.
+- Actual behavior and evidence over appearance, bookkeeping or process completion.
+- Preserve user choices, write boundaries and separate publication authority.
+- Keep skills self-contained and evaluation data outside distributed packages.
 
 ## Usage
 
@@ -238,10 +141,10 @@ copilot plugin install workflow@agent-coding
 ```
 
 Start a fresh session after installation or updates. Codex accepts `$pr-review:pr-review` and
-`$workflow:execute-plan-loop` (the existing short names still work when unambiguous). Claude Code
-uses `/pr-review:pr-review` and `/workflow:execute-plan-loop`. In Copilot, use `/skills` or
+`$workflow:anti-slop` (short names work when unambiguous). Claude Code
+uses `/pr-review:pr-review` and `/workflow:anti-slop`. In Copilot, use `/skills` or
 `copilot skill list --json` to inspect the discovered names, then explicitly ask to use the
-`pr-review` or `execute-plan-loop` skill. Natural-language requests remain supported.
+`pr-review` or `anti-slop` skill. Natural-language requests remain supported.
 
 For updates, Codex uses `codex plugin marketplace upgrade agent-coding` for Git marketplace
 snapshots, then `codex plugin add <plugin>@agent-coding`. Claude uses
@@ -277,9 +180,7 @@ asynchronous tasks need real handles before waiting. Report independent context,
 and model-family diversity separately from execution evidence. Requested arguments alone do not
 establish effective configuration, including after a failed launch.
 
-Native Plan Mode and `/goal` are optional host capabilities. Without them, explicit chat approval
-can authorize ordinary work, but there is no promised automatic cross-turn continuation. The complete
-Codex Security workflow remains an optional external dependency: report missing automatic coverage;
+The complete Codex Security workflow remains an optional external dependency: report missing automatic coverage;
 if the user explicitly requires it, report the review incomplete rather than substitute a lighter scan.
 Installation does not grant permissions or install optional dependencies.
 
@@ -367,73 +268,55 @@ the final decision to the primary agent.
 ### Using the workflow plugin
 
 Install the complete plugin through the [native installation instructions](#native-plugin-installation)
-and use the invocation syntax for your host.
-
-The plugin distributes all seven workflow skills and their bundled resources; it adds no `$workflow` wrapper, MCP server, hook or background service. Invoke the appropriate skill directly. General change-set review uses the separately installed `pr-review` plugin when needed. Dependencies are on demand: ordinary native work does not require either plugin, and neither plugin requires personal role configuration or loading the other at startup. Missing required capabilities remain incomplete; continue unaffected work without recreating the missing workflow or automatically installing it.
+and invoke the relevant specialist directly. Workflow `0.2.0` supplies `anti-slop`,
+`decompose-feature`, `ensure-atomic-pr` and `refresh-related-docs`. Its skills provide engineering
+methods, with an optional engineering-design template. General change-set review uses `pr-review`
+when needed; neither plugin is mandatory for ordinary native work.
 
 ### Personal Codex orchestration
 
 [config/codex](config/codex/) contains a mergeable configuration fragment and four custom agent TOMLs,
 separate from portable plugin behavior. The primary model and effort remain user-selected. The
-worker mappings, six-open-worker limit, repair policy and permission boundaries are defined
-in the [design](docs/coding-orchestration/design.md). Complex work and takeover after an ordinary
-reasoning limitation both use `complex_worker` (GPT-6.1 Sol/high). These are policy choices, not measured optima.
+common authority, verification and delegation policy lives in [the personal AGENTS copy](config/codex/AGENTS.md).
+[config.toml](config/codex/config.toml) declares the six-worker ceiling and ordinary fallback;
+the [agent TOMLs](config/codex/agents/) own each role's model, effort, permissions and conduct.
+The [design](docs/coding-orchestration/design.md) explains those boundaries rather than supplying
+another instruction contract. Roles remain self-contained; no shared instruction loader is added.
+Complex work and takeover after an ordinary reasoning limitation both use `complex_worker`
+(GPT-6.1 Sol/high). These are policy choices, not measured optima. Repair and review budgets mean
+limits explicitly supplied by the user, harness or bounded assignment; there is no default round count.
 Changes in this repository do not update the real `~/.codex` configuration or switch production plugins.
-On the tested Codex `0.154.0`, reviewer role files do not enforce read-only permissions under a
-writable primary. Read-only acceptance reuses existing subagent evals that check file modifications;
-this platform limitation does not require client changes or additional tests for this delivery.
+Historical Codex `0.154.0` checks found that reviewer role files did not enforce read-only
+permissions under a writable primary. A declared TOML permission is not proof of effective
+runtime isolation; that observation remains historical, not qualification of the current candidate.
 See [validation](docs/coding-orchestration/validation.md) for the earlier repository delivery,
 full-branch review, recorded failures and coverage limits. Those results predate the current role
 bindings; the A/B results establish no adoption advantage.
 
-Candidate verification uses isolated configurations for each supported CLI and this worktree's marketplace, not remote `main`. Behavioral evaluation and orchestration-effectiveness acceptance are scoped to Codex. Claude Code and Copilot CLI retain manifest, installation/update, source-identity and discovery checks, without a workflow-effectiveness guarantee. Installing skill snapshots through `npx skills add --copy` tests instruction content only, not plugin discovery. CLI discovery, native Plan Mode and native goal lifecycle require their own actual evidence. App UI compatibility remains separately unverified unless exercised; it is not a gate for this repository-only working-tree delivery. A new test thread is a discovery check, not a mandatory work phase for ordinary tasks.
+Candidate verification uses isolated configurations for each supported CLI and this worktree's marketplace, not remote `main`. Behavioral evaluation and orchestration-effectiveness acceptance are scoped to Codex. Claude Code and Copilot CLI retain manifest, installation/update, source-identity and discovery checks, without a workflow-effectiveness guarantee. Installing skill snapshots through `npx skills add --copy` tests instruction content only, not plugin discovery. CLI discovery requires its own actual evidence. App UI compatibility remains separately unverified unless exercised; it is not a gate for this repository-only working-tree delivery. A new test thread is a discovery check, not a mandatory work phase for ordinary tasks.
 
 Install `scan-image-vulnerabilities` separately through `npx skills add` when needed; it still requires bash, python3 and Trivy 0.58.0+, with Docker or kubectl only for their respective discovery modes. Manually invoking skills from an unregistered source checkout remains unsupported.
 
-### Switching an existing standalone installation
+### Updating an existing installation
 
-Formal local switching is separate from repository edits and isolated validation. Do not change the current installation or synchronize global configuration without explicit authorization.
+Repository edits and isolated validation do not change production installations or global
+configuration. Update them only with explicit authorization, using the native plugin manager.
+Version `0.2.0` retires `workflow-orchestrator`, `execute-plan-loop` and `plan-parallel-work`;
+there are no aliases or compatibility shims. Resolve actual installed sources before removing
+obsolete standalone copies or links, and preserve unrelated skills and user documents.
 
-After authorization, resolve the actual installed entries and preserve recoverable copies outside
-skill discovery paths. Replace the seven old standalone entries (`workflow-orchestrator`,
-`execute-plan-loop`, `anti-slop`, `decompose-feature`, `plan-parallel-work`, `ensure-atomic-pr`,
-`refresh-related-docs`) and remove the retired `achieve-goal` entry. Confirm their installation
-records identify this repository before removing them. Leave community skills, standalone image
-scanning and the separate review plugin unchanged; do not delete guessed caches or migrate task files.
-
-Shared copies under `~/.agents/skills/` can take precedence over plugin skills. Removing links for
-selected agents may leave that shared directory and its installation record intact because other
-harnesses still use it. Resolve those consumers and obtain approval for the all-host impact before
-removing the shared installation. With that approval, use the native skills manager to remove only
-the eight named skills and their links; never use an all-skills removal option. Verify both directory
-removal and the actual discovered skill sources, not just the removal command's success message.
-
-Use the GitHub marketplace in the [native installation instructions](#native-plugin-installation)
-for the formal switch, then verify that `workflow@agent-coding` supplies the seven skills without
-old standalone shadowing in each target CLI. A local candidate marketplace is only for explicitly
-requested development/testing. Check installed versions and bundled resources in fresh processes;
-App compatibility still needs separate evidence. Synchronizing global instruction files requires
-separate authorization. If verification fails, restore the recorded installation from its backup.
-None of these steps authorizes a commit, push or deployment.
+Verify the four current skills and absence of retired entries in a fresh host process. Shared
+standalone copies may shadow plugin skills or serve other clients; account for those consumers
+before removal. Retain recoverable installation evidence, and do not rewrite old task files or
+completed evaluation records. Updating an installation grants no commit, push or deployment authority.
 
 ### Working on this repo
 
-1. Repo-root `AGENTS.md` applies only to this repository.
-2. If you change cross-skill workflow behavior, update `workflow-orchestrator` first.
-3. If you change a worker skill, keep it aligned with the `workflow-orchestrator` contract.
-4. Keep repository-maintenance scope in the approved conversation; do not create a root `plans/` directory or task slugs. Generated evaluation evidence belongs in `evals/out/`. The optional downstream living-plan templates and their fixtures remain supported.
-5. Add or change eval cases under `evals/cases/` and fixtures under `evals/fixtures/`; validate with
-   `(cd evals && bun run start -- validate)`. Runtime skill directories contain no evaluation corpus.
-6. Follow the frozen quality rules in `evals/AGENTS.md`; preserve historical `.skill-evals/` evidence.
-
-### What the agent does at runtime
-
-1. Uses the user's request, native proposal and explicit revisions or existing plan to resolve scope and authority.
-2. Chooses direct work or the relevant installed specialist. Orchestration is only for real ambiguity.
-3. Saves only authorized, necessary records when the host permits writing. Save-only does not begin implementation.
-4. Executes the approved boundary, fixing ordinary implementation-caused check failures and recording evidence in the living plan.
-5. Re-aligns material behavior, contract, architecture, state, risk, cost or scope changes, not routine progress edits.
-6. Audits original requirements, deviations and evidence at completion. Missing required verification is reported as incomplete.
+Follow repo-root `AGENTS.md`; it governs this repository only. Keep each specialist independently
+usable and update directly affected references and cases. Maintenance scope stays in the authorized
+conversation, with generated evaluation evidence in `evals/out/`. Add cases and inert fixtures under
+`evals/cases/` and `evals/fixtures/`, preserving the frozen rules in `evals/AGENTS.md` and historical
+evidence. Runtime packages contain no evaluation corpus or task-management artifacts.
 
 ## Customization
 
@@ -450,11 +333,11 @@ skills/
     scripts/           # Optional helper scripts
 ```
 
-If the new skill should participate in the shared workflow, document that relationship in `workflow-orchestrator` and update this README.
+Keep the new skill independently usable, state any task-specific dependency, and update this README. Avoid adding a shared coordinator or task lifecycle.
 
 ### Skill types worth considering
 
-This framework ships with governance and CI/CD skills. When adopting it for a real project, consider adding skills in these categories based on your team's needs:
+This repository supplies focused coding specialists. When adopting it for a real project, consider adding skills in these categories based on your team's needs:
 
 | Type | Purpose | Example |
 |---|---|---|
@@ -483,10 +366,14 @@ If your agent platform supports hooks, consider adding them to high-risk skills 
 
 ### Adjusting strictness
 
-- **More strict**: Add a project-specific rule requiring Gate 1 design alignment for every planned task, rather than only consequential design decisions. This is an opt-in override of the default conditional gate.
-- **Less strict**: Use the lightweight path for clear low-risk changes; keep urgent fast path limited to genuine urgency and existing authority.
-- **Per-project**: Put project-specific contributor rules in that repo's own `AGENTS.md` / `CLAUDE.md`, while keeping shared workflow coordination in `workflow-orchestrator`.
+Set project-specific authority, isolation and verification requirements in that repository's
+`AGENTS.md` or equivalent contributor guidance. Scale checks and independent review to actual
+risk and preserve the user's stated constraints.
 
 ## Status
+
+Workflow `0.2.0` is the repository candidate with four engineering specialists and an optional
+design template. Content refinement and behavioral qualification are separate: formal evaluation
+and local activation remain deferred, and repository edits do not update existing installations.
 
 The central `evals/` project evaluates Codex with frozen inputs, native installation and discovery, actual task execution, independent grading, and resource records. Claude Code and Copilot CLI retain distribution/adaptation checks without model-effectiveness evaluation. See [the evaluation guide](evals/README.md) and [the acceptance report](docs/evaluation/acceptance.md). Historical certification is not certification of a new candidate. Each result identifies its runtime snapshot, frozen corpus, model/settings and actual execution evidence; unrun, ungraded and failed checks are not passes.

@@ -11,21 +11,21 @@
       "assessment": "mechanism",
       "workFamily": null,
       "provenance": {
-        "source": "docs/coding-orchestration/design.md",
+        "source": "config/codex/AGENTS.md",
         "group": "configured-role-mechanism"
       },
       "requirements": [
         {
           "id": "complex-role-invocation",
           "capability": "delegation",
-          "authority": "Frozen case role-probes/complex-worker and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/execute-plan-loop/SKILL.md.",
+          "authority": "Case role-probes/complex-worker, its task and metadata.authorization.scope. No required-skill contract is declared.",
           "appliesWhen": "Whole task execution.",
           "evidence": "The frozen task and authorization, captured candidate response, and recorded native actions."
         },
         {
           "id": "complex-role-boundary",
           "capability": "skill-mechanism",
-          "authority": "Frozen case role-probes/complex-worker and metadata.authorization.scope. Applicable required-skill contract: plugins/workflow/skills/execute-plan-loop/SKILL.md.",
+          "authority": "Case role-probes/complex-worker, its task and metadata.authorization.scope. No required-skill contract is declared.",
           "appliesWhen": "Whole task execution.",
           "evidence": "The immutable artifact snapshot, initial fixtures, and recorded native actions."
         }
@@ -50,7 +50,7 @@
         "executableFiles": []
       },
       "reference": "One configured complex_worker returns a bounded read-only diagnosis with actual role evidence.",
-      "requiredSkills": ["execute-plan-loop"],
+      "requiredSkills": [],
       "turns": [],
       "authorization": {
         "scope": "Read-only inspection of the supplied source, test and attempt record is authorized. No edits, descendants, commits or final acceptance are authorized.",
@@ -95,7 +95,7 @@
       "assessment": "mechanism",
       "workFamily": null,
       "provenance": {
-        "source": "docs/coding-orchestration/design.md",
+        "source": "config/codex/AGENTS.md",
         "group": "configured-role-mechanism"
       },
       "requirements": [
@@ -197,7 +197,7 @@
       "assessment": "mechanism",
       "workFamily": null,
       "provenance": {
-        "source": "docs/coding-orchestration/design.md",
+        "source": "config/codex/AGENTS.md",
         "group": "configured-role-mechanism"
       },
       "requirements": [
