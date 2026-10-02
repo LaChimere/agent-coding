@@ -147,6 +147,18 @@ Preparation must identify the inputs, establish the workspace, and make configur
 
 Mandatory execution conditions are prerequisites for a valid trial, not candidate-quality assertions. Preparation must establish them before launching the candidate; otherwise the trial is not run, with the unmet conditions and refusal reason recorded. These conditions include required network isolation, fixture-tool PATH precedence, and executable fixture files. The ability to report an observation as unknown does not permit starting without these prerequisites. Preparation consumption remains recorded even when execution is refused.
 
+Repository state is also a task input. The optional `execution.gitBaseline` lists
+fixture target files that belong to the existing code baseline. Preparation commits
+exactly that list in the disposable trial repository and leaves other files as
+untracked additions; it records the observed commit, tree and worktree state.
+Omission retains legacy initialization with no commit, while an explicit empty
+list establishes an empty committed baseline. A task about existing code must not
+accidentally present all its source as a pending change set. Explicit patch files
+can remain part of a committed input baseline when the task names those patches
+as the review target. Changing repository-state conditions creates a new execution
+version and requires fresh candidate execution under the same conditions for both
+arms; old evidence and scores remain unchanged.
+
 Concurrency is finite, configurable, and recorded. Each concurrent trial retains independent mutable state; shared runtime or cache reuse must not mix configurations, workspaces, or conversations. Concurrency is an experimental condition rather than a resource budget.
 
 Fresh execution disables Promptfoo response reuse. Server-side input-token caching is a separate resource measurement. Repeating a candidate version still performs a new Codex execution.

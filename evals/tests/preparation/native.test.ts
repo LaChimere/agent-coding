@@ -118,6 +118,55 @@ afterEach(async () => {
   await Promise.all(roots.splice(0).map((root) => rm(root, { recursive: true, force: true })));
 });
 
+test('prepares the declared Git baseline before starting the native thread and records it', async () => {
+  const input = await fixture();
+  await write(resolve(input.directory, 'workspace/src/existing.ts'), 'export const existing = 1;');
+  await write(resolve(input.directory, 'workspace/src/proposed.ts'), 'export const proposed = 2;');
+
+  const result = await prepareNativeTrial({
+    ...input,
+    credentials: {},
+    networkAccess: false,
+    gitBaseline: ['src/existing.ts'],
+  });
+
+  expect(result.status).toBe('ready');
+  if (result.status !== 'ready') {
+    throw new Error(result.reason);
+  }
+  try {
+    const evidence = await Bun.file(result.evidencePath).json();
+    expect(evidence.conditions.gitBaseline).toEqual(['src/existing.ts']);
+    expect(evidence.probes.git.baseline.files).toEqual(['src/existing.ts']);
+    const tracked = Bun.spawn(['git', '-C', result.workspace, 'ls-files'], { stdout: 'pipe' });
+    expect(await new Response(tracked.stdout).text()).toBe('src/existing.ts\n');
+    expect(await tracked.exited).toBe(0);
+
+    const status = Bun.spawn(['git', '-C', result.workspace, 'status', '--porcelain=v1'], {
+      stdout: 'pipe',
+    });
+    expect(await new Response(status.stdout).text()).toContain('?? src/proposed.ts');
+    expect(await status.exited).toBe(0);
+  } finally {
+    await result.finalize();
+  }
+});
+
+test('refuses an invalid Git baseline before any native thread starts', async () => {
+  const input = await fixture();
+  const result = await prepareNativeTrial({
+    ...input,
+    credentials: {},
+    networkAccess: false,
+    gitBaseline: ['missing.ts'],
+  });
+
+  expect(result.status).toBe('not-run');
+  expect(await Bun.file(resolve(input.directory, 'native/protocol.jsonl')).text()).not.toContain(
+    'prepared-thread',
+  );
+});
+
 test('accepts a Linux masked private path only with an intact host marker', async () => {
   const input = await fixture();
 
