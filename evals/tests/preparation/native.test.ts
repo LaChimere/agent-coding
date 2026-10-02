@@ -69,6 +69,12 @@ async function fixture(options: { sandbox?: string } = {}): Promise<IFixture> {
     resolve(runtimeDirectory, 'skills/example/SKILL.md'),
     '---\nname: example\ndescription: Example.\n---\n',
   );
+  await write(
+    resolve(runtimeDirectory, 'skills/example/references/detail.md'),
+    'reference\n',
+    0o644,
+  );
+  await chmod(resolve(runtimeDirectory, 'skills/example/references'), 0o755);
 
   await write(
     resolve(runtimeDirectory, 'plugins/review/.codex-plugin/plugin.json'),
@@ -78,7 +84,9 @@ async function fixture(options: { sandbox?: string } = {}): Promise<IFixture> {
   await write(
     resolve(runtimeDirectory, 'plugins/review/skills/reviewer/SKILL.md'),
     '---\nname: reviewer\ndescription: Review.\n---\n',
+    0o644,
   );
+  await chmod(resolve(runtimeDirectory, 'plugins/review/skills/reviewer'), 0o755);
 
   await write(
     resolve(runtimeDirectory, '.agents/plugins/marketplace.json'),
@@ -336,7 +344,10 @@ test('prepares an isolated native thread and records verified repository capabil
 
   const result = await prepareNativeTrial({
     ...input,
-    credentials: Object.fromEntries([['TEST_SECRET', 'do-not-persist']]),
+    credentials: Object.fromEntries([
+      ['TEST_SECRET', 'do-not-persist'],
+      ['TEST_FAKE_MODE', 'masked-plugin-directory'],
+    ]),
     networkAccess: false,
     pathPrepend: ['bin'],
     executableFiles: ['bin/trivy'],
@@ -357,6 +368,19 @@ test('prepares an isolated native thread and records verified repository capabil
   for (const path of ['native', 'native/home', 'native/home/.codex', 'native/tmp']) {
     expect((await stat(resolve(input.directory, path))).mode & 0o777).toBe(0o700);
   }
+  expect(
+    (await stat(resolve(input.directory, 'native/home/.agents/skills/example/references'))).mode &
+      0o777,
+  ).toBe(0o755);
+
+  const installationEvidence = await Bun.file(result.evidencePath).json();
+  const verifiedSkill = installationEvidence.installation.verification['skill:example'];
+
+  expect(verifiedSkill.installed.sha256).toBe(verifiedSkill.source.sha256);
+  const verifiedPlugin = installationEvidence.installation.verification['plugin:review'];
+
+  expect(verifiedPlugin.installed.sha256).toBe(verifiedPlugin.source.sha256);
+  expect(installationEvidence.installation.standaloneDirectoryCreationMask).toBe(process.umask());
 
   const derived = Bun.TOML.parse(
     await Bun.file(resolve(codexHome, 'config.toml')).text(),
@@ -399,6 +423,127 @@ test('prepares an isolated native thread and records verified repository capabil
   ).rejects.toThrow();
 
   expect(await Bun.file(result.protocolPath).text()).toBe(originalProtocol);
+});
+
+test('restores masked plugin directories under a restrictive umask', async () => {
+  const input = await fixture();
+  const originalUmask = process.umask();
+  const sourceDirectory = resolve(input.runtimeDirectory, 'plugins/review/skills/reviewer');
+
+  expect((await stat(sourceDirectory)).mode & 0o777).toBe(0o755);
+
+  const script = [
+    '(async () => {',
+    '  process.umask(0o077);',
+    "  const { stat } = await import('node:fs/promises');",
+    "  const { resolve } = await import('node:path');",
+    `  const { prepareNativeTrial } = await import(${JSON.stringify(resolve(import.meta.dir, '../../src/preparation/native.ts'))});`,
+    `  const input = ${JSON.stringify(input)};`,
+    "  const result = await prepareNativeTrial({ ...input, credentials: { TEST_FAKE_MODE: 'masked-plugin-directory' }, networkAccess: false });",
+    '  if (result.status !== "ready") {',
+    '    process.stdout.write(JSON.stringify({ status: result.status, reason: result.reason }));',
+    '    return;',
+    '  }',
+    '  let report;',
+    '  try {',
+    '    const evidence = await Bun.file(result.evidencePath).json();',
+    "    const plugin = evidence.installation.verification['plugin:review'];",
+    "    const installedDirectory = resolve(result.codexHome, 'plugins/cache/fixture-marketplace/review/1.2.3/skills/reviewer');",
+    '    report = {',
+    '      status: result.status,',
+    '      creationMask: evidence.installation.standaloneDirectoryCreationMask,',
+    '      sourceDirectoryMode: (await stat(resolve(input.runtimeDirectory, "plugins/review/skills/reviewer"))).mode & 0o777,',
+    '      installerDirectoryMode: evidence.installation.plugins[0].fakeInstalledSkillDirectoryMode,',
+    '      installedDirectoryMode: (await stat(installedDirectory)).mode & 0o777,',
+    '      sourceHash: plugin.source.sha256,',
+    '      installedHash: plugin.installed.sha256,',
+    '      sourceEntries: plugin.source.entries,',
+    '      installedEntries: plugin.installed.entries,',
+    '    };',
+    '  } finally {',
+    '    await result.finalize();',
+    '  }',
+    '  process.stdout.write(JSON.stringify(report));',
+    '})().catch((error) => {',
+    '  console.error(error);',
+    '  process.exitCode = 1;',
+    '});',
+  ].join('\n');
+  const child = Bun.spawn([process.execPath, '-e', script], {
+    stdout: 'pipe',
+    stderr: 'pipe',
+  });
+  const [stdout, stderr, exitCode] = await Promise.all([
+    new Response(child.stdout).text(),
+    new Response(child.stderr).text(),
+    child.exited,
+  ]);
+
+  if (exitCode !== 0) {
+    throw new Error(`Umask preparation child failed with ${exitCode}: ${stderr}`);
+  }
+
+  expect(process.umask()).toBe(originalUmask);
+
+  const report = JSON.parse(stdout) as
+    | { status: 'not-run'; reason: string }
+    | {
+        status: 'ready';
+        creationMask: number;
+        sourceDirectoryMode: number;
+        installerDirectoryMode: number;
+        installedDirectoryMode: number;
+        sourceHash: string;
+        installedHash: string;
+        sourceEntries: unknown[];
+        installedEntries: unknown[];
+      };
+
+  expect(report.status).toBe('ready');
+  if (report.status !== 'ready') {
+    throw new Error(report.reason);
+  }
+
+  expect(report).toMatchObject({
+    creationMask: 0o077,
+    sourceDirectoryMode: 0o755,
+    installerDirectoryMode: 0o700,
+    installedDirectoryMode: 0o755,
+  });
+  expect(report.installerDirectoryMode).toBe(report.sourceDirectoryMode & ~report.creationMask);
+  expect(report.installedHash).toBe(report.sourceHash);
+  expect(report.installedEntries).toEqual(report.sourceEntries);
+});
+
+test('rejects installation changes unrelated to directory creation umask before model turns', async () => {
+  for (const [mode, label] of [
+    ['installed-content-changed', 'skill-example'],
+    ['installed-file-mode-changed', 'skill-example'],
+    ['installed-directory-mode-changed', 'skill-example'],
+    ['plugin-content-changed', 'plugin-review'],
+    ['plugin-file-mode-changed', 'plugin-review'],
+    ['plugin-directory-mode-changed', 'plugin-review'],
+  ] as const) {
+    const input = await fixture();
+
+    const result = await prepareNativeTrial({
+      ...input,
+      credentials: Object.fromEntries([['TEST_FAKE_MODE', mode]]),
+      networkAccess: false,
+    });
+
+    if (result.status === 'ready') {
+      await result.finalize();
+    }
+
+    expect(result).toMatchObject({
+      status: 'not-run',
+      reason: `Installed capability differs from frozen source: ${label}`,
+    });
+    expect(await Bun.file(resolve(input.directory, 'native/protocol.jsonl')).text()).not.toContain(
+      'prepared-thread',
+    );
+  }
 });
 
 test('refuses before a model turn when discovery exposes an undeclared capability', async () => {

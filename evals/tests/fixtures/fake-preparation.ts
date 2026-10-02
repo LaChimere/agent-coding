@@ -1,4 +1,4 @@
-import { cp, mkdir, readdir, stat, symlink, unlink } from 'node:fs/promises';
+import { chmod, cp, mkdir, readdir, stat, symlink, unlink } from 'node:fs/promises';
 import { relative, resolve, sep } from 'node:path';
 
 interface IRequest {
@@ -288,9 +288,21 @@ for await (const line of console) {
   const params = request.params ?? {};
 
   switch (request.method) {
-    case 'initialize':
+    case 'initialize': {
+      const installedSkill = resolve(home, '.agents/skills/example');
+      if (fakeMode === 'installed-content-changed') {
+        await Bun.write(resolve(installedSkill, 'references/detail.md'), 'changed content\n');
+      }
+      if (fakeMode === 'installed-file-mode-changed') {
+        await chmod(resolve(installedSkill, 'references/detail.md'), 0o755);
+      }
+      if (fakeMode === 'installed-directory-mode-changed') {
+        await chmod(resolve(installedSkill, 'references'), 0o777);
+      }
+
       reply({ userAgent: 'fake-preparation/0.154.0', secretEcho: secret });
       break;
+    }
     case 'marketplace/add': {
       const { source } = params;
       if (typeof source !== 'string') {
@@ -340,6 +352,22 @@ for await (const line of console) {
         errorOnExist: true,
       });
 
+      let fakeInstalledSkillDirectoryMode: number | undefined;
+      if (fakeMode === 'masked-plugin-directory') {
+        const skillDirectory = resolve(root, 'skills/reviewer');
+        await chmod(skillDirectory, 0o755 & ~process.umask());
+        fakeInstalledSkillDirectoryMode = (await stat(skillDirectory)).mode & 0o777;
+      }
+      if (fakeMode === 'plugin-content-changed') {
+        await Bun.write(resolve(root, 'skills/reviewer/SKILL.md'), 'changed plugin\n');
+      }
+      if (fakeMode === 'plugin-file-mode-changed') {
+        await chmod(resolve(root, 'skills/reviewer/SKILL.md'), 0o755);
+      }
+      if (fakeMode === 'plugin-directory-mode-changed') {
+        await chmod(resolve(root, 'skills/reviewer'), 0o777);
+      }
+
       installedPlugins.push({
         name: pluginName,
         version: manifest.version,
@@ -348,7 +376,13 @@ for await (const line of console) {
         enabled: true,
       });
 
-      reply({ authPolicy: 'ON_INSTALL', appsNeedingAuth: [] });
+      reply({
+        authPolicy: 'ON_INSTALL',
+        appsNeedingAuth: [],
+        ...(fakeInstalledSkillDirectoryMode === undefined
+          ? {}
+          : { fakeInstalledSkillDirectoryMode }),
+      });
       break;
     }
     case 'skills/list': {
