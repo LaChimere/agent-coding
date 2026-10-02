@@ -149,6 +149,13 @@ maintained as parallel active suites. Completed runs retain their own frozen inp
 criteria and reports. Compare candidates within one frozen collection; do not
 compare aggregate scores across versions or overwrite old results.
 
+`cases/workflow-commit-v1/` contains two specialist outcome regressions for commit
+decomposition and atomicity. They retain the existing skill invocation names as
+availability prerequisites and check commit boundaries, deferred PR grouping and
+advisory authority. They are separate from the 44-task daily sample and the original
+338-case registry; select that case root for targeted execution using the same
+registry configuration mechanism.
+
 ## Running and comparing
 
 ```sh

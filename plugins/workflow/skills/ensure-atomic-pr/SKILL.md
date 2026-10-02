@@ -1,57 +1,55 @@
 ---
 name: ensure-atomic-pr
-description: Assess whether a proposed or existing diff, commit, branch or PR has one independently meaningful purpose, and identify recoverable boundaries when it mixes concerns.
+description: Assess whether a proposed or existing commit has one independently meaningful purpose, and recover commit boundaries from a mixed diff or branch. Assess PR grouping when preparing submission or explicitly asked.
 ---
 
 # Purpose
 
-An atomic change has one purpose and can be reviewed or reverted as a coherent unit.
-Inspect the named change and its original requirements. `decompose-feature` designs a future PR
-sequence; this skill checks or recovers boundaries of the change already under discussion.
+An atomic commit has one purpose and can be reviewed or reverted as a coherent unit.
+Inspect the named change and its original requirements. `decompose-feature` designs a future
+commit sequence; this skill checks or recovers the boundaries already under discussion.
+The existing invocation name is retained; the default assessment unit is a commit.
 
 # Assess the boundaries
 
-Establish the actual comparison target: working tree, named commit, range, branch or PR. Inspect
-its requirements, diff and relevant history; distinguish pre-existing or unrelated user changes
-from the work being assessed. Trace changed callers and contracts where needed to understand
-whether concerns really depend on one another.
+Establish the actual target: proposed commit, working-tree diff, named commit, range, branch or
+explicitly selected PR. Inspect requirements, relevant history and changed callers or contracts.
+For a range, branch or PR, inspect the individual commits as well as their combined effect.
+Distinguish pre-existing or unrelated user changes from the work being assessed.
 
-Identify unrelated behavior, independently mergeable mechanical work and opportunistic cleanup.
+Identify unrelated behavior, independently meaningful mechanical work and opportunistic cleanup.
 Diff size alone is not a defect. An indivisible rename across many files can stay together;
-independent formatting or renaming should separate from a semantic change only when each can
-land safely on its own. Mechanical edits with the same independently meaningful purpose can
-remain one unit; separate filenames or operations do not automatically require separate commits.
+independent formatting or renaming can separate from semantic changes when both intermediate
+states remain valid. File boundaries alone do not require separate commits.
 
-Keep implementation, its tests and directly coupled documentation together. Avoid separate
-all-tests or all-refactors PRs spanning unrelated purposes. Test infrastructure may be separate
-when it is independently useful and can land without the feature; the feature's own acceptance
-tests still belong with its behavior. Do not manufacture tiny units or compatibility work just
-to force a split.
+Keep implementation, its tests and directly coupled documentation together. Avoid all-tests or
+all-refactors commits spanning unrelated purposes. Test infrastructure can separate when useful
+on its own, while acceptance tests remain with the behavior they verify. Keep inseparable work
+in one coherent commit rather than adding compatibility work merely to force a split.
 
 # Recover a mixed change
 
-Map each concern to concrete paths and, when a file mixes purposes, the relevant hunks or symbols.
-Identify prerequisite edits and shared contracts before recommending extraction. A split is useful
-only when the resulting units are understandable and their intermediate states remain healthy.
+Map each purpose to paths and, when a file mixes purposes, the relevant hunks or symbols.
+Identify prerequisites and shared contracts before recommending extraction. Explain which edits
+must stay together, which can form another commit and which unrelated cleanup can be deferred.
+Interactive staging is a possible recovery method, not authority to stage or rewrite history.
+Keep existing commits when their boundaries already work.
 
-Explain which concern can be extracted first, which edits must stay together, and which unrelated
-cleanup can be deferred. Interactive staging can separate independent working-tree hunks; a
-preparatory PR can isolate a genuine prerequisite. These are recovery suggestions, not authority
-to stage, rewrite history or alter a published PR. Keep existing commits when they already express
-the right boundaries; do not reorganize history merely for appearance.
-
-If changes cannot be separated safely, explain the coupling and keep one coherent unit. Recommend
-proportionate validation for each proposed unit: behavior preservation for mechanical work and
-observable behavior for semantic changes. Validation units need not equal commit units; relevant
-evidence can cover directly related commits without claiming coverage it does not provide.
+Check that the resulting commits are understandable and their intermediate code states remain
+usable. Recommend proportionate validation: behavior preservation for mechanical work and
+observable behavior for semantic changes. A check may cover related commits without proving
+unrelated behavior. Assess deployment compatibility separately from code-state validity.
 
 # Return the assessment
 
-State whether the change is atomic and identify its logical purposes. If it is already coherent,
-stop. Otherwise propose boundaries with included/excluded concerns, genuine dependencies,
-acceptance and evidence that intermediate states remain healthy. Explain when a safe split is
-not possible. Use concise prose or a table as appropriate to the requested assessment.
+State whether each assessed commit is atomic and identify any mixed purposes. For uncommitted
+work, propose commit boundaries only where needed. If the boundaries already work, stop.
+Explain genuine dependencies and any coupling that prevents a safe split.
+
+Group commits into PRs when preparing submission or explicitly asked. A PR may contain several
+coherent commits serving one review purpose; a commit split does not require multiple PRs.
+For an explicit PR-atomicity question, assess that combined purpose and landing safety as well.
 
 Assessment and recovery advice are read-only. Staging, commits, history rewriting and remote
-changes need their own authority; preserve unrelated user work and never discard it to recover
-boundaries. Write a requested report only within the authorized location.
+changes need their own authority. Preserve unrelated user work and write requested reports only
+within the authorized location.

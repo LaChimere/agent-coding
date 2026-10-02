@@ -14,9 +14,14 @@ test('the current corpus is valid and every bundled fixture is used', async () =
     caseRoot: 'cases/pr-review-entry-v1',
     fixtureRoot: 'fixtures',
   });
+  const commitFocused = await loadCases(project, {
+    caseRoot: 'cases/workflow-commit-v1',
+    fixtureRoot: 'fixtures',
+  });
+  expect(commitFocused).toHaveLength(2);
   const referenced = new Set([
     ...cases.flatMap((item) => item.definition.metadata.fixture.map((fixture) => fixture.source)),
-    ...[...sessionContext, ...entry].flatMap((item) =>
+    ...[...sessionContext, ...entry, ...commitFocused].flatMap((item) =>
       item.definition.metadata.fixture.map((fixture) => fixture.source),
     ),
   ]);

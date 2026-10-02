@@ -1,7 +1,7 @@
 {
   "name": "workflow",
-  "version": "0.2.0",
-  "description": "Four independent specialists for change quality, PR structure and documentation.",
+  "version": "0.2.1",
+  "description": "Four independent specialists for change quality, commit structure and documentation.",
   "author": {
     "name": "LaChimere",
     "url": "https://github.com/LaChimere"
@@ -10,7 +10,7 @@
   "repository": "https://github.com/LaChimere/agent-coding",
   "keywords": [
     "quality",
-    "pull-requests",
+    "commits",
     "documentation"
   ]
 }
