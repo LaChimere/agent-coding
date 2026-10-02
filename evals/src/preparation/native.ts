@@ -11,7 +11,13 @@ import {
   runtimeEnvironment,
 } from './config.ts';
 import { initializeFixtureGit } from './git.ts';
-import { containedPath, type ISnapshot, inventoryDirectory, writeJsonRecord } from './snapshot.ts';
+import {
+  containedPath,
+  contentHash,
+  type ISnapshot,
+  inventoryDirectory,
+  writeJsonRecord,
+} from './snapshot.ts';
 import { resolveRuntimeTools } from './tools.ts';
 
 export interface INativePreparationInput {
@@ -556,9 +562,41 @@ async function compareDirectories(
   source: string,
   installed: string,
   label: string,
+  directoryCreationMask?: number,
 ): Promise<{ source: ISnapshot; installed: ISnapshot }> {
   const sourceSnapshot = await inventoryDirectory(source);
-  const installedSnapshot = await inventoryDirectory(installed);
+  let installedSnapshot = await inventoryDirectory(installed);
+
+  if (directoryCreationMask !== undefined) {
+    const restoredEntries = installedSnapshot.entries.map((entry, index) => {
+      const original = sourceSnapshot.entries[index];
+      if (
+        entry.kind === 'directory' &&
+        original?.kind === 'directory' &&
+        entry.path === original.path &&
+        entry.mode === (original.mode & ~directoryCreationMask)
+      ) {
+        return { ...entry, mode: original.mode };
+      }
+
+      return entry;
+    });
+
+    // The copy installer creates directories through umask. Restore only that
+    // predictable difference, after all paths, bytes and other modes match.
+    if (contentHash(JSON.stringify(restoredEntries)) !== sourceSnapshot.sha256) {
+      throw new Error(`Installed capability differs from frozen source: ${label}`);
+    }
+
+    for (const [index, entry] of restoredEntries.entries()) {
+      if (entry.mode !== installedSnapshot.entries[index]?.mode) {
+        await chmod(containedPath(installed, entry.path), entry.mode);
+      }
+    }
+
+    installedSnapshot = await inventoryDirectory(installed);
+  }
+
   if (sourceSnapshot.sha256 !== installedSnapshot.sha256) {
     throw new Error(`Installed capability differs from frozen source: ${label}`);
   }
@@ -961,6 +999,12 @@ export async function prepareNativeTrial(
     if (installedSkillsVersion !== skillsVersion) {
       throw new Error(`skills CLI must be pinned to ${skillsVersion}.`);
     }
+    const skillDirectoryCreationMask = process.umask();
+    recordValue(
+      evidence.installation,
+      'standaloneDirectoryCreationMask',
+      skillDirectoryCreationMask,
+    );
     recordValue(
       evidence.installation,
       'standaloneCommand',
@@ -1039,6 +1083,7 @@ export async function prepareNativeTrial(
         resolve(input.runtimeDirectory, 'skills', name),
         installed,
         `skill-${name}`,
+        skillDirectoryCreationMask,
       );
       allowedSkillFiles.add(resolve(installed, 'SKILL.md'));
     }
@@ -1048,6 +1093,7 @@ export async function prepareNativeTrial(
         plugin.source,
         plugin.installed,
         `plugin-${plugin.name}`,
+        skillDirectoryCreationMask,
       );
       for await (const path of new Bun.Glob('*/SKILL.md').scan(
         resolve(plugin.installed, 'skills'),
