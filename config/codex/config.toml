@@ -8,6 +8,15 @@ approvals_reviewer = "auto_review"
 [sandbox_workspace_write]
 network_access = true
 
+[features]
+api_key_model_discovery = true
+chronicle = false
+memories = true
+prevent_idle_sleep = true
+
+[features.code_mode]
+enabled = true
+
 [agents]
 enabled = true
 max_concurrent_threads_per_session = 6
