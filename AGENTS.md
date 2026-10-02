@@ -13,7 +13,7 @@ methods and task-specific constraints.
 - `skills/` contains standalone skills; the four workflow specialists live under `plugins/workflow/skills/`.
 - `plugins/` contains shared plugin skills with native distribution for Codex CLI, Claude Code and GitHub Copilot CLI.
 - `evals/` contains the Bun/TypeScript Codex evaluation framework, central cases, fixtures and versioned profiles; it is never distributed with skills. Follow its local `AGENTS.md` and frozen quality baseline.
-- `plugins/workflow/` contains independent quality, PR structure and documentation skills. An optional engineering-design template is bundled with its consuming skill.
+- `plugins/workflow/` contains independent quality, commit structure and documentation skills. An optional engineering-design template is bundled with its consuming skill.
 - This repository does not keep a root `plans/` directory or task slugs. Use the authorized conversation for maintenance scope and `evals/out/` for new generated evaluation evidence. Historical `.skill-evals/` evidence and user-requested engineering documents remain unchanged; eval fixtures are task inputs, not runtime conventions.
 - Repo-root `AGENTS.md` is for repo-specific contributor guidance only.
 - Repo-root `templates/` should not exist; reusable templates belong with the skill that uses them.

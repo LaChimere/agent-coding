@@ -1,7 +1,7 @@
 {
   "name": "workflow",
-  "version": "0.2.0",
-  "description": "Four independent specialists for change quality, PR structure and documentation.",
+  "version": "0.2.1",
+  "description": "Four independent specialists for change quality, commit structure and documentation.",
   "author": {
     "name": "LaChimere",
     "url": "https://github.com/LaChimere"
@@ -10,14 +10,14 @@
   "repository": "https://github.com/LaChimere/agent-coding",
   "keywords": [
     "quality",
-    "pull-requests",
+    "commits",
     "documentation"
   ],
   "skills": "./skills/",
   "interface": {
     "displayName": "Workflow",
-    "shortDescription": "Inspect quality, structure PRs and refresh related docs.",
-    "longDescription": "Four independent skills: anti-slop, decompose-feature, ensure-atomic-pr and refresh-related-docs. Assess change quality, propose safe PR sequences, inspect atomicity and correct related documentation.",
+    "shortDescription": "Inspect quality, structure commits and refresh related docs.",
+    "longDescription": "Four independent skills: anti-slop, decompose-feature, ensure-atomic-pr and refresh-related-docs. Assess change quality, propose coherent commit sequences, inspect commit atomicity and correct related documentation.",
     "developerName": "LaChimere",
     "category": "Productivity",
     "capabilities": [

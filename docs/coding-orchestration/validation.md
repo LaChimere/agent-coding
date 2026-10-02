@@ -19,7 +19,7 @@ retained the user's Astra/xhigh primary selection and other settings, and instal
 App Server discovered exactly the ten target skills from their installed cache paths.
 
 The subsequent user-requested sandbox defaults are recorded in
-[design §10.2](design.md#102-global-configuration-fragment). Codex `0.154.0` strict `config/read`
+[design §10.2 at the recorded revision](https://github.com/LaChimere/agent-coding/blob/ac0f315b99f5c16c63cb93337852080ba062871d/docs/coding-orchestration/design.md#102-global-configuration-fragment). Codex `0.154.0` strict `config/read`
 accepted `workspace-write`, `on-request`, `auto_review` and network access enabled, while retaining
 the eight-worker setting and primary model/effort. The user's relocated configuration sections
 were preserved. Backups are under `~/.codex/backups/coding-orchestration-20260911T035518Z/`.

@@ -1,12 +1,12 @@
 # Agent Coding Skills
 
-Reusable engineering specialists for AI-assisted coding: change quality, PR structure, documentation and review. Repo-root `AGENTS.md` governs contributions here.
+Reusable engineering specialists for AI-assisted coding: change quality, commit structure, documentation and review. Repo-root `AGENTS.md` governs contributions here.
 
 ## Problem
 
 AI coding agents commonly fail in predictable ways:
 
-- Ship one giant PR that mixes multiple concerns
+- Mix independent concerns into one commit
 - Start implementing before understanding the problem
 - Bury architecture decisions inside code without explicit review
 - Step on each other's files when working in parallel
@@ -25,7 +25,7 @@ how those mechanisms are created, formatted, updated or completed.
 |---|---|
 | Agent harness | Goal and plan handling, execution, continuation and conversation state |
 | Primary agent and caller instructions | Scope, decisions, authorization, delegation and final judgment |
-| `plugins/workflow/skills/` | Four independent quality, PR-structure and documentation specialists |
+| `plugins/workflow/skills/` | Four independent quality, commit-structure and documentation specialists |
 | `plugins/pr-review/skills/` | Change-set review and independent critique methods |
 | Repository `AGENTS.md` | Contributor rules for this repository |
 
@@ -72,8 +72,8 @@ evals/                                # Bun/TypeScript Codex evaluation project
 | Skill | Use when | Result |
 |---|---|---|
 | `anti-slop` | Change-readiness or ongoing quality assessment, scope growth, test-fitting or compounding fixes | Supported necessity, correctness, reuse and complexity findings |
-| `decompose-feature` | A feature or migration needs staged PR delivery | End-to-end slices, genuine prerequisites, compatibility and acceptance |
-| `ensure-atomic-pr` | A diff, commit or PR may mix independent concerns | Atomicity assessment and concrete recovery boundaries |
+| `decompose-feature` | A feature or migration needs multiple coherent commits | Commit sequence, genuine prerequisites, compatibility and validation |
+| `ensure-atomic-pr` | A proposed commit, diff or branch may mix independent concerns | Commit atomicity and concrete recovery boundaries |
 | `refresh-related-docs` | Established behavior makes related Markdown stale | Evidence-backed corrections that preserve accepted decisions and history |
 | `scan-image-vulnerabilities` | Exact images or workload images need Trivy inspection | Fresh-database findings for the actual target images |
 
@@ -81,9 +81,13 @@ The first four are independent skills in the workflow plugin. Image scanning is 
 bundles its scanner script. Assessment requests are read-only; implementation requests authorize
 only their stated changes. None of these skills grants commit or external-action authority.
 
-`decompose-feature` designs a delivery sequence; `ensure-atomic-pr` checks the boundaries of a
+`decompose-feature` designs a commit sequence; `ensure-atomic-pr` checks the boundaries of a
 change already under discussion and maps mixed concerns to specific edits. Neither needs the
 other to be usable.
+
+Their default unit is a commit. Group commits into PRs when preparing submission or explicitly
+asked; several coherent commits can belong to one PR. Commit boundaries do not imply separate
+deployments, and code-state validity does not by itself establish rollout compatibility.
 
 `anti-slop` provides a focused necessity, correctness and maintenance-cost assessment. `pr-review`
 is the general change-set review entrypoint, with applicable code, tests, comments, error handling,
@@ -190,8 +194,10 @@ checks validate skill content, not native plugin installation or independent ope
 
 #### Compatibility evidence
 
-Current candidate validation, including the Codex orchestration checks and the latest full-branch
-review, is recorded in [coding-orchestration validation](docs/coding-orchestration/validation.md).
+Historical orchestration checkpoints are recorded in
+[coding-orchestration validation](docs/coding-orchestration/validation.md). Current refinement
+checks and their limits are recorded in
+[workflow refinement](docs/coding-orchestration/workflow-refinement.md).
 The following installation and publication observations are historical evidence for `0.1.1`.
 
 Local candidate verification on 2026-09-07:
@@ -278,10 +284,13 @@ the final decision to the primary agent.
 ### Using the workflow plugin
 
 Install the complete plugin through the [native installation instructions](#native-plugin-installation)
-and invoke the relevant specialist directly. Workflow `0.2.0` supplies `anti-slop`,
+and invoke the relevant specialist directly. Workflow `0.2.1` supplies `anti-slop`,
 `decompose-feature`, `ensure-atomic-pr` and `refresh-related-docs`. Its skills provide engineering
 methods, with an optional engineering-design template. General change-set review uses `pr-review`
 when needed; neither plugin is mandatory for ordinary native work.
+
+The [personal workflow refinement record](docs/coding-orchestration/workflow-refinement.md)
+summarizes the current delivery and reused daily-task checks, including the limits of the results.
 
 ### Personal Codex orchestration
 
@@ -382,8 +391,9 @@ risk and preserve the user's stated constraints.
 
 ## Status
 
-Workflow `0.2.0` is the repository candidate with four engineering specialists and an optional
-design template. Content refinement and behavioral qualification are separate: formal evaluation
-and local activation remain deferred, and repository edits do not update existing installations.
+Workflow `0.2.1` is the commit-focused repository candidate with four engineering specialists
+and an optional design template. Content refinement, behavioral evidence and local activation
+are separate; repository edits do not update existing installations. The refinement record
+identifies the tested snapshots and the limits of reused evaluation results.
 
 The central `evals/` project evaluates Codex with frozen inputs, native installation and discovery, actual task execution, independent grading, and resource records. Claude Code and Copilot CLI retain distribution/adaptation checks without model-effectiveness evaluation. See [the evaluation guide](evals/README.md) and [the acceptance report](docs/evaluation/acceptance.md). Historical certification is not certification of a new candidate. Each result identifies its runtime snapshot, frozen corpus, model/settings and actual execution evidence; unrun, ungraded and failed checks are not passes.

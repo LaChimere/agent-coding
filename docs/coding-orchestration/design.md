@@ -1,6 +1,6 @@
 # Engineering specialists and harness boundaries v0.2
 
-Updated 2026-09-30. This is the current design; [validation.md](validation.md) retains historical
+Updated 2026-10-02. This is the current design; [validation.md](validation.md) retains historical
 checks and their limits. Earlier results do not qualify this revision or its role/model mapping.
 This revision covers engineering methods and instruction ownership. Formal behavioral evaluation
 and local activation are separate work; environment diagnostics are not final acceptance.
@@ -16,18 +16,19 @@ and final acceptance. It reasons about dependencies and asks about unresolved co
 choices in the conversation. Progress records do not expand commit, external-write or
 destructive-action authority, and completion claims require actual verification evidence.
 
-The workflow plugin supplies engineering methods for change quality, PR structure and related
-documentation. PR delivery sequences and engineering designs are task outputs; they do not
+The workflow plugin supplies engineering methods for change quality, commit structure and related
+documentation. Commit sequences and engineering designs are task outputs; they do not
 govern the harness's task state or execution cadence. The optional design-document template
 is bundled with `decompose-feature`, with depth and sections adapted to the requested proposal.
+Group commits into PRs when preparing submission or explicitly asked.
 
 ## Four independent specialists
 
 | Skill | Question answered |
 |---|---|
 | `anti-slop` | Is this change necessary, supported by evidence and suitably simple? |
-| `decompose-feature` | What end-to-end PR sequence can land with genuine prerequisites and safe intermediate states? |
-| `ensure-atomic-pr` | Does the named change have one purpose, and which concrete edits form recoverable units? |
+| `decompose-feature` | What coherent commit sequence has genuine prerequisites and valid intermediate code states? |
+| `ensure-atomic-pr` | Does each proposed or existing commit have one purpose, and which edits form recoverable units? |
 | `refresh-related-docs` | Which facts are stale, and how can they be corrected while preserving accepted decisions and history? |
 
 Each skill is independently usable from its installed package. General change-set review uses
