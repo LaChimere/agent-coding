@@ -1,0 +1,7 @@
+def post_delivery(auth, body, store):
+    row = store.create_delivery(
+        tenant_id=auth.tenant_id,
+        request_id=body["request_id"],
+        payload=body["payload"],
+    )
+    return 202, {"delivery_id": row.id, "accepted_at": row.accepted_at}

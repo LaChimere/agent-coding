@@ -1,0 +1,18 @@
+export const CURRENT_LIMIT = 8;
+export const ACTIVE_REQUESTS_AT_OBSERVATION = 5;
+export const QUEUED_REQUESTS_AT_OBSERVATION = 2;
+
+export interface Pool {
+  limit: number;
+  active: number;
+  queued: number;
+}
+
+/** Changing the limit only gates new starts; it does not stop active handlers. */
+export function setLimit(pool: Pool, nextLimit: number): void {
+  pool.limit = nextLimit;
+  while (pool.active < pool.limit && pool.queued > 0) {
+    pool.queued -= 1;
+    pool.active += 1;
+  }
+}

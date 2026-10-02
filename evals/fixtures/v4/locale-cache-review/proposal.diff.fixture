@@ -1,0 +1,18 @@
+diff --git a/src/messages.py b/src/messages.py
+index 14ac020..7cfe881 100644
+--- a/src/messages.py
++++ b/src/messages.py
+@@ -1,4 +1,11 @@
+ import catalog
+-
++
++_CACHE: dict[str, str] = {}
++
+ def lookup(locale: str, key: str) -> str:
+-    return catalog.read(locale, key)
++    cached = _CACHE.get(key)
++    if cached is not None:
++        return cached
++    value = catalog.read(locale, key)
++    _CACHE[key] = value
++    return value

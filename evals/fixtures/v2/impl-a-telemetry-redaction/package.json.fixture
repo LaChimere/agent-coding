@@ -1,0 +1,8 @@
+{
+  "name": "impl-a-telemetry-redaction",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "bun test"
+  }
+}

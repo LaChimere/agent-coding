@@ -1,0 +1,24 @@
+diff --git a/repo/src/context.ts b/repo/src/context.ts
+--- a/repo/src/context.ts
++++ b/repo/src/context.ts
+@@ -1 +1 @@
+-import { AsyncLocalStorage } from 'node:async_hooks';
++let currentRequestId: string | undefined;
+@@ -3,4 +3,10 @@
+-const requestContext = new AsyncLocalStorage<string>();
+-
+-export function runWithRequest<T>(requestId: string, action: () => Promise<T>): Promise<T> {
+-  return requestContext.run(requestId, action);
++export async function runWithRequest<T>(
++  requestId: string,
++  action: () => Promise<T>,
++): Promise<T> {
++  currentRequestId = requestId;
++  try {
++    return await action();
++  } finally {
++    currentRequestId = undefined;
++  }
+@@ -13 +19 @@
+-  logger.info({ requestId: requestContext.getStore(), message });
++  logger.info({ requestId: currentRequestId, message });

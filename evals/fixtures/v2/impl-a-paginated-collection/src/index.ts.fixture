@@ -1,0 +1,15 @@
+export interface Page<T> {
+  items: T[];
+  nextCursor?: string;
+}
+
+export async function collectPages<T>(
+  loadPage: (cursor: string | undefined) => Promise<Page<T>>,
+): Promise<T[]> {
+  try {
+    const page = await loadPage(undefined);
+    return page.items.slice();
+  } catch {
+    return [];
+  }
+}

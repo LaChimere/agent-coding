@@ -1,0 +1,17 @@
+import { expect, test } from "bun:test";
+import { loadRegistryManifest, parseManifest } from "../src/index.ts";
+
+test("both entry points validate and preserve vendor fields", () => {
+  const source = JSON.stringify({ version: "2", entries: [{ id: "main", path: "app/main", vendorTag: "blue" }], vendorMetadata: { source: "catalog" } });
+  const expected = { version: "2", entries: [{ id: "main", path: "app/main", vendorTag: "blue" }], vendorMetadata: { source: "catalog" } };
+  expect(parseManifest(source)).toEqual(expected);
+  expect(loadRegistryManifest(source)).toEqual(expected);
+});
+
+test("both entry points report syntax and shape errors", () => {
+  for (const load of [parseManifest, loadRegistryManifest]) {
+    expect(() => load("{")).toThrow("JSON");
+    expect(() => load(JSON.stringify({ entries: [] }))).toThrow("version");
+    expect(() => load(JSON.stringify({ version: "2", entries: [{ id: "main", path: "" }] }))).toThrow("entries[0].path");
+  }
+});

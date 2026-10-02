@@ -1,0 +1,7 @@
+export interface RecordRow { id: string; contentText: string | null; revision: number; }
+export const storageFacts = {
+  column: "record_rows.content_text",
+  nullableRows: 0.008,
+  nullMeaning: "record has no text",
+  backfillPlannedThisQuarter: false,
+} as const;

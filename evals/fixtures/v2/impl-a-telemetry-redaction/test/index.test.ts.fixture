@@ -1,0 +1,25 @@
+import { expect, test } from "bun:test";
+import { redactTelemetry } from "../src/index.ts";
+
+test("redacts sensitive keys inside nested headers and arrays", () => {
+  const event = {
+    request: { headers: { Authorization: "Bearer hidden", "Set-Cookie": "sid=hidden" } },
+    retries: [{ refresh_token: "hidden" }],
+    operation: "upload",
+  };
+
+  expect(redactTelemetry(event)).toEqual({
+    request: { headers: { Authorization: "[redacted]", "Set-Cookie": "[redacted]" } },
+    retries: [{ refresh_token: "[redacted]" }],
+    operation: "upload",
+  });
+});
+
+test("does not change the input or unrelated values", () => {
+  const event = { password: "hidden", details: { count: 2 } };
+  const copy = structuredClone(event);
+
+  redactTelemetry(event);
+
+  expect(event).toEqual(copy);
+});

@@ -1,0 +1,6 @@
+# Stopping a worker
+
+Run the stop command with --grace-period-ms 30000. The value is milliseconds and the default is 60000.
+If the grace period expires, the process is forcibly terminated.
+
+The drain timeout accepts any nonnegative integer.

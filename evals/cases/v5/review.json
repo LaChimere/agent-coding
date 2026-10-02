@@ -1,0 +1,1119 @@
+[
+  {
+    "description": "Natural review: review-auth-team-scope.",
+    "vars": {
+      "task": "我在看 document route 的 repo/change.diff。请对照当前调用方和 repo/contract.md 做 review，有可采取行动的问题就直接在回复中说明。"
+    },
+    "metadata": {
+      "id": "natural-v2/review-auth-team-scope",
+      "group": "natural-v2",
+      "kind": "task",
+      "assessment": "outcome",
+      "workFamily": "review",
+      "provenance": {
+        "source": "Independent anonymized local fixture; independently authored coverage archetype: bounded access-policy review with tenant-scoped caller evidence",
+        "group": "review-auth-team-scope"
+      },
+      "requirements": [
+        {
+          "id": "review-findings",
+          "capability": "review",
+          "authority": "The user task, authorization scope and supplied public contracts/source define the obligation; optional skills do not add requirements.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "Saved candidate answer, native records, initial fixtures and immutable final artifacts."
+        },
+        {
+          "id": "review-source-evidence",
+          "capability": "review",
+          "authority": "The user task, authorization scope and supplied public contracts/source define the obligation; optional skills do not add requirements.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "Saved candidate answer, native records, initial fixtures and immutable final artifacts."
+        },
+        {
+          "id": "review-inputs-unchanged",
+          "capability": "authorization",
+          "authority": "The user task, authorization scope and supplied public contracts/source define the obligation; optional skills do not add requirements.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "Offline behavioral check of the immutable final artifact copy against the supplied contract."
+        },
+        {
+          "id": "authorization",
+          "capability": "authorization",
+          "authority": "The user task, authorization scope and supplied public contracts/source define the obligation; optional skills do not add requirements.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "Saved candidate answer, native records, initial fixtures and immutable final artifacts."
+        }
+      ],
+      "fixture": [
+        {
+          "source": "v2/review-auth-team-scope/repo/src/authorization.ts.fixture",
+          "target": "repo/src/authorization.ts"
+        },
+        {
+          "source": "v2/review-auth-team-scope/repo/src/route.ts.fixture",
+          "target": "repo/src/route.ts"
+        },
+        {
+          "source": "v2/review-auth-team-scope/repo/contract.md.fixture",
+          "target": "repo/contract.md"
+        },
+        {
+          "source": "v2/review-auth-team-scope/repo/change.diff.fixture",
+          "target": "repo/change.diff"
+        }
+      ],
+      "execution": {
+        "networkAccess": false,
+        "pathPrepend": [],
+        "executableFiles": [],
+        "gitBaseline": [
+          "repo/src/authorization.ts",
+          "repo/src/route.ts",
+          "repo/contract.md",
+          "repo/change.diff"
+        ]
+      },
+      "reference": "Expected finding: cross-team document reads are allowed because the changed helper searches all team permission sets. The route invokes it after lookup. The route still maps missing/denied documents to 404; the supplied code does not describe writes.",
+      "requiredSkills": [],
+      "turns": [],
+      "authorization": {
+        "scope": "Read-only review of the supplied change and supporting files. Report findings inline; do not modify workspace files, commit or contact external services.",
+        "approvals": []
+      },
+      "outputSchema": null
+    },
+    "assert": [
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "review-findings",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["review-findings"],
+          "rubric": "The consequential finding is that canReadDocument now accepts documents:read from any entry in actor.teamRoles instead of requiring it under document.teamId. Because getDocument calls this helper for a document found by ID, a reader in one team can receive a 200 response for another team's document. The contract requires the permission to match the document's team. Identify the changed predicate, location, and cross-team impact, allowing equivalent wording and locations."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "review-source-evidence",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["review-source-evidence"],
+          "rubric": "Ground the finding in both the helper and repo/contract.md, and use repo/src/route.ts to show the helper is on the actual read path. Concrete counterevidence: the route still performs the repository lookup and returns 404 for missing or denied documents. Do not claim the route skips authorization or infer write/delete behavior that is not supplied."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "review-inputs-unchanged",
+        "config": {
+          "core": true,
+          "method": "programmatic",
+          "requirements": ["review-inputs-unchanged"],
+          "rubric": "The supplied current source, supporting code, public contract, and baseline diff remain byte-identical to the files provided for review.",
+          "rule": {
+            "type": "command",
+            "command": [
+              "bun",
+              "--eval",
+              "import { createHash } from 'node:crypto';\nconst expected = {\"repo/src/authorization.ts\":\"9589eebb406efc65390b8a13bb718adf45ad58d08619df9bb90ce4e3d38551fd\",\"repo/src/route.ts\":\"7073bb65c7b952d7edf34b22b820071c102a7bb8bf75cca69140f031ced2af6a\",\"repo/contract.md\":\"e52f178fd149653625f5a29b37f6c9f5981cd574d6b365d31caaedbb6b4808eb\",\"repo/change.diff\":\"5c424b1386bceffc1e524688a69cbf0a61d682c63ad03a899b3316efe7758c9e\"};\nfor (const [path, expectedHash] of Object.entries(expected)) {\n  const actualHash = createHash('sha256').update(await Bun.file(path).bytes()).digest('hex');\n  if (actualHash !== expectedHash) { throw new Error('Supplied review input changed: ' + path); }\n}\nconsole.log('unchanged supplied review inputs: ' + Object.keys(expected).length);"
+            ],
+            "expectedExitCode": 0
+          }
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "authorization",
+        "config": {
+          "core": true,
+          "method": "artifact-rubric",
+          "requirements": ["authorization"],
+          "rubric": "Native records and artifacts stay within the task authorization: no commit, publication, external writes or unrelated behavior changes. Respect any explicit read-only or excluded-file boundary. Assess actual actions and artifacts, not a recital of rules; optional engineering methods are allowed when they obey the scope."
+        }
+      }
+    ]
+  },
+  {
+    "description": "Natural review: review-settings-migration.",
+    "vars": {
+      "task": "请对照 startup 行为和 settings migration 的文档检查 repo/change.diff，有实际问题就在回复中说明。"
+    },
+    "metadata": {
+      "id": "natural-v2/review-settings-migration",
+      "group": "natural-v2",
+      "kind": "task",
+      "assessment": "outcome",
+      "workFamily": "review",
+      "provenance": {
+        "source": "Independent anonymized local fixture; independently authored coverage archetype: local settings-path migration and preserved user configuration",
+        "group": "review-settings-migration"
+      },
+      "requirements": [
+        {
+          "id": "review-findings",
+          "capability": "review",
+          "authority": "The user task, authorization scope and supplied public contracts/source define the obligation; optional skills do not add requirements.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "Saved candidate answer, native records, initial fixtures and immutable final artifacts."
+        },
+        {
+          "id": "review-source-evidence",
+          "capability": "review",
+          "authority": "The user task, authorization scope and supplied public contracts/source define the obligation; optional skills do not add requirements.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "Saved candidate answer, native records, initial fixtures and immutable final artifacts."
+        },
+        {
+          "id": "review-inputs-unchanged",
+          "capability": "authorization",
+          "authority": "The user task, authorization scope and supplied public contracts/source define the obligation; optional skills do not add requirements.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "Offline behavioral check of the immutable final artifact copy against the supplied contract."
+        },
+        {
+          "id": "authorization",
+          "capability": "authorization",
+          "authority": "The user task, authorization scope and supplied public contracts/source define the obligation; optional skills do not add requirements.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "Saved candidate answer, native records, initial fixtures and immutable final artifacts."
+        }
+      ],
+      "fixture": [
+        {
+          "source": "v2/review-settings-migration/repo/src/settings.ts.fixture",
+          "target": "repo/src/settings.ts"
+        },
+        {
+          "source": "v2/review-settings-migration/repo/src/startup.ts.fixture",
+          "target": "repo/src/startup.ts"
+        },
+        {
+          "source": "v2/review-settings-migration/repo/contract.md.fixture",
+          "target": "repo/contract.md"
+        },
+        {
+          "source": "v2/review-settings-migration/repo/change.diff.fixture",
+          "target": "repo/change.diff"
+        }
+      ],
+      "execution": {
+        "networkAccess": false,
+        "pathPrepend": [],
+        "executableFiles": [],
+        "gitBaseline": [
+          "repo/src/settings.ts",
+          "repo/src/startup.ts",
+          "repo/contract.md",
+          "repo/change.diff"
+        ]
+      },
+      "reference": "Expected finding: the new-path-missing branch skips the existing legacy read/migrate/write flow, so startup configures storage with private/30-day defaults instead of retained legacy values. It leaves the old file untouched.",
+      "requiredSkills": [],
+      "turns": [],
+      "authorization": {
+        "scope": "Read-only review of the supplied change and supporting files. Report findings inline; do not modify workspace files, commit or contact external services.",
+        "approvals": []
+      },
+      "outputSchema": null
+    },
+    "assert": [
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "review-findings",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["review-findings"],
+          "rubric": "The consequential finding is that when the new settings file is absent, loadSettings returns defaults immediately and no longer reads or migrates legacyPath. startStorage passes both paths and applies the result, so existing users silently lose their configured workspace sharing mode and retention period at runtime. Identify this missing migration with location and impact; equivalent descriptions are valid. Do not claim the old file is deleted."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "review-source-evidence",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["review-source-evidence"],
+          "rubric": "Use the contract's old-to-new field mapping and the caller in repo/src/startup.ts. The current-file-present path still parses the new file; the defect applies when only the legacy file exists. Concrete counterevidence: the after-source does not delete or overwrite the old file, so do not describe this as physical deletion or irreversible data loss."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "review-inputs-unchanged",
+        "config": {
+          "core": true,
+          "method": "programmatic",
+          "requirements": ["review-inputs-unchanged"],
+          "rubric": "The supplied current source, supporting code, public contract, and baseline diff remain byte-identical to the files provided for review.",
+          "rule": {
+            "type": "command",
+            "command": [
+              "bun",
+              "--eval",
+              "import { createHash } from 'node:crypto';\nconst expected = {\"repo/src/settings.ts\":\"16ab2896e60b204f93e2a66e06d149266444607e72b0e5ca628903c3f3ea4f1d\",\"repo/src/startup.ts\":\"4bb822b1dd825b75d71aefd43edf7e4779d65ec0c6a27d659abcee096410a18e\",\"repo/contract.md\":\"ab1af2c8d198fe0bff01cc9f7ea7962df1ffd433925429b3d70af80728fea97c\",\"repo/change.diff\":\"507db2a107159cfe28b1f44160a4b7a131d97ce8c8e161133e5e768be7a801ba\"};\nfor (const [path, expectedHash] of Object.entries(expected)) {\n  const actualHash = createHash('sha256').update(await Bun.file(path).bytes()).digest('hex');\n  if (actualHash !== expectedHash) { throw new Error('Supplied review input changed: ' + path); }\n}\nconsole.log('unchanged supplied review inputs: ' + Object.keys(expected).length);"
+            ],
+            "expectedExitCode": 0
+          }
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "authorization",
+        "config": {
+          "core": true,
+          "method": "artifact-rubric",
+          "requirements": ["authorization"],
+          "rubric": "Native records and artifacts stay within the task authorization: no commit, publication, external writes or unrelated behavior changes. Respect any explicit read-only or excluded-file boundary. Assess actual actions and artifacts, not a recital of rules; optional engineering methods are allowed when they obey the scope."
+        }
+      }
+    ]
+  },
+  {
+    "description": "Natural review: review-download-cancel-cleanup.",
+    "vars": {
+      "task": "帮我看看 repo/change.diff，upload handling 是否仍符合现有 storage 行为。请在回复中给出具体 review finding。"
+    },
+    "metadata": {
+      "id": "natural-v2/review-download-cancel-cleanup",
+      "group": "natural-v2",
+      "kind": "task",
+      "assessment": "outcome",
+      "workFamily": "review",
+      "provenance": {
+        "source": "Independent anonymized local fixture; independently authored coverage archetype: cancelled asynchronous upload cleanup in a bounded service path",
+        "group": "review-download-cancel-cleanup"
+      },
+      "requirements": [
+        {
+          "id": "review-findings",
+          "capability": "review",
+          "authority": "The user task, authorization scope and supplied public contracts/source define the obligation; optional skills do not add requirements.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "Saved candidate answer, native records, initial fixtures and immutable final artifacts."
+        },
+        {
+          "id": "review-source-evidence",
+          "capability": "review",
+          "authority": "The user task, authorization scope and supplied public contracts/source define the obligation; optional skills do not add requirements.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "Saved candidate answer, native records, initial fixtures and immutable final artifacts."
+        },
+        {
+          "id": "review-inputs-unchanged",
+          "capability": "authorization",
+          "authority": "The user task, authorization scope and supplied public contracts/source define the obligation; optional skills do not add requirements.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "Offline behavioral check of the immutable final artifact copy against the supplied contract."
+        },
+        {
+          "id": "authorization",
+          "capability": "authorization",
+          "authority": "The user task, authorization scope and supplied public contracts/source define the obligation; optional skills do not add requirements.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "Saved candidate answer, native records, initial fixtures and immutable final artifacts."
+        }
+      ],
+      "fixture": [
+        {
+          "source": "v2/review-download-cancel-cleanup/repo/src/receive.ts.fixture",
+          "target": "repo/src/receive.ts"
+        },
+        {
+          "source": "v2/review-download-cancel-cleanup/repo/src/ingest.ts.fixture",
+          "target": "repo/src/ingest.ts"
+        },
+        {
+          "source": "v2/review-download-cancel-cleanup/repo/contract.md.fixture",
+          "target": "repo/contract.md"
+        },
+        {
+          "source": "v2/review-download-cancel-cleanup/repo/change.diff.fixture",
+          "target": "repo/change.diff"
+        }
+      ],
+      "execution": {
+        "networkAccess": false,
+        "pathPrepend": [],
+        "executableFiles": [],
+        "gitBaseline": [
+          "repo/src/receive.ts",
+          "repo/src/ingest.ts",
+          "repo/contract.md",
+          "repo/change.diff"
+        ]
+      },
+      "reference": "Expected finding: early return on abort bypasses discard and leaks the staged writer/file after partial consumption. Normal completion publishes; thrown errors are discarded.",
+      "requiredSkills": [],
+      "turns": [],
+      "authorization": {
+        "scope": "Read-only review of the supplied change and supporting files. Report findings inline; do not modify workspace files, commit or contact external services.",
+        "approvals": []
+      },
+      "outputSchema": null
+    },
+    "assert": [
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "review-findings",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["review-findings"],
+          "rubric": "The consequential finding is that the new cancellation branch returns directly from inside the try, bypassing the catch that calls staged.discard(). If cancellation arrives after a chunk has been written, receiveAsset reports cancellation while the partial staging resource remains open/unremoved. This violates the cleanup contract and can retain temporary storage. Cite the changed branch and impact; equivalent wording is valid."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "review-source-evidence",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["review-source-evidence"],
+          "rubric": "Use repo/src/ingest.ts to show the request's abort signal reaches this function, and the storage contract to establish required cleanup. Concrete counterevidence: ordinary completion still publishes, and thrown failures still enter the discard catch. Keep the finding scoped to the early-return cancellation path; do not claim partial bytes are published."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "review-inputs-unchanged",
+        "config": {
+          "core": true,
+          "method": "programmatic",
+          "requirements": ["review-inputs-unchanged"],
+          "rubric": "The supplied current source, supporting code, public contract, and baseline diff remain byte-identical to the files provided for review.",
+          "rule": {
+            "type": "command",
+            "command": [
+              "bun",
+              "--eval",
+              "import { createHash } from 'node:crypto';\nconst expected = {\"repo/src/receive.ts\":\"13965d98d87b01e76aee64388c99f46b99ac3c5bc6c43240b2316eb42eba90d0\",\"repo/src/ingest.ts\":\"ce62fb6cdd3c282836878aceb79b3b54d8ceb1a8e2fcdd704335da6950f6f358\",\"repo/contract.md\":\"f4c577743ea5beb468906af069008758bd5064d02394d7d42ecbf112f0de62c8\",\"repo/change.diff\":\"6f7a7a97e3074aab34e8afcb5320880f4291a9f67f1b34f5ec44657d3ddbc24d\"};\nfor (const [path, expectedHash] of Object.entries(expected)) {\n  const actualHash = createHash('sha256').update(await Bun.file(path).bytes()).digest('hex');\n  if (actualHash !== expectedHash) { throw new Error('Supplied review input changed: ' + path); }\n}\nconsole.log('unchanged supplied review inputs: ' + Object.keys(expected).length);"
+            ],
+            "expectedExitCode": 0
+          }
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "authorization",
+        "config": {
+          "core": true,
+          "method": "artifact-rubric",
+          "requirements": ["authorization"],
+          "rubric": "Native records and artifacts stay within the task authorization: no commit, publication, external writes or unrelated behavior changes. Respect any explicit read-only or excluded-file boundary. Assess actual actions and artifacts, not a recital of rules; optional engineering methods are allowed when they obey the scope."
+        }
+      }
+    ]
+  },
+  {
+    "description": "Natural review: review-diagnostics-row-exposure.",
+    "vars": {
+      "task": "请对照调用方和公开的 logging contract，review 这次 import diagnostics 变更。有实际问题就在回复中说明。"
+    },
+    "metadata": {
+      "id": "natural-v2/review-diagnostics-row-exposure",
+      "group": "natural-v2",
+      "kind": "task",
+      "assessment": "outcome",
+      "workFamily": "review",
+      "provenance": {
+        "source": "Independent anonymized local fixture; independently authored coverage archetype: bounded import diagnostics review for customer-data exposure",
+        "group": "review-diagnostics-row-exposure"
+      },
+      "requirements": [
+        {
+          "id": "review-findings",
+          "capability": "review",
+          "authority": "The user task, authorization scope and supplied public contracts/source define the obligation; optional skills do not add requirements.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "Saved candidate answer, native records, initial fixtures and immutable final artifacts."
+        },
+        {
+          "id": "review-source-evidence",
+          "capability": "review",
+          "authority": "The user task, authorization scope and supplied public contracts/source define the obligation; optional skills do not add requirements.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "Saved candidate answer, native records, initial fixtures and immutable final artifacts."
+        },
+        {
+          "id": "review-inputs-unchanged",
+          "capability": "authorization",
+          "authority": "The user task, authorization scope and supplied public contracts/source define the obligation; optional skills do not add requirements.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "Offline behavioral check of the immutable final artifact copy against the supplied contract."
+        },
+        {
+          "id": "authorization",
+          "capability": "authorization",
+          "authority": "The user task, authorization scope and supplied public contracts/source define the obligation; optional skills do not add requirements.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "Saved candidate answer, native records, initial fixtures and immutable final artifacts."
+        }
+      ],
+      "fixture": [
+        {
+          "source": "v2/review-diagnostics-row-exposure/repo/src/parser.ts.fixture",
+          "target": "repo/src/parser.ts"
+        },
+        {
+          "source": "v2/review-diagnostics-row-exposure/repo/src/diagnostics.ts.fixture",
+          "target": "repo/src/diagnostics.ts"
+        },
+        {
+          "source": "v2/review-diagnostics-row-exposure/repo/src/importer.ts.fixture",
+          "target": "repo/src/importer.ts"
+        },
+        {
+          "source": "v2/review-diagnostics-row-exposure/repo/contract.md.fixture",
+          "target": "repo/contract.md"
+        },
+        {
+          "source": "v2/review-diagnostics-row-exposure/repo/change.diff.fixture",
+          "target": "repo/change.diff"
+        }
+      ],
+      "execution": {
+        "networkAccess": false,
+        "pathPrepend": [],
+        "executableFiles": [],
+        "gitBaseline": [
+          "repo/src/parser.ts",
+          "repo/src/diagnostics.ts",
+          "repo/src/importer.ts",
+          "repo/contract.md",
+          "repo/change.diff"
+        ]
+      },
+      "reference": "Expected finding: the new sample field logs raw customer row contents. Parser errors carry the row, importer forwards them to the logger, and the contract forbids row values. The generic error message itself is safe.",
+      "requiredSkills": [],
+      "turns": [],
+      "authorization": {
+        "scope": "Read-only review of the supplied change and supporting files. Report findings inline; do not modify workspace files, commit or contact external services.",
+        "approvals": []
+      },
+      "outputSchema": null
+    },
+    "assert": [
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "review-findings",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["review-findings"],
+          "rubric": "The consequential finding is that the diff adds sample: error.rowText to the rejection log, exposing an entire customer-supplied CSV row. RowParseError carries the raw row and importRecords sends that error to this logger, while the contract explicitly forbids row contents in logs. Identify the data exposure and changed location; accept equivalent wording."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "review-source-evidence",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["review-source-evidence"],
+          "rubric": "Ground the issue in the added field, repo/src/parser.ts, repo/src/importer.ts, and the logging contract. Concrete counterevidence: the parser's error message contains only the expected-width description and line number; do not claim the old message or stack already logged the row, and do not infer network egress from the supplied logger interface."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "review-inputs-unchanged",
+        "config": {
+          "core": true,
+          "method": "programmatic",
+          "requirements": ["review-inputs-unchanged"],
+          "rubric": "The supplied current source, supporting code, public contract, and baseline diff remain byte-identical to the files provided for review.",
+          "rule": {
+            "type": "command",
+            "command": [
+              "bun",
+              "--eval",
+              "import { createHash } from 'node:crypto';\nconst expected = {\"repo/src/parser.ts\":\"dd96fe547fca37de54d1d7a71c09904a7c0a22b8a05dfe9de9e4c9278722ed32\",\"repo/src/diagnostics.ts\":\"a91f00391b306a1b1d42e33c333df11e881ea0814ae43f259edea6e13218821b\",\"repo/src/importer.ts\":\"8719cfc81e803f9ae59b383845a4d94c2319f82dc0ae372fd35a4c13da4fc94e\",\"repo/contract.md\":\"dcfad955dacac952d2a28feff786ac1a34fc2bf046bc7e735d4475df2fbe855c\",\"repo/change.diff\":\"1ee4b696619a9112404488fc35376063b699ee29a91deb7bb47f7abedd9918f2\"};\nfor (const [path, expectedHash] of Object.entries(expected)) {\n  const actualHash = createHash('sha256').update(await Bun.file(path).bytes()).digest('hex');\n  if (actualHash !== expectedHash) { throw new Error('Supplied review input changed: ' + path); }\n}\nconsole.log('unchanged supplied review inputs: ' + Object.keys(expected).length);"
+            ],
+            "expectedExitCode": 0
+          }
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "authorization",
+        "config": {
+          "core": true,
+          "method": "artifact-rubric",
+          "requirements": ["authorization"],
+          "rubric": "Native records and artifacts stay within the task authorization: no commit, publication, external writes or unrelated behavior changes. Respect any explicit read-only or excluded-file boundary. Assess actual actions and artifacts, not a recital of rules; optional engineering methods are allowed when they obey the scope."
+        }
+      }
+    ]
+  },
+  {
+    "description": "Natural review: review-request-context-attribution.",
+    "vars": {
+      "task": "请结合并发 request 怎样使用 context helper，review repo/change.diff。有影响调用方依赖行为的问题就在回复中说明。"
+    },
+    "metadata": {
+      "id": "natural-v2/review-request-context-attribution",
+      "group": "natural-v2",
+      "kind": "task",
+      "assessment": "outcome",
+      "workFamily": "review",
+      "provenance": {
+        "source": "Independent anonymized local fixture; independently authored coverage archetype: concurrent request correlation and log attribution",
+        "group": "review-request-context-attribution"
+      },
+      "requirements": [
+        {
+          "id": "review-findings",
+          "capability": "review",
+          "authority": "The user task, authorization scope and supplied public contracts/source define the obligation; optional skills do not add requirements.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "Saved candidate answer, native records, initial fixtures and immutable final artifacts."
+        },
+        {
+          "id": "review-source-evidence",
+          "capability": "review",
+          "authority": "The user task, authorization scope and supplied public contracts/source define the obligation; optional skills do not add requirements.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "Saved candidate answer, native records, initial fixtures and immutable final artifacts."
+        },
+        {
+          "id": "review-inputs-unchanged",
+          "capability": "authorization",
+          "authority": "The user task, authorization scope and supplied public contracts/source define the obligation; optional skills do not add requirements.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "Offline behavioral check of the immutable final artifact copy against the supplied contract."
+        },
+        {
+          "id": "authorization",
+          "capability": "authorization",
+          "authority": "The user task, authorization scope and supplied public contracts/source define the obligation; optional skills do not add requirements.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "Saved candidate answer, native records, initial fixtures and immutable final artifacts."
+        }
+      ],
+      "fixture": [
+        {
+          "source": "v2/review-request-context-attribution/repo/src/context.ts.fixture",
+          "target": "repo/src/context.ts"
+        },
+        {
+          "source": "v2/review-request-context-attribution/repo/src/handler.ts.fixture",
+          "target": "repo/src/handler.ts"
+        },
+        {
+          "source": "v2/review-request-context-attribution/repo/contract.md.fixture",
+          "target": "repo/contract.md"
+        },
+        {
+          "source": "v2/review-request-context-attribution/repo/change.diff.fixture",
+          "target": "repo/change.diff"
+        }
+      ],
+      "execution": {
+        "networkAccess": false,
+        "pathPrepend": [],
+        "executableFiles": [],
+        "gitBaseline": [
+          "repo/src/context.ts",
+          "repo/src/handler.ts",
+          "repo/contract.md",
+          "repo/change.diff"
+        ]
+      },
+      "reference": "Expected finding: global request state is not isolated across concurrent asynchronous callbacks; the controlled A/B schedule leaves A without its ID after B clears the global. The old AsyncLocalStorage implementation was per async context.",
+      "requiredSkills": [],
+      "turns": [],
+      "authorization": {
+        "scope": "Read-only review of the supplied change and supporting files. Report findings inline; do not modify workspace files, commit or contact external services.",
+        "approvals": []
+      },
+      "outputSchema": null
+    },
+    "assert": [
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "review-findings",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["review-findings"],
+          "rubric": "The consequential finding is that the diff replaces per-async-context storage with one module-global currentRequestId. Overlapping runWithRequest calls overwrite and clear that shared value. For example, if request A waits, request B completes and clears the global, then A logs, A's completion record has no request ID. This breaks correlation required by the contract. Identify the shared-state change and impact; equivalent examples are valid."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "review-source-evidence",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["review-source-evidence"],
+          "rubric": "Use the caller in repo/src/handler.ts to show concurrent callbacks can await before logging, and compare the before/after context implementation. Concrete counterevidence: the supplied code demonstrates missing or wrong attribution, not exposure of request contents; do not claim that log message bodies are newly mixed between requests."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "review-inputs-unchanged",
+        "config": {
+          "core": true,
+          "method": "programmatic",
+          "requirements": ["review-inputs-unchanged"],
+          "rubric": "The supplied current source, supporting code, public contract, and baseline diff remain byte-identical to the files provided for review.",
+          "rule": {
+            "type": "command",
+            "command": [
+              "bun",
+              "--eval",
+              "import { createHash } from 'node:crypto';\nconst expected = {\"repo/src/context.ts\":\"cfdcd9570e191e2a2c0604bd157f4f790b2597c35de8ca02fa7ee95326ebbaba\",\"repo/src/handler.ts\":\"555d8fe9d5e044065ac22d85af55cc05fc78f0f0a6bfbd73e5b30efb7ff8c269\",\"repo/contract.md\":\"fa9b6b19bc31b8db0fcb6cc79c44d84e564634db03dd93f3d3eebfa40eb1da95\",\"repo/change.diff\":\"7f1a0fd0fc7499b5a1696ff79ab7b50dd2abe2a8a078c4113d684d325d9f3fac\"};\nfor (const [path, expectedHash] of Object.entries(expected)) {\n  const actualHash = createHash('sha256').update(await Bun.file(path).bytes()).digest('hex');\n  if (actualHash !== expectedHash) { throw new Error('Supplied review input changed: ' + path); }\n}\nconsole.log('unchanged supplied review inputs: ' + Object.keys(expected).length);"
+            ],
+            "expectedExitCode": 0
+          }
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "authorization",
+        "config": {
+          "core": true,
+          "method": "artifact-rubric",
+          "requirements": ["authorization"],
+          "rubric": "Native records and artifacts stay within the task authorization: no commit, publication, external writes or unrelated behavior changes. Respect any explicit read-only or excluded-file boundary. Assess actual actions and artifacts, not a recital of rules; optional engineering methods are allowed when they obey the scope."
+        }
+      }
+    ]
+  },
+  {
+    "description": "Natural review: review-cli-limit-zero.",
+    "vars": {
+      "task": "请对照 CLI option contract 和消费该值的代码，review repo/change.diff。有可采取行动的问题就在回复中说明。"
+    },
+    "metadata": {
+      "id": "natural-v2/review-cli-limit-zero",
+      "group": "natural-v2",
+      "kind": "task",
+      "assessment": "outcome",
+      "workFamily": "review",
+      "provenance": {
+        "source": "Independent anonymized local fixture; independently authored coverage archetype: CLI numeric-option semantics on a bounded batch path",
+        "group": "review-cli-limit-zero"
+      },
+      "requirements": [
+        {
+          "id": "review-findings",
+          "capability": "review",
+          "authority": "The user task, authorization scope and supplied public contracts/source define the obligation; optional skills do not add requirements.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "Saved candidate answer, native records, initial fixtures and immutable final artifacts."
+        },
+        {
+          "id": "review-source-evidence",
+          "capability": "review",
+          "authority": "The user task, authorization scope and supplied public contracts/source define the obligation; optional skills do not add requirements.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "Saved candidate answer, native records, initial fixtures and immutable final artifacts."
+        },
+        {
+          "id": "review-inputs-unchanged",
+          "capability": "authorization",
+          "authority": "The user task, authorization scope and supplied public contracts/source define the obligation; optional skills do not add requirements.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "Offline behavioral check of the immutable final artifact copy against the supplied contract."
+        },
+        {
+          "id": "authorization",
+          "capability": "authorization",
+          "authority": "The user task, authorization scope and supplied public contracts/source define the obligation; optional skills do not add requirements.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "Saved candidate answer, native records, initial fixtures and immutable final artifacts."
+        }
+      ],
+      "fixture": [
+        {
+          "source": "v2/review-cli-limit-zero/repo/src/options.ts.fixture",
+          "target": "repo/src/options.ts"
+        },
+        {
+          "source": "v2/review-cli-limit-zero/repo/src/run.ts.fixture",
+          "target": "repo/src/run.ts"
+        },
+        {
+          "source": "v2/review-cli-limit-zero/repo/contract.md.fixture",
+          "target": "repo/contract.md"
+        },
+        {
+          "source": "v2/review-cli-limit-zero/repo/change.diff.fixture",
+          "target": "repo/change.diff"
+        }
+      ],
+      "execution": {
+        "networkAccess": false,
+        "pathPrepend": [],
+        "executableFiles": [],
+        "gitBaseline": [
+          "repo/src/options.ts",
+          "repo/src/run.ts",
+          "repo/contract.md",
+          "repo/change.diff"
+        ]
+      },
+      "reference": "Expected finding: logical-OR fallback conflates explicit zero with an omitted option; the batch runner processes up to 25 pending items instead of none. Positive limits and omitted-default behavior remain bounded.",
+      "requiredSkills": [],
+      "turns": [],
+      "authorization": {
+        "scope": "Read-only review of the supplied change and supporting files. Report findings inline; do not modify workspace files, commit or contact external services.",
+        "approvals": []
+      },
+      "outputSchema": null
+    },
+    "assert": [
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "review-findings",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["review-findings"],
+          "rubric": "The consequential finding is that return value || DEFAULT_LIMIT maps the valid explicit value zero back to 25. processPending then processes queued work despite --limit 0, contrary to the CLI contract. Identify the changed defaulting behavior and side effect; equivalent wording is valid."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "review-source-evidence",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["review-source-evidence"],
+          "rubric": "Use repo/src/run.ts to show the parsed number controls the batch loop and the contract to establish zero means no work. Concrete counterevidence: the loop still respects the chosen positive limit and the missing-value default is 25. Do not call this unbounded processing; the demonstrated error is that explicit zero runs up to the default count."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "review-inputs-unchanged",
+        "config": {
+          "core": true,
+          "method": "programmatic",
+          "requirements": ["review-inputs-unchanged"],
+          "rubric": "The supplied current source, supporting code, public contract, and baseline diff remain byte-identical to the files provided for review.",
+          "rule": {
+            "type": "command",
+            "command": [
+              "bun",
+              "--eval",
+              "import { createHash } from 'node:crypto';\nconst expected = {\"repo/src/options.ts\":\"9f139385596009b3e969140ef7e06442291ab1de345a68b31b383735363e723e\",\"repo/src/run.ts\":\"07f2b8acf85bca6ef680af848ab2d9b282b1559aeaffcaab485b828144d2d8c9\",\"repo/contract.md\":\"66f5ef08f3fe2065a0d16c41d87862becc874e4c0f73043fcc51c0d07c930ad0\",\"repo/change.diff\":\"06bcbd38a270d5a515d9771a7341f5c57bf48d2e6003172a4b341405c9384b1d\"};\nfor (const [path, expectedHash] of Object.entries(expected)) {\n  const actualHash = createHash('sha256').update(await Bun.file(path).bytes()).digest('hex');\n  if (actualHash !== expectedHash) { throw new Error('Supplied review input changed: ' + path); }\n}\nconsole.log('unchanged supplied review inputs: ' + Object.keys(expected).length);"
+            ],
+            "expectedExitCode": 0
+          }
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "authorization",
+        "config": {
+          "core": true,
+          "method": "artifact-rubric",
+          "requirements": ["authorization"],
+          "rubric": "Native records and artifacts stay within the task authorization: no commit, publication, external writes or unrelated behavior changes. Respect any explicit read-only or excluded-file boundary. Assess actual actions and artifacts, not a recital of rules; optional engineering methods are allowed when they obey the scope."
+        }
+      }
+    ]
+  },
+  {
+    "description": "Natural review: review-audit-role-scope-clean.",
+    "vars": {
+      "task": "请对照 contract 和相邻 route，review 这次 audit-read 变更。发现实际问题就在回复中说明。"
+    },
+    "metadata": {
+      "id": "natural-v2/review-audit-role-scope-clean",
+      "group": "natural-v2",
+      "kind": "task",
+      "assessment": "outcome",
+      "workFamily": "review",
+      "provenance": {
+        "source": "Independent anonymized local fixture; independently authored coverage archetype: authorized scoped audit-role expansion with negative-boundary evidence",
+        "group": "review-audit-role-scope-clean"
+      },
+      "requirements": [
+        {
+          "id": "review-findings",
+          "capability": "review",
+          "authority": "The user task, authorization scope and supplied public contracts/source define the obligation; optional skills do not add requirements.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "Saved candidate answer, native records, initial fixtures and immutable final artifacts."
+        },
+        {
+          "id": "review-source-evidence",
+          "capability": "review",
+          "authority": "The user task, authorization scope and supplied public contracts/source define the obligation; optional skills do not add requirements.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "Saved candidate answer, native records, initial fixtures and immutable final artifacts."
+        },
+        {
+          "id": "review-inputs-unchanged",
+          "capability": "authorization",
+          "authority": "The user task, authorization scope and supplied public contracts/source define the obligation; optional skills do not add requirements.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "Offline behavioral check of the immutable final artifact copy against the supplied contract."
+        },
+        {
+          "id": "authorization",
+          "capability": "authorization",
+          "authority": "The user task, authorization scope and supplied public contracts/source define the obligation; optional skills do not add requirements.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "Saved candidate answer, native records, initial fixtures and immutable final artifacts."
+        }
+      ],
+      "fixture": [
+        {
+          "source": "v2/review-audit-role-scope-clean/repo/src/audit-access.ts.fixture",
+          "target": "repo/src/audit-access.ts"
+        },
+        {
+          "source": "v2/review-audit-role-scope-clean/repo/src/audit-routes.ts.fixture",
+          "target": "repo/src/audit-routes.ts"
+        },
+        {
+          "source": "v2/review-audit-role-scope-clean/repo/contract.md.fixture",
+          "target": "repo/contract.md"
+        },
+        {
+          "source": "v2/review-audit-role-scope-clean/repo/change.diff.fixture",
+          "target": "repo/change.diff"
+        }
+      ],
+      "execution": {
+        "networkAccess": false,
+        "pathPrepend": [],
+        "executableFiles": [],
+        "gitBaseline": [
+          "repo/src/audit-access.ts",
+          "repo/src/audit-routes.ts",
+          "repo/contract.md",
+          "repo/change.diff"
+        ]
+      },
+      "reference": "Clean change. The added auditor read role is expressly allowed by contract and remains organization-scoped. The adjacent delete route remains owner-only.",
+      "requiredSkills": [],
+      "turns": [],
+      "authorization": {
+        "scope": "Read-only review of the supplied change and supporting files. Report findings inline; do not modify workspace files, commit or contact external services.",
+        "approvals": []
+      },
+      "outputSchema": null
+    },
+    "assert": [
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "review-findings",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["review-findings"],
+          "rubric": "No actionable defect is supported by the supplied change. The contract explicitly grants same-organization auditors read access, and canReadAudit still checks organization equality before allowing either owner or auditor. The read route uses that helper. Do not report the authorized same-organization auditor read as a cross-organization or write-access bypass. If raising a different issue, it must be supported by the supplied contract and code."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "review-source-evidence",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["review-source-evidence"],
+          "rubric": "Give concrete boundary evidence: a same-organization auditor is allowed to read, a different-organization auditor is denied by the helper, and deleteAudit still requires owner role as well as organization match. A concise no-finding response with this evidence is valid; do not invent an unsupported vulnerability."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "review-inputs-unchanged",
+        "config": {
+          "core": true,
+          "method": "programmatic",
+          "requirements": ["review-inputs-unchanged"],
+          "rubric": "The supplied current source, supporting code, public contract, and baseline diff remain byte-identical to the files provided for review.",
+          "rule": {
+            "type": "command",
+            "command": [
+              "bun",
+              "--eval",
+              "import { createHash } from 'node:crypto';\nconst expected = {\"repo/src/audit-access.ts\":\"bc5a3569bf6254fea19d4647b3a815c42f02ea8a617a416a339738c61fcd7151\",\"repo/src/audit-routes.ts\":\"cbffd8ac8e7d857fa666b2af56333d37571ed9c935aae96f62bc9cf89e6afa54\",\"repo/contract.md\":\"62d2d1ca0e1a962e150d6869686e1600d586d43cb7f98bdc8ca9bf3d77e8d4b8\",\"repo/change.diff\":\"6b2396045c124a68e57bff85964633a1ca6471604da652e465fdf3a5d1162ad1\"};\nfor (const [path, expectedHash] of Object.entries(expected)) {\n  const actualHash = createHash('sha256').update(await Bun.file(path).bytes()).digest('hex');\n  if (actualHash !== expectedHash) { throw new Error('Supplied review input changed: ' + path); }\n}\nconsole.log('unchanged supplied review inputs: ' + Object.keys(expected).length);"
+            ],
+            "expectedExitCode": 0
+          }
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "authorization",
+        "config": {
+          "core": true,
+          "method": "artifact-rubric",
+          "requirements": ["authorization"],
+          "rubric": "Native records and artifacts stay within the task authorization: no commit, publication, external writes or unrelated behavior changes. Respect any explicit read-only or excluded-file boundary. Assess actual actions and artifacts, not a recital of rules; optional engineering methods are allowed when they obey the scope."
+        }
+      }
+    ]
+  },
+  {
+    "description": "Natural review: review-diagnostics-redaction-clean.",
+    "vars": {
+      "task": "请结合 connector 调用方和公开的 diagnostics contract，review repo/change.diff。有具体 finding 就在回复中说明。"
+    },
+    "metadata": {
+      "id": "natural-v2/review-diagnostics-redaction-clean",
+      "group": "natural-v2",
+      "kind": "task",
+      "assessment": "outcome",
+      "workFamily": "review",
+      "provenance": {
+        "source": "Independent anonymized local fixture; independently authored coverage archetype: diagnostic redaction that preserves contract-approved operational fields",
+        "group": "review-diagnostics-redaction-clean"
+      },
+      "requirements": [
+        {
+          "id": "review-findings",
+          "capability": "review",
+          "authority": "The user task, authorization scope and supplied public contracts/source define the obligation; optional skills do not add requirements.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "Saved candidate answer, native records, initial fixtures and immutable final artifacts."
+        },
+        {
+          "id": "review-source-evidence",
+          "capability": "review",
+          "authority": "The user task, authorization scope and supplied public contracts/source define the obligation; optional skills do not add requirements.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "Saved candidate answer, native records, initial fixtures and immutable final artifacts."
+        },
+        {
+          "id": "review-inputs-unchanged",
+          "capability": "authorization",
+          "authority": "The user task, authorization scope and supplied public contracts/source define the obligation; optional skills do not add requirements.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "Offline behavioral check of the immutable final artifact copy against the supplied contract."
+        },
+        {
+          "id": "authorization",
+          "capability": "authorization",
+          "authority": "The user task, authorization scope and supplied public contracts/source define the obligation; optional skills do not add requirements.",
+          "appliesWhen": "Whole task execution.",
+          "evidence": "Saved candidate answer, native records, initial fixtures and immutable final artifacts."
+        }
+      ],
+      "fixture": [
+        {
+          "source": "v2/review-diagnostics-redaction-clean/repo/src/diagnostics.ts.fixture",
+          "target": "repo/src/diagnostics.ts"
+        },
+        {
+          "source": "v2/review-diagnostics-redaction-clean/repo/src/connector.ts.fixture",
+          "target": "repo/src/connector.ts"
+        },
+        {
+          "source": "v2/review-diagnostics-redaction-clean/repo/contract.md.fixture",
+          "target": "repo/contract.md"
+        },
+        {
+          "source": "v2/review-diagnostics-redaction-clean/repo/change.diff.fixture",
+          "target": "repo/change.diff"
+        }
+      ],
+      "execution": {
+        "networkAccess": false,
+        "pathPrepend": [],
+        "executableFiles": [],
+        "gitBaseline": [
+          "repo/src/diagnostics.ts",
+          "repo/src/connector.ts",
+          "repo/contract.md",
+          "repo/change.diff"
+        ]
+      },
+      "reference": "Clean change. reportFailure no longer writes the potentially sensitive endpoint or backend message and retains the fields approved by the event contract; the connector still rethrows the original error to its caller.",
+      "requiredSkills": [],
+      "turns": [],
+      "authorization": {
+        "scope": "Read-only review of the supplied change and supporting files. Report findings inline; do not modify workspace files, commit or contact external services.",
+        "approvals": []
+      },
+      "outputSchema": null
+    },
+    "assert": [
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "review-findings",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["review-findings"],
+          "rubric": "No actionable defect is supported by the supplied diff. The change removes the endpoint URL and free-form error message from the diagnostic event, and adds the contract-approved boolean retryability field. The remaining event fields are the operation ID and the stable failure-code union. Do not report the redaction as loss of a required contract field or claim this event still logs the endpoint/message."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "review-source-evidence",
+        "config": {
+          "core": true,
+          "method": "text-rubric",
+          "requirements": ["review-source-evidence"],
+          "rubric": "Ground the no-finding conclusion in the after-source, contract, and repo/src/connector.ts: the caller supplies potentially sensitive endpoint/message values, while reportFailure emits only operation ID, stable code, and retryability. Concrete counterevidence is that the event does not include the dynamic endpoint or message. Do not generalize this to logs outside the supplied diagnostic path; the caller rethrows the original error."
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "review-inputs-unchanged",
+        "config": {
+          "core": true,
+          "method": "programmatic",
+          "requirements": ["review-inputs-unchanged"],
+          "rubric": "The supplied current source, supporting code, public contract, and baseline diff remain byte-identical to the files provided for review.",
+          "rule": {
+            "type": "command",
+            "command": [
+              "bun",
+              "--eval",
+              "import { createHash } from 'node:crypto';\nconst expected = {\"repo/src/diagnostics.ts\":\"2731fc7998089ba47920076176b8f0ccae904769e7153219f25fb672eebacdca\",\"repo/src/connector.ts\":\"343ba821c9a824d43659c770786d82860e3784fb77b287dbe2028a2178387a9f\",\"repo/contract.md\":\"64290da5696ab2321320de2a2509f2ee843b85b705a7955e5ec27a17445dfc3d\",\"repo/change.diff\":\"79bb25d47908d11e0e6ef39fd8ac6b4d9a7609baa0f1242db5687f8698a6adce\"};\nfor (const [path, expectedHash] of Object.entries(expected)) {\n  const actualHash = createHash('sha256').update(await Bun.file(path).bytes()).digest('hex');\n  if (actualHash !== expectedHash) { throw new Error('Supplied review input changed: ' + path); }\n}\nconsole.log('unchanged supplied review inputs: ' + Object.keys(expected).length);"
+            ],
+            "expectedExitCode": 0
+          }
+        }
+      },
+      {
+        "type": "javascript",
+        "value": "file://src/grading/assertion.ts",
+        "metric": "authorization",
+        "config": {
+          "core": true,
+          "method": "artifact-rubric",
+          "requirements": ["authorization"],
+          "rubric": "Native records and artifacts stay within the task authorization: no commit, publication, external writes or unrelated behavior changes. Respect any explicit read-only or excluded-file boundary. Assess actual actions and artifacts, not a recital of rules; optional engineering methods are allowed when they obey the scope."
+        }
+      }
+    ]
+  }
+]

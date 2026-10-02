@@ -1,0 +1,16 @@
+diff --git a/repo/src/settings.ts b/repo/src/settings.ts
+--- a/repo/src/settings.ts
++++ b/repo/src/settings.ts
+@@ -43,6 +43 @@
+-  if (current !== null) {
+-    return parseCurrent(current);
+-  }
+-
+-  const legacy = await files.read(legacyPath);
+-  if (legacy === null) {
++  if (current === null) {
+@@ -52,3 +47 @@
+-  const migrated = migrateLegacy(legacy);
+-  await files.write(currentPath, JSON.stringify(migrated));
+-  return migrated;
++  return parseCurrent(current);

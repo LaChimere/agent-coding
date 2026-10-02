@@ -1,0 +1,6 @@
+# Audit export
+
+GET /audit/export returns rows for one authorized project and the half-open
+range from inclusive, to exclusive. Rows are ordered by occurred_at and then
+event_id. The optional cursor resumes after that pair. Page size defaults to
+100 and is capped at 500. Events are append-only and retained for 30 days.

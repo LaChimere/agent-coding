@@ -1,0 +1,25 @@
+export type FailureCode = 'timeout' | 'rejected' | 'unavailable';
+
+export interface ConnectorFailure {
+  operationId: string;
+  code: FailureCode;
+  retryable: boolean;
+  endpoint: URL;
+  message: string;
+}
+
+export interface DiagnosticLogger {
+  warn(record: Record<string, unknown>): void;
+}
+
+export function reportFailure(
+  logger: DiagnosticLogger,
+  failure: ConnectorFailure,
+): void {
+  logger.warn({
+    event: 'connector_failure',
+    operationId: failure.operationId,
+    code: failure.code,
+    retryable: failure.retryable,
+  });
+}

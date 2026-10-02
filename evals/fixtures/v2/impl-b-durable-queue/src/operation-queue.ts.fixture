@@ -1,0 +1,33 @@
+export type QueueEntry = { id: string; payload: string };
+
+export interface QueueJournal {
+  save(entries: readonly QueueEntry[]): Promise<void>;
+}
+
+export class OperationQueue {
+  private entries: QueueEntry[];
+
+  constructor(initial: readonly QueueEntry[], private readonly journal: QueueJournal) {
+    this.entries = initial.map((entry) => ({ ...entry }));
+  }
+
+  list(): readonly QueueEntry[] {
+    return [...this.entries];
+  }
+
+  async enqueue(entry: QueueEntry): Promise<void> {
+    this.entries.push({ ...entry });
+    await this.journal.save(this.entries);
+  }
+
+  async remove(id: string): Promise<boolean> {
+    const index = this.entries.findIndex((entry) => entry.id === id);
+    if (index < 0) {
+      return false;
+    }
+
+    this.entries.splice(index, 1);
+    await this.journal.save(this.entries);
+    return true;
+  }
+}

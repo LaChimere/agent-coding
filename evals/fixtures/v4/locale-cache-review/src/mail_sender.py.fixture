@@ -1,0 +1,5 @@
+from messages import lookup
+
+
+def receipt_subject(account, receipt) -> str:
+    return lookup(account.locale, "receipt_subject").format(number=receipt.number)

@@ -1,0 +1,60 @@
+import { expect, test } from "bun:test";
+import { pipeStream } from "../src/index.ts";
+
+test("aborting cancels the source, aborts the destination, and releases locks", async () => {
+  let sourceController!: ReadableStreamDefaultController<string>;
+  let cancelled: unknown;
+  let destinationAbort: unknown;
+  let firstWrite!: () => void;
+  const wrote = new Promise<void>((resolve) => {
+    firstWrite = resolve;
+  });
+  const source = new ReadableStream<string>({
+    start(controller) { sourceController = controller; controller.enqueue("chunk"); },
+    cancel(reason) { cancelled = reason; },
+  });
+  const destination = new WritableStream<string>({
+    write() { firstWrite(); },
+    abort(reason) { destinationAbort = reason; },
+  });
+  const controller = new AbortController();
+  const reason = new Error("client closed");
+  const transfer = pipeStream(source, destination, controller.signal);
+
+  await wrote;
+  controller.abort(reason);
+
+  const settled = transfer.then(
+    () => ({ ok: true as const }),
+    (error) => ({ ok: false as const, error }),
+  );
+  const timedOut = Symbol("timed out");
+  const outcome = await Promise.race([
+    settled,
+    new Promise<typeof timedOut>((resolve) => setTimeout(() => resolve(timedOut), 400)),
+  ]);
+  if (outcome === timedOut) {
+    sourceController.close();
+  }
+  const finalOutcome = outcome === timedOut ? await settled : outcome;
+
+  expect(finalOutcome).toEqual({ ok: false, error: reason });
+  expect(cancelled).toBe(reason);
+  expect(destinationAbort).toBe(reason);
+  expect(source.locked).toBe(false);
+  expect(destination.locked).toBe(false);
+});
+
+test("a normal transfer resolves", async () => {
+  const source = new ReadableStream<string>({
+    start(controller) { controller.enqueue("ok"); controller.close(); },
+  });
+  const values: string[] = [];
+  const destination = new WritableStream<string>({
+    write(value) { values.push(value); },
+  });
+
+  await pipeStream(source, destination);
+
+  expect(values).toEqual(["ok"]);
+});

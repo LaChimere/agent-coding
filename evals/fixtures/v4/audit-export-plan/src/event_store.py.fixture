@@ -1,0 +1,10 @@
+def append_event(tx, project_id, event_id, occurred_at, payload):
+    # The counter row lock is held in this transaction through commit.
+    seq = tx.increment_project_counter(project_id)
+    return tx.insert_event(
+        project_id=project_id,
+        event_id=event_id,
+        occurred_at=occurred_at,
+        ingest_seq=seq,
+        payload=payload,
+    )

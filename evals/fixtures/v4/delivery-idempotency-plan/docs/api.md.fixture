@@ -1,0 +1,8 @@
+# Delivery submission
+
+POST /deliveries requires request_id and payload. request_id is stable for a
+producer but is scoped to that producer's tenant; two tenants can use the same
+value. Clients retry for up to 30 days when the response is lost. Delivery
+records are retained for 90 days. The current handler returns the new row's id
+and accepted_at with status 202. The API does not specify behavior when one
+tenant reuses the same request_id with a changed payload.

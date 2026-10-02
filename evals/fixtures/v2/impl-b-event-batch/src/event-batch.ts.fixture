@@ -1,0 +1,17 @@
+export interface LocalEvent {
+  id: string;
+  sequence: number;
+  kind: string;
+}
+
+export function appendUniqueEvents(
+  existing: readonly LocalEvent[],
+  incoming: readonly LocalEvent[],
+): LocalEvent[] {
+  const byId = new Map<string, LocalEvent>();
+  for (const event of [...existing, ...incoming]) {
+    byId.set(event.id, event);
+  }
+
+  return [...byId.values()].sort((left, right) => left.id.localeCompare(right.id));
+}

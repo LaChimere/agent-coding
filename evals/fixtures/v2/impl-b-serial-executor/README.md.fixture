@@ -1,0 +1,3 @@
+# Serial executor
+
+SerialExecutor.run accepts a synchronous or asynchronous callback and returns that callback's result or rejection. Calls are started in submission order, one at a time. A rejection belongs to that call and does not cancel callbacks submitted after it.

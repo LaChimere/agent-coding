@@ -1,0 +1,7 @@
+# Rollout facts
+
+The API is deployed as a rolling set of instances; old and new versions overlap for up to two minutes.
+A per-tenant feature flag is available and is currently off for all tenants.
+PostgreSQL supports CREATE INDEX CONCURRENTLY for the planned GIN label index.
+The team targets p95 below 250 ms for list calls. Database timeouts currently return 503 with a request ID.
+There is no new database, queue, or third-party search dependency in the feature brief.

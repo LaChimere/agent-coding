@@ -1,0 +1,5 @@
+# Settings merger
+
+Run the visible checks with bun test.
+
+The public API is resolveConfig(defaults, file, environment). Each input is a string-keyed settings object. For every key appearing in any input, choose the environment value if it is not undefined, otherwise choose the file value if it is not undefined, otherwise choose the default value. Keep values as supplied, including false, zero, the empty string, and null. If every source supplies undefined for a key, its result is undefined. Do not mutate any input.

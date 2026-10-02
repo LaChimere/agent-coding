@@ -1,0 +1,5 @@
+diff --git a/repo/src/diagnostics.ts b/repo/src/diagnostics.ts
+--- a/repo/src/diagnostics.ts
++++ b/repo/src/diagnostics.ts
+@@ -11,0 +12 @@
++    sample: error.rowText,

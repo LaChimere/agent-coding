@@ -1,0 +1,9 @@
+# Deployment facts
+
+Application versions overlap for up to twenty minutes during rollout; rollback to the prior image remains available for one hour.
+The proposed child table uses policy_id plus ordinal as its primary key and stores the complete rule JSON, so duplicate actions and unknown keys can remain distinct.
+Backfill can run in batches and can be retried using the same policy_id and ordinal key.
+Policy edits continue while backfill runs; no write lock is planned.
+The existing payload column can remain while both old and new application versions are deployed.
+No other service or third-party database is planned.
+Dropping payload would prevent the old image and hourly exporter from reading policies.

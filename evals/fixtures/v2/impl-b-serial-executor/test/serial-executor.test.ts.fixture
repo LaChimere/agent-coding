@@ -1,0 +1,41 @@
+import { expect, test } from "bun:test";
+import { SerialExecutor } from "../src/serial-executor.ts";
+
+test("a rejection belongs to its call and later callbacks still run in order", async () => {
+  const executor = new SerialExecutor();
+  const failure = new Error("callback failed");
+  const order: string[] = [];
+  const first = executor.run(async () => {
+    order.push("first");
+    await Promise.resolve();
+    throw failure;
+  });
+  const second = executor.run(async () => {
+    order.push("second");
+    return "done";
+  });
+  const third = executor.run(() => {
+    order.push("third");
+    return 3;
+  });
+
+  await expect(first).rejects.toBe(failure);
+  await expect(second).resolves.toBe("done");
+  await expect(third).resolves.toBe(3);
+  expect(order).toEqual(["first", "second", "third"]);
+});
+
+test("callbacks do not overlap", async () => {
+  const executor = new SerialExecutor();
+  let active = 0;
+  let maxActive = 0;
+  const run = (label: string) => executor.run(async () => {
+    active += 1;
+    maxActive = Math.max(maxActive, active);
+    await Promise.resolve(label);
+    active -= 1;
+  });
+
+  await Promise.all([run("a"), run("b"), run("c")]);
+  expect(maxActive).toBe(1);
+});

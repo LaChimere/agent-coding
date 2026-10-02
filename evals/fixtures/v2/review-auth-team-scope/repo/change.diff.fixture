@@ -1,0 +1,8 @@
+diff --git a/repo/src/authorization.ts b/repo/src/authorization.ts
+--- a/repo/src/authorization.ts
++++ b/repo/src/authorization.ts
+@@ -12 +12,3 @@
+-  return actor.teamRoles[document.teamId]?.includes('documents:read') === true;
++  return Object.values(actor.teamRoles).some((permissions) =>
++    permissions.includes('documents:read'),
++  );

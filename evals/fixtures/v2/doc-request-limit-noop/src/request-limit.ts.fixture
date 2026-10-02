@@ -1,0 +1,12 @@
+export const REQUEST_BODY_LIMIT_BYTES = 256 * 1024;
+
+export async function createRequest(request: Request, store: JobStore): Promise<Response> {
+  const bytes = new Uint8Array(await request.arrayBuffer());
+  if (bytes.byteLength > REQUEST_BODY_LIMIT_BYTES) {
+    return Response.json({ error: "payload_too_large" }, { status: 413 });
+  }
+  await store.create(bytes);
+  return Response.json({ accepted: true }, { status: 202 });
+}
+
+export interface JobStore { create(bytes: Uint8Array): Promise<void>; }

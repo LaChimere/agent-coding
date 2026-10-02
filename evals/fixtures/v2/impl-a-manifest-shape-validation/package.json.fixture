@@ -1,0 +1,8 @@
+{
+  "name": "impl-a-manifest-shape-validation",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "bun test"
+  }
+}

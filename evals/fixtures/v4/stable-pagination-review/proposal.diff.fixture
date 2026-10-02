@@ -1,0 +1,17 @@
+diff --git a/src/event_query.py b/src/event_query.py
+index e101a17..3b51d61 100644
+--- a/src/event_query.py
++++ b/src/event_query.py
+@@ -4,7 +4,9 @@ def events_page(records, after, limit):
+ def events_page(records, after, limit):
+-    ordered = sorted(records, key=_key)
+-    if after is not None:
+-        ordered = [row for row in ordered if _key(row) > after]
++    eligible = (
++        row for row in records
++        if after is None or _key(row) > after
++    )
++    ordered = sorted(eligible, key=_key)
+     items = ordered[:limit]
+     next_cursor = _key(items[-1]) if len(ordered) > len(items) else None
+     return {"items": items, "next_cursor": next_cursor}

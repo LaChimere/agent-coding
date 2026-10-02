@@ -1,0 +1,20 @@
+export type Settings = Record<string, unknown>;
+
+export function resolveConfig(
+  defaults: Settings,
+  file: Settings,
+  environment: Settings,
+): Settings {
+  const keys = new Set([
+    ...Object.keys(defaults),
+    ...Object.keys(file),
+    ...Object.keys(environment),
+  ]);
+  const result: Settings = {};
+
+  for (const key of keys) {
+    result[key] = environment[key] || file[key] || defaults[key];
+  }
+
+  return result;
+}

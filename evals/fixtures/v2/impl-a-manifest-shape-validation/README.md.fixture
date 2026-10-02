@@ -1,0 +1,5 @@
+# Manifest loading
+
+Run the visible checks with bun test.
+
+The public APIs are parseManifest(text) and loadRegistryManifest(text). Both return the same validated manifest. The JSON value must be an object with a non-empty string version and an entries array. Every entry must be an object with non-empty string id and path fields. Extra fields at the top level and on entries are allowed and must be preserved by both APIs. Malformed JSON must throw an Error whose message identifies JSON syntax. Shape errors must throw an Error whose message includes the failing field path, such as version, entries, or entries[0].path.

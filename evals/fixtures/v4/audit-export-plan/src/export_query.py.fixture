@@ -1,0 +1,9 @@
+def export_page(repository, project_id, start, end, after, limit):
+    rows = repository.events_in_window(project_id, start, end, after=after)
+    rows.sort(key=lambda event: (event.occurred_at, event.event_id))
+    items = rows[:limit]
+    next_cursor = None
+    if len(rows) > len(items):
+        last = items[-1]
+        next_cursor = (last.occurred_at, last.event_id)
+    return {"items": items, "next_cursor": next_cursor}

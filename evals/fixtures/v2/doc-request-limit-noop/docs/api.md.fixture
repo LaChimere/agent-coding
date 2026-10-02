@@ -1,0 +1,3 @@
+# Request size
+
+The request body limit is 256 KiB (262,144 bytes). Bodies larger than the limit receive HTTP 413 with error code payload_too_large before a job is persisted.

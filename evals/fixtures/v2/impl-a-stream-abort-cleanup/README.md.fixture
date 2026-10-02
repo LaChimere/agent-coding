@@ -1,0 +1,5 @@
+# Stream transfer
+
+Run the visible checks with bun test.
+
+The public API is pipeStream(source, destination, signal?). It copies values according to ReadableStream.pipeTo semantics and resolves when a normal transfer completes. When a supplied signal aborts an active transfer, cancel the source, abort the destination with signal.reason, reject with that same reason, and release both stream locks. Without a signal, stream errors propagate and locks are still released.

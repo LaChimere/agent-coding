@@ -1,0 +1,11 @@
+export const objectStoreFacts = {
+  bucket: "shared export bucket",
+  encryption: "server-side encryption enabled",
+  tenantPrefix: true,
+  lifecycleExpiration: null,
+  deleteApi: null,
+} as const;
+
+export async function currentDownload(actor: Actor, entryId: string): Promise<ZipStream> {
+  return downloadExport(actor, entryId, store);
+}

@@ -1,0 +1,15 @@
+import { canReadAudit, type Actor, type AuditRecord } from './audit-access.ts';
+
+export function readAudit(actor: Actor, record: AuditRecord) {
+  if (!canReadAudit(actor, record)) {
+    return { status: 404 as const };
+  }
+  return { status: 200 as const, record };
+}
+
+export function deleteAudit(actor: Actor, record: AuditRecord) {
+  if (actor.organizationId !== record.organizationId || actor.role !== 'owner') {
+    return { status: 404 as const };
+  }
+  return { status: 204 as const };
+}

@@ -1,0 +1,8 @@
+# Rollout facts
+
+The API uses a rolling deployment; old and new instances overlap for up to twenty minutes.
+The existing API uses PostgreSQL and the proposal introduces no new storage or third-party dependency.
+The record-body-field flag is available and currently off.
+Mobile clients may remain offline for 45 days, and no content null backfill is scheduled this quarter.
+If the partner export cannot read content, that night's export fails and is retried the next night.
+The v1 route is used by all three supplied clients.

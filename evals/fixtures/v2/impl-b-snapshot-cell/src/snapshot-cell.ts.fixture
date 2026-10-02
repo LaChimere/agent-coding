@@ -1,0 +1,33 @@
+export type JsonValue =
+  | null
+  | boolean
+  | number
+  | string
+  | JsonValue[]
+  | { [key: string]: JsonValue };
+
+function shallowCopy<T extends JsonValue>(value: T): T {
+  if (Array.isArray(value)) {
+    return [...value] as T;
+  }
+  if (value !== null && typeof value === "object") {
+    return { ...value } as T;
+  }
+  return value;
+}
+
+export class SnapshotCell<T extends JsonValue> {
+  private current: T;
+
+  constructor(value: T) {
+    this.current = shallowCopy(value);
+  }
+
+  replace(value: T): void {
+    this.current = shallowCopy(value);
+  }
+
+  read(): T {
+    return shallowCopy(this.current);
+  }
+}

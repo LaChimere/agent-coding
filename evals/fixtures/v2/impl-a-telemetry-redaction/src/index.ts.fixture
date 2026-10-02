@@ -1,0 +1,28 @@
+const sensitiveKeys = new Set([
+  "authorization",
+  "cookie",
+  "set-cookie",
+  "access_token",
+  "refresh_token",
+  "client_secret",
+  "password",
+]);
+
+export function redactTelemetry<T>(value: T): T {
+  if (value === null || typeof value !== "object" || Array.isArray(value)) {
+    if (Array.isArray(value)) {
+      return value.map((item) => redactTelemetry(item)) as T;
+    }
+
+    return value;
+  }
+
+  const result: Record<string, unknown> = {};
+  for (const [key, child] of Object.entries(value as Record<string, unknown>)) {
+    result[key] = sensitiveKeys.has(key)
+      ? "[redacted]"
+      : child;
+  }
+
+  return result as T;
+}

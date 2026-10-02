@@ -1,0 +1,9 @@
+def events_in_window(database, project_id, start, end, after=None):
+    rows = database.events_for_project(project_id)
+    rows = [row for row in rows if start <= row.occurred_at < end]
+    if after is not None:
+        rows = [
+            row for row in rows
+            if (row.occurred_at, row.event_id) > after
+        ]
+    return rows

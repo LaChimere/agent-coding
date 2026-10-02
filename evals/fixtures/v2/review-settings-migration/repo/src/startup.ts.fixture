@@ -1,0 +1,15 @@
+import { loadSettings, type Settings, type SettingsFiles } from './settings.ts';
+
+export interface StorageRuntime {
+  configure(settings: Settings): Promise<void>;
+}
+
+export async function startStorage(
+  files: SettingsFiles,
+  currentPath: string,
+  legacyPath: string,
+  storage: StorageRuntime,
+): Promise<void> {
+  const settings = await loadSettings(files, currentPath, legacyPath);
+  await storage.configure(settings);
+}

@@ -1,0 +1,16 @@
+export interface RecordV1 {
+  id: string;
+  content: string | null;
+  revision: number;
+}
+
+export function serializeV1(row: RecordRow): RecordV1 {
+  return { id: row.id, content: row.contentText, revision: row.revision };
+}
+
+export const apiFacts = {
+  route: "GET /v1/records/:id",
+  omittedContentValue: null,
+  unknownFields: "older clients ignore them",
+  v1RequiredFieldRemoval: "breaking",
+} as const;

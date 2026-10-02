@@ -1,0 +1,14 @@
+from pagination import page_events
+
+
+def list_events(records, cursor, limit):
+    after = None if cursor is None else (cursor["created_at"], cursor["id"])
+    page = page_events(records, after, limit)
+    next_cursor = page["next_cursor"]
+    return {
+        "events": page["items"],
+        "next_cursor": None if next_cursor is None else {
+            "created_at": next_cursor[0],
+            "id": next_cursor[1],
+        },
+    }

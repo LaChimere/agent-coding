@@ -1,0 +1,11 @@
+export const schemaFacts = {
+  database: "PostgreSQL 15",
+  table: "policy_sets",
+  payloadColumn: "payload JSONB",
+  rowCount: 4000000,
+  oldFieldCanBeKeptDuringMigration: true,
+  indexCreation: "CREATE INDEX CONCURRENTLY supported",
+} as const;
+
+export const normalizedRuleKey = ["policy_id", "ordinal"] as const;
+export const actionIndexIsNonUnique = true;

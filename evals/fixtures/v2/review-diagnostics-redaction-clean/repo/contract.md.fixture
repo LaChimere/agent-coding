@@ -1,0 +1,3 @@
+# Connector failure event contract
+
+A connector failure event may contain the operation ID, a stable failure code, and whether retrying is appropriate. Endpoint URLs and backend error messages can contain customer-specific names, paths, query values, or response text, so they must not be written to this diagnostic event. The caller may continue to propagate the original error to its own caller.

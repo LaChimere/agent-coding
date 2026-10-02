@@ -1,0 +1,20 @@
+export class RowParseError extends Error {
+  constructor(
+    readonly lineNumber: number,
+    readonly rowText: string,
+  ) {
+    super('Expected a different number of cells on line ' + lineNumber);
+  }
+}
+
+export function parseRecords(contents: string): string[][] {
+  const rows = contents.trimEnd().split(/\r?\n/u);
+  const width = rows[0]?.split(',').length ?? 0;
+  return rows.map((row, index) => {
+    const cells = row.split(',');
+    if (cells.length !== width) {
+      throw new RowParseError(index + 1, row);
+    }
+    return cells;
+  });
+}

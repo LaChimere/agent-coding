@@ -1,0 +1,26 @@
+export class TimeBudget {
+  private readonly durationMs: number;
+  private readonly startedAtMs: number;
+  private readonly now: () => number;
+
+  constructor(durationMs: number, now: () => number) {
+    if (!Number.isFinite(durationMs) || durationMs < 0) {
+      throw new RangeError("durationMs must be finite and nonnegative");
+    }
+    if (typeof now !== "function") {
+      throw new TypeError("now must be a function");
+    }
+
+    this.durationMs = durationMs;
+    this.now = now;
+    this.startedAtMs = Date.now();
+  }
+
+  remainingMs(): number {
+    return Math.max(0, this.durationMs - (Date.now() - this.startedAtMs));
+  }
+
+  isExpired(): boolean {
+    return this.remainingMs() === 0;
+  }
+}

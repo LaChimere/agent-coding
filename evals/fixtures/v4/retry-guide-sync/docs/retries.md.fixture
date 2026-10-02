@@ -1,0 +1,5 @@
+# Delivery retries
+
+Every failed delivery is retried. The first retry waits one second, and each
+later attempt doubles the delay. Delays stop growing after five minutes.
+Permanent failures are scheduled again at the five-minute limit.

@@ -1,0 +1,13 @@
+export interface PolicyV3 { id: string; rules: Rule[]; revision: number; }
+export interface Rule { action: string; [key: string]: unknown; }
+
+export function responseFromPayload(row: PolicyRow): PolicyV3 {
+  return { id: row.id, rules: row.payload, revision: row.revision };
+}
+
+export const contractFacts = {
+  maximumRules: 100,
+  ruleOrderIsSignificant: true,
+  duplicateActionsAllowed: true,
+  unknownRuleKeysPreserved: true,
+} as const;

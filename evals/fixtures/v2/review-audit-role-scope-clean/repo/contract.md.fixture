@@ -1,0 +1,3 @@
+# Audit access contract
+
+An owner or auditor may read audit records in their own organization. Organization scope is required for every read. Only an owner may delete or otherwise mutate an audit record. The read and delete routes enforce their respective checks.

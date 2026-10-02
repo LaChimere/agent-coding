@@ -1,0 +1,9 @@
+export const DEFAULT_LIMIT = 25;
+
+export function parseLimit(raw?: string): number {
+  const value = raw === undefined ? DEFAULT_LIMIT : Number(raw);
+  if (!Number.isSafeInteger(value) || value < 0) {
+    throw new Error('limit must be a non-negative integer');
+  }
+  return value || DEFAULT_LIMIT;
+}

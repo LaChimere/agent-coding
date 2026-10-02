@@ -1,0 +1,9 @@
+{
+  "name": "injected-time-budget",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "bun test"
+  },
+  "dependencies": {}
+}

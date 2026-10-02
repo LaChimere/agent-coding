@@ -1,0 +1,45 @@
+import { expect, test } from "bun:test";
+import { OperationQueue } from "../src/operation-queue.ts";
+
+test("successful changes are saved and keep FIFO order", async () => {
+  const writes: string[][] = [];
+  const queue = new OperationQueue([{ id: "a", payload: "build" }], {
+    async save(entries) {
+      writes.push(entries.map((entry) => entry.id));
+    },
+  });
+
+  await queue.enqueue({ id: "b", payload: "test" });
+  expect(writes).toEqual([["a", "b"]]);
+  expect(queue.list().map((entry) => entry.id)).toEqual(["a", "b"]);
+  expect(await queue.remove("a")).toBe(true);
+  expect(queue.list().map((entry) => entry.id)).toEqual(["b"]);
+  expect(writes).toEqual([["a", "b"], ["b"]]);
+});
+
+test("failed enqueue and removal leave visible entries unchanged", async () => {
+  const seed = [{ id: "a", payload: "build" }, { id: "b", payload: "test" }];
+  const failure = new Error("journal unavailable");
+  const queue = new OperationQueue(seed, {
+    async save() {
+      throw failure;
+    },
+  });
+
+  await expect(queue.enqueue({ id: "c", payload: "publish" })).rejects.toBe(failure);
+  expect(queue.list()).toEqual(seed);
+  await expect(queue.remove("a")).rejects.toBe(failure);
+  expect(queue.list()).toEqual(seed);
+});
+
+test("an unknown id does not trigger a journal write", async () => {
+  let writes = 0;
+  const queue = new OperationQueue([], {
+    async save() {
+      writes += 1;
+    },
+  });
+
+  expect(await queue.remove("unknown")).toBe(false);
+  expect(writes).toBe(0);
+});

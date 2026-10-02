@@ -1,0 +1,36 @@
+export interface Lease {
+  id: string;
+  expiresAtMs: number;
+}
+
+export interface LeaseRepository {
+  save(lease: Lease): Promise<void>;
+  loadAll(): Promise<Lease[]>;
+  deleteExpiredAtOrBefore(epochMs: number): Promise<number>;
+}
+
+interface Database {
+  execute(sql: string, ...values: (string | number)[]): Promise<void>;
+  query(sql: string): Promise<{ id: string; expires_at_ms: number }[]>;
+}
+
+export function createLeaseRepository(database: Database): LeaseRepository {
+  return {
+    async save(lease) {
+      // Durable storage keeps the numeric timestamp as supplied.
+      await database.execute(
+        "INSERT INTO leases (id, expires_at_ms) VALUES (?, ?)",
+        lease.id,
+        lease.expiresAtMs,
+      );
+    },
+    async loadAll() {
+      const rows = await database.query("SELECT id, expires_at_ms FROM leases");
+      return rows.map((row) => ({ id: row.id, expiresAtMs: row.expires_at_ms }));
+    },
+    async deleteExpiredAtOrBefore(epochMs) {
+      await database.execute("DELETE FROM leases WHERE expires_at_ms <= ?", epochMs);
+      return 0;
+    },
+  };
+}

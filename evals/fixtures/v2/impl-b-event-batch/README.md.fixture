@@ -1,0 +1,5 @@
+# Event batch extension
+
+appendUniqueEvents receives the current event history and a newly read batch. Each event has a string id, numeric sequence and string kind. It returns a new array containing the first event for each id encountered while scanning the current history followed by the batch. It preserves that first-seen order and does not mutate either input array. Event ids are opaque strings.
+
+EventReplayReader.append adds a chunk using the same rules across successive calls. list returns the current replay history in order.

@@ -1,0 +1,36 @@
+export type ReportFormat = "text" | "json";
+
+export interface ReportOptions {
+  format: ReportFormat;
+  maxItems: number;
+  dryRun: boolean;
+}
+
+export function parseReportOptions(args: readonly string[]): ReportOptions {
+  const options: ReportOptions = {
+    format: "text",
+    maxItems: 100,
+    dryRun: false,
+  };
+
+  for (let index = 0; index < args.length; index += 1) {
+    const argument = args[index];
+    if (argument === "--format") {
+      options.format = args[index + 1] as ReportFormat;
+      index += 1;
+      continue;
+    }
+
+    if (argument === "--max-items") {
+      options.maxItems = Number(args[index + 1]);
+      index += 1;
+      continue;
+    }
+
+    if (argument === "--dry-run") {
+      options.dryRun = true;
+    }
+  }
+
+  return options;
+}

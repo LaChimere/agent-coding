@@ -1,0 +1,16 @@
+import { parseReportOptions } from "./options.ts";
+
+export interface PreparedReport {
+  output: string;
+  dryRun: boolean;
+}
+
+export function prepareReport(args: readonly string[], rows: readonly string[]): PreparedReport {
+  const options = parseReportOptions(args);
+  const selected = rows.slice(0, options.maxItems);
+  const output = options.format === "json"
+    ? JSON.stringify(selected)
+    : selected.join("\n");
+
+  return { output, dryRun: options.dryRun };
+}

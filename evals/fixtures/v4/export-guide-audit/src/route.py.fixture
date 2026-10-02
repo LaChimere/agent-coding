@@ -1,0 +1,28 @@
+from export_query import page_events
+
+
+def encode_cursor(cursor):
+    if cursor is None:
+        return None
+    return f"{cursor[0]}:{cursor[1]}"
+
+
+def decode_cursor(value):
+    if value is None:
+        return None
+    occurred_at, row_id = value.split(":", 1)
+    return int(occurred_at), row_id
+
+
+def get_export(query, rows):
+    project_id = query["project_id"]
+    start = int(query["from"])
+    end = int(query["to"])
+    limit = None if "limit" not in query else int(query["limit"])
+    cursor = decode_cursor(query.get("cursor"))
+    page = page_events(rows, project_id, start, end, cursor, limit)
+    next_cursor = page["next_cursor"]
+    return {
+        "items": page["items"],
+        "next_cursor": None if next_cursor is None else encode_cursor(next_cursor),
+    }

@@ -1,0 +1,9 @@
+CREATE TABLE deliveries (
+    id BIGSERIAL PRIMARY KEY,
+    tenant_id TEXT NOT NULL,
+    request_id TEXT NOT NULL,
+    payload JSONB NOT NULL,
+    accepted_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+    status TEXT NOT NULL DEFAULT 'pending'
+);
+CREATE INDEX deliveries_pending ON deliveries(status) WHERE status = 'pending';

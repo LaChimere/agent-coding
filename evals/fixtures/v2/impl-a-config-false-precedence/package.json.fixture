@@ -1,0 +1,8 @@
+{
+  "name": "impl-a-config-false-precedence",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "bun test"
+  }
+}

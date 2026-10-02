@@ -1,0 +1,18 @@
+export interface Invocation {
+  command: string;
+  args: string[];
+}
+
+export function buildInvocation(
+  executable: string,
+  options: readonly string[],
+  paths: readonly string[],
+): Invocation {
+  return {
+    command: executable,
+    args: [
+      ...options,
+      ...paths.map((path) => "'" + path + "'"),
+    ],
+  };
+}

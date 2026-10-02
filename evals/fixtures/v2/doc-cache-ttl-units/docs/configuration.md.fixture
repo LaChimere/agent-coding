@@ -1,0 +1,4 @@
+# Cache configuration
+
+CACHE_TTL_MS is a millisecond value. It defaults to 900000 and accepts values from 1000 through 86400000.
+The expiry timer is reset whenever an entry is read.

@@ -1,0 +1,6 @@
+diff --git a/repo/src/receive.ts b/repo/src/receive.ts
+--- a/repo/src/receive.ts
++++ b/repo/src/receive.ts
+@@ -20 +20 @@
+-        throw new Error('upload cancelled');
++        return { status: 'cancelled' as const };

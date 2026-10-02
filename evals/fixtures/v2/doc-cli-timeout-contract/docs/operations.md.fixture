@@ -1,0 +1,5 @@
+# Operator stop procedure
+
+Use --timeout 45 to wait for a worker to drain; this value is in milliseconds and defaults to 45.
+The old --grace-period-ms option is still accepted.
+When the timeout is reached, the supervisor sends SIGKILL so the worker cannot remain active.

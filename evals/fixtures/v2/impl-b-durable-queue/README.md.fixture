@@ -1,0 +1,3 @@
+# Durable operation queue
+
+OperationQueue stores FIFO entries with string id and payload fields. QueueJournal.save receives the complete proposed FIFO snapshot. enqueue appends an entry, and remove deletes the first matching id. A successful save makes that state visible. A rejected save is returned to the caller as the same error and leaves the previously visible queue unchanged. Removing an unknown id returns false without saving. list returns the current FIFO entries.

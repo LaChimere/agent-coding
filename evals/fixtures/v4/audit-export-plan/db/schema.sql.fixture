@@ -1,0 +1,14 @@
+CREATE TABLE project_event_counters (
+    project_id TEXT PRIMARY KEY,
+    last_committed_seq BIGINT NOT NULL
+);
+
+CREATE TABLE events (
+    project_id TEXT NOT NULL,
+    event_id TEXT NOT NULL,
+    occurred_at BIGINT NOT NULL,
+    ingest_seq BIGINT NOT NULL,
+    payload JSONB NOT NULL,
+    PRIMARY KEY (project_id, event_id),
+    UNIQUE (project_id, ingest_seq)
+);

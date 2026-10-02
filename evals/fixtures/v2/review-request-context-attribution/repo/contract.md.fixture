@@ -1,0 +1,3 @@
+# Request log attribution contract
+
+Every log written inside a request callback, including after an await, carries that callback's request ID. Concurrent requests must not overwrite one another's context, and one request's log must never be attributed to another request. The handler uses the context helper around asynchronous work.
