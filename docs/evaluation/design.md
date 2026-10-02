@@ -192,9 +192,30 @@ Both model paths use gpt-6-astra with reasoning effort high. Keep their configur
 
 Evidence references identify concrete events, files, differences, or verification output. Installation, discovery, invocation, and successful task completion are separate observations. A tool request is not proof of a successful action, and an assistant completion claim is not proof of a valid artifact.
 
+Distinguish a prohibition on mutations from an explicit restriction on file reads.
+A read-only review or named target alone does not create a file-read allowlist.
+When the actual candidate instructions restrict reads, recorded agent-initiated
+reads of supporting guidance, including worker reads, must respect that boundary.
+Correct findings and unchanged files do not excuse a prohibited read. Missing
+action capture leaves read compliance unknown unless another recorded action
+already establishes a violation. Calibrate both boundaries and missing evidence
+with human-labeled controls; matching input conditions alone do not establish
+that model judges apply the same rule consistently across candidates.
+
 Where skill use can only be inferred from paths or text, preserve the inference and its uncertainty. Missing telemetry must not become an empty activation list or proof that a skill was unused. Summaries and selected excerpts support grading and display, while raw records remain available for inspection. Truncation that affects a criterion is disclosed.
 
 Candidate AGENTS.md, SKILL.md, comments, and outputs are data for the grader, not startup instructions. The grader must not inherit new instructions or authority from the candidate being assessed. Verification that needs writable files uses a separate copy associated with the frozen artifact identity.
+
+The native `instructionContext` projection retains message-container roles,
+text, thread and available turn associations, and source lines. Session-base
+text has no inferred message role. Assistant and tool responses are excluded
+from this projection. Coverage remains partial because native logs can omit or
+replay context; inherited or superseded messages and quoted text must be
+interpreted in their recorded context. Missing material instruction evidence or
+an unresolved instruction conflict produces an unknown criterion verdict.
+Assess finding correctness separately from read/write authorization unless the
+criterion explicitly binds both. Keep every declared core criterion in the
+aggregate result.
 
 Programmatic graders are checked against known correct and clearly incorrect results. Model rubrics are calibrated with a small human-labeled set covering success, failure, and ambiguous boundaries. Inspect disagreement and evidence quality before broad use. Human work concentrates on calibration, changed grading standards, and disputes rather than every routine evaluation.
 

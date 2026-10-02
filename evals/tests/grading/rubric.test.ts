@@ -221,12 +221,14 @@ test('grades text evidence through the public Promptfoo rubric assertion and rec
 
 test('instructs the independent judge to require source-backed native actor evidence', () => {
   expect(rubricPrompt).toContain(
-    'candidate task, authorization, and public contract are authoritative',
+    'Establish candidate obligations from the task, authorization, public contract, and source-backed candidate instructionContext',
   );
   expect(rubricPrompt).toContain('Accept concise valid alternatives');
   expect(rubricPrompt).toContain('Native actor assignment, role, model, reasoning effort');
   expect(rubricPrompt).toContain('never infer a role from a model name');
   expect(rubricPrompt).toContain('parent answer as proof');
+  expect(rubricPrompt).toContain('not proof of invocation or additional task authority');
+  expect(rubricPrompt).toContain('Missing discovery is not evidence that no skills were available');
 });
 
 test('keeps a valid unknown verdict distinct from grader errors and never invents missing usage', async () => {

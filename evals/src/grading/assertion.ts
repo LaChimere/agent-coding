@@ -1,11 +1,16 @@
 import { randomUUID } from 'node:crypto';
-import { mkdir } from 'node:fs/promises';
+import { lstat, mkdir } from 'node:fs/promises';
 import { isAbsolute, resolve } from 'node:path';
 import type { AssertionValueFunctionContext, GradingResult } from 'promptfoo';
 import { collectEvidence, objectRecord, readProtocol } from '../codex/evidence.ts';
 import type { ICaseAssertion, ICaseMetadata, ILoadedCase } from '../corpus/cases.ts';
 import { resolveAuthentication } from '../preparation/authentication.ts';
-import { inventoryDirectory, writeJsonRecord } from '../preparation/snapshot.ts';
+import {
+  containedPath,
+  contentHash,
+  inventoryDirectory,
+  writeJsonRecord,
+} from '../preparation/snapshot.ts';
 import type {
   IPlannedTrial,
   IRunManifest,
@@ -23,6 +28,159 @@ let runSignal: AbortSignal | undefined;
 /** A fresh run worker supplies its manual cancellation signal to public assertion callbacks. */
 export function setGradingSignal(signal: AbortSignal | undefined): void {
   runSignal = signal;
+}
+
+interface ISkillDiscoveryEvidence {
+  status: 'observed' | 'unknown';
+  source: string;
+  sha256: string | null;
+  skills: { name: string; description: string; source: string }[] | null;
+  reason: string | null;
+}
+
+async function savedPreparation(runDirectory: string, trialId: string) {
+  const source = `trials/${trialId}/native/preparation.json`;
+  try {
+    const path = containedPath(runDirectory, source);
+    if (!(await lstat(path)).isFile()) {
+      return null;
+    }
+    const bytes = await Bun.file(path).bytes();
+    const prepared = objectRecord(JSON.parse(new TextDecoder().decode(bytes)));
+    const { status } = prepared ?? {};
+    if (prepared === undefined || status !== 'ready') {
+      return null;
+    }
+    return { source, sha256: contentHash(bytes), prepared };
+  } catch {
+    return null;
+  }
+}
+
+/** Saved native discovery is capability evidence, not evidence of skill invocation. */
+async function skillDiscoveryEvidence(
+  runDirectory: string,
+  trialId: string,
+): Promise<ISkillDiscoveryEvidence> {
+  const source = `trials/${trialId}/native/preparation.json`;
+  const unknown: ISkillDiscoveryEvidence = {
+    status: 'unknown',
+    source,
+    sha256: null,
+    skills: null,
+    reason: 'Saved native skill discovery is missing or invalid.',
+  };
+
+  try {
+    const saved = await savedPreparation(runDirectory, trialId);
+    if (saved === null) {
+      return unknown;
+    }
+    const { discovery } = saved.prepared;
+    const { skills: listed } = objectRecord(discovery) ?? {};
+    const { data } = objectRecord(listed) ?? {};
+    if (!Array.isArray(data)) {
+      return unknown;
+    }
+
+    const skills: NonNullable<ISkillDiscoveryEvidence['skills']> = [];
+    const names = new Set<string>();
+    for (const [entryIndex, entry] of data.entries()) {
+      const { skills: entries, errors } = objectRecord(entry) ?? {};
+      if (!Array.isArray(entries) || !Array.isArray(errors) || errors.length !== 0) {
+        return unknown;
+      }
+
+      for (const [skillIndex, skill] of entries.entries()) {
+        const { enabled, name, description } = objectRecord(skill) ?? {};
+        if (typeof enabled !== 'boolean') {
+          return unknown;
+        }
+        if (!enabled) {
+          continue;
+        }
+        if (
+          typeof name !== 'string' ||
+          name.trim().length === 0 ||
+          typeof description !== 'string' ||
+          names.has(name)
+        ) {
+          return unknown;
+        }
+
+        names.add(name);
+        skills.push({
+          name,
+          description,
+          source: `${source}#/discovery/skills/data/${entryIndex}/skills/${skillIndex}`,
+        });
+      }
+    }
+
+    return { status: 'observed', source, sha256: saved.sha256, skills, reason: null };
+  } catch {
+    return unknown;
+  }
+}
+
+async function gitBaselineEvidence(
+  runDirectory: string,
+  trialId: string,
+  declared: readonly string[] | undefined,
+  fixtureTargets: readonly string[],
+) {
+  if (declared === undefined) {
+    return { status: 'not-declared' };
+  }
+  const unknown = {
+    status: 'unknown',
+    source: `trials/${trialId}/native/preparation.json#/probes/git/baseline`,
+    reason: 'Saved initial Git baseline is missing or does not match the declared fixture paths.',
+  };
+  const saved = await savedPreparation(runDirectory, trialId);
+  const { probes, conditions } = saved?.prepared ?? {};
+  const { git } = objectRecord(probes) ?? {};
+  const { baseline } = objectRecord(git) ?? {};
+  const { files, commit, tree, observed } = objectRecord(baseline) ?? {};
+  const {
+    head,
+    tree: observedTree,
+    trackedFiles,
+    untrackedFiles,
+    trackedWorktreeClean,
+  } = objectRecord(observed) ?? {};
+  const { gitBaseline: requested } = objectRecord(conditions) ?? {};
+  const samePaths = (paths: unknown, expected: readonly string[]): boolean =>
+    Array.isArray(paths) &&
+    paths.every((path) => typeof path === 'string') &&
+    JSON.stringify([...paths].sort()) === JSON.stringify([...expected].sort());
+  const remainingFiles = fixtureTargets.filter((path) => !declared.includes(path));
+  const hash = /^(?:[\da-f]{40}|[\da-f]{64})$/u;
+  if (
+    saved === null ||
+    !samePaths(files, declared) ||
+    !samePaths(requested, declared) ||
+    !samePaths(trackedFiles, declared) ||
+    !samePaths(untrackedFiles, remainingFiles) ||
+    head !== commit ||
+    observedTree !== tree ||
+    trackedWorktreeClean !== true ||
+    typeof commit !== 'string' ||
+    typeof tree !== 'string' ||
+    !hash.test(commit) ||
+    !hash.test(tree)
+  ) {
+    return unknown;
+  }
+  return {
+    status: 'observed',
+    source: unknown.source,
+    sha256: saved.sha256,
+    files,
+    commit,
+    tree,
+    observed: { head, tree: observedTree, trackedFiles, untrackedFiles, trackedWorktreeClean },
+  };
 }
 
 export async function gradeCriterion(input: {
@@ -172,24 +330,28 @@ export async function gradeCriterion(input: {
           actorRelations,
           conversation,
           toolRecords: savedToolRecords,
+          instructionContext: savedInstructionContext,
         } = objectRecord(evidence) ?? {};
 
         // Regrading can enrich projections from retained raw records without changing a trial.
         const rootThread = result.threadIds[0];
 
-        const toolRecords =
-          savedToolRecords ??
-          (result.protocolPath !== null && rootThread !== undefined
-            ? (
-                await collectEvidence(
-                  await readProtocol(resolve(input.runDirectory, result.protocolPath)),
-                  rootThread,
-                  result.protocolPath,
-                  resolve(input.runDirectory, 'trials', result.id, 'native/home/.codex'),
-                  Object.values(credentials),
-                )
-              ).toolRecords
-            : null);
+        const recoveredEvidence =
+          (savedToolRecords === undefined || savedInstructionContext === undefined) &&
+          result.protocolPath !== null &&
+          rootThread !== undefined
+            ? await collectEvidence(
+                await readProtocol(resolve(input.runDirectory, result.protocolPath)),
+                rootThread,
+                result.protocolPath,
+                resolve(input.runDirectory, 'trials', result.id, 'native/home/.codex'),
+                Object.values(credentials),
+              )
+            : null;
+
+        const toolRecords = savedToolRecords ?? recoveredEvidence?.toolRecords ?? null;
+        const instructionContext =
+          savedInstructionContext ?? recoveredEvidence?.instructionContext ?? null;
 
         const rubricEvidence = JSON.stringify({
           task: input.case.definition.vars.task,
@@ -200,11 +362,19 @@ export async function gradeCriterion(input: {
           authorization: input.case.definition.metadata.authorization.scope,
           executionStatus: result.status,
           executionConditions: input.initialMetadata.execution,
+          skillDiscovery: await skillDiscoveryEvidence(input.runDirectory, trial.id),
+          gitBaseline: await gitBaselineEvidence(
+            input.runDirectory,
+            trial.id,
+            input.initialMetadata.execution.gitBaseline,
+            input.initialMetadata.fixture.map((binding) => binding.target),
+          ),
           errors: result.errors,
           output: result.output,
           outputReference: `trials/${trial.id}/result.json#output`,
           items,
           toolRecords,
+          instructionContext,
           actors: Array.isArray(savedActors)
             ? savedActors.map((value: unknown) => {
                 const {

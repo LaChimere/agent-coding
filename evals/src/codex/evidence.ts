@@ -16,6 +16,21 @@ export interface INativeConversationMessage {
   source: string;
 }
 
+export interface INativeInstructionContext {
+  /** Rollouts may omit or replay context. This is not a complete instruction stack. */
+  coverage: 'partial';
+  reason: string;
+  entries: {
+    threadId: string;
+    turnId: string | null;
+    kind: 'session-base' | 'role-message';
+    /** Session metadata does not declare a message role. */
+    role: 'system' | 'developer' | 'user' | null;
+    content: string;
+    source: string;
+  }[];
+}
+
 export interface INativeActorEvidence {
   threadId: string;
   parentThreadId: string | null;
@@ -51,6 +66,7 @@ export interface INativeEvidence {
     source: string;
   }[];
   actors: INativeActorEvidence[];
+  instructionContext: INativeInstructionContext;
   conversation: INativeConversationMessage[];
   actorRelations: { parentThreadId: string; childThreadId: string; source: string }[];
   /** The root thread is first; remaining entries include observed worker threads. */
@@ -99,7 +115,7 @@ export function projectEvidence(
   records: readonly ICodexTransportRecord[],
   rootThreadId: string,
   source: string,
-): Omit<INativeEvidence, 'actors' | 'toolRecords'> {
+): Omit<INativeEvidence, 'actors' | 'toolRecords' | 'instructionContext'> {
   const items = new Map<string, IEvidenceItem>();
   const threads = new Set([rootThreadId]);
   const turns = new Set<string>();
@@ -234,6 +250,12 @@ export async function collectEvidence(
 
   const actors = new Map<string, INativeActorEvidence>();
   const toolRecords: INativeEvidence['toolRecords'] = [];
+  const instructionContext: INativeInstructionContext = {
+    coverage: 'partial',
+    reason:
+      'Observed native session context only. Role labels describe message containers, not the authority of quoted text. Messages may be inherited or superseded; null turn IDs have no established live-turn association. Session-base role and instruction-stack completeness are unknown.',
+    entries: [],
+  };
 
   for (const threadId of projection.threadIds) {
     actors.set(threadId, {
@@ -325,6 +347,19 @@ export async function collectEvidence(
           const agentNickname = firstText(field(context, 'agent_nickname'));
           const provider = firstText(modelProvider);
           const parentThreadId = firstText(field(threadSpawn, 'parent_thread_id'));
+          const baseInstructions = objectRecord(field(context, 'base_instructions'));
+          const baseText = firstText(field(baseInstructions, 'text'));
+
+          if (baseText !== null) {
+            instructionContext.entries.push({
+              threadId: owner,
+              turnId: null,
+              kind: 'session-base',
+              role: null,
+              content: String(redactEvidence(baseText, secrets)),
+              source: evidenceSource,
+            });
+          }
 
           actor.contexts.push({
             source: evidenceSource,
@@ -364,6 +399,28 @@ export async function collectEvidence(
           const { type: itemType, internal_chat_message_metadata_passthrough: metadata } = context;
           const { turn_id: declaredTurn } = objectRecord(metadata) ?? {};
           const toolTurn = typeof declaredTurn === 'string' ? declaredTurn : currentTurn;
+          const messageRole = field(context, 'role');
+
+          if (
+            actor !== undefined &&
+            itemType === 'message' &&
+            (messageRole === 'system' || messageRole === 'developer' || messageRole === 'user')
+          ) {
+            const content = messageContent(context);
+            if (content !== null) {
+              instructionContext.entries.push({
+                threadId: owner,
+                turnId:
+                  typeof declaredTurn === 'string' && liveTurns.get(owner)?.has(declaredTurn)
+                    ? declaredTurn
+                    : null,
+                kind: 'role-message',
+                role: messageRole,
+                content: String(redactEvidence(content, secrets)),
+                source: evidenceSource,
+              });
+            }
+          }
           if (
             typeof itemType === 'string' &&
             [
@@ -444,6 +501,7 @@ export async function collectEvidence(
     ...projection,
     actors: [...actors.values()],
     toolRecords,
+    instructionContext,
   };
 }
 
