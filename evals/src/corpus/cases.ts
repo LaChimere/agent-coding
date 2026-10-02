@@ -35,7 +35,13 @@ export interface ICaseMetadata {
   provenance: { source: string; group: string };
   requirements: IRequirement[];
   fixture: { source: string; target: string }[];
-  execution: { networkAccess: boolean; pathPrepend: string[]; executableFiles: string[] };
+  execution: {
+    networkAccess: boolean;
+    pathPrepend: string[];
+    executableFiles: string[];
+    /** Fixture paths tracked in a disposable initial commit; omission keeps the legacy empty repo. */
+    gitBaseline?: string[];
+  };
   reference: string;
   requiredSkills: string[];
   turns: { when: 'after-turn' | 'user-input'; match: string; reply: string }[];
@@ -296,11 +302,11 @@ export function parseCase(value: unknown): IRepositoryCase {
 
   const conditions = knownFields(
     execution,
-    ['networkAccess', 'pathPrepend', 'executableFiles'],
+    ['networkAccess', 'pathPrepend', 'executableFiles', 'gitBaseline'],
     'execution conditions',
   );
 
-  const { networkAccess, pathPrepend, executableFiles } = conditions;
+  const { networkAccess, pathPrepend, executableFiles, gitBaseline } = conditions;
 
   const files = array(fixture, 'fixture').map((item) => {
     const { source, target } = table(item, 'fixture file');
@@ -313,6 +319,13 @@ export function parseCase(value: unknown): IRepositoryCase {
 
   if (new Set(files.map((file) => file.target)).size !== files.length) {
     throw new Error('Duplicate fixture target.');
+  }
+
+  const baselineFiles = gitBaseline === undefined ? undefined : paths(gitBaseline, 'Git baseline');
+  for (const path of baselineFiles ?? []) {
+    if (path.split(/[\\/]/u).includes('.git') || !files.some((file) => file.target === path)) {
+      throw new Error(`Git baseline must name a declared fixture target outside .git: ${path}`);
+    }
   }
 
   const replies = array(turns, 'scripted turns').map((item) => {
@@ -378,6 +391,7 @@ export function parseCase(value: unknown): IRepositoryCase {
         networkAccess: boolean(networkAccess, 'networkAccess'),
         pathPrepend: paths(pathPrepend, 'PATH entries'),
         executableFiles: paths(executableFiles, 'executable files'),
+        ...(baselineFiles === undefined ? {} : { gitBaseline: baselineFiles }),
       },
       reference: text(reference, 'reference', true),
       requiredSkills: strings(requiredSkills, 'required skills'),

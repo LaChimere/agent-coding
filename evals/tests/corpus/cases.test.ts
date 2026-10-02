@@ -79,6 +79,34 @@ test('sends authorization with the task without leaking grading guidance or futu
   expect(promptfooCase(source, '/project')).toMatchObject({ vars: { task: prompt } });
 });
 
+test('Git baselines name only declared fixture targets and remain optional for old cases', () => {
+  const source = definition();
+  expect(Object.hasOwn(parseCase(source).metadata.execution, 'gitBaseline')).toBeFalse();
+  source.metadata.fixture = [{ source: 'input.fixture', target: 'src/input.ts' }];
+  source.metadata.execution.gitBaseline = ['src/input.ts'];
+
+  expect(parseCase(source).metadata.execution.gitBaseline).toEqual(['src/input.ts']);
+  source.metadata.execution.gitBaseline = [];
+  expect(parseCase(source).metadata.execution.gitBaseline).toEqual([]);
+
+  for (const baseline of [['missing.ts'], ['../outside'], ['src/input.ts', 'src/input.ts']]) {
+    source.metadata.execution.gitBaseline = baseline;
+    expect(() => parseCase(source)).toThrow();
+  }
+  source.metadata.fixture = [{ source: 'config.fixture', target: '.git/config' }];
+  source.metadata.execution.gitBaseline = ['.git/config'];
+  expect(() => parseCase(source)).toThrow('outside .git');
+  expect(() =>
+    parseCase({
+      ...source,
+      metadata: {
+        ...source.metadata,
+        execution: { ...source.metadata.execution, gitBaseline: 'all' },
+      },
+    }),
+  ).toThrow('must be an array');
+});
+
 test('rejects ungraded requirements, missing core checks and duplicate criteria', () => {
   const noCore = definition();
 
@@ -194,6 +222,29 @@ test('refuses missing fixtures and graders', async () => {
   await expect(loadCases(root, { caseRoot: 'cases', fixtureRoot: 'fixtures' })).rejects.toThrow(
     'Missing grader',
   );
+});
+
+test('changing the Git fixture baseline changes execution identity while legacy parsing stays stable', async () => {
+  const root = await mkdtemp(resolve('.cache/cases-git-test-'));
+  try {
+    const source = definition();
+    source.metadata.fixture = [{ source: 'input.fixture', target: 'src/input.ts' }];
+    await Bun.write(resolve(root, 'src/grader.ts'), 'export default () => true;');
+    await Bun.write(resolve(root, 'fixtures/input.fixture'), 'export const value = 1;');
+    await Bun.write(resolve(root, 'cases/example.json'), JSON.stringify([source]));
+
+    const before = (await loadCases(root, { caseRoot: 'cases', fixtureRoot: 'fixtures' }))[0];
+    expect(before?.definition.metadata.execution).toEqual(source.metadata.execution);
+
+    source.metadata.execution.gitBaseline = ['src/input.ts'];
+    await Bun.write(resolve(root, 'cases/example.json'), JSON.stringify([source]));
+    const after = (await loadCases(root, { caseRoot: 'cases', fixtureRoot: 'fixtures' }))[0];
+
+    expect(after?.executionVersion).not.toBe(before?.executionVersion);
+    expect(after?.version).not.toBe(before?.version);
+  } finally {
+    await rm(root, { recursive: true });
+  }
 });
 
 test('moving fixture storage preserves execution identity when target, bytes and mode remain equal', async () => {

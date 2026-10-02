@@ -10,6 +10,7 @@ import {
   parseConfig,
   runtimeEnvironment,
 } from './config.ts';
+import { initializeFixtureGit } from './git.ts';
 import { containedPath, type ISnapshot, inventoryDirectory, writeJsonRecord } from './snapshot.ts';
 import { resolveRuntimeTools } from './tools.ts';
 
@@ -22,6 +23,7 @@ export interface INativePreparationInput {
   networkAccess: boolean;
   pathPrepend?: readonly string[];
   executableFiles?: readonly string[];
+  gitBaseline?: readonly string[];
   onServerRequest?: (method: string, params: unknown, id: JsonRpcId) => unknown | Promise<unknown>;
 }
 
@@ -68,6 +70,7 @@ interface IPreparationEvidence {
     networkAccess: boolean;
     pathPrepend: readonly string[];
     executableFiles: readonly string[];
+    gitBaseline?: readonly string[];
   };
 }
 
@@ -761,6 +764,7 @@ export async function prepareNativeTrial(
       networkAccess: input.networkAccess,
       pathPrepend: input.pathPrepend ?? [],
       executableFiles: input.executableFiles ?? [],
+      ...(input.gitBaseline === undefined ? {} : { gitBaseline: input.gitBaseline }),
     },
   };
 
@@ -943,11 +947,12 @@ export async function prepareNativeTrial(
     recordValue(
       evidence.probes,
       'git',
-      await runControl(
-        ['git', '-c', 'init.templateDir=', 'init', '--quiet', workspace],
+      await initializeFixtureGit({
         workspace,
-        environment,
-      ),
+        baselineFiles: input.gitBaseline,
+        run: (command, overrides) =>
+          runControl(command, workspace, { ...environment, ...overrides }),
+      }),
     );
 
     const packagePath = Bun.resolveSync('skills/package.json', import.meta.dir);
