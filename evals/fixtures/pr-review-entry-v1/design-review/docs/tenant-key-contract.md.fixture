@@ -1,0 +1,5 @@
+# Tenant key contract
+
+- A tenant may reuse an external key in another tenant; the pair `(tenant_id, external_key)` identifies a record.
+- Every lookup or update for a tenant-scoped external key must include the tenant ID.
+- Importing a record for one tenant must not change another tenant's record.

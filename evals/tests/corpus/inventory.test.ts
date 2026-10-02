@@ -10,9 +10,13 @@ test('the current corpus is valid and every bundled fixture is used', async () =
     caseRoot: 'cases/v5',
     fixtureRoot: 'fixtures',
   });
+  const entry = await loadCases(project, {
+    caseRoot: 'cases/pr-review-entry-v1',
+    fixtureRoot: 'fixtures',
+  });
   const referenced = new Set([
     ...cases.flatMap((item) => item.definition.metadata.fixture.map((fixture) => fixture.source)),
-    ...sessionContext.flatMap((item) =>
+    ...[...sessionContext, ...entry].flatMap((item) =>
       item.definition.metadata.fixture.map((fixture) => fixture.source),
     ),
   ]);
@@ -21,6 +25,26 @@ test('the current corpus is valid and every bundled fixture is used', async () =
   ];
 
   expect([...referenced].sort()).toEqual(files.sort());
+});
+
+test('artifact outcome regressions remain separate and do not claim skill invocation', async () => {
+  const project = resolve(import.meta.dir, '../..');
+  const cases = await loadCases(project, {
+    caseRoot: 'cases/pr-review-entry-v1',
+    fixtureRoot: 'fixtures',
+  });
+
+  expect(cases).toHaveLength(2);
+  for (const item of cases) {
+    const { metadata, assert: assertions } = item.definition;
+    expect(metadata.assessment).toBe('outcome');
+    expect(metadata.requiredSkills).toEqual(['pr-review']);
+    expect(metadata.execution.gitBaseline).toEqual(
+      metadata.fixture.map((binding) => binding.target),
+    );
+    expect(assertions.every((check) => check.config.method === 'artifact-rubric')).toBeTrue();
+    expect(assertions.some((check) => check.config.requirements.includes('scope'))).toBeTrue();
+  }
 });
 
 test('current daily tasks retain the eight additional public-boundary cases', async () => {

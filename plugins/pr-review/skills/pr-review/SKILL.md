@@ -1,11 +1,11 @@
 ---
 name: pr-review
-description: "Default general review entrypoint for a pull request, branch diff, commit range, working-tree change set, or requests phrased as review since X. Use applicable code, comment, test, error, type, spec, independent challenge, and optional security review, then aggregate only double-confirmed findings. Use this as the primary change-set review workflow; do not compose it with the separate code-review skill. Do not use for implementing fixes, repository-wide security audits, container-image CVEs, or PR atomicity analysis."
+description: "Review a pull request, branch diff, commit range, working-tree change set, or explicitly selected review artifact, including design files. Use for concrete review targets and explicit $pr-review requests. Ordinary feature, compatibility or delivery advice stays in the primary session. Do not use for implementation, repository-wide security audits, container-image CVEs, or PR atomicity analysis."
 ---
 
 # PR Review
 
-Review one fixed change set without modifying it. The public entrypoint is the `pr-review` skill;
+Review one fixed change set or explicitly selected review artifact without modifying it. The public entrypoint is the `pr-review` skill;
 review aspects are checking perspectives, not agent counts or separate public skills. SPAR and Rubber Duck are plugin
 skills that this workflow composes when selected; they can also be invoked directly.
 
@@ -14,14 +14,23 @@ skills that this workflow composes when selected; they can also be invoked direc
 Resolve the review target from the user's words and current repository state. Accept natural
 language rather than requiring a command grammar.
 
+Select this workflow for a change-review request, an explicitly selected file or artifact to review,
+or an explicit `$pr-review` request. Implementation files supplied as background for a feature,
+compatibility or delivery question remain supporting context. Answer that advice in the primary
+session; design reasoning or mention of a prospective PR alone does not select this workflow.
+
 - An explicit range, branch, commit, PR, file set, or working-tree request wins.
 - Otherwise inspect the current branch, working tree, and available PR context. Ask only when two
   materially different targets remain plausible.
-- Before dispatching reviewers, record the exact base/head or local-patch definition, commit list,
+- For change-set targets, record the exact base/head or local-patch definition, commit list,
   changed-file inventory, and whether staged, unstaged, untracked, and deleted files are included.
-- Keep that target unchanged for the whole review. Stop early when it resolves to no changes.
-- Read unchanged supporting code only when needed to confirm or disprove behavior introduced by the
-  change; do not expand into a repository-wide audit.
+- For explicitly selected artifact targets, pin the selected paths and content with their supplied
+  review context. An unchanged tracked artifact is still a review target; unrelated working-tree
+  changes do not replace it.
+- Keep that target unchanged for the whole review. Stop early when a change-set target resolves to
+  no changes.
+- Read unchanged supporting code only when needed to confirm or disprove behavior under review;
+  do not expand into a repository-wide audit.
 
 ## Context
 
@@ -47,8 +56,9 @@ aspect merely because it can notice the same code.
 Make applicability decisions from the index alone. Do not open a reviewer file to decide whether
 its aspect applies, and do not read or dispatch reviewer files for aspects recorded as skipped.
 
-If the user asks to review a design, treat design as a focus for the applicable `code`, `comments`,
-and `spec` reviewers rather than inventing a separate public aspect.
+Within a review selected under Scope, treat design as a focus for the applicable existing aspects,
+including `code`, `comments` and `spec`, rather than inventing a separate public aspect. Select other
+aspects using their own applicability criteria.
 
 ## Dispatch
 
@@ -131,10 +141,18 @@ double confirmation.
   pending independent coverage. Do not expose hidden reasoning.
   A Rubber Duck security concern does not complete the security aspect.
 
-- Keep security separate from ordinary reviewers. When security is applicable and
-  `codex-security:security-diff-scan` is available, invoke that complete workflow using the host's
-  supported skill invocation from the primary
-  agent against the same pinned target. Do not copy or weaken its threat-model, validation,
+- Keep security separate from ordinary reviewers. When security is applicable, check whether
+  the selected target is a Git change set supported by `codex-security:security-diff-scan`.
+  Invoke that complete workflow from the primary against the same pinned target when available.
+  In this composition, omit Daybreak access queries, access-status warnings and enrollment
+  prompts, including the scan workflow's Daybreak advisory. Security review does not require
+  Daybreak membership. Retain technical capability and permission checks and the scan's
+  substantive review and reporting steps; this exclusion changes only the account advisory.
+  An unchanged design file or a patch supplied as an artifact is not itself a Git change set.
+  Do not synthesize a diff, apply a patch or substitute other changes to make it scannable.
+  Continue the applicable ordinary aspects and record that specialist security coverage was not
+  run for an unsupported target; explicitly requested security coverage remains incomplete.
+  Do not copy or weaken the supported scan's threat-model, validation,
   attack-path, coverage, report, or SARIF lifecycle.
 - If security was selected automatically but the capability is unavailable, continue and record
   that it was not run. If the user explicitly required security, stop and report the missing

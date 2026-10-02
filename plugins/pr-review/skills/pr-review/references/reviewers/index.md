@@ -25,8 +25,9 @@ When the user says `only`, run only the named ordinary reviewers plus the scope 
 them safely. A neighboring reviewer does not substitute for an applicable one merely because it
 could notice the same code.
 
-Design is a focus, not a public aspect. For a design review, apply that focus to the applicable
-`code`, `comments`, and `spec` reviewers.
+Within a review selected under the skill's Scope, design is a focus, not a public aspect. Apply it to
+the relevant existing perspectives, including `code`, `comments` and `spec`; select other aspects
+using their own criteria above.
 
 ## Security
 
@@ -37,6 +38,11 @@ permissions, storage, network boundaries, webhooks, sensitive data, dependencies
 deployment, infrastructure permissions, or controls named by `SECURITY.md`.
 
 Security is not an ordinary reviewer file. Invoke the complete
-`codex-security:security-diff-scan` workflow through the host's supported invocation from the primary agent against the same pinned target.
+`codex-security:security-diff-scan` workflow only for a supported Git change-set target,
+through the host's invocation from the primary against that same target. For non-diff artifacts,
+keep the ordinary review scoped to the artifact and report specialist security coverage as not run;
+explicitly requested security coverage remains incomplete. Do not manufacture or substitute a diff.
 An ordinary reviewer may identify a correctness issue with security impact, but that does not
 complete the security aspect.
+
+Apply the PR Review entrypoint's Daybreak advisory exclusion when composing the scan.

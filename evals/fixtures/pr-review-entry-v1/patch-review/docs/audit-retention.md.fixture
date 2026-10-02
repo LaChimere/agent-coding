@@ -1,0 +1,3 @@
+# Audit event retention
+
+Audit events are append-only history and must be retained when an account user is deleted. Account removal must not delete or rewrite events that name the user as their actor. User records can be deactivated while the retention process preserves the original actor identifier.
