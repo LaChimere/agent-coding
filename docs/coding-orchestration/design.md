@@ -1,6 +1,6 @@
 # Engineering specialists and harness boundaries v0.2
 
-Updated 2026-10-02. This is the current design; [validation.md](validation.md) retains historical
+Updated 2026-10-03. This is the current design; [validation.md](validation.md) retains historical
 checks and their limits. Earlier results do not qualify this revision or its role/model mapping.
 This revision covers engineering methods and instruction ownership. Formal behavioral evaluation
 and local activation are separate work; environment diagnostics are not final acceptance.
@@ -44,7 +44,7 @@ establish full PR or specialist security coverage, and neither plugin automatica
 
 | Source | Owns |
 |---|---|
-| [Personal AGENTS copy](../../config/codex/AGENTS.md) | Common authority, Git safety, verification, primary delegation and final judgment |
+| [Personal AGENTS copy](../../config/codex/AGENTS.md) | Communication and presentation, common authority, Git safety, verification, primary delegation and final judgment |
 | [Runtime fragment](../../config/codex/config.toml) | Worker capacity and ordinary fallback configuration |
 | [Agent TOMLs](../../config/codex/agents/) | Role-specific conduct, model/effort bindings, permissions and result requirements |
 | Installed skill | Engineering methods for its specific task, with self-contained scope and authority boundaries |
@@ -55,6 +55,15 @@ This document describes the sources; it is not a second runtime rulebook or a sh
 Global policy selects and integrates roles; role files remain usable with a bounded assignment
 without depending on another role's instructions. Repeating essential scope and read-only
 boundaries in a self-contained role is intentional, unlike maintaining competing policy versions.
+
+The communication policy matches content to readers' tasks, knowledge and context, making needed
+information easy to locate, understand, verify and use. Presentation follows the information's
+structure: prose for simple explanations, tables for comparisons, diagrams for relationships,
+and disposable HTML pages when interaction helps answer the current question.
+The primary checks worker evidence before presenting conclusions and selects the user-facing
+format. Workers retain their evidence requirements. Presentation preserves uncertainty and
+required report formats within existing authority, file boundaries and available host capabilities.
+Polished output establishes neither correctness nor usability; reader feedback informs usefulness.
 
 Repair and review budgets mean only limits explicitly supplied by the user, harness or bounded
 assignment. No default attempt or review-round count is introduced. Attempt history and validation
