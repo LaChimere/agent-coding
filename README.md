@@ -236,10 +236,20 @@ Install the plugin through the [native installation instructions](#native-plugin
 The examples in this section use Codex invocation syntax.
 
 Start a new thread, then invoke `$pr-review` explicitly or ask Codex to review the current PR,
-branch diff, commit range, or working-tree changes. The plugin is read-only. It uses the complete
-`$codex-security:security-diff-scan` workflow when security review is applicable and that optional
-capability is installed; otherwise it reports the missing security coverage according to whether
-security was automatic or explicitly required.
+branch diff, commit range, or working-tree changes. The plugin is read-only. For a supported Git
+change-set target, it uses the complete `$codex-security:security-diff-scan` workflow when security
+review is applicable and that optional capability is installed. For a non-diff artifact it keeps
+the selected ordinary review aspects and reports specialist security coverage as not run;
+explicitly requested security coverage remains incomplete. It does not synthesize or substitute
+a diff to make an artifact scannable.
+
+PR Review omits Daybreak access queries, access-status warnings and enrollment prompts,
+including advisories in the composed scan workflow. Technical scan checks and substantive
+security coverage remain required; account membership is not a review prerequisite.
+
+An explicitly selected design file or patch can also be the review target. Ordinary feature,
+compatibility and delivery advice stays in the primary session; implementation files supplied as
+background do not automatically select PR Review. Design is a focus within a selected review.
 
 The primary uses `$pr-review` to select necessary code, comments, tests, errors, types, and specification
 aspects. It can combine several aspects in one reviewer while retaining each method and its evidence;

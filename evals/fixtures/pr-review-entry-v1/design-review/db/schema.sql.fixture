@@ -1,0 +1,7 @@
+CREATE TABLE imported_records (
+    id TEXT PRIMARY KEY,
+    tenant_id TEXT NOT NULL,
+    external_key TEXT NOT NULL,
+    payload TEXT NOT NULL,
+    UNIQUE (tenant_id, external_key)
+);

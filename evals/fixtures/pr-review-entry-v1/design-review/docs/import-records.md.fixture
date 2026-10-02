@@ -1,0 +1,16 @@
+# Import existing tenant records
+
+The importer accepts a tenant ID, an external record key, and a replacement payload. External keys are independent for each tenant. The lookup below finds the submitting tenant's row, and updating it leaves records owned by other tenants unchanged.
+
+```sql
+SELECT id
+FROM imported_records
+WHERE external_key = :external_key
+LIMIT 1;
+
+UPDATE imported_records
+SET payload = :payload
+WHERE id = :id;
+```
+
+When the lookup returns no row, the importer inserts a new record with the submitting tenant ID and external key.

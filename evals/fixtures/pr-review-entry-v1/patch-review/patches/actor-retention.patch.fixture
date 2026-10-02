@@ -1,0 +1,11 @@
+diff --git a/db/schema.sql b/db/schema.sql
+index 7b25a10..de34bc9 100644
+--- a/db/schema.sql
++++ b/db/schema.sql
+@@ -10,5 +10,5 @@ CREATE TABLE audit_events (
+     created_at TEXT NOT NULL,
+     FOREIGN KEY (actor_user_id)
+         REFERENCES account_users(user_id)
+-        ON DELETE RESTRICT
++        ON DELETE CASCADE
+ );

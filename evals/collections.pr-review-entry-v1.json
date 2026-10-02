@@ -1,0 +1,17 @@
+{
+  "schema": "codex-evals/collections-v1",
+  "collections": {
+    "development": {
+      "version": "artifact-review-outcomes-no-daybreak-2026-10-02",
+      "caseRoot": "cases/pr-review-entry-v1",
+      "fixtureRoot": "fixtures",
+      "exposure": "seen"
+    },
+    "holdout": {
+      "version": "2026-09-13",
+      "caseRoot": "holdout/cases",
+      "fixtureRoot": "holdout/fixtures",
+      "exposure": "unseen"
+    }
+  }
+}

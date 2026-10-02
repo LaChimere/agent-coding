@@ -141,6 +141,14 @@ the checkout used for that evaluation, preserving the existing holdout configura
 Then the normal `validate` and `run --case <id>` commands use the selected roots.
 The CLI does not select a registry by filename or accept `--collection natural-v5`.
 
+Cases in `cases/pr-review-entry-v1/` are separate artifact outcome regressions with
+PR Review available. They check findings and read-only conduct, not skill invocation;
+keep their results separate from the 44-task sample. Intermediate v2/v3/v4 definitions and one obsolete fixture
+are retained byte-for-byte in `out/refinement-history-20261002/`, rather than
+maintained as parallel active suites. Completed runs retain their own frozen inputs,
+criteria and reports. Compare candidates within one frozen collection; do not
+compare aggregate scores across versions or overwrite old results.
+
 ## Running and comparing
 
 ```sh
