@@ -1,0 +1,10 @@
+export const exportClients = [
+  { name: "browser", path: "/v1/entries/:id/export", expects: "one 200 application/zip response" },
+  { name: "desktop", path: "/v1/entries/:id/export", expects: "one 200 application/zip response" },
+] as const;
+
+export const authorizationFacts = {
+  checkedOnEveryCurrentRequest: true,
+  membershipCanBeRevoked: true,
+  proposedPresignedObjectUrlChecksApplicationMembership: false,
+} as const;

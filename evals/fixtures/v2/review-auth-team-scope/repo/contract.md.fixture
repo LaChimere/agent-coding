@@ -1,0 +1,3 @@
+# Document read contract
+
+An actor's teamRoles map is keyed by team ID. A document can be read only when the actor has documents:read for that document's teamId. A permission granted in another team does not apply. The read route looks up the document before authorizing it and returns the same 404 response for a missing or unauthorized document.

@@ -1,0 +1,24 @@
+def decode_cursor(value):
+    if value is None:
+        return None
+    occurred_at, event_id = value.split(":", 1)
+    return int(occurred_at), event_id
+
+
+def encode_cursor(cursor):
+    if cursor is None:
+        return None
+    return f"{cursor[0]}:{cursor[1]}"
+
+
+def get_export(auth, query, repository):
+    project_id = auth.require_project(query["project_id"])
+    start = int(query["from"])
+    end = int(query["to"])
+    limit = min(int(query.get("limit", 100)), 500)
+    after = decode_cursor(query.get("cursor"))
+    page = export_page(repository, project_id, start, end, after, limit)
+    return {
+        "items": page["items"],
+        "next_cursor": encode_cursor(page["next_cursor"]),
+    }

@@ -1,0 +1,3 @@
+# Sending requests
+
+Keep request bodies at or below 256 KiB (262,144 bytes). A body above that limit is rejected with HTTP 413 and payload_too_large before persistence.

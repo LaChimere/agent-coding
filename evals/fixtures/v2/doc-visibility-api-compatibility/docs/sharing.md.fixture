@@ -1,0 +1,4 @@
+# Sharing a note
+
+A note without a visibility field is shared with everyone in its workspace.
+Choose private only when the author wants an exception; workspace is the normal default.

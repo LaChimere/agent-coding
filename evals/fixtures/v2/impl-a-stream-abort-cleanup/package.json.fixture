@@ -1,0 +1,8 @@
+{
+  "name": "impl-a-stream-abort-cleanup",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "bun test"
+  }
+}

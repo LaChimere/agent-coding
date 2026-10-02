@@ -1,0 +1,5 @@
+# Quick start
+
+Logs are retained for 90 days. Operators run cleanup manually each Sunday at noon in the server's local time.
+
+For details, see [the logging policy reference](./api-reference.md).

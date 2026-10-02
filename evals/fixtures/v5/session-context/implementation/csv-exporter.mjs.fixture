@@ -1,0 +1,4 @@
+/** Serializes one ordered row for the existing CSV caller. */
+export function formatCsvRow(fields) {
+  return `${fields.join(",")}\r\n`;
+}

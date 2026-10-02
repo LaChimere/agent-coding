@@ -1,0 +1,65 @@
+import { expect, test } from "bun:test";
+import { parseReportOptions } from "../src/options.ts";
+import { prepareReport } from "../src/report-command.ts";
+
+function mentionsArgument(message: string, argument: string) {
+  const escaped = argument.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  return new RegExp("(?:^|[^a-zA-Z0-9_.-])" + escaped + "(?=$|[^a-zA-Z0-9_.-]|\\.(?:\\s|$))", "u").test(message);
+}
+
+test("omitted arguments use defaults and valid options combine in any order", () => {
+  expect(parseReportOptions([])).toEqual({ format: "text", maxItems: 100, dryRun: false });
+  expect(parseReportOptions(["--max-items", "1", "--dry-run", "--format", "json"])).toEqual({
+    format: "json",
+    maxItems: 1,
+    dryRun: true,
+  });
+  expect(parseReportOptions(["--format", "text", "--max-items", "500"])).toEqual({
+    format: "text",
+    maxItems: 500,
+    dryRun: false,
+  });
+});
+
+test("the report caller applies output format, limit and dry-run", () => {
+  expect(prepareReport(["--format", "json", "--max-items", "2", "--dry-run"], ["a", "b", "c"])).toEqual({
+    output: "[\"a\",\"b\"]",
+    dryRun: true,
+  });
+  expect(prepareReport([], ["first", "second"])).toEqual({
+    output: "first\nsecond",
+    dryRun: false,
+  });
+});
+
+test("invalid and repeated options name the token that needs correction", () => {
+  for (const [args, token] of [
+    [["--max-items", "0"], "--max-items"],
+    [["--max-items", "501"], "--max-items"],
+    [["--max-items", "1.5"], "--max-items"],
+    [["--format", "yaml"], "--format"],
+    [["--format"], "--format"],
+    [["--dry-run", "--dry-run"], "--dry-run"],
+    [["--unknown"], "--unknown"],
+    [["report.txt"], "report.txt"],
+  ] as const) {
+    let caught: unknown;
+    try {
+      prepareReport(args, ["row"]);
+    } catch (error) {
+      caught = error;
+    }
+    expect(caught).toBeInstanceOf(Error);
+    const message = (caught as Error).message;
+    const valueArgument = args.length === 2 && ["--format", "--max-items"].includes(args[0])
+      ? args[1]
+      : undefined;
+    expect(mentionsArgument(message, token) || (valueArgument !== undefined && valueArgument.length > 0 && mentionsArgument(message, valueArgument))).toBe(true);
+  }
+});
+
+test("the parser does not mutate a readonly token list", () => {
+  const args = Object.freeze(["--format", "json", "--max-items", "17"]);
+  expect(parseReportOptions(args)).toEqual({ format: "json", maxItems: 17, dryRun: false });
+  expect(args).toEqual(["--format", "json", "--max-items", "17"]);
+});

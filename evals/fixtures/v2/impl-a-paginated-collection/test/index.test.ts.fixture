@@ -1,0 +1,27 @@
+import { expect, test } from "bun:test";
+import { collectPages } from "../src/index.ts";
+
+test("collects items from every cursor page in order", async () => {
+  const cursors: Array<string | undefined> = [];
+  const pages = [{ items: ["first"], nextCursor: "next" }, { items: ["second", "third"] }];
+
+  const result = await collectPages(async (cursor) => {
+    cursors.push(cursor);
+    return pages[cursors.length - 1];
+  });
+
+  expect(result).toEqual(["first", "second", "third"]);
+  expect(cursors).toEqual([undefined, "next"]);
+});
+
+test("propagates the original loader error", async () => {
+  const failure = new Error("offline");
+
+  await expect(collectPages(async (cursor) => {
+    if (cursor === undefined) {
+      return { items: [], nextCursor: "next" };
+    }
+
+    throw failure;
+  })).rejects.toBe(failure);
+});

@@ -1,0 +1,44 @@
+export interface RefreshOperation {
+  operationId: string;
+  collection: string;
+}
+
+export interface RefreshAttempt extends RefreshOperation {
+  attempt: number;
+}
+
+export type AttemptHandler<T> = (attempt: RefreshAttempt) => T | Promise<T>;
+export type RetryWait = (failedAttempt: number) => void | Promise<void>;
+
+export class RefreshCoordinator {
+  private readonly maxAttempts: number;
+  private readonly wait: RetryWait;
+
+  constructor(maxAttempts: number, wait: RetryWait = async () => undefined) {
+    if (!Number.isInteger(maxAttempts) || maxAttempts < 1) {
+      throw new RangeError("maxAttempts must be a positive integer");
+    }
+
+    this.maxAttempts = maxAttempts;
+    this.wait = wait;
+  }
+
+  async run<T>(operation: RefreshOperation, perform: AttemptHandler<T>): Promise<T> {
+    for (let attempt = 1; attempt <= this.maxAttempts; attempt += 1) {
+      try {
+        const operationId = attempt === 1
+          ? operation.operationId
+          : operation.operationId + "-retry-" + attempt;
+        return await perform({ ...operation, operationId, attempt });
+      } catch (error) {
+        if (attempt === this.maxAttempts) {
+          throw error;
+        }
+
+        await this.wait(attempt);
+      }
+    }
+
+    throw new Error("No attempt was run");
+  }
+}

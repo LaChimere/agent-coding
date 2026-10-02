@@ -1,0 +1,4 @@
+# Entry cache
+
+Set ENTRY_CACHE_TTL=15m to choose the entry-cache lifetime. The default is 15 minutes.
+The setting accepts a number followed by m or h. Each cache hit refreshes the lifetime.

@@ -1,0 +1,5 @@
+from lease_queue import InMemoryLeaseQueue, Lease
+
+
+def acknowledge(queue: InMemoryLeaseQueue, lease: Lease, *, finished_at: int) -> bool:
+    return queue.ack(lease.item_id, lease.token, now=finished_at)

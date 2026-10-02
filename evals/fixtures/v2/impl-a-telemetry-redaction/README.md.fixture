@@ -1,0 +1,5 @@
+# Telemetry redaction
+
+Run the visible checks with bun test.
+
+The public API is redactTelemetry(value), for JSON-compatible objects, arrays, and primitive values. It returns a recursively copied value. Object keys named authorization, cookie, set-cookie, access_token, refresh_token, client_secret, or password are sensitive, matched without regard to letter casing. Replace each sensitive value with the string [redacted]. Preserve array order and every unrelated value. Never modify the input.

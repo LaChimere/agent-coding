@@ -1,0 +1,9 @@
+import type { LeaseRepository } from "./lease-repository.js";
+
+/** Startup invokes this again after persisted leases are loaded in a new process. */
+export async function startExpiryWorker(repository: LeaseRepository): Promise<void> {
+  await repository.deleteExpiredAtOrBefore(Date.now());
+  setInterval(() => {
+    void repository.deleteExpiredAtOrBefore(Date.now());
+  }, 60_000);
+}

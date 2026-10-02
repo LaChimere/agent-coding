@@ -1,0 +1,35 @@
+import { expect, test } from "bun:test";
+import { SnapshotCell } from "../src/snapshot-cell.ts";
+
+test("construction and replacement detach nested input values", () => {
+  const input = { labels: ["blue"], metadata: { flags: { pinned: false } } };
+  const cell = new SnapshotCell(input);
+  input.labels.push("outside");
+  input.metadata.flags.pinned = true;
+  expect(cell.read()).toEqual({ labels: ["blue"], metadata: { flags: { pinned: false } } });
+
+  const replacement = { labels: ["green"], metadata: { flags: { pinned: true } } };
+  cell.replace(replacement);
+  replacement.labels[0] = "outside";
+  replacement.metadata.flags.pinned = false;
+  expect(cell.read()).toEqual({ labels: ["green"], metadata: { flags: { pinned: true } } });
+});
+
+test("each read is detached from storage and other reads", () => {
+  const cell = new SnapshotCell({ items: [{ name: "first" }], flags: { dirty: false } });
+  const one = cell.read();
+  one.items[0].name = "changed";
+  one.flags.dirty = true;
+  const two = cell.read();
+
+  expect(two).toEqual({ items: [{ name: "first" }], flags: { dirty: false } });
+  expect(two).not.toBe(one);
+});
+
+test("opaque object keys and primitive values remain intact", () => {
+  const value = { ["__proto__"]: "opaque", count: 0 };
+  const cell = new SnapshotCell(value);
+  expect(cell.read()).toEqual(value);
+  expect(Object.hasOwn(cell.read(), "__proto__")).toBe(true);
+  expect(new SnapshotCell("value").read()).toBe("value");
+});

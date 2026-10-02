@@ -1,0 +1,11 @@
+class DeliveryStore:
+    def __init__(self, database):
+        self.database = database
+
+    def create_delivery(self, tenant_id, request_id, payload):
+        with self.database.transaction() as tx:
+            return tx.insert("deliveries", {
+                "tenant_id": tenant_id,
+                "request_id": request_id,
+                "payload": payload,
+            })

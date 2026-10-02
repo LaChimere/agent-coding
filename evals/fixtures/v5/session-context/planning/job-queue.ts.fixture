@@ -1,0 +1,26 @@
+export interface StoredJob {
+  id: string;
+  state: "queued" | "running" | "completed";
+  leaseUntilMs: number | null;
+}
+
+/** Accepted jobs are committed to durable storage before pool dispatch. */
+export async function enqueue(database: Database, id: string): Promise<void> {
+  await database.insert({ id, state: "queued", leaseUntilMs: null });
+}
+
+/** On restart, an expired running lease is returned to the durable queue. */
+export async function recoverExpiredLeases(database: Database, nowMs: number): Promise<void> {
+  await database.requeueWhereLeaseExpired(nowMs);
+}
+
+/** Result rows have a unique job id, so a replay cannot create a second result. */
+export async function commitResultOnce(database: Database, id: string, value: string): Promise<void> {
+  await database.insertResultIfAbsent(id, value);
+}
+
+interface Database {
+  insert(job: StoredJob): Promise<void>;
+  requeueWhereLeaseExpired(nowMs: number): Promise<void>;
+  insertResultIfAbsent(id: string, value: string): Promise<void>;
+}

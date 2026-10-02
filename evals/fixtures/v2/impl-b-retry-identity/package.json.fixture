@@ -1,0 +1,9 @@
+{
+  "name": "index-refresh-retry-coordinator",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "bun test"
+  },
+  "dependencies": {}
+}

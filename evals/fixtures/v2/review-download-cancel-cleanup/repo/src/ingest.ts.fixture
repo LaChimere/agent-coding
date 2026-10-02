@@ -1,0 +1,14 @@
+import { receiveAsset, type StagedStorage } from './receive.ts';
+
+export async function acceptUpload(
+  chunks: AsyncIterable<Uint8Array>,
+  requestSignal: AbortSignal,
+  storage: StagedStorage,
+) {
+  const result = await receiveAsset(chunks, storage, requestSignal);
+  if (result.status === 'cancelled') {
+    return { status: 499 as const };
+  }
+
+  return { status: 201 as const, location: result.location };
+}

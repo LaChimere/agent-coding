@@ -1,0 +1,3 @@
+# Upload staging contract
+
+The request signal is aborted when the client disconnects. Storage creates a private staging file before consuming chunks. A completed upload publishes that file. A failed or cancelled upload must discard the unpublished staging file and close its writer before returning or throwing. Partial bytes must never be published.

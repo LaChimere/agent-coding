@@ -1,0 +1,3 @@
+# Snapshot cell
+
+SnapshotCell stores a JSON-compatible value tree made from null, booleans, numbers, strings, arrays and string-keyed objects. The constructor and replace capture the complete value as it exists at the call. read returns a fresh detached value each time. Mutating the input after construction or replacement, or mutating any returned value, does not change the value later read from the cell.

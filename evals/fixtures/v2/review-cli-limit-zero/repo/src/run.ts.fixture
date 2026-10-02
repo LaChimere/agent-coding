@@ -1,0 +1,25 @@
+import { parseLimit } from './options.ts';
+
+export interface PendingQueue<T> {
+  pending(): Promise<readonly T[]>;
+}
+
+export async function processPending<T>(
+  rawLimit: string | undefined,
+  queue: PendingQueue<T>,
+  process: (item: T) => Promise<void>,
+): Promise<number> {
+  const limit = parseLimit(rawLimit);
+  const pending = await queue.pending();
+  let count = 0;
+
+  for (const item of pending) {
+    if (count >= limit) {
+      break;
+    }
+    await process(item);
+    count += 1;
+  }
+
+  return count;
+}

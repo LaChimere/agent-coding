@@ -1,0 +1,14 @@
+# Audit export
+
+The export endpoint filters by project and a half-open time range: from is
+included and to is excluded. Results are ordered by occurred_at and then id,
+both ascending. A continuation cursor is exclusive; send the returned opaque
+cursor with the same project and time filters to continue.
+
+The default page size is 100. Requests above 500 rows are capped at 500, and a
+limit below 1 or a range with from at or after to is rejected. The response has
+items and next_cursor; next_cursor is null on the final page. There is no total
+count field.
+
+Events are retained for 30 days based on recorded_at, the time the service
+stored the event. Events older than 30 days may be removed.

@@ -1,0 +1,8 @@
+_TEXT = {
+    "en": {"receipt_subject": "Your receipt"},
+    "fr": {"receipt_subject": "Votre reçu"},
+}
+
+
+def read(locale: str, key: str) -> str:
+    return _TEXT[locale][key]

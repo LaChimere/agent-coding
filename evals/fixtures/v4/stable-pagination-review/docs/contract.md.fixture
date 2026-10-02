@@ -1,0 +1,1 @@
+Event identifiers are unique within a project. The route supplies records for one project and validates that limit is between 1 and 100. Pages are ordered by (created_at, id), and a continuation cursor is exclusive: the next page contains keys greater than the cursor pair. A cursor is null when the returned page is final.

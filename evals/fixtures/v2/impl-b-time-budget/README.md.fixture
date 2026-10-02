@@ -1,0 +1,3 @@
+# Time budget
+
+TimeBudget requires a duration in finite nonnegative milliseconds and an injected finite, nondecreasing clock function. Construction samples the clock once. remainingMs samples it again and returns the duration minus elapsed time, clamped at zero. isExpired is true when no time remains, including a zero duration and the exact deadline. Fractional milliseconds are preserved.

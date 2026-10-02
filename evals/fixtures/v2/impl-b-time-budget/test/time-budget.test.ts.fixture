@@ -1,0 +1,25 @@
+import { expect, test } from "bun:test";
+import { TimeBudget } from "../src/time-budget.ts";
+
+test("remaining time follows the injected clock and expires at the deadline", () => {
+  let now = 10;
+  const budget = new TimeBudget(37.5, () => now);
+  expect(budget.remainingMs()).toBe(37.5);
+  expect(budget.isExpired()).toBe(false);
+
+  now = 22.25;
+  expect(budget.remainingMs()).toBe(25.25);
+  now = 47.5;
+  expect(budget.remainingMs()).toBe(0);
+  expect(budget.isExpired()).toBe(true);
+  now = 80;
+  expect(budget.remainingMs()).toBe(0);
+});
+
+test("zero duration expires immediately and invalid durations reject", () => {
+  expect(new TimeBudget(0, () => 5).isExpired()).toBe(true);
+  expect(() => new TimeBudget(-1, () => 5)).toThrow(RangeError);
+  expect(() => new TimeBudget(Number.NaN, () => 5)).toThrow(RangeError);
+  expect(() => new TimeBudget(Number.POSITIVE_INFINITY, () => 5)).toThrow(RangeError);
+  expect(() => new TimeBudget(1, undefined as unknown as () => number)).toThrow(TypeError);
+});

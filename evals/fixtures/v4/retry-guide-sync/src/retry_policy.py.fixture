@@ -1,0 +1,11 @@
+RETRYABLE_CODES = frozenset({"timeout", "busy"})
+BASE_DELAY_SECONDS = 2
+MAX_DELAY_SECONDS = 300
+
+
+def retry_delay(attempt: int, failure_code: str) -> int | None:
+    if attempt < 1:
+        raise ValueError("attempts start at 1")
+    if failure_code not in RETRYABLE_CODES:
+        return None
+    return min(BASE_DELAY_SECONDS * (2 ** (attempt - 1)), MAX_DELAY_SECONDS)

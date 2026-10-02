@@ -1,0 +1,9 @@
+{
+  "name": "durable-operation-queue",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "bun test"
+  },
+  "dependencies": {}
+}

@@ -1,0 +1,5 @@
+# Async cache
+
+Run the visible checks with bun test.
+
+The public API is memoizeAsync(load), which returns an async getter. Calls made while one load is pending use that same in-flight work. After success, later calls use the cached result without calling load again. After rejection, pass the same rejection value to callers and clear the failed entry so the next call invokes load again. Do not cache a rejection permanently.

@@ -1,0 +1,3 @@
+# Local settings migration contract
+
+Startup prefers the new settings file when it exists. If it does not exist, startup reads the prior local settings file, maps shareWithinWorkspace to accessMode and retainDays to retentionDays, writes the migrated record to the new path, and returns it to storage configuration. If neither file exists, startup uses the defaults. It does not delete the old file as part of this migration.

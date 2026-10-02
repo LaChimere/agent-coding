@@ -1,0 +1,10 @@
+# Export change request
+
+Current generation streams an archive from the requested entry revision and stores no archive copy.
+The generated archive contains entry text, reviewer comments, attachments, and owner display name.
+No retention policy for generated archives or object deletion/lifecycle job is recorded.
+A 30-day object-store URL would remain usable by anyone holding it until expiry, even if workspace membership is later revoked.
+The bucket is shared, encrypted at rest, and keys carry a tenant prefix.
+The browser and desktop clients depend on the existing immediate 200 application/zip response.
+The API uses a rolling deployment with old and new versions overlapping for fifteen minutes; no feature flag currently gates persisted links.
+Object upload and link-record creation are separate operations: upload success followed by record failure leaves an orphan, while record success followed by upload failure leaves a broken link.

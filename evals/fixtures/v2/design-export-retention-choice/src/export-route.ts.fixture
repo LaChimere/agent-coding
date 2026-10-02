@@ -1,0 +1,15 @@
+export async function downloadExport(actor: Actor, entryId: string, store: EntryStore): Promise<ZipStream> {
+  const entry = await store.findEntry(entryId);
+  if (entry === null || !(await store.canRead(actor, entry))) {
+    throw new NotFoundError();
+  }
+  const snapshot = await store.readSnapshot(entry.id, entry.revision);
+  return buildZip(snapshot);
+}
+
+export const existingRoute = {
+  method: "GET",
+  path: "/v1/entries/:id/export",
+  response: "200 application/zip stream",
+  persistsArchive: false,
+} as const;

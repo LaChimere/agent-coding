@@ -1,0 +1,7 @@
+diff --git a/repo/src/diagnostics.ts b/repo/src/diagnostics.ts
+--- a/repo/src/diagnostics.ts
++++ b/repo/src/diagnostics.ts
+@@ -23,2 +23 @@
+-    endpoint: failure.endpoint.toString(),
+-    message: failure.message,
++    retryable: failure.retryable,

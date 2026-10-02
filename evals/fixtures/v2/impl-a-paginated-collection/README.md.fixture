@@ -1,0 +1,5 @@
+# Page collection
+
+Run the visible checks with bun test.
+
+The public API is collectPages(loadPage). Call loadPage first with undefined. Append each page's items in order, then call with its nextCursor whenever nextCursor is not undefined; an empty string is still a cursor. Resolve to a new flat array after a page omits nextCursor. If any call rejects, reject with that same error value. Do not modify page item arrays.

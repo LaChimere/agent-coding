@@ -1,0 +1,22 @@
+export const cacheTtlContract = {
+  environmentVariable: "ENTRY_CACHE_TTL_SECONDS",
+  defaultSeconds: 3600,
+  minimumSeconds: 60,
+  maximumSeconds: 86400,
+} as const;
+
+export function readCacheTtl(raw: string | undefined): number {
+  const value = raw ?? String(cacheTtlContract.defaultSeconds);
+  if (!/^\d+$/.test(value)) {
+    throw new Error("ENTRY_CACHE_TTL_SECONDS must be a whole number of seconds.");
+  }
+  const seconds = Number(value);
+  if (seconds < cacheTtlContract.minimumSeconds || seconds > cacheTtlContract.maximumSeconds) {
+    throw new RangeError("ENTRY_CACHE_TTL_SECONDS is outside the supported range.");
+  }
+  return seconds * 1000;
+}
+
+export function cacheEntryExpired(createdAtMs: number, nowMs: number, ttlMs: number): boolean {
+  return nowMs >= createdAtMs + ttlMs;
+}

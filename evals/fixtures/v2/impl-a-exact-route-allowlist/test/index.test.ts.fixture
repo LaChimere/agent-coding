@@ -1,0 +1,13 @@
+import { expect, test } from "bun:test";
+import { isRouteAllowed } from "../src/index.ts";
+
+test("permits only the configured literal route", () => {
+  expect(isRouteAllowed("/v1/reports", ["/v1/reports"])).toBe(true);
+  expect(isRouteAllowed("/v1/reports-admin", ["/v1/reports"])).toBe(false);
+});
+
+test("case and trailing slash differences remain distinct", () => {
+  expect(isRouteAllowed("/v1/Reports", ["/v1/reports"])).toBe(false);
+  expect(isRouteAllowed("/v1/reports/", ["/v1/reports"])).toBe(false);
+  expect(isRouteAllowed("/v1/reports/", ["/v1/reports/"])).toBe(true);
+});

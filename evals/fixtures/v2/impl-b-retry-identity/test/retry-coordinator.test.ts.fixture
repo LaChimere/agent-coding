@@ -1,0 +1,45 @@
+import { expect, test } from "bun:test";
+import { RefreshCoordinator } from "../src/retry-coordinator.ts";
+
+test("retries keep the operation identity and count attempts separately", async () => {
+  const waits: number[] = [];
+  const seen: Array<[string, string, number]> = [];
+  const coordinator = new RefreshCoordinator(3, async (attempt) => {
+    waits.push(attempt);
+  });
+
+  const result = await coordinator.run(
+    { operationId: "refresh-42", collection: "catalog" },
+    async (attempt) => {
+      seen.push([attempt.operationId, attempt.collection, attempt.attempt]);
+      if (attempt.attempt < 3) {
+        throw new Error("temporary index lock");
+      }
+      return "ready";
+    },
+  );
+
+  expect(result).toBe("ready");
+  expect(seen).toEqual([
+    ["refresh-42", "catalog", 1],
+    ["refresh-42", "catalog", 2],
+    ["refresh-42", "catalog", 3],
+  ]);
+  expect(waits).toEqual([1, 2]);
+});
+
+test("the cap includes the first attempt and preserves the final error", async () => {
+  const failure = new Error("still locked");
+  const attempts: number[] = [];
+  const coordinator = new RefreshCoordinator(2);
+  await expect(coordinator.run({ operationId: "refresh-99", collection: "events" }, async (attempt) => {
+    attempts.push(attempt.attempt);
+    throw failure;
+  })).rejects.toBe(failure);
+  expect(attempts).toEqual([1, 2]);
+});
+
+test("the attempt cap must be positive", () => {
+  expect(() => new RefreshCoordinator(0)).toThrow(RangeError);
+  expect(() => new RefreshCoordinator(1.5)).toThrow(RangeError);
+});

@@ -1,0 +1,30 @@
+export type Visibility = "private" | "workspace";
+
+export const DEFAULT_VISIBILITY: Visibility = "private";
+
+export function visibilityForCreate(input: { visibility?: Visibility }): Visibility {
+  return input.visibility ?? DEFAULT_VISIBILITY;
+}
+
+export function canRead(note: Note, actor: Actor): boolean {
+  if (note.visibility === "workspace") {
+    return actor.workspaceId === note.workspaceId;
+  }
+  return actor.id === note.ownerId;
+}
+
+export interface NoteResponse {
+  id: string;
+  body: string;
+  revision: number;
+  visibility: Visibility;
+}
+
+export const v1ResponseCompatibility = {
+  unknownTopLevelFields: "clients-ignore",
+  optionalFieldAddition: "compatible",
+  requiredFieldRemovalOrTypeChange: "requires-new-version",
+} as const;
+
+export interface Note { id: string; ownerId: string; workspaceId: string; visibility: Visibility; }
+export interface Actor { id: string; workspaceId: string; }

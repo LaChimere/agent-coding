@@ -1,0 +1,6 @@
+import type { Manifest } from "./manifest.ts";
+
+export function loadRegistryManifest(text: string): Manifest {
+  const value = JSON.parse(text) as Manifest;
+  return { version: value.version, entries: value.entries };
+}

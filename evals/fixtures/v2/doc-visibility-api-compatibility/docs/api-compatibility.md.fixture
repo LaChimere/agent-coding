@@ -1,0 +1,4 @@
+# Version 1 response compatibility
+
+Version 1 response objects are closed records. Clients should reject any property they do not recognize.
+Adding even an optional response field requires a new API version.

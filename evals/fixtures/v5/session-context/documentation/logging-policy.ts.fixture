@@ -1,0 +1,12 @@
+/** Public retention and cleanup policy consumed by the logging API. */
+export const LOG_RETENTION_DAYS = 30;
+export const CLEANUP_INTERVAL_HOURS = 24;
+export const CLEANUP_START_UTC = "02:00";
+
+export function expiresAtMs(createdAtMs: number): number {
+  return createdAtMs + LOG_RETENTION_DAYS * 24 * 60 * 60 * 1_000;
+}
+
+export function shouldDeleteLog(expiresAtMsValue: number, nowMs: number): boolean {
+  return expiresAtMsValue <= nowMs;
+}

@@ -1,0 +1,6 @@
+import { processUptimeMs } from "./clock.js";
+
+// Patch under review: the returned number is persisted without conversion.
+export function expiryAt(ttlMs: number): number {
+  return processUptimeMs() + ttlMs;
+}

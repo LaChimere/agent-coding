@@ -1,0 +1,15 @@
+export interface ManifestEntry {
+  id: string;
+  path: string;
+  [key: string]: unknown;
+}
+
+export interface Manifest {
+  version: string;
+  entries: ManifestEntry[];
+  [key: string]: unknown;
+}
+
+export function parseManifest(text: string): Manifest {
+  return JSON.parse(text) as Manifest;
+}

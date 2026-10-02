@@ -1,0 +1,6 @@
+diff --git a/repo/src/options.ts b/repo/src/options.ts
+--- a/repo/src/options.ts
++++ b/repo/src/options.ts
+@@ -8 +8 @@
+-  return value;
++  return value || DEFAULT_LIMIT;

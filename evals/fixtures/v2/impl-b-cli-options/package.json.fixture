@@ -1,0 +1,9 @@
+{
+  "name": "local-report-options",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "bun test"
+  },
+  "dependencies": {}
+}

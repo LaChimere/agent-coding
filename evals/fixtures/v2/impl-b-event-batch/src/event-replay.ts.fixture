@@ -1,0 +1,13 @@
+import { appendUniqueEvents, type LocalEvent } from "./event-batch.ts";
+
+export class EventReplayReader {
+  private history: LocalEvent[] = [];
+
+  append(chunk: readonly LocalEvent[]): void {
+    this.history = appendUniqueEvents(this.history, chunk);
+  }
+
+  list(): readonly LocalEvent[] {
+    return [...this.history];
+  }
+}

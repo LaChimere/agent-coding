@@ -1,0 +1,5 @@
+RETENTION_DAYS = 30
+
+
+def should_purge(recorded_at: int, now: int) -> bool:
+    return recorded_at < now - RETENTION_DAYS * 24 * 60 * 60

@@ -1,0 +1,10 @@
+export const callers = [
+  { name: "web-dashboard", sendsOwnerFilter: true, omitsUnknownQueryFields: true },
+  { name: "nightly-exporter", sendsOwnerFilter: false, paginatesAt100: true },
+] as const;
+
+export const storageBehavior = {
+  listLimit: 100,
+  dbTimeoutMapsTo: 503,
+  errorIncludesRequestId: true,
+} as const;

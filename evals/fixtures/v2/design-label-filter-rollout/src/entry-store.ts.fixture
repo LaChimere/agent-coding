@@ -1,0 +1,10 @@
+export function normalizeLabels(labels: string[]): string[] {
+  return [...new Set(labels.map((label) => label.trim().toLowerCase()))].sort();
+}
+
+export const entryTableFacts = {
+  database: "PostgreSQL 15",
+  approximateRows: 3200000,
+  indexes: ["tenant_id", "tenant_id+owner_id"],
+  labelIndex: null,
+} as const;

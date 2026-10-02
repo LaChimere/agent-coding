@@ -1,0 +1,5 @@
+import catalog
+
+
+def lookup(locale: str, key: str) -> str:
+    return catalog.read(locale, key)

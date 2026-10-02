@@ -1,0 +1,30 @@
+import { commitResultOnce } from "./job-queue.js";
+
+export async function requestCancellation(
+  database: Database,
+  id: string,
+  controller: AbortController,
+): Promise<void> {
+  await database.markCancelRequested(id);
+  controller.abort();
+}
+
+/** The provider call may not observe cancellation until it returns. */
+export async function runJob(
+  database: Database,
+  id: string,
+  provider: { execute(): Promise<string> },
+  signal: AbortSignal,
+): Promise<void> {
+  const result = await provider.execute();
+  await commitResultOnce(database, id, result);
+  if (signal.aborted) {
+    await database.markCancelled(id);
+  }
+}
+
+interface Database {
+  insertResultIfAbsent(id: string, value: string): Promise<void>;
+  markCancelRequested(id: string): Promise<void>;
+  markCancelled(id: string): Promise<void>;
+}

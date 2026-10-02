@@ -1,0 +1,5 @@
+export const clients = [
+  { name: "web-console", reads: ["content"], unknownFields: "ignored" },
+  { name: "mobile-3.2", reads: ["content"], unknownFields: "ignored", offlineUpdateLagDays: 45 },
+  { name: "partner-csv", reads: ["content"], rejectsMissingContent: true, runsNightly: true },
+] as const;

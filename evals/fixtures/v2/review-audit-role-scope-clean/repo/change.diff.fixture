@@ -1,0 +1,6 @@
+diff --git a/repo/src/audit-access.ts b/repo/src/audit-access.ts
+--- a/repo/src/audit-access.ts
++++ b/repo/src/audit-access.ts
+@@ -15 +15 @@
+-  return actor.role === 'owner';
++  return actor.role === 'owner' || actor.role === 'auditor';

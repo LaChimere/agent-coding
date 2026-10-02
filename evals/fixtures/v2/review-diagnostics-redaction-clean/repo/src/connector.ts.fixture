@@ -1,0 +1,31 @@
+import {
+  reportFailure,
+  type DiagnosticLogger,
+  type FailureCode,
+} from './diagnostics.ts';
+
+export interface BackendClient {
+  post(endpoint: URL): Promise<void>;
+}
+
+export async function callBackend(
+  endpoint: URL,
+  operationId: string,
+  client: BackendClient,
+  logger: DiagnosticLogger,
+  classify: (error: unknown) => FailureCode,
+  isRetryable: (error: unknown) => boolean,
+): Promise<void> {
+  try {
+    await client.post(endpoint);
+  } catch (error) {
+    reportFailure(logger, {
+      operationId,
+      code: classify(error),
+      retryable: isRetryable(error),
+      endpoint,
+      message: error instanceof Error ? error.message : String(error),
+    });
+    throw error;
+  }
+}

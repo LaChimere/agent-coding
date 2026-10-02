@@ -1,0 +1,31 @@
+export interface StagedFile {
+  write(chunk: Uint8Array): Promise<void>;
+  publish(): Promise<string>;
+  discard(): Promise<void>;
+}
+
+export interface StagedStorage {
+  begin(): Promise<StagedFile>;
+}
+
+export async function receiveAsset(
+  chunks: AsyncIterable<Uint8Array>,
+  storage: StagedStorage,
+  signal: AbortSignal,
+) {
+  const staged = await storage.begin();
+  try {
+    for await (const chunk of chunks) {
+      if (signal.aborted) {
+        return { status: 'cancelled' as const };
+      }
+      await staged.write(chunk);
+    }
+
+    const location = await staged.publish();
+    return { status: 'stored' as const, location };
+  } catch (error) {
+    await staged.discard();
+    throw error;
+  }
+}

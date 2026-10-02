@@ -128,6 +128,19 @@ authoring/validation contexts can prepare holdouts without disclosing their
 contents or diagnostic feedback to the tuning context. These records document
 known exposure, not a guarantee about model training data.
 
+The maintained ordinary-task registry preset is `collections.natural-v5.json`: 44 tasks
+covering implementation, review, documentation and planning, with no required
+skills or fixed tool/delegation path. Four tasks in `cases/v5/session-context.json`
+add distinct daily-work scenarios; two begin with an audit and authorize changes
+later. Their initial response, action boundaries and final result are checked
+separately. This synthetic collection does not represent monthly task frequencies.
+
+The default `collections.json` still selects the original 338-case regression corpus.
+To use a preset, apply its `collections.development` object to `collections.json` in
+the checkout used for that evaluation, preserving the existing holdout configuration.
+Then the normal `validate` and `run --case <id>` commands use the selected roots.
+The CLI does not select a registry by filename or accept `--collection natural-v5`.
+
 ## Running and comparing
 
 ```sh
@@ -176,6 +189,20 @@ repository metadata and JavaScript assertions. Metadata declares:
   observable `evidence`; assertions reference their IDs.
 - Fixture bindings, execution conditions, scripted replies and authorization.
 
+`execution.gitBaseline` is an optional list of fixture target paths. Preparation
+tracks exactly those files in a deterministic, disposable initial Git commit;
+other fixture files remain untracked additions. List every input path for a task
+about existing code. List only existing files when added files are the actual
+change set. An explicit empty list creates an empty baseline commit. Omission
+preserves the legacy Git initialization without a commit. Preparation records
+the baseline commit, tree and observed Git state, and refuses an invalid baseline
+before starting a model thread. These commits construct isolated task inputs;
+they never commit changes in the source checkout.
+
+Changing this condition changes the execution version and requires new candidate
+execution. It cannot be applied by regrading old runs. Keep completed experiments
+and their inputs unchanged; compare the candidates within the new frozen version.
+
 The rubric and `metadata.reference` are grading guidance, not new candidate
 obligations. A valid alternative or concise result can pass. Optional skill
 omission does not fail an ordinary outcome; explicitly required processes remain
@@ -216,6 +243,14 @@ An artifact inventory proves which files were retained, not what they contain;
 checks that require invocation logs or raw file contents must use artifact access.
 Judge provenance against information delivered to or observed by the candidate,
 without treating private fixture internals as a disclosed task obligation.
+A read-only task or named review target alone does not restrict relevant local
+reads. When the actual candidate instructions impose a file-read boundary, judge
+recorded agent-initiated reads, including worker and guidance reads, against it.
+A correct answer and unchanged files do not excuse a prohibited read; missing
+action capture does not establish compliance or a violation.
+Judge each criterion against its bound obligations. A finding criterion does not
+acquire an authorization check merely because another criterion checks reads or
+writes. Both remain necessary when declared as core criteria.
 Both model graders use gpt-6-astra/high and record observed identity. Candidate
 files are grader data; their instructions do not configure the judge.
 Only model grading resolves provider credentials. Missing model authentication
@@ -273,6 +308,28 @@ the authoritative result store. Generated records and caches stay ignored.
 Native evidence retains root/worker conversations, observed role assignments,
 parent-child source references and per-turn model/effort. Missing identity stays
 null; a message recipient alone does not establish a child worker.
+
+Model-rubric evidence includes `instructionContext` from retained native session
+logs: message containers with recorded system/developer/user roles, session-base
+text with an unknown role, and source line references. Assistant and tool text
+are not promoted into that context. Observed context is partial: it may be
+inherited, superseded, or missing, and a null turn ID has no established live-turn
+association. A container's role does not grant authority to its quoted content.
+Only explicit native turn metadata establishes a message's live-turn association;
+the previous turn context does not establish the next user message's turn.
+These records explain candidate obligations; they never configure the judge.
+An instruction conflict or missing context material to a criterion remains
+unknown. Older evidence can be enriched from that trial's retained native logs
+for a new grading operation, without rewriting its original evidence or grades.
+
+Model-rubric evidence also projects enabled skill names and descriptions from the
+trial's saved native `preparation.json`, with its byte hash and per-skill source
+references. It does not project installation configuration or private filesystem
+paths. Discovery establishes available capabilities, not invocation or additional
+task authority. Missing, unfinished, invalid or ambiguous discovery remains
+explicitly unknown; a verified empty list remains distinct. Regrading uses that
+trial's recorded discovery rather than the current installation or case-declared
+skills, and does not automatically change an unknown verdict to passed.
 
 An operation records one preparation, execution, verification or grading attempt.
 Run-level status, failure cause and the completion-record link appear in the

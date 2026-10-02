@@ -1,0 +1,12 @@
+import { logRequest, runWithRequest } from './context.ts';
+
+export async function handleRequest(
+  requestId: string,
+  waitForWork: Promise<void>,
+  logger: { info(record: Record<string, unknown>): void },
+): Promise<void> {
+  await runWithRequest(requestId, async () => {
+    await waitForWork;
+    logRequest(logger, 'request-complete');
+  });
+}

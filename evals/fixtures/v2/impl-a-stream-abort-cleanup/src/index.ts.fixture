@@ -1,0 +1,7 @@
+export function pipeStream<T>(
+  source: ReadableStream<T>,
+  destination: WritableStream<T>,
+  signal?: AbortSignal,
+): Promise<void> {
+  return source.pipeTo(destination);
+}

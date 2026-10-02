@@ -1,0 +1,12 @@
+import { expiryAt } from "./expiry.js";
+import type { LeaseRepository } from "./lease-repository.js";
+
+export async function createLease(
+  repository: LeaseRepository,
+  id: string,
+  ttlMs: number,
+): Promise<{ id: string; expiresAtMs: number }> {
+  const lease = { id, expiresAtMs: expiryAt(ttlMs) };
+  await repository.save(lease);
+  return lease;
+}

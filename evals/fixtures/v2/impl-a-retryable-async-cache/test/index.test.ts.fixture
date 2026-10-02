@@ -1,0 +1,40 @@
+import { expect, test } from "bun:test";
+import { memoizeAsync } from "../src/index.ts";
+
+test("concurrent calls share a load and success remains cached", async () => {
+  let calls = 0;
+  let finish!: (value: string) => void;
+  const pending = new Promise<string>((resolve) => {
+    finish = resolve;
+  });
+  const getValue = memoizeAsync(() => {
+    calls += 1;
+    return pending;
+  });
+
+  const first = getValue();
+  const second = getValue();
+  await Promise.resolve();
+  expect(calls).toBe(1);
+  finish("ready");
+  expect(await first).toBe("ready");
+  expect(await second).toBe("ready");
+  expect(await getValue()).toBe("ready");
+  expect(calls).toBe(1);
+});
+
+test("a rejection does not block a later retry", async () => {
+  let calls = 0;
+  const failure = new Error("temporary");
+  const getValue = memoizeAsync(async () => {
+    calls += 1;
+    if (calls === 1) {
+      throw failure;
+    }
+    return "ready";
+  });
+
+  await expect(getValue()).rejects.toBe(failure);
+  await expect(getValue()).resolves.toBe("ready");
+  expect(calls).toBe(2);
+});

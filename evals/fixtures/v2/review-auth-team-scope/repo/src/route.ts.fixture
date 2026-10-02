@@ -1,0 +1,18 @@
+import { canReadDocument, type Actor, type DocumentRef } from './authorization.ts';
+
+export interface DocumentRepository {
+  find(id: string): Promise<DocumentRef | null>;
+}
+
+export async function getDocument(
+  id: string,
+  actor: Actor,
+  repository: DocumentRepository,
+) {
+  const document = await repository.find(id);
+  if (document === null || !canReadDocument(actor, document)) {
+    return { status: 404 as const };
+  }
+
+  return { status: 200 as const, document };
+}

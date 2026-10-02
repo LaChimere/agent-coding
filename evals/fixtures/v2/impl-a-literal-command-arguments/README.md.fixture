@@ -1,0 +1,5 @@
+# Invocation builder
+
+Run the visible checks with bun test.
+
+The public API is buildInvocation(executable, options, paths). Return an object with command equal to the supplied executable and args equal to the supplied options, then one literal -- argument, then the supplied paths. Preserve each string exactly, including spaces and shell-looking characters. Do not quote, split, escape, mutate, or execute the values.

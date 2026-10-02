@@ -1,0 +1,8 @@
+{
+  "name": "impl-a-retryable-async-cache",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "bun test"
+  }
+}

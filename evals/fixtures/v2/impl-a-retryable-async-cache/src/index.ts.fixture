@@ -1,0 +1,14 @@
+export function memoizeAsync<T>(
+  load: () => Promise<T>,
+): () => Promise<T> {
+  let cached: Promise<T> | undefined;
+
+  return () => {
+    if (cached !== undefined) {
+      return cached;
+    }
+
+    cached = Promise.resolve().then(load);
+    return cached;
+  };
+}

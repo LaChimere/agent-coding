@@ -1,0 +1,31 @@
+export interface ConfigDocument {
+  version: 1 | 2;
+  workspace: string;
+  enabled?: boolean;
+  [key: string]: unknown;
+}
+
+export function parseConfig(source: string): ConfigDocument {
+  const value = JSON.parse(source) as Record<string, unknown>;
+  if (value === null || typeof value !== "object" || Array.isArray(value)) {
+    throw new TypeError("Configuration must be an object");
+  }
+  if (typeof value.workspace !== "string") {
+    throw new TypeError("workspace must be a string");
+  }
+
+  return {
+    version: 2,
+    workspace: value.workspace,
+    enabled: Boolean(value.enabled),
+  };
+}
+
+export function readEnabled(config: ConfigDocument): boolean {
+  return Boolean(config.enabled);
+}
+
+export function setEnabled(source: string, enabled: boolean): string {
+  const config = parseConfig(source);
+  return JSON.stringify({ ...config, enabled: Boolean(enabled) }, null, 2);
+}

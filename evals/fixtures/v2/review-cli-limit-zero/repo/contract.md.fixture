@@ -1,0 +1,3 @@
+# Batch CLI contract
+
+When --limit is omitted, the command uses the default of 25. An explicit --limit 0 is valid and processes no pending items. A positive integer processes at most that many items. Negative and non-integer values are rejected.

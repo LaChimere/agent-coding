@@ -1,0 +1,61 @@
+import { expect, test } from "bun:test";
+import { parseConfig, readEnabled, setEnabled } from "../src/config.ts";
+
+test("v1 files keep their version and unknown nested properties after an update", () => {
+  const source = JSON.stringify({
+    version: 1,
+    workspace: "index",
+    extensions: { writer: "new-tool", values: [1, null, { keep: true }] },
+  });
+  const parsed = parseConfig(source);
+  expect(parsed.version).toBe(1);
+  expect(readEnabled(parsed)).toBe(false);
+  expect(parsed.extensions).toEqual({ writer: "new-tool", values: [1, null, { keep: true }] });
+
+  const updated = JSON.parse(setEnabled(source, true));
+  expect(updated.version).toBe(1);
+  expect(updated.enabled).toBe(true);
+  expect(updated.extensions).toEqual({ writer: "new-tool", values: [1, null, { keep: true }] });
+});
+
+test("v2 updates change only the known setting", () => {
+  const source = JSON.stringify({
+    version: 2,
+    workspace: "docs",
+    enabled: true,
+    writer: "new-tool",
+    values: [null, 7, { untouched: "yes" }],
+    future: { owner: "another-tool", metadata: { active: true } },
+  });
+  const parsed = parseConfig(source);
+  expect(parsed.version).toBe(2);
+  expect(readEnabled(parsed)).toBe(true);
+  expect(parsed.writer).toBe("new-tool");
+  expect(parsed.values).toEqual([null, 7, { untouched: "yes" }]);
+  expect(parsed.future).toEqual({ owner: "another-tool", metadata: { active: true } });
+
+  const updated = JSON.parse(setEnabled(source, false));
+  expect(updated).toEqual({
+    version: 2,
+    workspace: "docs",
+    enabled: false,
+    writer: "new-tool",
+    values: [null, 7, { untouched: "yes" }],
+    future: { owner: "another-tool", metadata: { active: true } },
+  });
+  expect(readEnabled(parseConfig(JSON.stringify(updated)))).toBe(false);
+});
+
+test("malformed documents and invalid enabled values reject", () => {
+  for (const source of [
+    "{",
+    "null",
+    "[]",
+    JSON.stringify({ version: 3, workspace: "x" }),
+    JSON.stringify({ version: 1, workspace: 5 }),
+    JSON.stringify({ version: 2, workspace: "x", enabled: "yes" }),
+  ]) {
+    expect(() => parseConfig(source)).toThrow();
+  }
+  expect(() => setEnabled('{"version":1,"workspace":"x"}', "yes" as unknown as boolean)).toThrow(TypeError);
+});

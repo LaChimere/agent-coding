@@ -1,0 +1,25 @@
+import { expect, test } from "bun:test";
+import { resolveConfig } from "../src/index.ts";
+
+test("an explicit false environment setting disables a file-enabled feature", () => {
+  const result = resolveConfig(
+    { feature: true, region: "default" },
+    { feature: true, region: "file" },
+    { feature: false, region: "environment" },
+  );
+
+  expect(result).toEqual({ feature: false, region: "environment" });
+});
+
+test("undefined falls through to the next configured layer", () => {
+  expect(resolveConfig(
+    { attempts: 3 },
+    { attempts: 5 },
+    { attempts: undefined },
+  )).toEqual({ attempts: 5 });
+  expect(resolveConfig(
+    { enabled: true, attempts: 3, empty: "default" },
+    { enabled: false, attempts: 0, empty: "" },
+    {},
+  )).toEqual({ enabled: false, attempts: 0, empty: "" });
+});

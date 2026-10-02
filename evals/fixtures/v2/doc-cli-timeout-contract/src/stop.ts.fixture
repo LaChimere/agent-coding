@@ -1,0 +1,38 @@
+export const drainTimeoutContract = {
+  option: "--drain-timeout",
+  operand: "SECONDS",
+  defaultSeconds: 30,
+  minimumSeconds: 5,
+  maximumSeconds: 120,
+  previousOption: null,
+} as const;
+
+export function parseDrainTimeout(args: string[]): number {
+  const index = args.indexOf(drainTimeoutContract.option);
+  const raw = index < 0 ? String(drainTimeoutContract.defaultSeconds) : args[index + 1];
+  if (raw === undefined || !/^\d+$/.test(raw)) {
+    throw new Error("Expected a whole number of seconds.");
+  }
+  const seconds = Number(raw);
+  if (seconds < drainTimeoutContract.minimumSeconds || seconds > drainTimeoutContract.maximumSeconds) {
+    throw new RangeError("Drain timeout is outside the supported range.");
+  }
+  return seconds;
+}
+
+export async function stopAfterDrain(timeoutSeconds: number, service: Service): Promise<StopResult> {
+  service.requestGracefulStop();
+  const drained = await service.waitForDrain(timeoutSeconds * 1000);
+  return drained
+    ? { status: "stopped" }
+    : { status: "timeout", processStillRunning: true };
+}
+
+export interface Service {
+  requestGracefulStop(): void;
+  waitForDrain(timeoutMilliseconds: number): Promise<boolean>;
+}
+
+export type StopResult =
+  | { status: "stopped" }
+  | { status: "timeout"; processStillRunning: true };

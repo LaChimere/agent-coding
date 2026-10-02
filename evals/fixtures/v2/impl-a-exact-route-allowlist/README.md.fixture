@@ -1,0 +1,5 @@
+# Route allowlist
+
+Run the visible checks with bun test.
+
+The public API is isRouteAllowed(route, allowlist). Each allowlist entry is one exact route string. Matching is case-sensitive. A trailing slash is significant. Entries are not prefixes or wildcard patterns, and the function does not trim or normalize either input.

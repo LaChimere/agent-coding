@@ -1,0 +1,15 @@
+export interface Actor {
+  id: string;
+  teamRoles: Readonly<Record<string, readonly string[]>>;
+}
+
+export interface DocumentRef {
+  id: string;
+  teamId: string;
+}
+
+export function canReadDocument(actor: Actor, document: DocumentRef): boolean {
+  return Object.values(actor.teamRoles).some((permissions) =>
+    permissions.includes('documents:read'),
+  );
+}

@@ -1,0 +1,16 @@
+export interface Actor {
+  organizationId: string;
+  role: 'owner' | 'auditor' | 'member';
+}
+
+export interface AuditRecord {
+  id: string;
+  organizationId: string;
+}
+
+export function canReadAudit(actor: Actor, record: AuditRecord): boolean {
+  if (actor.organizationId !== record.organizationId) {
+    return false;
+  }
+  return actor.role === 'owner' || actor.role === 'auditor';
+}

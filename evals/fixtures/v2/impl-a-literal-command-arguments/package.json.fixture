@@ -1,0 +1,8 @@
+{
+  "name": "impl-a-literal-command-arguments",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "bun test"
+  }
+}

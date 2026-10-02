@@ -1,0 +1,27 @@
+PAGE_DEFAULT = 100
+PAGE_MAX = 500
+
+
+def page_events(rows, project_id, start, end, cursor=None, limit=None):
+    if start >= end:
+        raise ValueError("invalid time range")
+    requested = PAGE_DEFAULT if limit is None else limit
+    if requested < 1:
+        raise ValueError("limit must be positive")
+    size = min(requested, PAGE_MAX)
+    selected = [
+        row for row in rows
+        if row["project_id"] == project_id and start <= row["occurred_at"] < end
+    ]
+    selected.sort(key=lambda row: (row["occurred_at"], row["id"]))
+    if cursor is not None:
+        selected = [
+            row for row in selected
+            if (row["occurred_at"], row["id"]) > cursor
+        ]
+    items = selected[:size]
+    next_cursor = None
+    if len(selected) > len(items):
+        last = items[-1]
+        next_cursor = (last["occurred_at"], last["id"])
+    return {"items": items, "next_cursor": next_cursor}

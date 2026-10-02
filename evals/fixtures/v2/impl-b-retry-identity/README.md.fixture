@@ -1,0 +1,3 @@
+# Index refresh retry coordinator
+
+RefreshCoordinator owns retries for a single index refresh operation. run takes one operation with operationId and collection fields and a handler. Every handler attempt sees those same fields and a separate one-based attempt number. maxAttempts is a positive integer and includes the first handler call. The optional wait hook receives the failed attempt number and runs only when another attempt will be made. Success returns the handler result; the final handler error is propagated unchanged.

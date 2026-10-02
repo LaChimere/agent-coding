@@ -1,0 +1,63 @@
+import { expect, test } from "bun:test";
+import { appendUniqueEvents } from "../src/event-batch.ts";
+import { EventReplayReader } from "../src/event-replay.ts";
+
+test("first event wins and original order is retained across both arrays", () => {
+  const first = { id: "alpha", sequence: 1, kind: "opened" };
+  const laterAlpha = { id: "alpha", sequence: 9, kind: "duplicate" };
+  const existing = [first, laterAlpha, { id: "beta", sequence: 2, kind: "saved" }];
+  const incoming = [
+    { id: "beta", sequence: 10, kind: "replayed" },
+    { id: "gamma", sequence: 3, kind: "closed" },
+    { id: "gamma", sequence: 11, kind: "duplicate" },
+  ];
+
+  const before = structuredClone([existing, incoming]);
+  const result = appendUniqueEvents(existing, incoming);
+  expect(result.map((event) => event.id)).toEqual(["alpha", "beta", "gamma"]);
+  expect(result[0]).toEqual(first);
+  expect(result[1]).toEqual(existing[2]);
+  expect(result[2]).toEqual(incoming[1]);
+  expect(existing).toHaveLength(3);
+  expect(incoming).toHaveLength(3);
+  expect([existing, incoming]).toEqual(before);
+});
+
+test("opaque strings such as empty and prototype-named ids are ordinary ids", () => {
+  const existing = [{ id: "__proto__", sequence: 1, kind: "old" }];
+  const incoming = [
+    { id: "", sequence: 2, kind: "blank" },
+    { id: "__proto__", sequence: 3, kind: "later" },
+  ];
+
+  const before = structuredClone([existing, incoming]);
+  const result = appendUniqueEvents(existing, incoming);
+  expect(result.map((event) => event.id)).toEqual(["__proto__", ""]);
+  expect(result[1]).toEqual(incoming[0]);
+  expect([existing, incoming]).toEqual(before);
+});
+
+test("the replay reader deduplicates across successive appends", () => {
+  const reader = new EventReplayReader();
+  reader.append([
+    { id: "alpha", sequence: 1, kind: "opened" },
+    { id: "beta", sequence: 2, kind: "saved" },
+  ]);
+  reader.append([
+    { id: "beta", sequence: 3, kind: "replayed" },
+    { id: "gamma", sequence: 4, kind: "closed" },
+  ]);
+
+  expect(reader.list()).toEqual([
+    { id: "alpha", sequence: 1, kind: "opened" },
+    { id: "beta", sequence: 2, kind: "saved" },
+    { id: "gamma", sequence: 4, kind: "closed" },
+  ]);
+});
+
+test("empty input still returns a fresh array", () => {
+  const input: Array<{ id: string; sequence: number; kind: string }> = [];
+  const result = appendUniqueEvents(input, []);
+  expect(result).toEqual([]);
+  expect(result).not.toBe(input);
+});

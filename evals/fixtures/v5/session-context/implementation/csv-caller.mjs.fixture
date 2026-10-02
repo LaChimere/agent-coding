@@ -1,0 +1,6 @@
+import { formatCsvRow } from "./csv-exporter.mjs";
+
+/** Existing caller: each row is an array of column values. */
+export function writeCsv(rows) {
+  return rows.map((fields) => formatCsvRow(fields)).join("");
+}

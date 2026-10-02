@@ -1,0 +1,14 @@
+import type { RowParseError } from './parser.ts';
+
+export interface ImportLogger {
+  warn(record: Record<string, unknown>): void;
+}
+
+export function recordImportFailure(logger: ImportLogger, error: RowParseError): void {
+  logger.warn({
+    event: 'import_rejected',
+    line: error.lineNumber,
+    message: error.message,
+    sample: error.rowText,
+  });
+}

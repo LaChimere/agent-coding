@@ -1,0 +1,5 @@
+# Logging API reference
+
+All records are retained for seven days. A scheduled cleanup runs daily at 03:00 local time and archives expired logs instead of deleting them.
+
+Policy implementation: `src/logging-policy.ts`

@@ -1,0 +1,9 @@
+/** Milliseconds elapsed since this process started; the value resets on restart. */
+export function processUptimeMs(): number {
+  return process.uptime() * 1_000;
+}
+
+/** Milliseconds since the Unix epoch, comparable across process restarts. */
+export function wallClockEpochMs(): number {
+  return Date.now();
+}

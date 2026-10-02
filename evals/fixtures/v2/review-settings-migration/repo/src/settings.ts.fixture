@@ -1,0 +1,48 @@
+export type AccessMode = 'private' | 'workspace';
+
+export interface Settings {
+  accessMode: AccessMode;
+  retentionDays: number;
+}
+
+export interface SettingsFiles {
+  read(path: string): Promise<string | null>;
+  write(path: string, contents: string): Promise<void>;
+}
+
+export const DEFAULT_SETTINGS: Settings = {
+  accessMode: 'private',
+  retentionDays: 30,
+};
+
+function parseCurrent(contents: string): Settings {
+  const value = JSON.parse(contents) as Partial<Settings>;
+  return {
+    accessMode: value.accessMode === 'workspace' ? 'workspace' : 'private',
+    retentionDays: Number.isSafeInteger(value.retentionDays) ? value.retentionDays! : 30,
+  };
+}
+
+function migrateLegacy(contents: string): Settings {
+  const value = JSON.parse(contents) as {
+    shareWithinWorkspace?: unknown;
+    retainDays?: unknown;
+  };
+  return {
+    accessMode: value.shareWithinWorkspace === true ? 'workspace' : 'private',
+    retentionDays: Number.isSafeInteger(value.retainDays) ? Number(value.retainDays) : 30,
+  };
+}
+
+export async function loadSettings(
+  files: SettingsFiles,
+  currentPath: string,
+  legacyPath: string,
+): Promise<Settings> {
+  const current = await files.read(currentPath);
+  if (current === null) {
+    return { ...DEFAULT_SETTINGS };
+  }
+
+  return parseCurrent(current);
+}

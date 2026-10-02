@@ -1,0 +1,19 @@
+import { expect, test } from "bun:test";
+import { buildInvocation } from "../src/index.ts";
+
+test("paths remain literal arguments after the option terminator", () => {
+  expect(buildInvocation("indexer", ["--format", "json"], ["folder/my file", "-draft.txt"])).toEqual({
+    command: "indexer",
+    args: ["--format", "json", "--", "folder/my file", "-draft.txt"],
+  });
+});
+
+test("does not mutate options or paths", () => {
+  const options = ["--label", "two words"];
+  const paths = ["one file", "-other"];
+
+  buildInvocation("indexer", options, paths);
+
+  expect(options).toEqual(["--label", "two words"]);
+  expect(paths).toEqual(["one file", "-other"]);
+});

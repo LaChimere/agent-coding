@@ -1,0 +1,5 @@
+# Local report options
+
+parseReportOptions accepts a readonly array of command-line tokens. Omitted values default to format text, maxItems 100 and dryRun false. Supported tokens are --format followed by text or json, --max-items followed by a nonempty string containing only ASCII digits 0-9, whose decimal value is from 1 through 500 (hexadecimal and exponent tokens are invalid), and --dry-run by itself. Options can appear in any order. Each option may appear once. Unknown tokens, duplicates, missing values, invalid values and extra positional arguments throw an Error whose message includes the offending option or argument. The input token array is not modified.
+
+prepareReport parses the tokens, selects at most maxItems rows in their original order, serializes selected rows as JSON for json format or joins them with newlines for text format, and returns that output together with dryRun for its writer.

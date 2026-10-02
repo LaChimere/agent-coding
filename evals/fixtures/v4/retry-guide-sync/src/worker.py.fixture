@@ -1,0 +1,9 @@
+from retry_policy import retry_delay
+
+
+def handle_failure(job, failure, scheduler, dead_letter):
+    delay = retry_delay(job.attempt, failure.code)
+    if delay is None:
+        dead_letter(job)
+        return
+    scheduler.schedule(job, delay_seconds=delay)

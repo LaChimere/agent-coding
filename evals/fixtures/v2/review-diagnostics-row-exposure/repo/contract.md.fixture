@@ -1,0 +1,3 @@
+# Import diagnostic contract
+
+CSV rows can contain names, email addresses, and other customer-provided values. Import rejection events may include the event name, line number, and a generic parse message. They must not contain raw row text or cell values. The parser's RowParseError.rowText exists for local control flow and is not approved for logs.

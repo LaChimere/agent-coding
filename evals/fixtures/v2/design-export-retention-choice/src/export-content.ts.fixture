@@ -1,0 +1,12 @@
+export const includedExportData = [
+  "entry body",
+  "reviewer comments",
+  "attachments",
+  "owner display name",
+] as const;
+
+export const snapshotMapping = {
+  source: "entry id plus revision at request time",
+  attachmentSource: "tenant-scoped object keys",
+  archiveCopiesCreatedToday: 0,
+} as const;

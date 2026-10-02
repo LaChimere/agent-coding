@@ -1,0 +1,9 @@
+from event_query import events_page
+
+
+def list_events(repository, project_id, cursor, limit):
+    if not 1 <= limit <= 100:
+        raise ValueError("limit out of range")
+    after = None if cursor is None else (cursor["created_at"], cursor["id"])
+    page = events_page(repository.events_for_project(project_id), after, limit)
+    return {"items": page["items"], "next_cursor": page["next_cursor"]}

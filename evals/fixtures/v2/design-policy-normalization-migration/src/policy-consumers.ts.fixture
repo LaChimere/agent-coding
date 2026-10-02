@@ -1,0 +1,12 @@
+export const consumers = [
+  { name: "api", reads: "payload JSONB", writes: "whole rules array", preservesOrder: true },
+  { name: "scheduler", reads: "payload JSONB", behavior: "evaluates rules in order" },
+  { name: "exporter", reads: "payload JSONB in SQL", schedule: "hourly" },
+  { name: "admin-console", writes: "whole rules array", unknownKeys: "round-tripped" },
+] as const;
+
+export const currentWriteMapping = {
+  ruleOrdinal: "array position",
+  duplicateRules: "preserved",
+  unknownKeys: "stored in each JSON rule",
+} as const;

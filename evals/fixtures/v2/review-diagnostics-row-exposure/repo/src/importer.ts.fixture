@@ -1,0 +1,15 @@
+import { recordImportFailure, type ImportLogger } from './diagnostics.ts';
+import { parseRecords, RowParseError } from './parser.ts';
+
+export function importRecords(contents: string, logger: ImportLogger) {
+  try {
+    return { status: 'accepted' as const, rows: parseRecords(contents) };
+  } catch (error) {
+    if (!(error instanceof RowParseError)) {
+      throw error;
+    }
+
+    recordImportFailure(logger, error);
+    return { status: 'rejected' as const, line: error.lineNumber };
+  }
+}

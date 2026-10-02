@@ -1,0 +1,6 @@
+export function isRouteAllowed(
+  route: string,
+  allowlist: readonly string[],
+): boolean {
+  return allowlist.some((entry) => route.startsWith(entry));
+}
