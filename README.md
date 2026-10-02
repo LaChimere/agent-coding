@@ -195,9 +195,7 @@ checks validate skill content, not native plugin installation or independent ope
 #### Compatibility evidence
 
 Historical orchestration checkpoints are recorded in
-[coding-orchestration validation](docs/coding-orchestration/validation.md). Current refinement
-checks and their limits are recorded in
-[workflow refinement](docs/coding-orchestration/workflow-refinement.md).
+[coding-orchestration validation](docs/coding-orchestration/validation.md).
 The following installation and publication observations are historical evidence for `0.1.1`.
 
 Local candidate verification on 2026-09-07:
@@ -288,9 +286,6 @@ and invoke the relevant specialist directly. Workflow `0.2.1` supplies `anti-slo
 `decompose-feature`, `ensure-atomic-pr` and `refresh-related-docs`. Its skills provide engineering
 methods, with an optional engineering-design template. General change-set review uses `pr-review`
 when needed; neither plugin is mandatory for ordinary native work.
-
-The [personal workflow refinement record](docs/coding-orchestration/workflow-refinement.md)
-summarizes the current delivery and reused daily-task checks, including the limits of the results.
 
 ### Personal Codex orchestration
 
@@ -393,7 +388,6 @@ risk and preserve the user's stated constraints.
 
 Workflow `0.2.1` is the commit-focused repository candidate with four engineering specialists
 and an optional design template. Content refinement, behavioral evidence and local activation
-are separate; repository edits do not update existing installations. The refinement record
-identifies the tested snapshots and the limits of reused evaluation results.
+are separate; repository edits do not update existing installations.
 
 The central `evals/` project evaluates Codex with frozen inputs, native installation and discovery, actual task execution, independent grading, and resource records. Claude Code and Copilot CLI retain distribution/adaptation checks without model-effectiveness evaluation. See [the evaluation guide](evals/README.md) and [the acceptance report](docs/evaluation/acceptance.md). Historical certification is not certification of a new candidate. Each result identifies its runtime snapshot, frozen corpus, model/settings and actual execution evidence; unrun, ungraded and failed checks are not passes.
