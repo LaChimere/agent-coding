@@ -1,6 +1,6 @@
 # Engineering specialists and harness boundaries v0.2
 
-Updated 2026-10-03. This is the current design; [validation.md](validation.md) retains historical
+Updated 2026-10-06. This is the current design; [validation.md](validation.md) retains historical
 checks and their limits. Earlier results do not qualify this revision or its role/model mapping.
 This revision covers engineering methods and instruction ownership. Formal behavioral evaluation
 and local activation are separate work; environment diagnostics are not final acceptance.
@@ -15,6 +15,10 @@ The primary agent owns requirements, material decisions, authorization, integrat
 and final acceptance. It reasons about dependencies and asks about unresolved consequential
 choices in the conversation. Progress records do not expand commit, external-write or
 destructive-action authority, and completion claims require actual verification evidence.
+Implementation prioritizes an exercised path from the real entry point to a usable result while
+preserving required constraints and safeguards. That slice is a checkpoint toward the approved
+outcome. Added infrastructure and defenses need a current requirement or credible failure mode;
+test counts, coverage percentages and review rounds are not delivery goals.
 
 The workflow plugin supplies engineering methods for change quality, commit structure and related
 documentation. Commit sequences and engineering designs are task outputs; they do not
@@ -35,10 +39,13 @@ Each skill is independently usable from its installed package. General change-se
 the separate `pr-review` plugin when needed. Missing required capabilities remain explicit gaps;
 no automatic installation or imitation.
 
-`anti-slop` challenges necessity, behavioral evidence and maintenance cost. `pr-review` covers
+`anti-slop` challenges necessity, behavioral evidence, test value and maintenance cost. `pr-review` covers
 the requested change-set review aspects and independent scrutiny. Either can identify correctness
 issues; overlapping findings with the same cause are combined. A focused assessment does not
 establish full PR or specialist security coverage, and neither plugin automatically invokes the other.
+Test assessment checks independent expectations, meaningful failure controls and retained proof
+when coverage changes. A useful static contract guard or testing seam is not redundant merely
+because it resembles implementation. These are checking methods, not another required workflow.
 
 ## Instruction ownership
 
