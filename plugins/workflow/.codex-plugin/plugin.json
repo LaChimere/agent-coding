@@ -1,6 +1,6 @@
 {
   "name": "workflow",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Four independent specialists for change quality, commit structure and documentation.",
   "author": {
     "name": "LaChimere",

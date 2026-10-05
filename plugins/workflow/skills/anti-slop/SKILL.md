@@ -13,8 +13,9 @@ alone do not establish that a change is necessary or correct.
 
 Read the request, selected decisions and named change. Inspect affected callers, contracts and
 relevant verification. State what behavior the change should produce and why it is needed;
-judge additions against that outcome. Expand inspection when a concrete dependency or proof
-gap requires it, keeping unrelated work outside the assessment.
+judge additions against that outcome and its required implementation constraints. Check whether
+a similar-looking result substitutes for the requested behavior or method. Expand inspection when
+a concrete dependency or proof gap requires it, keeping unrelated work outside the assessment.
 
 For ongoing work, use related changes and prior failed fixes when they explain accumulating
 complexity or a mistaken assumption. Missing context is a limitation to report, not a reason
@@ -24,10 +25,16 @@ to invent requirements.
 
 ## Necessity and scope
 
-Connect new options, flags, abstractions, compatibility paths and fallback behavior to an actual
-requirement or demonstrated execution condition. Hypothetical future consumers do not justify
-extension points. Distinguish validation at an external boundary from redundant checks on values
-already guaranteed by an internal contract.
+Connect new validation, options, flags, abstractions, dependencies, compatibility, retries and
+fallback behavior to an actual requirement or credible failure mode and consequence. Hypothetical
+future consumers do not justify extension points. Distinguish validation at an external boundary
+from redundant checks on values already guaranteed by an internal contract.
+
+For ongoing implementation, check whether the smallest complete path from the actual entry point
+to a usable result has been exercised, or whether infrastructure and hypothetical safeguards are
+delaying it. Recommend an authorized representative run or a bounded correction at the blocked
+step. Preserve required safety, data integrity and repository gates; a working slice does not
+complete a larger approved outcome.
 
 Identify unrelated cleanup and changes to shared consumers beyond the requested scope. Recommend
 the smallest coherent correction that preserves selected behavior and necessary safeguards.
@@ -44,6 +51,18 @@ a contractually fixed value is not automatically hard-coding. Check that tests e
 behavior rather than mirror the implementation or assert states the interface cannot produce.
 Changing expectations, suppressing errors or skipping a check requires its own justification;
 a green result alone cannot justify weakening the behavior being checked.
+
+For changed tests, identify the protected contract, credible regression, gap in existing coverage
+and any production interface introduced only for testing. Inspect expectations derived from the
+subject under test, mocks that supply the behavior being asserted and negative cases that pass
+because a different guard rejects the input. For bug fixes, inspect available evidence of failure
+on pre-fix code for the intended reason and success after repair; missing evidence is a verification
+gap, not proof that the fix is wrong.
+
+Before recommending consolidation or deletion, identify the independent proof that remains for
+each distinct risk. Source checks, call ordering and test seams can protect real public, protocol,
+security or architecture contracts; prove redundancy rather than deleting by pattern, speed or
+line count. Prefer exercising existing production boundaries over adding test-only scaffolding.
 
 ## Reuse and complexity
 

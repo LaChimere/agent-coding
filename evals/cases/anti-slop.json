@@ -287,9 +287,9 @@
         "metric": "criterion-003",
         "config": {
           "core": true,
-          "method": "text-rubric",
+          "method": "artifact-rubric",
           "requirements": ["expectation-003"],
-          "rubric": "Solves parsing for real inputs, not just a single example value."
+          "rubric": "Inspect implementation and retained execution evidence. Pass only when the parser implements the documented format for representative inputs and a focused run demonstrates the expected behavior. A blocked run or missing execution evidence is unknown, not passed, unless available artifacts establish a contract violation, which is failed. A relevant observed parsing failure is failed; an infrastructure failure alone leaves behavior unknown. Do not credit a success claim or speculative infrastructure as execution evidence."
         }
       },
       {
@@ -588,7 +588,7 @@
           "core": true,
           "method": "artifact-rubric",
           "requirements": ["expectation-004"],
-          "rubric": "Treats a green test built on hard-coded values as not-yet-proven."
+          "rubric": "Treats a green test built on hard-coded values as not-yet-proven. Uses expectations independent of the parser being checked. When reporting regression-test evidence, distinguishes an observed pre-fix failure for the intended reason from an unrun or unrelated failure; does not invent a failing control."
         }
       }
     ]

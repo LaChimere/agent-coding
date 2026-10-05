@@ -282,7 +282,7 @@ the final decision to the primary agent.
 ### Using the workflow plugin
 
 Install the complete plugin through the [native installation instructions](#native-plugin-installation)
-and invoke the relevant specialist directly. Workflow `0.2.1` supplies `anti-slop`,
+and invoke the relevant specialist directly. Workflow `0.2.2` supplies `anti-slop`,
 `decompose-feature`, `ensure-atomic-pr` and `refresh-related-docs`. Its skills provide engineering
 methods, with an optional engineering-design template. General change-set review uses `pr-review`
 when needed; neither plugin is mandatory for ordinary native work.
@@ -386,7 +386,7 @@ risk and preserve the user's stated constraints.
 
 ## Status
 
-Workflow `0.2.1` is the commit-focused repository candidate with four engineering specialists
+Workflow `0.2.2` is the commit-focused repository candidate with four engineering specialists
 and an optional design template. Content refinement, behavioral evidence and local activation
 are separate; repository edits do not update existing installations.
 
