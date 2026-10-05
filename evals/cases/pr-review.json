@@ -2906,7 +2906,7 @@
           "core": true,
           "method": "artifact-rubric",
           "requirements": ["expectation-000"],
-          "rubric": "Inspects the actual patch/source/test and identifies the reachable swallowed parse-error regression against the supplied original contract."
+          "rubric": "Inspects the actual patch/source/test and identifies the reachable swallowed parse-error regression against the supplied original contract. Explains that the existing valid-JSON assertion does not protect malformed-JSON error propagation and identifies a focused regression assertion at importProfile's real boundary. Keeps a missing pre-fix run distinct from a demonstrated code defect and does not execute tests or mutate code during read-only test review."
         }
       },
       {

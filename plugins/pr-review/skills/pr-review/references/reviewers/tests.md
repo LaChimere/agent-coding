@@ -29,14 +29,33 @@ Check whether changed tests:
 
 - assert observable outcomes instead of private implementation sequence;
 - would fail if the intended behavior regressed;
+- protect a distinct risk not already covered at a stronger owning boundary;
 - avoid assertions so broad that the wrong behavior also passes;
+- derive expected results independently of the implementation under test;
 - isolate the behavior without mocking away the condition under test;
+- exercise negative cases that fail for the intended reason, not an unrelated guard;
 - use realistic failure and boundary inputs;
 - remain deterministic under concurrency, time, randomness, and ordering;
 - follow applicable repository test conventions.
 
 Identify tests that only prove a helper ran, a mock was called, or a command exited zero when the
 claimed behavior was never exercised.
+
+For bug fixes, inspect retained evidence that the regression test fails on pre-fix code for the
+intended reason and passes after repair. When that evidence is absent, state the limit and a
+focused way to establish it; absence alone is not an implementation defect. This remains a
+read-only review and does not authorize running a control or mutating production code.
+
+Inspect production exports, flags, wrappers and injection hooks added for tests. Prefer tests at
+existing owning boundaries; assess whether a seam supports a real contract or only preserves
+test scaffolding. Test-only usage alone does not prove an interface should be removed.
+
+For weakened, consolidated or removed assertions, identify the contract-based justification and
+the remaining proof for each distinct risk. Inspect relevant history when needed to understand
+why the test exists. Retain independent public API, protocol, storage, security, release and
+architecture guards, including static checks and observable call ordering. Behavior-preserving
+refactoring should preserve behavioral tests; exact bytes, paths or structure may themselves be
+the contract. Speed, line counts and resemblance to implementation are not deletion evidence.
 
 When repository guidance requires executing a validation command, inspect the command or its
 configured script before treating its success text as test evidence. State what tests or assertions
