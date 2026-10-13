@@ -30,7 +30,7 @@ Detailed rules live in the `global-agent-rules` skill (installed with the `workf
 | Commit, push, open/update a PR, merge, or recover from a Git failure | `global-agent-rules` → `references/git-publication.md` |
 | Delegate, pick a role or model, take over a worker, or integrate review findings | `global-agent-rules` → `references/delegation-review.md` |
 | Review a PR, branch or change set | `pr-review` plugin (`$pr-review`), plus the project's `docs/decisions.md` |
-| Poll or triage issues, CI runs or alerts | `global-agent-rules` → `references/triage.md` (luna classifies, sol handles) |
+| Poll or triage issues, CI runs or alerts | `global-agent-rules` → `references/triage.md` (`ordinary_worker` classifies; `complex_worker`/`critical_reviewer` handle) |
 | Run multi-step shell/SSH work that changes state | `global-agent-rules` → `references/stateful-remote.md` |
 | Continue earlier work or rely on a tool, model or host capability | `global-agent-rules` → `references/capability-boundaries.md` |
 | Create or change a project's `AGENTS.md`, `docs/`, lessons, decisions or retrospective | `global-agent-rules` → `references/project-docs.md` and its `templates/` |
