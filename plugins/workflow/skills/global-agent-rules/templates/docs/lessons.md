@@ -1,7 +1,7 @@
 # Lessons
 
-Recurring pitfalls. When a pitfall recurs, increment its count and add evidence; do not duplicate the entry.
-At **3 occurrences**, promote it into the relevant `docs/` page or owning skill, add an eval case or test that catches it, and mark the entry promoted.
+Recurring pitfalls. Occurrences count independent events; fixes of the same kind within one PR count once. When a pitfall recurs, increment its count and add evidence; do not duplicate the entry.
+At **3 occurrences**, promote it in the PR that records the third event into the relevant `docs/` page or owning skill, add an eval case or test that catches it, and mark the entry promoted.
 
 Retrospective cadence: weekly by default.
 

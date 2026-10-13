@@ -1,6 +1,6 @@
 {
   "name": "workflow",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Four on-demand specialists for change quality, commit structure and documentation, plus global-agent-rules: the standing rules the global AGENTS.md routing table points to.",
   "author": {
     "name": "LaChimere",
