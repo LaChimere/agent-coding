@@ -21,19 +21,19 @@ These are personal defaults for every repository. More specific `AGENTS.md` file
 
 ## Routing
 
-Detailed rules live in the `working-conventions` skill (installed with the `workflow` plugin) and in each project's `docs/`. Before doing the task in the left column, read the right column; a project's own `AGENTS.md` and `docs/` take precedence over these global defaults.
+Detailed rules live in the `global-agent-rules` skill (installed with the `workflow` plugin) and in each project's `docs/`. Before doing the task in the left column, read the right column; a project's own `AGENTS.md` and `docs/` take precedence over these global defaults.
 
 | Before you | Read |
 |---|---|
-| Edit code or other implementation artifacts | `working-conventions` → `references/implementation.md`; the project's `docs/decisions.md` and `docs/lessons.md` |
-| Add or change tests, validate, report results, or treat CI as passing | `working-conventions` → `references/verification.md` (includes the CI gate) |
-| Commit, push, open/update a PR, merge, or recover from a Git failure | `working-conventions` → `references/git-publication.md` |
-| Delegate, pick a role or model, take over a worker, or integrate review findings | `working-conventions` → `references/delegation-review.md` |
+| Edit code or other implementation artifacts | `global-agent-rules` → `references/implementation.md`; the project's `docs/decisions.md` and `docs/lessons.md` |
+| Add or change tests, validate, report results, or treat CI as passing | `global-agent-rules` → `references/verification.md` (includes the CI gate) |
+| Commit, push, open/update a PR, merge, or recover from a Git failure | `global-agent-rules` → `references/git-publication.md` |
+| Delegate, pick a role or model, take over a worker, or integrate review findings | `global-agent-rules` → `references/delegation-review.md` |
 | Review a PR, branch or change set | `pr-review` plugin (`$pr-review`), plus the project's `docs/decisions.md` |
-| Poll or triage issues, CI runs or alerts | `working-conventions` → `references/triage.md` (luna classifies, sol handles) |
-| Run multi-step shell/SSH work that changes state | `working-conventions` → `references/stateful-remote.md` |
-| Continue earlier work or rely on a tool, model or host capability | `working-conventions` → `references/capability-boundaries.md` |
-| Create or change a project's `AGENTS.md`, `docs/`, lessons, decisions or retrospective | `working-conventions` → `references/project-docs.md` and its `templates/` |
+| Poll or triage issues, CI runs or alerts | `global-agent-rules` → `references/triage.md` (luna classifies, sol handles) |
+| Run multi-step shell/SSH work that changes state | `global-agent-rules` → `references/stateful-remote.md` |
+| Continue earlier work or rely on a tool, model or host capability | `global-agent-rules` → `references/capability-boundaries.md` |
+| Create or change a project's `AGENTS.md`, `docs/`, lessons, decisions or retrospective | `global-agent-rules` → `references/project-docs.md` and its `templates/` |
 | Plan commits or check atomicity; assess change quality; refresh docs | `workflow` plugin: `decompose-feature`, `ensure-atomic-pr`, `anti-slop`, `refresh-related-docs` |
 
 If a routed skill is not installed, say so, apply the communication and authority rules above, and do not recreate the missing skill.

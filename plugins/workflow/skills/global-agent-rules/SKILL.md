@@ -1,5 +1,5 @@
 ---
-name: working-conventions
+name: global-agent-rules
 description: Global engineering conventions that a routing-only AGENTS.md points to. Read the reference named by the routing table before implementation, verification, Git publication, delegation and review, polling or triage, stateful or remote work, continuation, or creating and maintaining a project's docs, lessons, decisions and retrospectives.
 ---
 

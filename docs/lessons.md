@@ -1,7 +1,7 @@
 # Lessons
 
 Recurring pitfalls in this repository's prompts, skills, plugins and evals themselves. Format and
-promotion rules follow the `working-conventions` skill (`references/project-docs.md`).
+promotion rules follow the `global-agent-rules` skill (`references/project-docs.md`).
 
 - Each entry has a rule, reason, evidence links and an occurrence count.
 - When a pitfall recurs, increment its count and add the evidence link; do not duplicate the entry.
