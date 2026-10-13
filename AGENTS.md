@@ -46,6 +46,10 @@ methods and task-specific constraints.
 - If you retire a skill or change its scope, update active references and affected evaluation cases while preserving historical evidence.
 - Treat repo-root `AGENTS.md` as high-impact documentation for this repo, not as a global orchestration layer.
 
+## Lessons
+
+- Before changing prompts, skills, plugins or evals, read [docs/lessons.md](docs/lessons.md) and record recurring pitfalls there.
+
 ## Validation guidance
 
 This repo does not have a single universal build/test pipeline.
