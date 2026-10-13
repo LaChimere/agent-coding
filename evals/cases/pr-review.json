@@ -1023,7 +1023,7 @@
           "core": true,
           "method": "text-rubric",
           "requirements": ["expectation-000"],
-          "rubric": "Uses the required Scope, Summary, Spec Coverage, Review Coverage, Questions, and Recommended Action sections."
+          "rubric": "Uses the required Scope, Summary, Hard Evidence (Revert check, Mutation check, Not run), Spec Coverage, Review Coverage, Questions, and Recommended Action sections."
         }
       },
       {
