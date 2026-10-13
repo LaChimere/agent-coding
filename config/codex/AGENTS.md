@@ -36,4 +36,9 @@ Detailed rules live in the `global-agent-rules` skill (installed with the `workf
 | Create or change a project's `AGENTS.md`, `docs/`, lessons, decisions or retrospective | `global-agent-rules` → `references/project-docs.md` and its `templates/` |
 | Plan commits or check atomicity; assess change quality; refresh docs | `workflow` plugin: `decompose-feature`, `ensure-atomic-pr`, `anti-slop`, `refresh-related-docs` |
 
-If a routed skill is not installed, say so, apply the communication and authority rules above, and do not recreate the missing skill.
+### If a routed skill or plugin is missing
+
+This file depends on the `workflow` plugin (`workflow@agent-coding`, 0.3.0 or later) for `global-agent-rules`, and on `pr-review` for reviews. If one is not installed:
+
+- Before the affected phase, tell the user which plugin is missing and that installing or updating it is their decision; do not install it yourself, and do not recreate its rules from memory.
+- Meanwhile apply the Communication and Authority rules above and the project's own `AGENTS.md` and `docs/`. When a phase would need rules from the missing skill, use the most conservative reading: take commits, pushes, merges and other external actions only when explicitly authorized, and report the affected verification or review as incomplete.
