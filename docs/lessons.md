@@ -23,4 +23,4 @@ promotion rules follow the `global-agent-rules` skill (`references/project-docs.
 - Reason: Plain `rg` skips hidden directories such as `.codex-plugin/` and `.claude-plugin/`, so a rename check reported no matches while both workflow manifests still named `working-conventions`.
 - Evidence: [PR #11 review, MAJOR-01](https://github.com/LaChimere/agent-coding/pull/11#issuecomment-6142031183); fix commit `7071aaf`.
 - Occurrences: 1
-- Status: active; follow-up planned for the next PR: a distribution test that every skill referenced in plugin manifests exists.
+- Status: active; enforced by the `manifests reference only existing skills` case in `evals/tests/distribution.test.ts`, which fails when a plugin manifest names a skill (kebab-case or `$skill`) that has no `skills/<name>/SKILL.md` in that plugin. Hidden-aware search is still required for renames outside manifests.
