@@ -61,3 +61,13 @@ Settled decisions for contributions to `agent-coding`. Reviews check whether a c
 - Alternatives rejected: Changing the hook config: it is part of the frozen baseline and would not protect other git callers.
 - Consequences: New fixture git calls must use the stripped environment; a regression test covers it.
 - Links: [PR #10](https://github.com/LaChimere/agent-coding/pull/10)
+
+## D-007: Plugin manifests are not required to name every skill
+
+- Date: 2026-10-13
+- Status: accepted
+- Context: A reverse check (every skill directory must be named in its plugin manifests) was proposed after PR #12.
+- Decision: Manifest `description` and `interface` text stay human-facing summaries; skills are discovered from the plugin's `skills/` directory. The distribution test checks only that skill names a manifest does mention exist.
+- Alternatives rejected: Require every skill name in the manifests: neither host needs it, and it turns summaries into lists.
+- Consequences: Adding a skill needs no manifest edit; renaming one still fails the test if a manifest names the old skill.
+- Links: [Codex: package your plugin](https://developers.openai.com/plugins/build/plugins), [Codex plugin.json spec](https://github.com/openai/codex/blob/main/codex-rs/skills/src/assets/samples/plugin-creator/references/plugin-json-spec.md), [Claude Code plugin manifest reference](https://code.claude.com/docs/en/plugins-reference)
