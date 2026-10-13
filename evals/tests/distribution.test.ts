@@ -131,3 +131,56 @@ test.each(pluginNames)(
     }
   },
 );
+
+// Prose words that look like skill names but are not; extend deliberately.
+const nonSkillCompounds = new Set([
+  'double-confirms',
+  'evidence-checked',
+  'on-demand',
+  'project-docs',
+  'routing-only',
+]);
+
+function proseOf(manifest: Record<string, unknown>): string[] {
+  const { description, interface: ui } = manifest;
+  const values: unknown[] = [description, ...Object.values((ui ?? {}) as Record<string, unknown>)];
+  return values.flat().filter((value): value is string => typeof value === 'string');
+}
+
+test.each(pluginNames)('plugin %s manifests reference only existing skills', async (name) => {
+  const pluginRoot = resolve(repository, 'plugins', name);
+  const codex = (await Bun.file(resolve(pluginRoot, '.codex-plugin/plugin.json')).json()) as Record<
+    string,
+    unknown
+  >;
+  const shared = (await Bun.file(
+    resolve(pluginRoot, '.claude-plugin/plugin.json'),
+  ).json()) as Record<string, unknown>;
+  const skillsRoot = resolve(pluginRoot, String(codex['skills']));
+  const skills = new Set<string>();
+
+  for (const entry of await readdir(skillsRoot, { withFileTypes: true })) {
+    if (!entry.isDirectory()) {
+      continue;
+    }
+    const document = Bun.file(resolve(skillsRoot, entry.name, 'SKILL.md'));
+
+    expect(await document.exists(), `${name}/skills/${entry.name}/SKILL.md`).toBeTrue();
+    expect((await document.text()).match(/^name:\s*(\S+)\s*$/mu)?.[1]).toBe(entry.name);
+    skills.add(entry.name);
+  }
+
+  expect(skills.size).toBeGreaterThan(0);
+
+  for (const prose of [...proseOf(codex), ...proseOf(shared)]) {
+    for (const [, sigil, token] of prose.matchAll(/(\$?)\b([a-z0-9]+(?:-[a-z0-9]+)+)\b/gu)) {
+      if (token === undefined || (sigil === '' && nonSkillCompounds.has(token))) {
+        continue;
+      }
+
+      expect([...skills], `manifest reference "${sigil}${token}" in plugin ${name}`).toContain(
+        token,
+      );
+    }
+  }
+});
