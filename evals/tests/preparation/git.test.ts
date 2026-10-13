@@ -1,7 +1,11 @@
 import { afterEach, expect, test } from 'bun:test';
 import { chmod, lstat, mkdir, mkdtemp, rm, symlink } from 'node:fs/promises';
 import { dirname, resolve } from 'node:path';
-import { type FixtureGitEvidence, initializeFixtureGit } from '../../src/preparation/git.ts';
+import {
+  type FixtureGitEvidence,
+  initializeFixtureGit,
+  withoutInheritedGitEnvironment,
+} from '../../src/preparation/git.ts';
 
 const roots: string[] = [];
 
@@ -28,7 +32,7 @@ async function actualGit(
   const child = Bun.spawn({
     cmd: [...command],
     cwd: process.cwd(),
-    env: { ...process.env, ...environmentOverrides },
+    env: { ...withoutInheritedGitEnvironment(process.env), ...environmentOverrides },
     stdout: 'pipe',
     stderr: 'pipe',
   });
