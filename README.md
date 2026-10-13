@@ -51,6 +51,7 @@ plugins/pr-review/                     # Separate review plugin
   skills/spar/
   skills/rubber-duck/
 skills/scan-image-vulnerabilities/      # Standalone, with bundled script and tests
+skills/working-conventions/            # Standalone global rules and project-docs templates routed from AGENTS.md
 .agents/plugins/marketplace.json
 .claude-plugin/marketplace.json        # Claude Code + Copilot CLI marketplace
 evals/                                # Bun/TypeScript Codex evaluation project
@@ -76,6 +77,7 @@ evals/                                # Bun/TypeScript Codex evaluation project
 | `ensure-atomic-pr` | A proposed commit, diff or branch may mix independent concerns | Commit atomicity and concrete recovery boundaries |
 | `refresh-related-docs` | Established behavior makes related Markdown stale | Evidence-backed corrections that preserve accepted decisions and history |
 | `scan-image-vulnerabilities` | Exact images or workload images need Trivy inspection | Fresh-database findings for the actual target images |
+| `working-conventions` | A routing-only `AGENTS.md` points to a phase: implementation, verification and CI, Git publication, delegation and review, triage, stateful work, project docs | Detailed global rules plus `AGENTS.md`, `docs/`, lessons and decisions templates |
 
 The first four are independent skills in the workflow plugin. Image scanning is standalone and
 bundles its scanner script. Assessment requests are read-only; implementation requests authorize
@@ -309,7 +311,7 @@ bindings; the A/B results establish no adoption advantage.
 
 Candidate verification uses isolated configurations for each supported CLI and this worktree's marketplace, not remote `main`. Behavioral evaluation and orchestration-effectiveness acceptance are scoped to Codex. Claude Code and Copilot CLI retain manifest, installation/update, source-identity and discovery checks, without a workflow-effectiveness guarantee. Installing skill snapshots through `npx skills add --copy` tests instruction content only, not plugin discovery. CLI discovery requires its own actual evidence. App UI compatibility remains separately unverified unless exercised; it is not a gate for this repository-only working-tree delivery. A new test thread is a discovery check, not a mandatory work phase for ordinary tasks.
 
-Install `scan-image-vulnerabilities` separately through `npx skills add` when needed; it still requires bash, python3 and Trivy 0.58.0+, with Docker or kubectl only for their respective discovery modes. Manually invoking skills from an unregistered source checkout remains unsupported.
+Install `scan-image-vulnerabilities` and `working-conventions` separately through `npx skills add` when needed; image scanning still requires bash, python3 and Trivy 0.58.0+, with Docker or kubectl only for their respective discovery modes. Manually invoking skills from an unregistered source checkout remains unsupported.
 
 ### Updating an existing installation
 
