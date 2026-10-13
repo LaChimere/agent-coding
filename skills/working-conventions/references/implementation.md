@@ -1,0 +1,11 @@
+# Implementation
+
+Read before implementation edits.
+
+- Before implementation edits, inspect authoritative requirements and affected responsibilities, callers, data flow, failure handling, tests and local patterns. Scale inspection to impact and risk, following concrete dependencies. Simplify scope while preserving necessary understanding and verification; use separate design documents only when material decisions need them.
+- Read the project's `docs/decisions.md` and `docs/lessons.md` when they exist. Do not overturn a recorded decision without a new explicit decision; see [project-docs.md](project-docs.md).
+- For implementation work, prioritize the smallest complete path from the actual entry point through representative input to a usable result. Exercise it early within authority, then extend it to the full approved outcome. A working slice is a checkpoint, not completion; preserve required safeguards and repository gates throughout.
+- Make the smallest coherent change satisfying the outcome and touch directly related files. Added validation, branches, abstractions, dependencies, compatibility, retries and fallbacks need a current requirement or credible failure mode and consequence. Validate external boundaries and rely on established internal contracts; preserve necessary safety and data-integrity checks. Resolve repeated failures at their cause rather than layering compensating patches.
+- Follow local style with descriptive names, focused responsibilities, logical blank-line groups and braced multiline control flow. Reuse existing patterns and remove this change's dead code, empty branches and abandoned scaffolding. Optimize for readable, maintainable behavior rather than line counts or speculative reuse.
+- Preserve behavior outside narrow requests. For open-ended builds, supply conventional details needed for a usable result under the caller's choice rules; ask before adding separate features, external dependencies or unneeded material operational commitments. Shared components may change when required within authorized impact; outside-consumer behavior changes need approval.
+- Preserve unrelated work in dirty worktrees. Stop and explain overlapping edits you cannot safely account for.
