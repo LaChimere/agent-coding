@@ -12,7 +12,7 @@ methods and task-specific constraints.
 
 ## Repository model
 
-- `skills/` contains standalone skills; the four workflow specialists live under `plugins/workflow/skills/`.
+- `skills/` contains standalone skills; the workflow specialists and `working-conventions` live under `plugins/workflow/skills/`.
 - `plugins/` contains shared plugin skills with native distribution for Codex CLI, Claude Code and GitHub Copilot CLI.
 - `evals/` contains the Bun/TypeScript Codex evaluation framework, central cases, fixtures and versioned profiles; it is never distributed with skills. Follow its local `AGENTS.md` and frozen quality baseline.
 - `plugins/workflow/` contains independent quality, commit structure and documentation skills. An optional engineering-design template is bundled with its consuming skill.

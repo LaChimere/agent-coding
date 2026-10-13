@@ -21,7 +21,7 @@ These are personal defaults for every repository. More specific `AGENTS.md` file
 
 ## Routing
 
-Detailed rules live in the `working-conventions` skill and in each project's `docs/`. Before doing the task in the left column, read the right column; a project's own `AGENTS.md` and `docs/` take precedence over these global defaults.
+Detailed rules live in the `working-conventions` skill (installed with the `workflow` plugin) and in each project's `docs/`. Before doing the task in the left column, read the right column; a project's own `AGENTS.md` and `docs/` take precedence over these global defaults.
 
 | Before you | Read |
 |---|---|

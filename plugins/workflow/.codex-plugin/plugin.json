@@ -1,7 +1,7 @@
 {
   "name": "workflow",
-  "version": "0.2.2",
-  "description": "Four independent specialists for change quality, commit structure and documentation.",
+  "version": "0.3.0",
+  "description": "Four on-demand specialists for change quality, commit structure and documentation, plus working-conventions: the standing conventions the global AGENTS.md routing table points to.",
   "author": {
     "name": "LaChimere",
     "url": "https://github.com/LaChimere"
@@ -16,8 +16,8 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "Workflow",
-    "shortDescription": "Inspect quality, structure commits and refresh related docs.",
-    "longDescription": "Four independent skills: anti-slop, decompose-feature, ensure-atomic-pr and refresh-related-docs. Assess change quality, propose coherent commit sequences, inspect commit atomicity and correct related documentation.",
+    "shortDescription": "Inspect quality, structure commits, refresh docs and follow standing conventions.",
+    "longDescription": "Four on-demand skills (anti-slop, decompose-feature, ensure-atomic-pr, refresh-related-docs) assess change quality, propose coherent commit sequences, inspect commit atomicity and correct related documentation. working-conventions holds the standing rules and project-docs templates that a routing-only AGENTS.md points to.",
     "developerName": "LaChimere",
     "category": "Productivity",
     "capabilities": [
@@ -25,7 +25,7 @@
       "Documentation"
     ],
     "defaultPrompt": [
-      "Use a specialist only when its methods help with the requested task."
+      "Use a specialist when it helps; read the working-conventions reference AGENTS.md routes to."
     ]
   }
 }
