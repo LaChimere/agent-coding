@@ -70,4 +70,4 @@ Settled decisions for contributions to `agent-coding`. Reviews check whether a c
 - Decision: Manifest `description` and `interface` text stay human-facing summaries; skills are discovered from the plugin's `skills/` directory. The distribution test checks only that skill names a manifest does mention exist.
 - Alternatives rejected: Require every skill name in the manifests: neither host needs it, and it turns summaries into lists.
 - Consequences: Adding a skill needs no manifest edit; renaming one still fails the test if a manifest names the old skill.
-- Links: [Codex: package your plugin](https://developers.openai.com/plugins/build/plugins), [Codex plugin.json spec](https://github.com/openai/codex/blob/main/codex-rs/skills/src/assets/samples/plugin-creator/references/plugin-json-spec.md), [Claude Code plugin manifest reference](https://code.claude.com/docs/en/plugins-reference)
+- Links: [Codex: package your plugin](https://developers.openai.com/plugins/build/plugins), [Claude Code plugin manifest reference](https://code.claude.com/docs/en/plugins-reference)
