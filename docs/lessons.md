@@ -9,13 +9,13 @@ promotion rules follow the `global-agent-rules` skill (`references/project-docs.
   `evals/cases/` that catches it, and mark the entry promoted with links to both.
 - Retrospective cadence: weekly by default.
 
-## L-001: Create the ignored evals cache before running distribution tests
+## L-001: Tests must not depend on an untracked evals cache directory
 
-- Rule: In a fresh checkout, create `evals/.cache/` (ignored) before `bun test tests/distribution.test.ts`.
-- Reason: The test calls `mkdtemp` under `evals/.cache/` and fails with `ENOENT` when it is missing, which looks like a plugin-distribution regression but is a local-environment gap.
-- Evidence: branch `lachimere/routing-conventions` (PR adding routing conventions), local run on 2026-10-13: 2 fail on unmodified `main`, 3 pass after `mkdir -p evals/.cache`.
-- Occurrences: 1
-- Status: active
+- Rule: Test scratch directories under `evals/.cache/` are created by the test preload (`evals/tests/setup.ts`, wired in `evals/bunfig.toml`); do not rely on a manual `mkdir`.
+- Reason: Tests call `mkdtemp` under `evals/.cache/` and failed with `ENOENT` in a fresh checkout, which looked like a plugin-distribution regression but was a local-environment gap.
+- Evidence: branch `lachimere/routing-conventions`, local run on 2026-10-13: 2 fail on unmodified `main`, 3 pass after `mkdir -p evals/.cache`; recurred in the PR #12 worktree.
+- Occurrences: 2
+- Status: resolved by the test preload; a fresh worktree passes `bun run test` without creating the directory.
 
 ## L-002: Use hidden-aware search when verifying a rename
 
