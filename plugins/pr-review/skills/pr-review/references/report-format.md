@@ -87,6 +87,17 @@ Use this stable Markdown shape. Omit empty severity sections, but include all ze
 - Impact: <observable consequence>
 - Recommendation: <bounded correction direction>
 
+## Hard Evidence
+
+### Revert check
+- <command run against the pinned head with pre-change production code restored and new tests kept; which tests failed and why, or "not run: <reason>">
+
+### Mutation check
+- <mutation (file:line, change) -> failing test, or "survived" as a finding, or "not run: <reason>">
+
+### Not run
+- <each relevant check, aspect or mutation not executed and why; write none when empty>
+
 ## Spec Coverage
 - <implemented, partial, missing, unrequested, or skipped with reason>
 
@@ -101,13 +112,17 @@ Use this stable Markdown shape. Omit empty severity sections, but include all ze
   - Execution: <actual model/effort and family, same/different/unknown family, evidence; primary fallback is non-independent>
 - Commands executed: <exact command and decisive result, or none>
 - Security: <completed, incomplete, not applicable, or unavailable>
+- Decisions: <docs/decisions.md checked, none overturned | overturned D-NNN (see finding) | no decisions file>
 
 ## Questions
 - <only unresolved questions; write none when empty>
 
 ## Recommended Action
-<short natural-language merge/rework recommendation citing finding IDs and coverage limits>
+<short natural-language merge/rework recommendation citing finding IDs and coverage limits; when recommending merge, name the reviewed head SHA and `gh pr merge --match-head-commit <reviewed sha>`>
 ```
+
+Always include the three Hard Evidence subsections, even when a step was not run. Review Coverage
+also records whether `docs/decisions.md` was checked and any decision the change overturns.
 
 Do not output a mechanical PASS/FAIL. "No findings" means only that the completed coverage found no
 reportable issue; state material skipped or incomplete coverage in Recommended Action.

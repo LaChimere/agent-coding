@@ -37,6 +37,10 @@ session; design reasoning or mention of a prospective PR alone does not select t
 Read the repository guidance that governs the changed paths, including applicable `AGENTS.md`,
 `CLAUDE.md`, `CONTRIBUTING.md`, style guides, and equivalent local instructions.
 
+When the repository has `docs/decisions.md`, read it and check whether the change overturns or
+contradicts a recorded decision. An unsuperseded contradiction is a finding under the applicable
+aspect (normally `spec` or `code`); record the check in Review Coverage.
+
 Use only an authoritative specification supplied by the user or present in the repository. When no
 such source is available, skip `spec` without asking or reconstructing requirements from the diff.
 Record the source or skip reason in the final coverage section.
@@ -163,7 +167,7 @@ double confirmation.
 ## Tests and commands
 
 The `tests` aspect reviews behavioral coverage and test quality; it does not run tests by default.
-Run test, build, lint, or typecheck commands only when the user explicitly requests execution or
+Apart from the Hard Evidence steps below, run test, build, lint, or typecheck commands only when the user explicitly requests execution or
 applicable repository guidance requires it. Keep command/result evidence separate from reviewer
 judgement, and never present an unrun check as passing.
 
@@ -174,6 +178,36 @@ unless the user or the same guidance separately requires it.
 Before claiming that an executed command proves tests passed, inspect the command definition or
 configured script and identify the tests or assertions it actually ran. A command that only prints
 success is passing command evidence, not passing test evidence.
+
+## Hard evidence
+
+Every report includes the three Hard Evidence sections defined in
+[references/report-format.md](references/report-format.md). They are the explicit execution
+requirement of this workflow for change sets with tests; run them only in an isolated scratch copy
+or worktree of the pinned head, never in the reviewed checkout, and discard that copy afterwards.
+
+1. **Revert check**: restore the pre-change production code while keeping the new or changed tests,
+   run those tests and confirm they fail for the intended reason. Passing tests on reverted code mean
+   they do not protect the change.
+2. **Mutation check**: introduce at least one deliberate, plausible break in the changed production
+   code (for example invert a condition, drop a guard, change a boundary) and confirm an existing or
+   new test fails. Record each mutation and the failing test.
+3. **Not run**: list every relevant check, aspect or mutation that was not executed, and why.
+
+An explicit user limit takes precedence: when the user restricts execution (for example "only" named
+aspects without execution, or an exact command set), do not run revert or mutation commands beyond
+that limit; record them under Not run with that reason.
+
+When a step cannot run (no tests, docs-only change, missing toolchain, unauthorized side effects),
+say so in that section with the reason; never present a skipped step as passing. A missing test that
+lets the revert or mutation survive is classified by the regression it permits.
+
+## Merge
+
+This workflow never merges. When it recommends merging, the Recommended Action names the exact
+reviewed head SHA and the merge command `gh pr merge --match-head-commit <reviewed sha>`, so a
+later push cannot be merged unreviewed. A CI run cancelled by a later push, or a base branch that is
+already red, does not count as passing CI.
 
 A rule requiring tests or coverage to exist does not by itself require command execution. Treat
 repository guidance as an execution requirement only when it explicitly says to run a check or
@@ -196,7 +230,8 @@ and authorizes its path; permission to save the report does not authorize editin
 ## Boundaries
 
 - Review only. Apart from an explicitly authorized report artifact, do not edit files, implement
-  fixes, simplify code, commit, push, or write externally.
+  fixes, simplify code, commit, push, merge, or write externally. Hard Evidence edits happen only in a
+  discarded scratch copy, never in the reviewed checkout.
 - Do not invoke or depend on the separate `$code-review` skill; this workflow owns repository
   standards and specification review internally.
 - Do not invoke or reproduce a code-simplifier.
