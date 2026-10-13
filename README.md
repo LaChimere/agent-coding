@@ -25,7 +25,7 @@ how those mechanisms are created, formatted, updated or completed.
 |---|---|
 | Agent harness | Goal and plan handling, execution, continuation and conversation state |
 | Primary agent and caller instructions | Scope, decisions, authorization, delegation and final judgment |
-| `plugins/workflow/skills/` | Four on-demand quality, commit-structure and documentation specialists, plus `working-conventions` |
+| `plugins/workflow/skills/` | Four on-demand quality, commit-structure and documentation specialists, plus `global-agent-rules` |
 | `plugins/pr-review/skills/` | Change-set review and independent critique methods |
 | Repository `AGENTS.md` | Contributor rules for this repository |
 
@@ -44,7 +44,7 @@ plugins/workflow/
     decompose-feature/
     ensure-atomic-pr/
     refresh-related-docs/
-    working-conventions/               # Standing rules and project-docs templates routed from AGENTS.md
+    global-agent-rules/                # Standing rules and project-docs templates routed from AGENTS.md
 plugins/pr-review/                     # Separate review plugin
   .codex-plugin/plugin.json
   .claude-plugin/plugin.json
@@ -76,11 +76,11 @@ evals/                                # Bun/TypeScript Codex evaluation project
 | `decompose-feature` | A feature or migration needs multiple coherent commits | Commit sequence, genuine prerequisites, compatibility and validation |
 | `ensure-atomic-pr` | A proposed commit, diff or branch may mix independent concerns | Commit atomicity and concrete recovery boundaries |
 | `refresh-related-docs` | Established behavior makes related Markdown stale | Evidence-backed corrections that preserve accepted decisions and history |
-| `working-conventions` | A routing-only `AGENTS.md` points to a phase: implementation, verification and CI, Git publication, delegation and review, triage, stateful work, project docs | Detailed global rules plus `AGENTS.md`, `docs/`, lessons and decisions templates |
+| `global-agent-rules` | A routing-only `AGENTS.md` points to a phase: implementation, verification and CI, Git publication, delegation and review, triage, stateful work, project docs | Detailed global rules plus `AGENTS.md`, `docs/`, lessons and decisions templates |
 | `scan-image-vulnerabilities` | Exact images or workload images need Trivy inspection | Fresh-database findings for the actual target images |
 
 The first five are skills in the workflow plugin: four on-demand specialists and
-`working-conventions`, the standing conventions that a routing-only `AGENTS.md` points to.
+`global-agent-rules`, the standing conventions that a routing-only `AGENTS.md` points to.
 Image scanning is standalone and bundles its scanner script. Assessment requests are read-only; implementation requests authorize
 only their stated changes. None of these skills grants commit or external-action authority.
 
@@ -286,7 +286,7 @@ the final decision to the primary agent.
 
 Install the complete plugin through the [native installation instructions](#native-plugin-installation)
 and invoke the relevant specialist directly. Workflow `0.3.0` supplies `anti-slop`,
-`decompose-feature`, `ensure-atomic-pr`, `refresh-related-docs` and `working-conventions`. Its skills provide engineering
+`decompose-feature`, `ensure-atomic-pr`, `refresh-related-docs` and `global-agent-rules`. Its skills provide engineering
 methods, with an optional engineering-design template. General change-set review uses `pr-review`
 when needed; neither plugin is mandatory for ordinary native work.
 
@@ -390,7 +390,7 @@ risk and preserve the user's stated constraints.
 ## Status
 
 Workflow `0.3.0` is the repository candidate with four engineering specialists, the
-`working-conventions` standing rules and an optional design template. Content refinement, behavioral evidence and local activation
+`global-agent-rules` standing rules and an optional design template. Content refinement, behavioral evidence and local activation
 are separate; repository edits do not update existing installations.
 
 The central `evals/` project evaluates Codex with frozen inputs, native installation and discovery, actual task execution, independent grading, and resource records. Claude Code and Copilot CLI retain distribution/adaptation checks without model-effectiveness evaluation. See [the evaluation guide](evals/README.md) and [the acceptance report](docs/evaluation/acceptance.md). Historical certification is not certification of a new candidate. Each result identifies its runtime snapshot, frozen corpus, model/settings and actual execution evidence; unrun, ungraded and failed checks are not passes.
