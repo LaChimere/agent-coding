@@ -179,6 +179,10 @@ Before claiming that an executed command proves tests passed, inspect the comman
 configured script and identify the tests or assertions it actually ran. A command that only prints
 success is passing command evidence, not passing test evidence.
 
+A rule requiring tests or coverage to exist does not by itself require command execution. Treat
+repository guidance as an execution requirement only when it explicitly says to run a check or
+names a command that must be executed.
+
 ## Hard evidence
 
 Every report includes the three Hard Evidence sections defined in
@@ -208,10 +212,6 @@ This workflow never merges. When it recommends merging, the Recommended Action n
 reviewed head SHA and the merge command `gh pr merge --match-head-commit <reviewed sha>`, so a
 later push cannot be merged unreviewed. A CI run cancelled by a later push, or a base branch that is
 already red, does not count as passing CI.
-
-A rule requiring tests or coverage to exist does not by itself require command execution. Treat
-repository guidance as an execution requirement only when it explicitly says to run a check or
-names a command that must be executed.
 
 ## Aggregate
 
