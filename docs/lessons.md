@@ -16,3 +16,11 @@ promotion rules follow the `global-agent-rules` skill (`references/project-docs.
 - Evidence: branch `lachimere/routing-conventions` (PR adding routing conventions), local run on 2026-10-13: 2 fail on unmodified `main`, 3 pass after `mkdir -p evals/.cache`.
 - Occurrences: 1
 - Status: active
+
+## L-002: Use hidden-aware search when verifying a rename
+
+- Rule: Check renames with `rg --hidden -g '!.git'` (or `rg -uu`), not plain `rg`.
+- Reason: Plain `rg` skips hidden directories such as `.codex-plugin/` and `.claude-plugin/`, so a rename check reported no matches while both workflow manifests still named `working-conventions`.
+- Evidence: [PR #11 review, MAJOR-01](https://github.com/LaChimere/agent-coding/pull/11#issuecomment-6142031183); fix commit `7071aaf`.
+- Occurrences: 1
+- Status: active; follow-up planned for the next PR: a distribution test that every skill referenced in plugin manifests exists.
