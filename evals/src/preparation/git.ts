@@ -54,6 +54,23 @@ const fixtureIdentity = Object.fromEntries([
   ['GIT_COMMITTER_DATE', '946684800 +0000'],
 ]);
 
+/**
+ * Copy an environment without inherited `GIT_*` variables. A caller running inside a Git hook
+ * exports variables such as `GIT_DIR`, `GIT_WORK_TREE` and `GIT_INDEX_FILE`; left in place they
+ * redirect fixture commands to the caller's repository instead of the fixture workspace.
+ */
+export function withoutInheritedGitEnvironment(
+  source: Readonly<Record<string, string | undefined>>,
+): Record<string, string> {
+  const result: Record<string, string> = {};
+  for (const [name, value] of Object.entries(source)) {
+    if (value !== undefined && !name.startsWith('GIT_')) {
+      result[name] = value;
+    }
+  }
+  return result;
+}
+
 function sorted(paths: readonly string[]): string[] {
   return [...paths].sort();
 }

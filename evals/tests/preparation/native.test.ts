@@ -1,6 +1,7 @@
 import { afterEach, expect, test } from 'bun:test';
 import { chmod, mkdir, mkdtemp, readdir, rm, stat, symlink } from 'node:fs/promises';
 import { resolve } from 'node:path';
+import { withoutInheritedGitEnvironment } from '../../src/preparation/git.ts';
 import { prepareNativeTrial } from '../../src/preparation/native.ts';
 
 const roots: string[] = [];
@@ -146,11 +147,15 @@ test('prepares the declared Git baseline before starting the native thread and r
     const evidence = await Bun.file(result.evidencePath).json();
     expect(evidence.conditions.gitBaseline).toEqual(['src/existing.ts']);
     expect(evidence.probes.git.baseline.files).toEqual(['src/existing.ts']);
-    const tracked = Bun.spawn(['git', '-C', result.workspace, 'ls-files'], { stdout: 'pipe' });
+    const tracked = Bun.spawn(['git', '-C', result.workspace, 'ls-files'], {
+      env: withoutInheritedGitEnvironment(process.env),
+      stdout: 'pipe',
+    });
     expect(await new Response(tracked.stdout).text()).toBe('src/existing.ts\n');
     expect(await tracked.exited).toBe(0);
 
     const status = Bun.spawn(['git', '-C', result.workspace, 'status', '--porcelain=v1'], {
+      env: withoutInheritedGitEnvironment(process.env),
       stdout: 'pipe',
     });
     expect(await new Response(status.stdout).text()).toContain('?? src/proposed.ts');
