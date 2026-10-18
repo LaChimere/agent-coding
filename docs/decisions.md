@@ -35,7 +35,7 @@ below; D-008 defines the current package and host structure.
 - Decision: Merge only with `gh pr merge --match-head-commit <reviewed sha>`; if the head moved, re-review and re-check.
 - Alternatives rejected: Plain `gh pr merge`: merges whatever the head is at merge time.
 - Consequences: Review recommendations name the reviewed SHA. The current
-  [release method](../plugins/engineering/skills/release-software/SKILL.md) preserves this gate.
+  [release method](../plugins/engineering/skills/release-and-rollout/SKILL.md) preserves this gate.
 - Links: [PR #11](https://github.com/LaChimere/agent-coding/pull/11), [review](https://github.com/LaChimere/agent-coding/pull/11#issuecomment-6142031183)
 
 ## D-004: PR bodies, comments and review threads are in English
@@ -127,3 +127,19 @@ below; D-008 defines the current package and host structure.
   Old results remain historical. Grok native verification remains explicitly user-deferred.
 - Evidence: Owner's request to align design and implementation and retain/integrate existing
   capabilities that empower or are empowered by the new practices, following the four diff comments.
+
+## D-010: Name the release entry for publication and rollout
+
+- Date: 2026-10-18
+- Status: accepted
+- Context: The owner proposed `release-and-rollout` to make the entry's existing responsibilities
+  visible. General maintenance remains spread across task implementation, verification maintenance,
+  structural prevention and continuous work.
+- Decision: Rename the release entry to `release-and-rollout`, including active references and
+  the distribution inventory. Preserve preparation-only use, authorization, staged deployment,
+  observation and recovery. The nine lifecycle responsibilities remain unchanged.
+- Alternatives rejected: `release-and-maintain`, which implies broader maintenance ownership;
+  keeping an alias when compatibility was explicitly excluded from the redesign.
+- Consequences: Replaces the release skill identifier in D-008's inventory without expanding
+  authority or claiming renewed native-host qualification. Historical runs retain their identities.
+- Evidence: Owner's naming annotation accompanying authorization to refine the Grok findings.

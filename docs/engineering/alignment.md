@@ -8,7 +8,7 @@ establish preservation. Current acceptance is tracked in [implementation.md](imp
 
 | Source | Principle applied | Product owner and evidence |
 |---|---|---|
-| [Claude Team](https://claude.dev/blog/solving-code-review-at-anthropic/) | Layered verification, independent review, verified findings, risk-based human approval, convergence and post-release learning | implement-task, code-review, release-software and continuous-work; actual review, permission and release cases |
+| [Claude Team](https://claude.dev/blog/solving-code-review-at-anthropic/) | Layered verification, independent review, verified findings, risk-based human approval, convergence and post-release learning | implement-task, code-review, release-and-rollout and continuous-work; actual review, permission and release cases |
 | [Claude review docs](https://code.claude.com/docs/en/code-review) | Find, verify, rank; trusted project review policy; findings are distinct from approval | code-review method index/report; positive and clean cases plus policy-source checks |
 | [Claude best practices](https://code.claude.com/docs/en/best-practices) | Runnable feedback, focused contexts, broad standing rules and on-demand methods | verification skills; retained host standing policy; fresh-context handoff |
 | [Lauren/pstack correct](https://github.com/cursor/plugins/blob/main/pstack/skills/correct/SKILL.md) and the owner's supplied inverse-pyramid post | Fix structure, then types/checks, then remaining judgment guidance; prove prior failures are caught | prevent-recurring-mistakes and change-quality; registry and faulty-verifier controls |
@@ -34,7 +34,7 @@ quality. A nightly job, merge queue or live incident feed needs separate setup a
 | Future commit decomposition and existing-change atomicity | Preserved as distinct methods under one design owner; independent PR grouping and deployment safety | design-solution/references/change-sequence.md |
 | Anti-slop, test-fitting and independent proof | Preserved detailed assessment, reachable from implementation and review | references/change-quality.md |
 | Revert/mutation verification | Preserved as selected proof methods; universal execution removed in favor of task/risk scope | verification-evidence and code-review |
-| Git authorization, selective staging, exact-head merge and safe failure recovery | Preserved separately from merely reporting review results | release-software and references/git-publication.md |
+| Git authorization, selective staging, exact-head merge and safe failure recovery | Preserved separately from merely reporting review results | release-and-rollout and references/git-publication.md |
 | Shared-state interruption recovery | Preserved rerunnable scoped scripts and credential/side-effect boundaries | references/stateful-work.md |
 | Cheap classification then stronger investigation | Preserved as a host-configurable strategy; no mandatory model in portable policy | continuous-work and personal Codex routing |
 | Project docs, decision/lesson records, explainers and directly related refresh | Preserved; established contracts outrank unauthorized implementation changes | references/project-knowledge.md |

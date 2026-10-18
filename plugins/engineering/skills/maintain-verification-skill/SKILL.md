@@ -26,6 +26,11 @@ Follow the skill's own launch model and verify every feature for which complete 
 claimed. Reconcile recipes into efficient app states without skipping proof. One owner drives
 each shared instance; short-lived commands can use fresh isolated sessions per journey.
 
+Recheck runtime and reporter assumptions when the environment changes. Prefer stable observable
+results and exit status to incidental console formatting; pin a reporter explicitly when its
+format is part of the verification interface. Separate declared supported versions from versions
+actually exercised.
+
 Doctor before the first drive and after surprising or failed behavior. Reset a wedged interaction
 or relaunch when process health alone cannot establish usable state. Capture actions, results
 and side effects. Preserve evidence through cleanup; remove failed-iteration residue and only
@@ -49,5 +54,5 @@ invalidates a running instance, restart the affected part and rerun its proof be
 Return the target, source/live feature coverage, proven corrections, product issues, unavailable
 paths and evidence locations. Use clean only for the claimed completed scope; distinguish changed
 verification assets from blocked/incomplete coverage. Publication needs separate applicable
-authority and is handled by [release-software](../release-software/SKILL.md). Keep the map useful
+authority and is handled by [release-and-rollout](../release-and-rollout/SKILL.md). Keep the map useful
 for the next unfamiliar agent, without committing unnecessary transient run logs.

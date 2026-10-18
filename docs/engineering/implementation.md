@@ -4,7 +4,9 @@
 challenge and engineering methods are preserved and integrated. The revised native run passed
 16/16 cases and 36/36 checks; independent static and actual-context forward checks passed.
 See [alignment](alignment.md) and the D-009 section below. Earlier results remain historical.
-Grok remains user-deferred; cross-host qualification limits remain explicit.
+The later [Grok acceptance and refinement](grok-acceptance.md) records the owner's returned
+artifact, independent local checks and remaining host limits. Earlier deferred statuses below
+describe their frozen runs, not the current file-loaded Grok evidence.
 
 ## Initial frozen candidate, before D-009
 

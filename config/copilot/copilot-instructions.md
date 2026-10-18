@@ -22,7 +22,7 @@ These are personal defaults for every repository. More specific `AGENTS.md` file
 Use the complete engineering package through this host's actual supported skill/file mechanism.
 Read the matching skill and its bundled references; do not assume another host's plugin syntax.
 Use understand-codebase, design-solution, implement-task, verification methods, code-review and
-release-software for their respective tasks. SPAR remains an explicit assumptions challenge;
+release-and-rollout for their respective tasks. SPAR remains an explicit assumptions challenge;
 Rubber Duck supplies a requested or risk-justified critic. Shared methods govern checking,
 sequencing, Git publication, stateful work and knowledge maintenance within the authority above.
 

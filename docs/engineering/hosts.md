@@ -84,9 +84,10 @@ authority, actual artifacts and evidence on both sides. Optional routine templat
 `config/grok-bot/routines.md` are inactive. Test once and use shadow mode where appropriate;
 creation, activation, external posting and production actions require the relevant authorization.
 
-For this redesign's acceptance, the owner deferred native Grok Bot execution to their own Bot.
-The prepared self-validation bundle and its hash are recorded in [acceptance](implementation.md).
-Keep that native behavior unverified until actual tool actions and resulting files are reviewed.
+The owner ran the cold-start bundle in their Bot and supplied the resulting project. Its
+[artifact audit](grok-acceptance.md) records file-based loading, local reproduction, verifier
+corrections and limits. Native import, routine execution and the revised methods remain unverified;
+the maintainer's local corrections are not another Grok run.
 
 ## Qualification levels
 

@@ -38,6 +38,8 @@ Write a skill with a discriminating name/description and these grounded sections
 
 Include every helper's invocation and requirements. Scripts must be runnable, necessary and
 grounded in the project rather than placeholder recipes.
+Define distinguishable product-failure and tool-error outcomes, including setup, cleanup and
+evidence-write failures, using the shared verification evidence contract.
 
 Create a small feature map: an index and entries for representative user-facing features. Each
 entry explains the feature, how a user reaches it, prerequisites, real actions and the observable
