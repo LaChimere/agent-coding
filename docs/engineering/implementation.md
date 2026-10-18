@@ -249,14 +249,20 @@ Validation for this follow-up:
 - Two new evidence regressions failed before the fix and passed after it: late first-seen old-owner
   output and absent current-owner output. The existing-item late-completion control still passes.
   Logs: `evals/out/pr15-evidence-before.log` and `pr15-focused-after.log`.
-- The current projector replayed saved native handoff records from `abcb255e` and `7e60f7c2` with
-  unchanged successful answers. This is recorded-protocol replay, not a new live-model run.
+- **Local, unpublished evidence:** the current projector replayed saved native handoff records
+  from `abcb255e` and `7e60f7c2` with unchanged successful answers. The records remain in ignored
+  `evals/out/` and are not attached to this PR, so PR readers cannot independently inspect this
+  replay. This is recorded-protocol replay, not a new live-model run.
 - In an isolated copied fixture, deleting `config/pi/AGENTS.md` or
   `config/grok-bot/INSTRUCTIONS.md` fails the actual distribution suite; the complete and restored
   copies pass. Logs: `evals/out/pr15-adapter-{baseline,pi,grok,restored}.log`.
 - Full coverage run: 326 passed, 0 failed, 97.06% line coverage (`evals/out/pr15-coverage.log`).
-  An independent read-only source review found no consequential defect in the scoped correction;
-  it did not rerun these primary-executed tests or mutation controls.
+- **Local, unpublished evidence:** an independent read-only source review found no consequential
+  defect in the scoped correction. Its record is not attached to this PR and cannot be independently
+  inspected from the repository. It did not rerun the primary-executed tests or mutation controls.
+
+The committed regression and distribution tests can be rerun from the PR. They do not make the
+separate unpublished replay and independent-review records publicly inspectable.
 
 Earlier native and cross-host observations retain their recorded scope and source identities.
 No new comprehensive trigger benchmark, GitHub CI workflow, specialist security scan or production
