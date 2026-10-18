@@ -1,0 +1,3 @@
+# Trusted review policy from the base branch
+Prioritize reachable data-loss and failure-reporting bugs. Report location, trigger, consequence
+and counterevidence. Style preferences are out of scope. Product and test coverage both matter.

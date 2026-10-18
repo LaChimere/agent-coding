@@ -1,0 +1,3 @@
+# Dispatch contract
+
+Supported jobs are email and archive. Unknown jobs must throw. Two independently observed regressions added a job to one of the supportedJobs/handlers lists but not the other. Keep dispatch(job) and listJobs() exports; preserve behavior for existing jobs.

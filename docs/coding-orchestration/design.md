@@ -1,6 +1,10 @@
 # Engineering specialists and harness boundaries v0.2
 
-Updated 2026-10-06. This is the current design; [validation.md](validation.md) retains historical
+Historical design, superseded on 2026-10-18 by [Portable engineering methods](../engineering/design.md)
+and decision D-008. The text below records the previous product and its evidence limits; it does
+not constrain the approved redesign or qualify the new engineering package.
+
+Updated 2026-10-06. This was the then-current design; [validation.md](validation.md) retains historical
 checks and their limits. Earlier results do not qualify this revision or its role/model mapping.
 This revision covers engineering methods and instruction ownership. Formal behavioral evaluation
 and local activation are separate work; environment diagnostics are not final acceptance.
@@ -53,7 +57,7 @@ because it resembles implementation. These are checking methods, not another req
 |---|---|
 | [Personal AGENTS copy](../../config/codex/AGENTS.md) | Communication and presentation, common authority, Git safety, verification, primary delegation and final judgment |
 | [Runtime fragment](../../config/codex/config.toml) | Worker capacity and ordinary fallback configuration |
-| [Agent TOMLs](../../config/codex/agents/) | Role-specific conduct, model/effort bindings, permissions and result requirements |
+| [Historical agent TOMLs](https://github.com/LaChimere/agent-coding/tree/f6229c002b0f90bac747d550f70b2d69d8bc3d71/config/codex/agents) | Role-specific conduct, model/effort bindings, permissions and result requirements |
 | Installed skill | Engineering methods for its specific task, with self-contained scope and authority boundaries |
 | Consuming project's guidance | That project's own contracts and practices |
 | Agent harness | Goal and plan handling, execution state and continuation |

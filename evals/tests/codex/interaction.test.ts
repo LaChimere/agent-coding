@@ -61,13 +61,41 @@ test('supplies sequential clarification and keeps authorization at its declared 
   expect(await user.handle('item/commandExecution/requestApproval', request)).toEqual({
     decision: 'decline',
   });
-  expect(await user.afterTurn('What should empty input do?')).toBe('Return an empty array.');
+  expect(await user.afterTurn('What should empty input do?')).toEqual({
+    text: 'Return an empty array.',
+    newThread: false,
+  });
   expect(await user.handle('item/commandExecution/requestApproval', request)).toEqual({
     decision: 'accept',
   });
   expect(await user.afterTurn('Done.')).toBeNull();
   expect(events.map((event) => event.replyBoundary)).toEqual([0, 1, 1]);
   expect(user.issues).toEqual([]);
+});
+
+test('a fresh-context continuation contains only the declared user reply', async () => {
+  const events: IInteractionEvent[] = [];
+  const user = new ScriptedUser(
+    metadata([
+      {
+        when: 'after-turn',
+        match: 'handoff ready',
+        reply: 'Read HANDOFF.md and continue.',
+        newThread: true,
+      },
+    ]),
+    '/workspace',
+    async (event) => {
+      events.push(event);
+    },
+  );
+
+  expect(await user.afterTurn('handoff ready: private exploratory history')).toEqual({
+    text: 'Read HANDOFF.md and continue.',
+    newThread: true,
+  });
+  expect(events[0]?.response).toBe('Read HANDOFF.md and continue.');
+  expect(events[0]?.reason).toContain('fresh native thread');
 });
 
 test('matches all native questions before consuming any scripted answer', async () => {

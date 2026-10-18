@@ -2,8 +2,8 @@
   "schema": "codex-evals/collections-v1",
   "collections": {
     "development": {
-      "version": "2026-09-30",
-      "caseRoot": "cases",
+      "version": "engineering-v1-capability-preservation-2026-10-18",
+      "caseRoot": "cases/engineering-v1",
       "fixtureRoot": "fixtures",
       "exposure": "seen"
     },

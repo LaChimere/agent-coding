@@ -1,0 +1,5 @@
+# Summary CLI contract
+
+`node cli.mjs rows.json` must print the number of records as JSON: {"count":2} for
+this checked-in two-record input. This public contract is still current. Existing verification
+support is in `.agents/skills/verify-summary`.

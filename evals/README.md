@@ -2,8 +2,8 @@
 
 Evaluate this repository's skills, complete plugins, and `config/codex` through
 native Codex. Promptfoo schedules cases and runs assertions; project records keep
-execution, quality, time, token usage, and cost separate. Claude Code and Copilot
-CLI are distribution targets, not model-effectiveness targets.
+execution, quality, time, token usage, and cost separate. This runner executes Codex. The engineering product also targets Claude Code, Pi and Grok Bot;
+those hosts require separate native qualification and are not proven by this runner.
 
 A case specifies a task and its checks. A trial is one fresh Codex execution of
 that case; fixture files establish its starting workspace. Regrading adds a new
@@ -25,15 +25,18 @@ Run these commands from this directory with Bun 1.4.2:
 ```sh
 bun install --frozen-lockfile
 bun run start -- validate
-bun run start -- run --case native/scripted-context
+cp -R profiles/engineering profiles/out
+# Set your approved gateway in profiles/out/config.toml; keep credential values out of the file.
+bun run start -- run --profile out --case engineering/cold-start-exporter
 ```
 
 The [frozen quality baseline](AGENTS.md#frozen-quality-baseline) requires the
 repository owner's explicit approval before any validation or code-style rule is
 weakened or bypassed.
 
-The versioned `profiles/default/` baseline was imported from the owner's global
-Codex configuration. Runs never reread global instructions or installed personal
+The published `profiles/engineering/` template retains the declared model/provider and credential
+reference shape, with engineering activation and explicit current tool dependencies. Live evaluations
+require a configured private copy; the public gateway placeholder is intentionally unusable. The original `profiles/default/` remains unchanged for historical experiments. Runs never reread global instructions or installed personal
 skills. `runtime.json` declares the local Codex executable, required tools and
 their code-library read paths, and credential references. Shared dependencies use
 `toolReadPaths`; OS-specific dependencies use `toolReadPathsByPlatform` with
@@ -60,10 +63,16 @@ environment: set `PROMPTFOO_CONFIG_DIR` to the owning run's directory before its
 first import. Batch workers do this automatically; direct grader tests use their
 own directories under `.cache` instead of the user's HOME.
 
-The default provider is the existing gateway at `http://127.0.0.1:4141/v1`.
-`GITHUB_COPILOT_API_KEY` takes precedence over the explicit local JSON-file
-reference in `runtime.json`. Credential values remain in memory and the owned
-child environment; do not place credentials in profiles or case files. Tool
+The published engineering profile uses a reserved non-routable gateway placeholder. Copy it to
+`profiles/out/` (already Git-ignored), configure an explicitly approved gateway there, and select
+`--profile out` for live evaluations. Recorded acceptance runs used the owner's explicitly selected
+local gateway; that address is not distributed. The declared credential reference reads `GITHUB_COPILOT_API_KEY` from an injected
+environment value first, otherwise from `~/.codex/.env`. The dotenv file is parsed as data; only
+the named value is returned, with no shell evaluation or unrelated variable import. The legacy
+default profile retains its original localhost/JSON reference for historical replay. Changes to
+a gateway or credential source must be explicit profile updates, not silent reads of mutable
+global configuration. Credential values remain in memory and the owned child environment;
+never place them in profiles, case files or logs. Tool
 commands use controlled HOME, CODEX_HOME, TMPDIR and PATH. Machine Git config is
 disabled. Native Codex must be able to apply its sandbox; nesting it under another
 host sandbox can fail during preparation. Launching the harness outside that
@@ -80,7 +89,7 @@ for tested CLI versions, platforms and limits.
 | `bun run dev` | Run the entry point in watch mode. |
 | `bun run start` | Display evaluation CLI help. |
 | `bun run start -- validate` | Validate the development collection and programmatic rules without model calls. |
-| `bun run start -- run` | Evaluate the current candidate on development cases, once each, at concurrency 2. |
+| `bun run start -- run` | Evaluate the current candidate with the engineering profile on development cases, once each, at concurrency 2. |
 | `bun run start -- calibrate` | Check both grader methods against the owner-confirmed calibration labels. |
 | `bun run start -- regrade RUN [--case ID ...] [--grading FILE]` | Grade frozen evidence with frozen criteria or explicit corrections; create a new report. |
 | `bun run start -- report RUN` | Build an immutable report from the run's original criterion definitions. |
@@ -135,8 +144,10 @@ add distinct daily-work scenarios; two begin with an audit and authorize changes
 later. Their initial response, action boundaries and final result are checked
 separately. This synthetic collection does not represent monthly task frequencies.
 
-The default `collections.json` still selects the original 338-case regression corpus.
-To use a preset, apply its `collections.development` object to `collections.json` in
+The default `collections.json` selects the sixteen engineering-v1 outcome scenarios.
+`collections.engineering-v1.json` records that preset; `collections.legacy-v1.json` preserves
+the original 338-case selection and `profiles/default` preserves its runtime baseline.
+To run a historical preset deliberately, apply its `collections.development` object to `collections.json` in
 the checkout used for that evaluation, preserving the existing holdout configuration.
 Then the normal `validate` and `run --case <id>` commands use the selected roots.
 The CLI does not select a registry by filename or accept `--collection natural-v5`.
@@ -190,6 +201,39 @@ ineligible. Candidate model, roles, and permissions may be the experiment's
 intended variables. Single trials describe observations, not reliability estimates.
 Core quality comparisons require matching selected core-grader configurations;
 an absent or different diagnostic grade does not exclude a decidable core result.
+
+
+## Engineering outcome collection
+
+`cases/engineering-v1/outcomes.json` contains sixteen scenarios covering a real executable synthetic
+CSV project, read-only understanding, design uncertainty, verification maintenance, false-positive
+review, stale release identity, current-state handoff, structural recurrence prevention and an
+unavailable runtime. Two staged episodes add an actual fresh Codex thread handoff and an
+authorized local artifact release. Further cases cover verification drift and tool repair,
+positive specialist review, SPAR, Rubber Duck and coherent change sequencing. This sample is not
+a claim about production task frequency or all host behavior.
+The CSV oracle drives the real CLI and parses its output independently. Calibration established
+that the broken baseline fails and a valid alternative quoting implementation passes.
+
+The cold-start case authorizes local verification support and repair while preserving the public
+CLI. Its model-judged checks inspect actual actions and retained artifacts; file existence alone
+cannot establish that the generated verification tool was executed. Preparation, framework tests,
+command-oracle controls and native model outcomes are reported separately in
+[the implementation record](../docs/engineering/implementation.md).
+
+### Fresh-context continuations
+
+A scripted `after-turn` reply may set `newThread: true`. Only after the prior turn completes,
+the driver starts a different native thread in the same workspace and with the same effective
+model configuration. The new thread receives the declared reply, not the old conversation;
+project files such as a candidate-authored handoff remain available. `handoffs.jsonl` records
+returned identities, completed turn and target workspace. Evidence retains both execution owners
+without inventing a parent/child delegation relationship. Normal replies remain in the same
+thread. New-context requests at a pending `user-input` point are rejected.
+
+This tests a new context, not process-crash recovery or a different product host. Cross-host
+qualification remains separate. Failed handoffs preserve incomplete evidence rather than
+silently continuing in the original thread.
 
 ## Cases and judgments
 

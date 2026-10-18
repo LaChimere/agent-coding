@@ -1,0 +1,3 @@
+# Contract
+
+The service accepts IDs 1 through 100 inclusive. The router validates external input before the repository call.

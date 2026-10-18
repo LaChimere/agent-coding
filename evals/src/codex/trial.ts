@@ -84,6 +84,7 @@ export async function executeTrial(input: ITrialInput): Promise<ITrialResult> {
 
   let preparation: Awaited<ReturnType<typeof prepareNativeTrial>> | undefined;
   let candidateStart: number | null = null;
+  const ownerThreadIds: string[] = [];
   const interaction = new AbortController();
 
   const signal =
@@ -115,6 +116,9 @@ export async function executeTrial(input: ITrialInput): Promise<ITrialResult> {
       codexExecutable: manifest.codexExecutable,
       credentials: input.credentials,
       ...input.case.definition.metadata.execution,
+      projectSkillFiles: input.case.definition.metadata.fixture
+        .map((binding) => binding.target)
+        .filter((path) => path.startsWith('.agents/skills/') && path.endsWith('/SKILL.md')),
       onServerRequest: async (method, params) => {
         try {
           const reply = await user.handle(method, params);
@@ -165,6 +169,8 @@ export async function executeTrial(input: ITrialInput): Promise<ITrialResult> {
     });
 
     result.status = 'completed';
+    let owner = preparation.thread;
+    ownerThreadIds.push(owner.id);
     let prompt: string | null = candidatePrompt(input.case.definition);
 
     while (prompt !== null) {
@@ -183,12 +189,32 @@ export async function executeTrial(input: ITrialInput): Promise<ITrialResult> {
 
       const current = projectEvidence(
         await readProtocol(preparation.protocolPath),
-        preparation.thread.id,
+        owner.id,
         result.protocolPath,
       );
 
       result.output = current.output;
-      prompt = await user.afterTurn(current.output);
+      const continuation = await user.afterTurn(current.output);
+      prompt = continuation?.text ?? null;
+      if (continuation?.newThread) {
+        signal.throwIfAborted();
+        const previous = owner;
+        owner = await preparation.session.handoffThread();
+        ownerThreadIds.push(owner.id);
+        await appendFile(
+          resolve(directory, 'handoffs.jsonl'),
+          `${JSON.stringify({
+            fromThreadId: previous.id,
+            completedTurnId: turn.id,
+            toThreadId: owner.id,
+            model: owner.model,
+            modelProvider: owner.modelProvider,
+            reasoningEffort: owner.reasoningEffort,
+            workspace,
+          })}\n`,
+          { mode: 0o600 },
+        );
+      }
     }
   } catch (error) {
     result.errors.push(errorText(error));
@@ -231,7 +257,7 @@ export async function executeTrial(input: ITrialInput): Promise<ITrialResult> {
 
         const evidence = await collectEvidence(
           records,
-          preparation.thread.id,
+          ownerThreadIds.length > 0 ? ownerThreadIds : preparation.thread.id,
           result.protocolPath ?? preparation.protocolPath,
           preparation.codexHome,
           Object.values(input.credentials),

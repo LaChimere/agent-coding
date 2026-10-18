@@ -1,0 +1,55 @@
+{
+  "codexExecutable": "~/.local/bin/codex",
+  "toolReadPaths": [],
+  "tools": [
+    {
+      "name": "bun",
+      "executable": "bun",
+      "probe": ["--version"]
+    },
+    {
+      "name": "node",
+      "executable": "node",
+      "probe": ["--version"]
+    },
+    {
+      "name": "npm",
+      "executable": "npm",
+      "codeReadPaths": [".."],
+      "probe": ["--version"]
+    },
+    {
+      "name": "git",
+      "executable": "git",
+      "probe": ["--version"]
+    },
+    {
+      "name": "python3",
+      "executable": "python3",
+      "probe": ["--version"]
+    },
+    {
+      "name": "uv",
+      "executable": "uv",
+      "probe": ["--version"]
+    }
+  ],
+  "authentication": [
+    {
+      "environment": "GITHUB_COPILOT_API_KEY",
+      "envFile": "~/.codex/.env"
+    }
+  ],
+  "toolReadPathsByPlatform": {
+    "darwin": [
+      "/opt/homebrew/Cellar",
+      "/opt/homebrew/bin",
+      "/opt/homebrew/opt",
+      "/opt/homebrew/lib/node_modules",
+      "/opt/homebrew/etc/openssl@3/openssl.cnf",
+      "/Library/Frameworks/Python.framework",
+      "/opt/homebrew/etc/openssl@4/openssl.cnf"
+    ],
+    "linux": []
+  }
+}

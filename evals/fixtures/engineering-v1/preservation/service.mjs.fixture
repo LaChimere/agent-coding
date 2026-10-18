@@ -1,0 +1,8 @@
+export async function submit(store, item) {
+  try {
+    await store.save(item);
+  } catch (error) {
+    console.warn('save failed', error);
+  }
+  return { status: 'saved' };
+}

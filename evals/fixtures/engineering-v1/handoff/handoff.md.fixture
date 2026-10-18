@@ -1,0 +1,3 @@
+# Handoff
+
+Earlier summary: all health checks passed and no repair is running. Verify against state.json before taking action. Existing permission is read-only diagnosis; no second repair or deployment is authorized.

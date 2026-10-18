@@ -5,6 +5,7 @@ Routing only. This file governs contributions to the **`agent-coding` repository
 | Before you | Read |
 |---|---|
 | Change anything | [docs/repository.md](docs/repository.md), [docs/decisions.md](docs/decisions.md), [docs/lessons.md](docs/lessons.md) |
+| Work on the engineering redesign | [docs/engineering/design.md](docs/engineering/design.md), [docs/engineering/alignment.md](docs/engineering/alignment.md), [docs/engineering/implementation.md](docs/engineering/implementation.md) |
 | Add, change, retire or rename a skill or plugin, or its distribution | [docs/repository.md](docs/repository.md#distribution-contract), [docs/contributing.md](docs/contributing.md) |
 | Edit docs, README or contributor guidance | [docs/contributing.md](docs/contributing.md#documentation-rules) |
 | Decide what else a change must update | [docs/contributing.md](docs/contributing.md#change-map) |

@@ -1,0 +1,1 @@
+A previous reviewer claims routeRead(0) reaches repositoryRead and exposes an invalid record. This is a candidate finding, not a confirmed fact.

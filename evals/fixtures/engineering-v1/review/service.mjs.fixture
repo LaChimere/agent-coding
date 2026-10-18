@@ -1,0 +1,5 @@
+export function repositoryRead(id) { return { id }; }
+export function routeRead(id) {
+  if (!Number.isInteger(id) || id < 1 || id > 100) { throw new Error('invalid id'); }
+  return repositoryRead(id);
+}

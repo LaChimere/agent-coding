@@ -77,6 +77,9 @@ const { runWorker } = await import('../../src/execution/worker.ts');
 
 class FakeSession {
   private _index = 0;
+  private _owner = 'thread-1';
+  private _ownerCount = 1;
+  private readonly _turnOwners = new Map<string, string>();
   private readonly _protocolPath: string;
   private readonly _codexHome: string;
   private readonly _workspace: string;
@@ -103,6 +106,7 @@ class FakeSession {
       throw new Error('Fake session received an unexpected turn.');
     }
     this._index += 1;
+    this._turnOwners.set(step.id, this._owner);
     if (this._writeArtifact && this._index === 1) {
       await Bun.write(resolve(this._workspace, 'candidate-output.txt'), 'candidate artifact\n');
     }
@@ -117,7 +121,7 @@ class FakeSession {
       parsed: {
         method: 'thread/tokenUsage/updated',
         params: {
-          threadId: 'thread-1',
+          threadId: this._owner,
           turnId: step.id,
           tokenUsage: { total: { inputTokens: 3, outputTokens: 2 } },
         },
@@ -132,7 +136,7 @@ class FakeSession {
       parsed: {
         method: 'item/completed',
         params: {
-          threadId: 'thread-1',
+          threadId: this._owner,
           turnId: step.id,
           item: {
             id: `item-${step.id}`,
@@ -168,21 +172,42 @@ class FakeSession {
 
   async close(): Promise<void> {}
 
+  async handoffThread() {
+    this._ownerCount += 1;
+    this._owner = `thread-${this._ownerCount}`;
+    for (const step of this._steps.slice(this._index)) {
+      this._turnOwners.set(step.id, this._owner);
+    }
+    await this.writeSessionHistory();
+    return {
+      id: this._owner,
+      model: 'gpt-6-astra',
+      modelProvider: 'fixture',
+      reasoningEffort: 'high',
+      response: {},
+    };
+  }
+
   async writeSessionHistory(): Promise<void> {
-    const lines = [
-      { type: 'session_meta', payload: { id: 'thread-1' } },
-      ...this._steps.map((step) => ({
-        type: 'turn_context',
-        payload: Object.fromEntries([
-          ['turn_id', step.id],
-          ['model', 'gpt-6-astra'],
-        ]),
-      })),
-    ];
-    await Bun.write(
-      resolve(this._codexHome, 'sessions/fixture.jsonl'),
-      `${lines.map((line) => JSON.stringify(line)).join('\n')}\n`,
-    );
+    for (const owner of new Set(['thread-1', ...this._turnOwners.values()])) {
+      const lines = [
+        { type: 'session_meta', payload: { id: owner } },
+        ...this._steps
+          .filter((step) => (this._turnOwners.get(step.id) ?? 'thread-1') === owner)
+          .map((step) => ({
+            type: 'turn_context',
+            payload: Object.fromEntries([
+              ['turn_id', step.id],
+              ['model', 'gpt-6-astra'],
+            ]),
+          })),
+      ];
+      const filename = owner === 'thread-1' ? 'fixture.jsonl' : `fixture-${owner}.jsonl`;
+      await Bun.write(
+        resolve(this._codexHome, 'sessions', filename),
+        `${lines.map((line) => JSON.stringify(line)).join('\n')}\n`,
+      );
+    }
   }
 }
 
@@ -487,6 +512,70 @@ test('executes completed scripted turns in one native thread and records evidenc
 
   expect(candidateOperation).toMatchObject({ status: 'completed', usesModel: true });
   expect(candidateOperation.observations).toHaveLength(2);
+});
+
+test('a declared handoff retains both owner traces and the second owner result', async () => {
+  const fixture = await executeFixture();
+  fixture.loaded.definition.metadata.turns = [
+    {
+      when: 'after-turn',
+      match: 'handoff ready',
+      reply: 'Continue from candidate-output.txt.',
+      newThread: true,
+    },
+  ];
+  preparationFactory = readyFactory({
+    writeArtifact: true,
+    steps: [
+      { id: 'turn-1', status: 'completed', output: 'handoff ready' },
+      { id: 'turn-2', status: 'completed', output: 'verified second owner result' },
+    ],
+  });
+
+  const result = await executeTrial({
+    runDirectory: fixture.runDirectory,
+    manifest: fixture.manifest,
+    trial: fixture.trial,
+    candidate: onlyCandidate(fixture.manifest),
+    case: fixture.loaded,
+    credentials: {},
+  });
+
+  expect(result).toMatchObject({
+    status: 'completed',
+    output: 'verified second owner result',
+    threadIds: ['thread-1', 'thread-2'],
+    turnIds: ['turn-1', 'turn-2'],
+  });
+  const root = resolve(fixture.runDirectory, 'trials', fixture.trial.id);
+  const handoff = JSON.parse((await Bun.file(resolve(root, 'handoffs.jsonl')).text()).trim());
+  expect(handoff).toMatchObject({
+    fromThreadId: 'thread-1',
+    completedTurnId: 'turn-1',
+    toThreadId: 'thread-2',
+  });
+  const evidence = await Bun.file(resolve(root, 'evidence.json')).json();
+  expect(evidence.actorRelations).toEqual([]);
+  expect(
+    evidence.actors.map((actor: { threadId: string; parentThreadId: string | null }) => [
+      actor.threadId,
+      actor.parentThreadId,
+    ]),
+  ).toEqual([
+    ['thread-1', null],
+    ['thread-2', null],
+  ]);
+  expect(
+    evidence.conversation
+      .filter(
+        (message: { actor: string; threadId: string }) =>
+          message.actor === 'user' && message.threadId === 'thread-2',
+      )
+      .map((message: { content: string }) => message.content),
+  ).toEqual(['Continue from candidate-output.txt.']);
+  expect(await Bun.file(resolve(root, 'artifacts/candidate-output.txt')).text()).toBe(
+    'candidate artifact\n',
+  );
 });
 
 test('records a prerequisite refusal without starting a candidate operation', async () => {

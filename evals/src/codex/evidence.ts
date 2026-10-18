@@ -69,7 +69,7 @@ export interface INativeEvidence {
   instructionContext: INativeInstructionContext;
   conversation: INativeConversationMessage[];
   actorRelations: { parentThreadId: string; childThreadId: string; source: string }[];
-  /** The root thread is first; remaining entries include observed worker threads. */
+  /** Execution-owner threads come first in order; remaining entries include observed workers. */
   threadIds: string[];
   turnIds: string[];
   output: string;
@@ -113,11 +113,12 @@ export async function readProtocol(path: string): Promise<ICodexTransportRecord[
 /** Project live items once by native identity; never replay inherited child history. */
 export function projectEvidence(
   records: readonly ICodexTransportRecord[],
-  rootThreadId: string,
+  rootThreadId: string | readonly string[],
   source: string,
 ): Omit<INativeEvidence, 'actors' | 'toolRecords' | 'instructionContext'> {
   const items = new Map<string, IEvidenceItem>();
-  const threads = new Set([rootThreadId]);
+  const owners = new Set(typeof rootThreadId === 'string' ? [rootThreadId] : rootThreadId);
+  const threads = new Set(owners);
   const turns = new Set<string>();
   const actorRelations: {
     parentThreadId: string;
@@ -173,7 +174,7 @@ export function projectEvidence(
 
   const answers = result.filter(({ threadId, item }) => {
     const { type, phase } = item;
-    return threadId === rootThreadId && type === 'agentMessage' && phase !== 'commentary';
+    return owners.has(threadId) && type === 'agentMessage' && phase !== 'commentary';
   });
 
   const last = answers.at(-1)?.item;
@@ -222,7 +223,7 @@ export function projectEvidence(
 
 export async function collectEvidence(
   records: readonly ICodexTransportRecord[],
-  rootThreadId: string,
+  rootThreadId: string | readonly string[],
   source: string,
   codexHome: string,
   secrets: readonly string[] = [],

@@ -5,6 +5,26 @@ import { writeJsonRecord } from '../../src/preparation/snapshot.ts';
 import type { IRunManifest } from '../../src/results/records.ts';
 import type { IPriceBook } from '../../src/results/resources.ts';
 
+export function fixtureCollectionRegistry() {
+  return {
+    schema: 'codex-evals/collections-v1',
+    collections: {
+      development: {
+        version: 'fixture',
+        caseRoot: 'cases',
+        fixtureRoot: 'fixtures',
+        exposure: 'seen',
+      },
+      holdout: {
+        version: 'fixture-holdout',
+        caseRoot: 'holdout/cases',
+        fixtureRoot: 'holdout/fixtures',
+        exposure: 'unseen',
+      },
+    },
+  };
+}
+
 export function requirement(id: string, capability: Capability = 'implementation'): IRequirement {
   return {
     id,

@@ -4,7 +4,7 @@ import { resolve } from 'node:path';
 import { runCli } from '../src/cli.ts';
 import { loadCases } from '../src/corpus/cases.ts';
 import { freezeCollection, selectCollection } from '../src/corpus/collections.ts';
-import { loadedCase } from './fixtures/contracts.ts';
+import { fixtureCollectionRegistry, loadedCase } from './fixtures/contracts.ts';
 
 const roots: string[] = [];
 
@@ -12,10 +12,7 @@ async function setup() {
   await mkdir(resolve('.cache'), { recursive: true });
   const root = await mkdtemp(resolve('.cache/cli-scope-'));
   roots.push(root);
-  await Bun.write(
-    resolve(root, 'collections.json'),
-    await Bun.file(resolve(import.meta.dir, '../collections.json')).bytes(),
-  );
+  await Bun.write(resolve(root, 'collections.json'), JSON.stringify(fixtureCollectionRegistry()));
   await Bun.write(resolve(root, 'cases/fixture.json'), JSON.stringify([loadedCase().definition]));
   await Bun.write(resolve(root, 'src/grading/assertion.ts'), 'export default () => true;');
   await Bun.write(resolve(root, 'holdout/cases/unreadable.json'), 'This must not be parsed.');

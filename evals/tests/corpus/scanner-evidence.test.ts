@@ -2,12 +2,11 @@ import { expect, test } from 'bun:test';
 import { mkdir, mkdtemp, rm } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { loadCases } from '../../src/corpus/cases.ts';
-import { selectCollection } from '../../src/corpus/collections.ts';
 import { parseRule } from '../../src/grading/programmatic.ts';
 
 test('scanner target checks reject prose-only claims, missing targets and unrelated scans', async () => {
   const project = resolve(import.meta.dir, '../..');
-  const cases = await loadCases(project, await selectCollection(project), [
+  const cases = await loadCases(project, { caseRoot: 'cases', fixtureRoot: 'fixtures' }, [
     'scan-image-vulnerabilities/1',
     'scan-image-vulnerabilities/2',
   ]);

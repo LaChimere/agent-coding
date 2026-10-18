@@ -19,7 +19,7 @@ const sharedCatalog = (await Bun.file(
 };
 const pluginNames = codexCatalog.plugins.map((plugin) => plugin.name);
 
-test('Codex and Claude/Copilot catalogs distribute the same local plugin roots', async () => {
+test('Codex and Claude catalogs distribute the same local plugin roots', async () => {
   const directories = await readdir(resolve(repository, 'plugins'), { withFileTypes: true });
 
   const available = directories
@@ -45,6 +45,78 @@ test('Codex and Claude/Copilot catalogs distribute the same local plugin roots',
       resolve(repository, 'plugins', plugin.name),
     );
   }
+});
+
+test('the engineering package exposes the complete approved skill set to Pi and native plugins', async () => {
+  const root = resolve(repository, 'plugins/engineering');
+  const manifest = (await Bun.file(resolve(root, 'package.json')).json()) as {
+    version: string;
+    files: string[];
+    pi: { skills: string[] };
+  };
+  const native = (await Bun.file(resolve(root, '.codex-plugin/plugin.json')).json()) as {
+    version: string;
+    skills: string;
+  };
+  const expected = [
+    'code-review',
+    'create-verification-skill',
+    'design-solution',
+    'implement-task',
+    'maintain-verification-skill',
+    'prevent-recurring-mistakes',
+    'release-software',
+    'rubber-duck',
+    'spar',
+    'understand-codebase',
+    'verify-behavior',
+  ];
+
+  expect(manifest.version).toBe(native.version);
+  expect(manifest.pi.skills.map((path) => resolve(root, path))).toEqual([
+    resolve(root, native.skills),
+  ]);
+  expect((await readdir(resolve(root, 'skills'))).sort()).toEqual(expected);
+  expect(manifest.files).toContain('skills');
+  expect(manifest.files).toContain('references');
+  expect(manifest.files).not.toContain('evals');
+  await expect(stat(resolve(root, 'references/working-agreement.md'))).resolves.toBeDefined();
+});
+
+test('personal Codex configuration retains selected capabilities outside portable method policy', async () => {
+  const config = Bun.TOML.parse(
+    await Bun.file(resolve(repository, 'config/codex/config.toml')).text(),
+  );
+
+  const expected = Bun.TOML.parse(`
+sandbox_mode = "workspace-write"
+approval_policy = "on-request"
+approvals_reviewer = "auto_review"
+[sandbox_workspace_write]
+network_access = true
+[features]
+api_key_model_discovery = true
+chronicle = false
+memories = true
+prevent_idle_sleep = true
+[features.code_mode]
+enabled = true
+[agents]
+enabled = true
+max_concurrent_threads_per_session = 6
+default_subagent_model = "gpt-6-luna"
+default_subagent_reasoning_effort = "max"
+[plugins."engineering@agent-coding"]
+enabled = true
+`);
+
+  expect(config).toMatchObject(expected);
+  expect((await readdir(resolve(repository, 'config/codex/agents'))).sort()).toEqual([
+    'complex_worker.toml',
+    'critical_reviewer.toml',
+    'deep_critical_reviewer.toml',
+    'ordinary_worker.toml',
+  ]);
 });
 
 test.each(pluginNames)(

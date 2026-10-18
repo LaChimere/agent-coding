@@ -43,3 +43,50 @@ test('fails on missing values and masks malformed credential file contents', asy
     ]),
   ).rejects.toThrow('Missing authentication value');
 });
+
+test('reads only the declared dotenv key without evaluating shell expressions', async () => {
+  const root = await mkdtemp(resolve('.cache/authentication-env-test-'));
+  await Bun.write(
+    `${root}/credentials.env`,
+    "export EVAL_KEY='$(not-a-command)'\nOTHER_KEY=not-requested\n",
+  );
+  const references = [{ environment: 'EVAL_KEY', envFile: '~/credentials.env' }];
+
+  const injected = Object.fromEntries([['EVAL_KEY', 'injected-value']]);
+  expect(Object.entries(await resolveAuthentication(references, {}, root))).toEqual([
+    ['EVAL_KEY', '$(not-a-command)'],
+  ]);
+  expect(await resolveAuthentication(references, injected, root)).toEqual(injected);
+  expect(
+    await resolveAuthentication(
+      [{ environment: 'EVAL_KEY', envFile: '~/absent.env' }],
+      injected,
+      root,
+    ),
+  ).toEqual(injected);
+});
+
+test('dotenv source errors and ambiguous fallback configuration do not leak values', async () => {
+  const root = await mkdtemp(resolve('.cache/authentication-env-test-'));
+  await Bun.write(`${root}/credentials.env`, 'OTHER_KEY=fixture-private-value\n');
+
+  await expect(
+    resolveAuthentication([{ environment: 'EVAL_KEY', envFile: '~/absent.env' }], {}, root),
+  ).rejects.toThrow('Cannot read the configured authentication env file for EVAL_KEY.');
+  await expect(
+    resolveAuthentication([{ environment: 'EVAL_KEY', envFile: '~/credentials.env' }], {}, root),
+  ).rejects.toThrow('Missing authentication value for EVAL_KEY.');
+  await expect(
+    resolveAuthentication(
+      [
+        {
+          environment: 'EVAL_KEY',
+          envFile: '~/credentials.env',
+          jsonFile: { path: '~/auth.json', pointer: '/key' },
+        },
+      ],
+      {},
+      root,
+    ),
+  ).rejects.toThrow('Multiple authentication file sources');
+});

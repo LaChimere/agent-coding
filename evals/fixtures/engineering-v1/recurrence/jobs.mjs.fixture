@@ -1,0 +1,7 @@
+const supportedJobs = ['email', 'archive'];
+const handlers = { email: () => 'emailed', archive: () => 'archived' };
+export function listJobs() { return [...supportedJobs]; }
+export function dispatch(job) {
+  if (!supportedJobs.includes(job)) { throw new Error('unknown job'); }
+  return handlers[job]();
+}

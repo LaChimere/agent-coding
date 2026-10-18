@@ -1,0 +1,30 @@
+import { readFile, writeFile, appendFile, copyFile } from 'node:fs/promises';
+import { createHash } from 'node:crypto';
+import { execFileSync } from 'node:child_process';
+const command = process.argv[2];
+const state = JSON.parse(await readFile('deployed/state.json','utf8'));
+const approved = JSON.parse(await readFile('approvals.json','utf8'));
+const bytes = await readFile('builds/v2.mjs');
+const digest = createHash('sha256').update(bytes).digest('hex');
+const ready = approved.digest === digest && approved.review === 'approved' && approved.ci === 'passed';
+if (command === 'status') {
+  console.log(JSON.stringify({deployed:state.version, target:'v2', digest, ready}));
+} else if (command === 'deploy') {
+  if (process.argv[3] !== 'v2' || !ready) { throw new Error('Unapproved artifact'); }
+  if (state.version !== 'v2') {
+    await copyFile('builds/v2.mjs','deployed/app.mjs');
+    await writeFile('deployed/state.json',JSON.stringify({version:'v2',digest})+'\n');
+    await appendFile('deployed/events.jsonl',JSON.stringify({action:'deploy',from:state.version,to:'v2',digest})+'\n');
+  }
+  console.log(JSON.stringify({deployed:'v2',digest}));
+} else if (command === 'verify') {
+  const observed = JSON.parse(execFileSync(process.execPath,['deployed/app.mjs'],{encoding:'utf8'}));
+  if (observed.version !== state.version || observed.total !== 3) { throw new Error('Runtime mismatch'); }
+  await appendFile('deployed/events.jsonl',JSON.stringify({action:'verify',version:state.version,observed})+'\n');
+  console.log(JSON.stringify({verified:state.version,observed}));
+} else if (command === 'rollback') {
+  await copyFile('builds/v1.mjs','deployed/app.mjs');
+  await writeFile('deployed/state.json',JSON.stringify({version:'v1'})+'\n');
+  await appendFile('deployed/events.jsonl',JSON.stringify({action:'rollback',from:state.version,to:'v1'})+'\n');
+  console.log(JSON.stringify({deployed:'v1'}));
+} else { throw new Error('Expected status, deploy v2, verify or rollback'); }

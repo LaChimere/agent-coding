@@ -1,0 +1,5 @@
+import assert from 'node:assert/strict';
+import { submit } from './service.mjs';
+const stored = [];
+assert.deepEqual(await submit({ save: async value => stored.push(value) }, 'draft'), { status: 'saved' });
+assert.deepEqual(stored, ['draft']);

@@ -30,6 +30,9 @@ export interface INativePreparationInput {
   pathPrepend?: readonly string[];
   executableFiles?: readonly string[];
   gitBaseline?: readonly string[];
+  /** Explicit fixture skills expected in native project discovery, never an unrestricted scan. */
+  projectSkillFiles?: readonly string[];
+  projectSkillWrites?: readonly string[];
   onServerRequest?: (method: string, params: unknown, id: JsonRpcId) => unknown | Promise<unknown>;
 }
 
@@ -77,6 +80,8 @@ interface IPreparationEvidence {
     pathPrepend: readonly string[];
     executableFiles: readonly string[];
     gitBaseline?: readonly string[];
+    projectSkillFiles?: readonly string[];
+    projectSkillWrites?: readonly string[];
   };
 }
 
@@ -249,7 +254,6 @@ function permissionFilesystem(
 
 function translateSandbox(
   config: IConfigTable,
-  workspace: string,
   filesystem: IConfigTable,
   networkAccess: boolean,
   transformations: string[],
@@ -314,9 +318,12 @@ function translateSandbox(
     'eval-read-only': {
       extends: ':read-only',
       filesystem: {
-        ...filesystem,
-        [workspace]: 'read',
-        ':tmpdir': 'read',
+        ...Object.fromEntries(
+          Object.entries(filesystem).map(([path, access]) => [
+            path,
+            access === 'write' ? 'read' : access,
+          ]),
+        ),
       },
       network: { enabled: networkAccess },
     },
@@ -347,7 +354,18 @@ async function copyCandidateAgents(
   transformations: string[],
 ): Promise<void> {
   await mkdir(destinationDirectory);
-  const names = (await readdir(sourceDirectory)).sort();
+  let names: string[];
+  try {
+    names = (await readdir(sourceDirectory)).sort();
+  } catch (error) {
+    if (error instanceof Error && 'code' in error && error.code === 'ENOENT') {
+      transformations.push(
+        'Candidate declares no custom agents; installed an empty agents directory.',
+      );
+      return;
+    }
+    throw error;
+  }
 
   for (const name of names) {
     if (!name.endsWith('.toml') || name.includes('/') || name.includes('\\')) {
@@ -803,6 +821,12 @@ export async function prepareNativeTrial(
       pathPrepend: input.pathPrepend ?? [],
       executableFiles: input.executableFiles ?? [],
       ...(input.gitBaseline === undefined ? {} : { gitBaseline: input.gitBaseline }),
+      ...(input.projectSkillFiles === undefined
+        ? {}
+        : { projectSkillFiles: input.projectSkillFiles }),
+      ...(input.projectSkillWrites === undefined
+        ? {}
+        : { projectSkillWrites: input.projectSkillWrites }),
     },
   };
 
@@ -880,6 +904,39 @@ export async function prepareNativeTrial(
       executableTarget,
     );
 
+    const skillOutputRoots: string[] = [];
+    if ((input.projectSkillWrites?.length ?? 0) > 0) {
+      filesystem[resolve(workspace, '.agents')] = 'read';
+      filesystem[resolve(workspace, '.agents/skills')] = 'read';
+    }
+    for (const path of input.projectSkillWrites ?? []) {
+      if (
+        !/^\.agents\/skills\/[a-z0-9][a-z0-9-]*$/u.test(path) ||
+        configValue(merged, 'sandbox_mode') !== 'workspace-write'
+      ) {
+        throw new Error(
+          'Project skill outputs require an exact authorized directory and a writable candidate.',
+        );
+      }
+      let current = workspace;
+      for (const part of path.split('/')) {
+        current = resolve(current, part);
+        try {
+          await mkdir(current);
+        } catch (error) {
+          if (!(error instanceof Error && 'code' in error && error.code === 'EEXIST')) {
+            throw error;
+          }
+        }
+        const info = await lstat(current);
+        if (!info.isDirectory() || info.isSymbolicLink()) {
+          throw new Error('Project skill output ancestors must be ordinary workspace directories.');
+        }
+      }
+      filesystem[current] = 'write';
+      skillOutputRoots.push(current);
+    }
+
     for (const path of runtimeTools.readPaths) {
       filesystem[path] = 'read';
     }
@@ -888,7 +945,6 @@ export async function prepareNativeTrial(
 
     const configured = translateSandbox(
       merged,
-      workspace,
       filesystem,
       input.networkAccess,
       evidence.transformations,
@@ -1076,6 +1132,24 @@ export async function prepareNativeTrial(
 
     const verificationResults: Record<string, unknown> = {};
     const allowedSkillFiles = new Set<string>();
+
+    for (const path of input.projectSkillFiles ?? []) {
+      if (!path.startsWith('.agents/skills/') || !path.endsWith('/SKILL.md')) {
+        throw new Error('Project skill declarations must name a fixture under .agents/skills.');
+      }
+      const file = containedPath(workspace, path);
+      const info = await lstat(file);
+      const actual = await realpath(file);
+      assertChild(await realpath(workspace), actual, 'Project skill');
+      if (!info.isFile() || actual !== file || allowedSkillFiles.has(file)) {
+        throw new Error('Project skill must be a unique regular fixture file without symlinks.');
+      }
+      allowedSkillFiles.add(file);
+      verificationResults[`project-skill:${path}`] = {
+        path: file,
+        sha256: contentHash(await Bun.file(file).bytes()),
+      };
+    }
 
     for (const name of skillNames) {
       const installed = resolve(home, '.agents/skills', name);
@@ -1334,12 +1408,17 @@ export async function prepareNativeTrial(
     const writeValue = `write-${randomUUID()}`;
     const writeStarted = `shell-${randomUUID()}`;
 
-    for (const [name, root] of [
+    const writeProbeRoots: [string, string][] = [
       ['workspace', workspace],
       ['temporary', temporary],
       ['runtime', resolve(input.runtimeDirectory)],
       ['private', stateDirectory],
-    ] as const) {
+      ...skillOutputRoots.map((root, index): [string, string] => [`project-skill-${index}`, root]),
+      ...(skillOutputRoots.length === 0
+        ? []
+        : [['project-skill-parent', resolve(workspace, '.agents/skills')] as [string, string]]),
+    ];
+    for (const [name, root] of writeProbeRoots) {
       const path = resolve(root, `.write-probe-${randomUUID()}`);
       const parentBefore = await lstat(root);
 
@@ -1367,7 +1446,8 @@ export async function prepareNativeTrial(
       }
 
       const shouldWrite =
-        defaultPermissions === 'eval' && (name === 'workspace' || name === 'temporary');
+        defaultPermissions === 'eval' &&
+        (name === 'workspace' || name === 'temporary' || skillOutputRoots.includes(root));
       const parentIntact =
         parentBefore.isDirectory() &&
         parentAfter.isDirectory() &&

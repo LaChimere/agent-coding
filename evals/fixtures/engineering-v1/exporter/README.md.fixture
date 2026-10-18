@@ -1,0 +1,9 @@
+# Export Desk
+
+A local CLI exports ordered JSON rows to a CSV file: `node cli.mjs input.json output.csv`.
+Input is an array of rows, each an array of strings. Preserve row/column order, empty strings,
+Unicode, and CRLF record endings. A CSV parser must recover commas, quotes and line breaks
+inside fields. No network, credentials, server or dependency install is needed.
+
+Run the existing baseline with `node tests.mjs`. The formatter's public export is
+`formatCsvRow(fields)`; the CLI is the user entry point and writes the output file.

@@ -1,0 +1,12 @@
+{
+  "version": "2",
+  "activeTask": {
+    "id": "repair-17",
+    "status": "running"
+  },
+  "observation": {
+    "fresh": false,
+    "result": null
+  },
+  "lastDeployment": "v1"
+}

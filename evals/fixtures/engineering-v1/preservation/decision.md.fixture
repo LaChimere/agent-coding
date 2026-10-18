@@ -1,0 +1,9 @@
+# Proposal: remove the durable retry queue
+The product accepts upload metadata before a slow external processor runs. Support sees duplicate
+retry notifications; operations sees incidents where acknowledged jobs were lost after restarts.
+The proposal removes the durable queue and always responds accepted after an in-memory enqueue.
+The latency objective is p95 under 150 ms, but there are no current measurements. The agreed
+contract promises accepted jobs survive a process restart. Reducing duplicates is desirable;
+changing the durability promise is undecided. No implementation, experiments or external actions
+are authorized. Analyze the real tensions, distinguish facts from assumptions and name a decisive
+experiment that could resolve uncertainty without treating a preference as a settled decision.

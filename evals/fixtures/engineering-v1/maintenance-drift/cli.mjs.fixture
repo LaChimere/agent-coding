@@ -1,0 +1,3 @@
+import { readFile } from 'node:fs/promises';
+const rows = JSON.parse(await readFile(process.argv[2], 'utf8'));
+console.log(JSON.stringify({ count: rows.length }));

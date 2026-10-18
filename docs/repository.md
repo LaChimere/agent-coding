@@ -1,32 +1,41 @@
 # Repository model and distribution
 
-Written for humans and agents contributing to `agent-coding`. Routed from the root [AGENTS.md](../AGENTS.md).
-
-## Purpose
-
-The root `AGENTS.md` and the docs it routes to govern contributions to the **`agent-coding` repository itself**.
-
-It is **not** a portable coordination contract for downstream repositories. Goal and plan handling
-belong to the consuming agent harness. Each distributed skill supplies its own engineering
-methods and task-specific constraints.
+This page governs contributions to `agent-coding`; downstream projects use the installed
+engineering methods and their own product contracts. The [accepted design](engineering/design.md)
+and [acceptance record](engineering/implementation.md) define the current redesign.
 
 ## Repository model
 
-- `skills/` contains standalone skills; the workflow specialists and `global-agent-rules` live under `plugins/workflow/skills/`.
-- `plugins/` contains shared plugin skills with native distribution for Codex CLI, Claude Code and GitHub Copilot CLI.
-- `evals/` contains the Bun/TypeScript Codex evaluation framework, central cases, fixtures and versioned profiles; it is never distributed with skills. Follow its local `AGENTS.md` and frozen quality baseline.
-- `plugins/workflow/` contains independent quality, commit structure and documentation skills. An optional engineering-design template is bundled with its consuming skill.
-- This repository does not keep a root `plans/` directory or task slugs. Use the authorized conversation for maintenance scope and `evals/out/` for new generated evaluation evidence. Historical `.skill-evals/` evidence and user-requested engineering documents remain unchanged; eval fixtures are task inputs, not runtime conventions.
-- Repo-root `AGENTS.md` is for repo-specific contributor guidance only, as a routing table into `docs/`.
-- Repo-root `templates/` should not exist; reusable templates belong with the skill that uses them.
+- `plugins/engineering/` owns the complete portable engineering package: task skills, shared
+  references, task-specific resources and native metadata. It does not implement another runtime.
+- `config/` owns host adapters and retained personal settings for Codex, Claude Code, Pi, Grok Bot
+  and the existing Copilot consumer. Standing policy, native syntax and capability differences
+  belong here; reusable product methods remain in the plugin.
+- `skills/` holds independently useful standalone specialists and their bundled resources.
+- `evals/` owns development cases, inert fixtures, versioned profiles, execution and grading.
+  Runtime packages exclude these materials. Follow `evals/AGENTS.md` and preserve its quality baseline.
+- `docs/` owns this repository's purpose, accepted design, decisions and qualification evidence.
+  The root `AGENTS.md` routes contributors here; distributed skills never rely on it.
+- `docs/engineering/implementation.md` records this redesign's progress. There is no mandatory
+  downstream task filename or repository-root plans directory.
 
 ## Distribution contract
 
-- Users consume root `skills/` through copies installed by `npx skills add`; plugin-owned skills are
-  consumed as complete plugins. Codex uses `.agents/plugins/marketplace.json`; Claude Code and
-  Copilot CLI share `.claude-plugin/marketplace.json`. Keep one runtime skill tree per plugin and
-  synchronize common metadata and versions across its native manifests.
-- Manually invoking a skill from an unregistered source checkout is unsupported. A native plugin manager may live-load a registered local marketplace; validate that path against an isolated candidate copy.
-- Runtime references, templates, scripts, and platform adapters must be bundled under the skill that uses them and resolved relative to the installed skill directory.
-- Skills documented as standalone must work when installed alone.
-- Skill dependencies must be task-specific, explicit and tested in their supported installed combinations.
+Users install the complete engineering plugin, even to invoke one skill. All relative runtime
+links must resolve inside the installed package; shared references may live at its root.
+Standalone specialists remain usable when installed alone. Required optional external capabilities
+must be identified, not silently installed or imitated.
+
+Codex uses `.agents/plugins/marketplace.json`; Claude Code uses `.claude-plugin/marketplace.json`.
+Their native manifests share package identity and version. Pi reads the engineering package's
+`package.json` resource declarations. Grok Bot uses the complete methods on its computer through
+its actual available import/file mechanisms; do not invent a native plugin command or qualify
+Grok from a CLI test. Details and evidence levels are in [hosts.md](engineering/hosts.md).
+
+Native managers may live-load a registered local package. Verify that path through an isolated
+candidate copy, rather than manually pretending an unregistered checkout is installed. Do not
+switch production installs or copy credential values for acceptance.
+
+Each supported host needs its own source identity, loading, invocation and behavior evidence.
+Mixed-tool work also needs actual handoff evidence. Missing capability remains explicit. Historical
+results, frozen profiles and holdouts are retained separately from the active redesign's cases.
