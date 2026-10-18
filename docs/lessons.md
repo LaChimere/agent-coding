@@ -84,6 +84,8 @@ following local rules implement D-008's structural-first prevention policy.
 - Reason: Grok's initial CSV helper masked the singleton-empty-field bug; our existing cold-start
   and handoff oracles also omitted that input. The returned helper's filesystem handling still
   missed operations outside its catch, and its map assumed one Node reporter format.
+  The follow-up also showed that retaining failed checks alone does not preserve an explicit
+  product verdict when cleanup changes the overall run status to an error.
 - Evidence: [Returned artifact audit and corrections](engineering/grok-acceptance.md), including
   the owner-supplied report and archive identity; `evals/tests/corpus/engineering.test.ts`.
 - Occurrences: 1 acceptance episode, observed in both the generated verifier and our evaluator.

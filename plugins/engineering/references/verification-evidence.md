@@ -25,8 +25,9 @@ assumptions; prove a disputed boundary with known inputs and a failing control.
 
 Keep product failures distinct from verification-tool errors through setup, execution, cleanup
 and evidence persistence. Give tool errors a distinguishable result and, for CLI helpers, exit status. Preserve
-earlier failures if cleanup also fails; if evidence cannot be saved, report that explicitly through
-an available output channel rather than claiming a saved result. Exercise a representative error
+the explicit product outcome alongside any later cleanup or evidence-write error; if evidence
+cannot be saved, report that explicitly through an available output channel rather than claiming
+a saved result. Exercise a representative error
 at a boundary the helper owns when claiming that boundary is handled.
 
 For real-app checks, reach the actual user entry point. Confirm prerequisites and the running
