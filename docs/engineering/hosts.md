@@ -102,6 +102,11 @@ No level implies the next. Unsupported, missing and unrun observations stay expl
 acceptance record. No production installation, routine activation or deployment is necessary to
 claim a repository draft exists, and a draft is not a qualification claim.
 
+Distribution checks require the declared host directories and nonempty regular adapter files,
+including Pi instructions and Grok Bot instructions/routine templates. They also validate native
+package declarations and bundled references. These checks do not prove that a host loads or follows
+the guidance. Personal host preferences remain allowed under D-009; they are not portable defaults.
+
 ## Primary references
 
 - [Codex plugins](https://developers.openai.com/plugins/build/plugins)

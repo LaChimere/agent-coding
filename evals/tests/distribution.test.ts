@@ -1,5 +1,5 @@
 import { expect, test } from 'bun:test';
-import { mkdtemp, readdir, rm, stat } from 'node:fs/promises';
+import { lstat, mkdtemp, readdir, rm, stat } from 'node:fs/promises';
 import { dirname, isAbsolute, relative, resolve, sep } from 'node:path';
 import { snapshotDirectory } from '../src/preparation/snapshot.ts';
 
@@ -117,6 +117,34 @@ enabled = true
     'deep_critical_reviewer.toml',
     'ordinary_worker.toml',
   ]);
+});
+
+test('every supported host retains its adapter artifacts', async () => {
+  const adapters = {
+    codex: ['AGENTS.md', 'config.toml'],
+    claude: ['CLAUDE.md'],
+    pi: ['AGENTS.md'],
+    'grok-bot': ['INSTRUCTIONS.md', 'routines.md'],
+    copilot: ['copilot-instructions.md'],
+  };
+  const root = resolve(repository, 'config');
+  const directories = await readdir(root, { withFileTypes: true });
+
+  expect(
+    directories
+      .filter((entry) => entry.isDirectory())
+      .map((entry) => entry.name)
+      .sort(),
+  ).toEqual(Object.keys(adapters).sort());
+
+  for (const [host, files] of Object.entries(adapters)) {
+    for (const file of files) {
+      const path = resolve(root, host, file);
+
+      expect((await lstat(path)).isFile(), path).toBeTrue();
+      expect((await Bun.file(path).text()).trim().length, path).toBeGreaterThan(0);
+    }
+  }
 });
 
 test.each(pluginNames)(

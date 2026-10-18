@@ -20,9 +20,9 @@ caller, test, documentation contract, or established invariant supplies evidence
 behavior. Convention or a plausible broader interpretation alone is unresolved; move it to
 Questions or omit it instead of reporting a defect.
 
-Do not require two reviewers to discover the same issue. For a completed Codex Security result,
-preserve its validated evidence and independently confirm only scope, location, duplication, and
-mapping into this report.
+Do not require two reviewers to discover the same issue. For a completed specialist security
+result from an available host workflow, preserve its validated evidence and independently confirm
+only scope, location, duplication, and mapping into this report.
 
 Attach only source labels for aspects that actually ran and materially support the final finding.
 Do not use a neighboring label as a synonym for the issue category.

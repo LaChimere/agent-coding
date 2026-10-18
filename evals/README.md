@@ -231,6 +231,11 @@ returned identities, completed turn and target workspace. Evidence retains both 
 without inventing a parent/child delegation relationship. Normal replies remain in the same
 thread. New-context requests at a pending `user-input` point are rejected.
 
+The final `output` belongs only to the last execution-owner thread, regardless of where an earlier
+owner's messages appear in the recorded stream. If the current owner has not answered, `output`
+is empty; prior answers remain in the conversation and evidence rather than becoming its answer.
+This does not change execution status or make an interrupted run complete.
+
 This tests a new context, not process-crash recovery or a different product host. Cross-host
 qualification remains separate. Failed handoffs preserve incomplete evidence rather than
 silently continuing in the original thread.

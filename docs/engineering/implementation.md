@@ -229,3 +229,38 @@ Git-ignored `evals/profiles/out/`; live runs select `--profile out`. Earlier fro
 what they actually used. Their method/runtime results are unchanged; the public template does
 not claim an operational gateway. The unpublished commit was replaced so the private address
 would not appear in the PR's commit history either.
+
+### PR #15 comment refinement
+
+The owner retained this PR's grouping and waived the proposed commit split. The three inline
+comments were addressed without rewriting history:
+
+- The shared review report now handles a completed specialist security result from any available
+  host workflow. It does not mandate a Codex-specific product or claim a security scan ran.
+- Final `output` is selected only from the last execution-owner thread. Missing current-owner
+  output stays empty; all earlier messages remain available as conversation/evidence. This avoids
+  stale answers without asserting that native Codex normally reorders events.
+- Distribution checks cover every declared host directory and its nonempty regular adapter files,
+  including Pi and Grok Bot. These are artifact checks, not keyword-based claims that instructions
+  were followed, and they retain D-009's permitted personal host preferences.
+
+Validation for this follow-up:
+
+- Two new evidence regressions failed before the fix and passed after it: late first-seen old-owner
+  output and absent current-owner output. The existing-item late-completion control still passes.
+  Logs: `evals/out/pr15-evidence-before.log` and `pr15-focused-after.log`.
+- The current projector replayed saved native handoff records from `abcb255e` and `7e60f7c2` with
+  unchanged successful answers. This is recorded-protocol replay, not a new live-model run.
+- In an isolated copied fixture, deleting `config/pi/AGENTS.md` or
+  `config/grok-bot/INSTRUCTIONS.md` fails the actual distribution suite; the complete and restored
+  copies pass. Logs: `evals/out/pr15-adapter-{baseline,pi,grok,restored}.log`.
+- Full coverage run: 326 passed, 0 failed, 97.06% line coverage (`evals/out/pr15-coverage.log`).
+  An independent read-only source review found no consequential defect in the scoped correction;
+  it did not rerun these primary-executed tests or mutation controls.
+
+Earlier native and cross-host observations retain their recorded scope and source identities.
+No new comprehensive trigger benchmark, GitHub CI workflow, specialist security scan or production
+qualification is claimed. Grok native execution remains user-deferred. Review-depth selection,
+noise/incident feedback and review limits are already represented by the methods; their long-term
+production effectiveness remains unverified. The known install-generated lefthook artifact is a
+separate tooling issue, not introduced by this correction.
