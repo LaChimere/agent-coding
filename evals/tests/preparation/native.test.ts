@@ -127,6 +127,157 @@ afterEach(async () => {
   await Promise.all(roots.splice(0).map((root) => rm(root, { recursive: true, force: true })));
 });
 
+test('a candidate without custom agents does not inherit baseline roles', async () => {
+  const input = await fixture();
+  await rm(resolve(input.runtimeDirectory, 'config/codex/agents'), { recursive: true });
+
+  const result = await prepareNativeTrial({
+    ...input,
+    credentials: {},
+    networkAccess: false,
+  });
+
+  expect(result.status).toBe('ready');
+  if (result.status !== 'ready') {
+    throw new Error(result.reason);
+  }
+  try {
+    expect(await readdir(resolve(result.codexHome, 'agents'))).toEqual([]);
+    expect(await Bun.file(resolve(result.codexHome, 'AGENTS.md')).text()).toBe(
+      'candidate agents\n',
+    );
+    expect(await Bun.file(result.evidencePath).text()).toContain(
+      'Candidate declares no custom agents',
+    );
+  } finally {
+    await result.finalize();
+  }
+});
+
+test('declared fixture project skills are discovered while undeclared project skills are rejected', async () => {
+  const skill = '.agents/skills/verify-summary/SKILL.md';
+  const declared = await fixture();
+  await write(
+    resolve(declared.directory, 'workspace', skill),
+    '---\nname: verify-summary\ndescription: Verify summary behavior.\n---\n',
+  );
+  const ready = await prepareNativeTrial({
+    ...declared,
+    credentials: {},
+    networkAccess: false,
+    projectSkillFiles: [skill],
+  });
+  expect(ready.status).toBe('ready');
+  if (ready.status !== 'ready') {
+    throw new Error(ready.reason);
+  }
+  try {
+    const evidence = await Bun.file(ready.evidencePath).text();
+    expect(evidence).toContain(`project-skill:${skill}`);
+    expect(evidence).toContain('verify-summary');
+  } finally {
+    await ready.finalize();
+  }
+
+  const undeclared = await fixture();
+  await write(
+    resolve(undeclared.directory, 'workspace', skill),
+    '---\nname: verify-summary\ndescription: Verify summary behavior.\n---\n',
+  );
+  const refused = await prepareNativeTrial({
+    ...undeclared,
+    credentials: {},
+    networkAccess: false,
+  });
+  expect(refused.status).toBe('not-run');
+  if (refused.status !== 'not-run') {
+    await refused.finalize();
+    throw new Error('Undeclared project skill was accepted');
+  }
+  expect(refused.reason).toContain('Undeclared enabled skill');
+});
+
+test('project skill declarations cannot authorize files outside their fixture location', async () => {
+  const input = await fixture();
+  const result = await prepareNativeTrial({
+    ...input,
+    credentials: {},
+    networkAccess: false,
+    projectSkillFiles: ['../outside/SKILL.md'],
+  });
+  expect(result.status).toBe('not-run');
+  if (result.status !== 'not-run') {
+    await result.finalize();
+    throw new Error('Escaped skill declaration was accepted');
+  }
+  expect(result.reason).toContain('fixture under .agents/skills');
+});
+
+test('authorized project skill outputs are writable while parent metadata and reviewer profiles stay read-only', async () => {
+  const input = await fixture();
+  const directory = '.agents/skills/verify-created';
+  const result = await prepareNativeTrial({
+    ...input,
+    credentials: {},
+    networkAccess: false,
+    projectSkillWrites: [directory],
+  });
+  expect(result.status).toBe('ready');
+  if (result.status !== 'ready') {
+    throw new Error(result.reason);
+  }
+  try {
+    const evidence = await Bun.file(result.evidencePath).json();
+    expect(evidence.probes.writes['project-skill-0'].exitCode).toBe(0);
+    expect(evidence.probes.writes['project-skill-parent'].exitCode).not.toBe(0);
+    const config = Bun.TOML.parse(
+      await Bun.file(resolve(result.codexHome, 'config.toml')).text(),
+    ) as { permissions: Record<string, { filesystem: Record<string, string> }> };
+    expect(config.permissions['eval']?.filesystem[resolve(result.workspace, directory)]).toBe(
+      'write',
+    );
+    expect(
+      config.permissions['eval-read-only']?.filesystem[resolve(result.workspace, directory)],
+    ).toBe('read');
+  } finally {
+    await result.finalize();
+  }
+});
+
+test('project skill output declarations cannot expand read-only candidates or follow symlink parents', async () => {
+  const readonly = await fixture({ sandbox: 'read-only' });
+  const blocked = await prepareNativeTrial({
+    ...readonly,
+    credentials: {},
+    networkAccess: false,
+    projectSkillWrites: ['.agents/skills/verify-created'],
+  });
+  expect(blocked.status).toBe('not-run');
+  if (blocked.status !== 'not-run') {
+    await blocked.finalize();
+    throw new Error('Read-only output declaration accepted');
+  }
+  expect(blocked.reason).toContain('writable candidate');
+
+  const linked = await fixture();
+  const outside = resolve(linked.root, 'outside');
+  await mkdir(outside);
+  await symlink(outside, resolve(linked.directory, 'workspace/.agents'));
+  const refused = await prepareNativeTrial({
+    ...linked,
+    credentials: {},
+    networkAccess: false,
+    projectSkillWrites: ['.agents/skills/verify-created'],
+  });
+  expect(refused.status).toBe('not-run');
+  if (refused.status !== 'not-run') {
+    await refused.finalize();
+    throw new Error('Symlink output declaration accepted');
+  }
+  expect(refused.reason).toContain('ordinary workspace directories');
+  expect(await readdir(outside)).toEqual([]);
+});
+
 test('prepares the declared Git baseline before starting the native thread and records it', async () => {
   const input = await fixture();
   await write(resolve(input.directory, 'workspace/src/existing.ts'), 'export const existing = 1;');

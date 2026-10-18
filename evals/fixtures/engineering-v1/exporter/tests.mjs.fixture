@@ -1,0 +1,5 @@
+import assert from 'node:assert/strict';
+import { formatCsvRow } from './format.mjs';
+assert.equal(formatCsvRow(['one', 'two']), 'one,two\r\n');
+assert.equal(formatCsvRow(['', 'x']), ',x\r\n');
+console.log('Plain-row baseline passed');

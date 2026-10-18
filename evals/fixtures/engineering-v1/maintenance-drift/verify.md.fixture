@@ -1,0 +1,12 @@
+---
+name: verify-summary
+description: Verify the summary CLI through its real command.
+---
+# Verify Summary
+Launch/doctor: `node --version`; no long-lived process is needed.
+Drive: `node .agents/skills/verify-summary/scripts/verify.mjs` from the project root.
+Keep this automated entry point usable for callers. It should launch the actual CLI, parse its
+output and fail when the count violates the public contract; a successful process alone is insufficient.
+Evidence: retain the command and actual results in an owned evidence directory.
+Cleanup: remove temporary inputs only; keep evidence.
+Read [the feature map](features/README.md).

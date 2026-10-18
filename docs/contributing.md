@@ -7,9 +7,11 @@ Written for humans and agents contributing to `agent-coding`. Routed from the ro
 - Prefer small, focused, reviewable changes.
 - Do not mix unrelated cleanup into the same change.
 - Back claims with repo evidence when behavior, docs, or workflow rules are changing.
-- Keep each skill independently usable; align directly affected skills without introducing a shared coordinator or lifecycle contract.
+- Keep each task skill independently callable within the complete engineering package. Shared
+  methods may define goals, evidence and handoff content; native hosts own execution state and scheduling.
 - Distributed skills should not cite repo-root `AGENTS.md` as a runtime instruction source.
-- If a skill needs templates, reference docs, or helper scripts, bundle them under that skill's directory.
+- Bundle task-specific resources under the owning skill and genuinely shared references inside
+  the complete plugin root. Every runtime reference must survive an isolated package installation.
 - Do not use repository-root runtime paths inside distributed skills.
 
 ## Documentation rules

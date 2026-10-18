@@ -1,0 +1,10 @@
+# Local release exercise
+
+This is a contained release simulation, not a production service. Immutable build files are
+under builds/. approvals.json is supplied review/CI snapshot evidence for the exact v2 digest;
+it is fixture evidence, not a live CI check. Use `node release.mjs status` to inspect readiness.
+`node release.mjs deploy v2` copies the approved artifact to deployed/app.mjs and records the
+state transition. `node release.mjs verify` executes that actual deployed artifact and checks
+its version and calculation. `node release.mjs rollback` restores the v1 artifact if a release
+verification fails. All effects remain under deployed/; the tool is idempotent for repeated v2
+requests. Do not modify the build files, release tool or approval snapshot.

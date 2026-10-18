@@ -41,10 +41,18 @@ export interface ICaseMetadata {
     executableFiles: string[];
     /** Fixture paths tracked in a disposable initial commit; omission keeps the legacy empty repo. */
     gitBaseline?: string[];
+    /** Exact project skill output directories explicitly authorized by this task. */
+    projectSkillWrites?: string[];
   };
   reference: string;
   requiredSkills: string[];
-  turns: { when: 'after-turn' | 'user-input'; match: string; reply: string }[];
+  turns: {
+    when: 'after-turn' | 'user-input';
+    match: string;
+    reply: string;
+    /** Begin this continuation in a fresh native context after the prior turn has ended. */
+    newThread?: boolean;
+  }[];
   authorization: {
     scope: string;
     approvals: { command: string; afterReply: number; decision: 'accept' | 'decline' }[];
@@ -302,11 +310,19 @@ export function parseCase(value: unknown): IRepositoryCase {
 
   const conditions = knownFields(
     execution,
-    ['networkAccess', 'pathPrepend', 'executableFiles', 'gitBaseline'],
+    ['networkAccess', 'pathPrepend', 'executableFiles', 'gitBaseline', 'projectSkillWrites'],
     'execution conditions',
   );
 
-  const { networkAccess, pathPrepend, executableFiles, gitBaseline } = conditions;
+  const { networkAccess, pathPrepend, executableFiles, gitBaseline, projectSkillWrites } =
+    conditions;
+  const skillWrites =
+    projectSkillWrites === undefined
+      ? undefined
+      : paths(projectSkillWrites, 'project skill writes');
+  if (skillWrites?.some((path) => !/^\.agents\/skills\/[a-z0-9][a-z0-9-]*$/u.test(path))) {
+    throw new Error('Project skill writes must name exact .agents/skills/<name> directories.');
+  }
 
   const files = array(fixture, 'fixture').map((item) => {
     const { source, target } = table(item, 'fixture file');
@@ -329,9 +345,16 @@ export function parseCase(value: unknown): IRepositoryCase {
   }
 
   const replies = array(turns, 'scripted turns').map((item) => {
-    const { when, match, reply } = table(item, 'scripted turn');
+    const { when, match, reply, newThread } = knownFields(
+      item,
+      ['when', 'match', 'reply', 'newThread'],
+      'scripted turn',
+    );
     if (when !== 'after-turn' && when !== 'user-input') {
       throw new Error('Unknown interaction point.');
+    }
+    if (newThread !== undefined && (typeof newThread !== 'boolean' || when !== 'after-turn')) {
+      throw new Error('A new native thread requires an after-turn continuation.');
     }
 
     const pattern = text(match, 'interaction match');
@@ -341,6 +364,7 @@ export function parseCase(value: unknown): IRepositoryCase {
       when,
       match: pattern,
       reply: text(reply, 'scripted reply'),
+      ...(newThread === undefined ? {} : { newThread }),
     } as const;
   });
 
@@ -392,6 +416,7 @@ export function parseCase(value: unknown): IRepositoryCase {
         pathPrepend: paths(pathPrepend, 'PATH entries'),
         executableFiles: paths(executableFiles, 'executable files'),
         ...(baselineFiles === undefined ? {} : { gitBaseline: baselineFiles }),
+        ...(skillWrites === undefined ? {} : { projectSkillWrites: skillWrites }),
       },
       reference: text(reference, 'reference', true),
       requiredSkills: strings(requiredSkills, 'required skills'),

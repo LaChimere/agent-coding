@@ -1,0 +1,3 @@
+# Release procedure
+
+A merge requires reviewed HEAD and successful required CI for that same HEAD. Deployment and post-deployment verification are separate states. This task only prepares a release; no network or publication is authorized.

@@ -4,7 +4,7 @@ import { resolve } from 'node:path';
 import { runCli } from '../src/cli.ts';
 import { loadCases } from '../src/corpus/cases.ts';
 import { freezeCollection, selectCollection } from '../src/corpus/collections.ts';
-import { loadedCase } from './fixtures/contracts.ts';
+import { fixtureCollectionRegistry, loadedCase } from './fixtures/contracts.ts';
 
 const roots: string[] = [];
 const originalConsoleLog = console.log;
@@ -22,10 +22,7 @@ async function projectRoot(): Promise<string> {
   for (const directory of ['skills', 'plugins', 'config/codex', '.agents/plugins']) {
     await mkdir(resolve(root, directory), { recursive: true });
   }
-  await Bun.write(
-    resolve(root, 'collections.json'),
-    await Bun.file(resolve(import.meta.dir, '../collections.json')).bytes(),
-  );
+  await Bun.write(resolve(root, 'collections.json'), JSON.stringify(fixtureCollectionRegistry()));
   await Bun.write(resolve(root, 'cases/fixture.json'), JSON.stringify([loadedCase().definition]));
   await Bun.write(resolve(root, 'src/grading/assertion.ts'), 'export default () => true;\n');
   await Bun.write(

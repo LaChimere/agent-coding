@@ -1,0 +1,13 @@
+{
+  "head": "bbbb2222",
+  "reviewedHead": "aaaa1111",
+  "ci": {
+    "head": "aaaa1111",
+    "status": "success"
+  },
+  "deployment": {
+    "version": "v1",
+    "head": "aaaa1111"
+  },
+  "requestedVersion": "v2"
+}

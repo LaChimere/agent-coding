@@ -1,5 +1,9 @@
 # Codex Evaluation Framework Design
 
+The engine contract below remains applicable. The engineering redesign uses the versioned
+`engineering` profile and `engineering-v1` development collection; original baselines and
+records remain retained. See [current product acceptance](../engineering/implementation.md).
+
 > The repository owner approved the evaluation scope, framework, grading, interaction, and aggregation policies during the design discussion on 2026-09-11. This document incorporates those decisions and the subsequent requirement to use the Workflow design template in English. The original implementation and qualification evidence is tracked in [the framework implementation record](plan.md); design approval is separate from execution evidence.
 
 The subsequent [evaluation refinement design](refinement-design.md) records the
@@ -137,7 +141,14 @@ Coverage includes explicit and implicit skill triggers, near misses, real task o
 
 Tool ordering is a constraint only when it is part of the behavior being tested. A valid alternative implementation is not a failure merely because it differs from a reference trajectory. For workflow skills, however, required clarification, review, authorization, and acceptance are themselves task requirements.
 
-The interaction driver provides only the user's side of the conversation. Codex generates all assistant messages and tool activity. The driver distinguishes natural-language clarification, ordinary confirmation, and native approval requests, keeping the case's turns in the same thread.
+An explicit `after-turn` continuation may request a fresh native thread. The prior turn must
+be terminal; the new thread uses the same workspace and effective model/provider/effort and
+receives only the declared user message. Handoff records and evidence retain both owner
+identities, without describing them as delegated parent/child agents. Ordinary continuations
+stay in their existing thread. This is context-handoff coverage, not automatic cross-host or
+process-crash recovery qualification.
+
+The interaction driver provides only the user's side of the conversation. Codex generates all assistant messages and tool activity. The driver distinguishes natural-language clarification, ordinary confirmation, and native approval requests, keeping turns in the same thread unless the case explicitly declares a fresh-context handoff.
 
 Unmatched requests preserve the current state without expanding permission. A proven contract violation can fail its check. If a reasonable branch cannot be handled by the script or execution facilities, the trial is incomplete and judgments depending on the missing continuation remain unknown.
 

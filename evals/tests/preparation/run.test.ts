@@ -3,7 +3,7 @@ import { chmod, mkdir, mkdtemp, rm, symlink } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import type { IRepositoryCase } from '../../src/corpus/cases.ts';
 import { freezeRun, type IRunRequest } from '../../src/preparation/run.ts';
-import { loadedCase } from '../fixtures/contracts.ts';
+import { fixtureCollectionRegistry, loadedCase } from '../fixtures/contracts.ts';
 
 async function setup(): Promise<{ root: string; input: IRunRequest }> {
   const root = await mkdtemp(resolve('.cache/freeze-test-'));
@@ -29,7 +29,7 @@ async function setup(): Promise<{ root: string; input: IRunRequest }> {
   await Bun.write(resolve(project, 'profiles/default/config.toml'), 'model="fixture"\n');
   await Bun.write(
     resolve(project, 'collections.json'),
-    await Bun.file(resolve(import.meta.dir, '../../collections.json')).bytes(),
+    JSON.stringify(fixtureCollectionRegistry()),
   );
   await Bun.write(resolve(project, 'package.json'), '{}\n');
   await Bun.write(resolve(project, 'bun.lock'), '{}\n');

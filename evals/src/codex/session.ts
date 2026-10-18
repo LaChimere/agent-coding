@@ -14,6 +14,12 @@ export interface INativeTurn {
   response: Readonly<Record<string, unknown>>;
 }
 
+interface IThreadOptions {
+  cwd: string;
+  permissions: string;
+  model?: string;
+}
+
 export function protocolObject(value: unknown): Record<string, unknown> {
   if (value === null || typeof value !== 'object' || Array.isArray(value)) {
     throw new Error('Expected a Codex protocol object.');
@@ -28,10 +34,11 @@ function protocolText(value: unknown, label: string): string {
   return value;
 }
 
-/** A trial owns one native thread; Codex owns every assistant turn and tool call. */
+/** Codex owns assistant turns; explicit handoffs can replace only an idle native context. */
 export class CodexSession {
   readonly transport: CodexTransport;
   private _thread: INativeThread | null = null;
+  private _threadOptions: IThreadOptions | null = null;
   private _running = false;
   private _turnId: string | null = null;
   private readonly _completed = new Map<string, INativeTurn>();
@@ -57,15 +64,48 @@ export class CodexSession {
     return result;
   }
 
-  async startThread(options: {
-    cwd: string;
-    permissions: string;
-    model?: string;
-  }): Promise<INativeThread> {
-    if (this._thread !== null) {
+  async startThread(options: IThreadOptions): Promise<INativeThread> {
+    if (this._thread !== null || this._running) {
       throw new Error('A trial cannot replace its native thread.');
     }
+    const initial = { ...options };
+    this._running = true;
+    try {
+      this._thread = await this._createThread(initial);
+      this._threadOptions = initial;
+      return this._thread;
+    } finally {
+      this._running = false;
+    }
+  }
 
+  async handoffThread(): Promise<INativeThread> {
+    if (this._thread === null || this._threadOptions === null || this._running) {
+      throw new Error('A handoff requires an existing idle native thread.');
+    }
+    const previous = this._thread;
+    this._running = true;
+    try {
+      const next = await this._createThread({ ...this._threadOptions, model: previous.model });
+      if (next.id === previous.id) {
+        throw new Error('A fresh-context handoff must return a different native thread.');
+      }
+      if (
+        next.model !== previous.model ||
+        next.modelProvider !== previous.modelProvider ||
+        next.reasoningEffort !== previous.reasoningEffort
+      ) {
+        throw new Error('A native handoff changed the qualified model configuration.');
+      }
+      this._thread = next;
+      this._completed.clear();
+      return next;
+    } finally {
+      this._running = false;
+    }
+  }
+
+  private async _createThread(options: IThreadOptions): Promise<INativeThread> {
     const response = protocolObject(
       await this.transport.request('thread/start', {
         ...options,
@@ -78,15 +118,13 @@ export class CodexSession {
     if (reasoningEffort !== null && typeof reasoningEffort !== 'string') {
       throw new Error('Codex did not report the effective reasoning effort.');
     }
-    this._thread = {
+    return {
       id: protocolText(id, 'thread.id'),
       model: protocolText(model, 'model'),
       modelProvider: protocolText(modelProvider, 'modelProvider'),
       reasoningEffort,
       response,
     };
-
-    return this._thread;
   }
 
   async runTurn(

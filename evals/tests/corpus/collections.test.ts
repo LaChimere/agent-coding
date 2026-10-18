@@ -10,13 +10,15 @@ import {
   selectCollection,
 } from '../../src/corpus/collections.ts';
 
+import { fixtureCollectionRegistry } from '../fixtures/contracts.ts';
+
 const roots: string[] = [];
 
 async function fixture() {
   await mkdir(resolve('.cache'), { recursive: true });
   const root = await mkdtemp(resolve('.cache/collections-'));
   roots.push(root);
-  const registry = await Bun.file(resolve(import.meta.dir, '../../collections.json')).json();
+  const registry = fixtureCollectionRegistry();
   await Bun.write(resolve(root, 'collections.json'), JSON.stringify(registry));
 
   return { root, registry };

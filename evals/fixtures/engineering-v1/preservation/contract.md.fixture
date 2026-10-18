@@ -1,0 +1,4 @@
+# Persistence contract
+submit(store, item) resolves {status:"saved"} only after store.save(item) succeeds. Storage failure
+must reject so the caller can retry; the caller deletes its local draft after a saved response.
+This contract is approved. Review may read files only, with no commands or edits.

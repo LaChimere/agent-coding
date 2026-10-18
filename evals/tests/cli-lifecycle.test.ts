@@ -38,7 +38,7 @@ async function projectFixture(): Promise<{
     await Bun.write(resolve(project, name), await Bun.file(resolve(projectSource, name)).bytes());
   }
 
-  const runtimePath = resolve(project, 'profiles/default/runtime.json');
+  const runtimePath = resolve(project, 'profiles/engineering/runtime.json');
   const runtime = (await Bun.file(runtimePath).json()) as IRuntimeConfig;
   runtime.authentication = [];
   await Bun.write(runtimePath, `${JSON.stringify(runtime)}\n`);
@@ -89,7 +89,7 @@ test('cancellation during freeze prevents worker startup and model execution', a
         '--candidate',
         input.candidate,
         '--case',
-        'native/scripted-context',
+        'engineering/understand-exporter',
         '--codex',
         input.codex,
       ],

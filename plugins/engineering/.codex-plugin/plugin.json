@@ -1,0 +1,34 @@
+{
+  "name": "engineering",
+  "version": "1.0.0",
+  "description": "Engineering methods for understanding projects, designing and implementing tasks, verifying behavior, reviewing code, releasing software and preventing repeated mistakes.",
+  "author": {
+    "name": "LaChimere",
+    "url": "https://github.com/LaChimere"
+  },
+  "homepage": "https://github.com/LaChimere/agent-coding",
+  "repository": "https://github.com/LaChimere/agent-coding",
+  "keywords": [
+    "engineering",
+    "verification",
+    "review",
+    "release",
+    "maintenance"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Engineering",
+    "shortDescription": "Develop, verify, review and maintain software with evidence.",
+    "longDescription": "Engineering methods for understanding projects, designing and implementing tasks, verifying behavior, reviewing code, releasing software and preventing repeated mistakes.",
+    "developerName": "LaChimere",
+    "category": "Productivity",
+    "capabilities": [
+      "Code",
+      "Review",
+      "Documentation"
+    ],
+    "defaultPrompt": [
+      "Use the engineering skill that matches my task, preserving its scope and checking actual results."
+    ]
+  }
+}

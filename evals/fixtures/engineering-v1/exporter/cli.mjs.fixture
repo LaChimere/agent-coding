@@ -1,0 +1,13 @@
+import { readFile, writeFile } from 'node:fs/promises';
+import { formatCsvRow } from './format.mjs';
+const [input, output] = process.argv.slice(2);
+if (!input || !output) {
+  console.error('Usage: node cli.mjs input.json output.csv');
+  process.exit(2);
+}
+const rows = JSON.parse(await readFile(input, 'utf8'));
+if (!Array.isArray(rows) || rows.some(row => !Array.isArray(row) || row.some(field => typeof field !== 'string'))) {
+  throw new Error('Expected rows of strings');
+}
+await writeFile(output, rows.map(formatCsvRow).join(''));
+console.log(`Exported ${rows.length} rows`);

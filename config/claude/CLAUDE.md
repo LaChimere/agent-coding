@@ -1,13 +1,8 @@
-# Global Claude Code instructions
+# Personal Claude Code instructions
 
-These are personal defaults for every repository. A project `CLAUDE.md` or `AGENTS.md` may add to or override them. Where they conflict with the oh-my-claudecode block above, these win.
-
-This machine's endpoint does not serve `fable`: never pass `model: fable`, whatever the block above offers as a tier — the agent dies immediately with an HTTP 400 (`model_not_supported`) and reports back only that error.
-
-Ignore the block above where it asks for a separate verifier pass on every task and for
-"zero pending tasks" before concluding. The rules below say when a review happens and what
-evidence I want; do not add a verifier subagent on top of them, and a review that ends with
-findings I told you to leave open counts as finished, not pending.
+These are personal defaults. Explicit user instructions and applicable project rules take
+precedence. Communication, decision/publication and shared-component boundaries remain active
+when no engineering skill is selected. The installed package supplies the task methods.
 
 ## Communication
 
@@ -38,26 +33,44 @@ findings I told you to leave open counts as finished, not pending.
 - Name the scope you actually checked — "the 42 tests in project X pass" — instead of claiming "no regressions". If a change has no local check you can run, say what you could not verify and what would prove it, and do not call it done.
 - Never invent a URL, an identifier, a log line, or a result. Mask secrets, tokens, and customer data when you quote output and say that you masked them — masking is not inventing.
 
-## Review and delegation
 
-- Do simple, well-defined tasks yourself. Do not spawn a subagent for work you can finish in a few steps.
-- Only the session I am talking to spawns subagents. A subagent never spawns another subagent and never runs the review protocol below; if it needs more hands, it says so and hands the work back. This includes a `fork` — a fork executes directly instead of re-delegating.
-- Use subagents mainly for: investigation that needs its own context window, multi-angle review, and running noisy builds, tests, or installs where I only need pass or fail.
-- Before taking over from a stalled subagent, stop it first, then do the work yourself. `TaskStop` from this session reaches any running task — pass the agent's `name` if it has one, otherwise its agent id. Only subagents are restricted: a subagent cannot stop another agent, even one it launched, so it hands that back instead.
-- A substantial change — more than one module touched, anything touching security, data, or a public interface, or behavior whose failure would be felt broadly — gets at least three agents in parallel, five at most, with explicitly different briefs: correctness and edge cases, security, and design fit. State each brief when you launch them. Tell each reviewer its job at that stage is coverage: report everything it finds, including low-severity and uncertain items, because the filtering happens in the next two rules. Send those `Agent` calls in one message, or they run one after another instead of at the same time. A small single-purpose diff you review yourself, even when it goes into a PR, and you say that is what you did.
-- Check every finding against the actual code before acting on it. Drop the ones the code disproves, and merge the duplicates.
-- Rank what survives — correctness, then security, then design, then clarity. Fix the correctness and security items, plus the design and clarity items that are cheap.
-- Counting the first review as round 1, review and refine for at most three rounds, and say which round you are on when you launch it. Stop earlier as soon as a round turns up no correctness or security findings that survive the check above. After the last round, stop and tell me what you fixed and what you left. Never run more than five reviewers in parallel.
-- Do not restate findings that are now resolved. Do list every finding that is still open, one line each, saying whether you could not fix it or chose not to, and why.
-- Reviewers must span at least two model families, and one of them must differ from whoever wrote the code under review. Inside Claude Code that means at least one reviewer goes through a non-Claude route, while the others run as `Agent` calls where you always pass `model` explicitly rather than accepting the agent definition's pinned tier — except a `fork`, which ignores `model` and always runs on this session's model. If only two families are available, say which brief doubled up. Never report a review as done without output from the reviewer that produced it; if an agent comes back empty, say so. What follows describes this machine and goes stale if it changes: the non-Claude routes today are `/codex:rescue`, which must run from this session because it spawns a subagent, and `/oh-my-claudecode:ask codex`, which a subagent can run too.
-- Delegate design docs, plan docs, and doc refreshes to Claude Opus 5 — run it as a subagent when this session is on another model — and review them with a different model family. Typos and one-line edits do not need this. That subagent is an `Agent` call with `model: opus`.
-- If a model one of these rules names is unavailable, never silently skip the work. When the rule asks for a different family, try another family first; otherwise fall back to this session's model. Either way, tell me which rule you could not honor and what you used instead.
+# Engineering methods in Claude Code
 
-## Stateful and remote work
+Use the installed `engineering` plugin's matching skill and its bundled shared agreement.
+The consuming project's instructions own its contracts. Keep native sessions, planning,
+tools, permissions and model selection in Claude Code; no fixed reviewer roster is required.
 
-- Remote work, and local work that is stateful and slow — anything that leaves things half applied if it dies: write a script, keep it outside the repository working tree, and run it in the background. Long builds, test suites, and installs are not this; delegate those to a subagent. Background means the Bash tool's `run_in_background`, not a trailing `&`.
-- Make that script safe to re-run by checking what is already done and doing only what is missing — never by deleting and recreating. Show me the script before its first run, keep credentials out of the file by reading them from the environment, and tell me where it lives.
+Use discovered commands such as `/engineering:implement-task` and `/engineering:code-review`,
+or natural-language task requests. Invoke sibling skills through supported native mechanisms
+and resolve shared resources relative to the installed plugin, not a source checkout.
 
-<tone_preference>
-Keep it short. Answer first, detail after, no narration of routine tool use.
-</tone_preference>
+The plugin's `code-review`, Claude Code's bundled review command and the managed PR review
+service are distinct tools. State which actually ran. A managed service's comments do not
+prove runtime verification, and a check result does not grant merge authority.
+
+Report missing tools, models or skills accurately. On resume or handoff, check the current
+workspace and external actions and preserve the objective, authority, evidence and unresolved work.
+
+## Personal capability and delegation boundaries
+
+The previous setup excluded `fable` because the owner's endpoint rejected it. Keep that model
+excluded until the current endpoint is explicitly verified to support it; this is local history,
+not a restriction on other hosts. Verify actual model and tool availability before selecting them.
+
+Use configured specialist writers or alternative model families where useful, with a separate
+critic for substantive blind spots. The engineering methods replace the old automatic 3–5-reviewer
+fan-out and mandatory cross-family/document-writer rules with risk-based selection and truthful
+independence evidence. Existing user-required model or independence choices still take precedence.
+A missing mandatory capability is a reported gap, never an invented successful launch.
+
+Only the task owner coordinates delegated work; reviewers execute their assigned methods without
+recursive delegation. Stop a stalled writer through actual available host controls before takeover.
+Use the package's stateful-work reference for interruption-sensitive shell/remote changes. No
+fixed tool name, third-party orchestrator or background flag is assumed to exist in every session.
+
+## Personal review budget
+
+Retain the existing three-round limit for this host unless the user explicitly authorizes more.
+Stop earlier when no supported correctness or security findings remain, while reporting other
+unresolved findings and unfulfilled gates. Reaching the limit is not approval; report remaining
+issues and reassess the approach before another round.

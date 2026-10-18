@@ -1,0 +1,22 @@
+{
+  "name": "@lachimere/agent-coding-engineering",
+  "version": "1.0.0",
+  "description": "Portable engineering methods with evidence and native host execution.",
+  "license": "MIT",
+  "private": true,
+  "keywords": [
+    "pi-package",
+    "engineering"
+  ],
+  "files": [
+    "skills",
+    "references",
+    ".codex-plugin",
+    ".claude-plugin"
+  ],
+  "pi": {
+    "skills": [
+      "./skills"
+    ]
+  }
+}

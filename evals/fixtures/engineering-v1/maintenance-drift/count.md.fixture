@@ -1,0 +1,3 @@
+# Record count
+
+Run `node summary.mjs rows.json`. The two records must produce {"count":1}.

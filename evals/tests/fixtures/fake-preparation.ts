@@ -70,6 +70,19 @@ const listSkillFiles = async () => {
     }
   }
 
+  const projectSkillsRoot = resolve(process.cwd(), '.agents/skills');
+  if (
+    await stat(projectSkillsRoot)
+      .then((info) => info.isDirectory())
+      .catch(() => false)
+  ) {
+    for await (const path of new Bun.Glob('**/SKILL.md').scan(projectSkillsRoot)) {
+      const file = resolve(projectSkillsRoot, path);
+      const name = (await Bun.file(file).text()).match(/^name:\s*(\S+)\s*$/mu)?.[1];
+      skills.push({ name, path: file, scope: 'project', enabled: true, pluginId: null });
+    }
+  }
+
   for (const plugin of installedPlugins) {
     if (!plugin.enabled) {
       continue;

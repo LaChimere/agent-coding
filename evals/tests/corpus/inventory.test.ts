@@ -6,6 +6,7 @@ import { selectCollection } from '../../src/corpus/collections.ts';
 test('the current corpus is valid and every bundled fixture is used', async () => {
   const project = resolve(import.meta.dir, '../..');
   const cases = await loadCases(project, await selectCollection(project));
+  const legacy = await loadCases(project, { caseRoot: 'cases', fixtureRoot: 'fixtures' });
   const sessionContext = await loadCases(project, {
     caseRoot: 'cases/v5',
     fixtureRoot: 'fixtures',
@@ -21,7 +22,7 @@ test('the current corpus is valid and every bundled fixture is used', async () =
   expect(commitFocused).toHaveLength(2);
   const referenced = new Set([
     ...cases.flatMap((item) => item.definition.metadata.fixture.map((fixture) => fixture.source)),
-    ...[...sessionContext, ...entry, ...commitFocused].flatMap((item) =>
+    ...[...legacy, ...sessionContext, ...entry, ...commitFocused].flatMap((item) =>
       item.definition.metadata.fixture.map((fixture) => fixture.source),
     ),
   ]);
@@ -95,7 +96,7 @@ test('the current daily corpus covers ordinary work without required skills or a
     exposure: 'seen',
   });
   const daily = await loadCases(project, source);
-  const legacy = await loadCases(project, await selectCollection(project));
+  const legacy = await loadCases(project, { caseRoot: 'cases', fixtureRoot: 'fixtures' });
 
   expect(legacy).toHaveLength(338);
   expect(daily).toHaveLength(44);

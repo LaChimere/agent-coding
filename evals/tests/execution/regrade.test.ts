@@ -5,7 +5,7 @@ import { saveReport } from '../../src/execution/worker.ts';
 import { freezeRun, type IRunRequest } from '../../src/preparation/run.ts';
 import { inventoryDirectory, snapshotDirectory } from '../../src/preparation/snapshot.ts';
 import type { ITrialResult } from '../../src/results/records.ts';
-import { loadedCase, requirement } from '../fixtures/contracts.ts';
+import { fixtureCollectionRegistry, loadedCase, requirement } from '../fixtures/contracts.ts';
 
 const projectSource = resolve(import.meta.dir, '../..');
 const regradeRunner = resolve(import.meta.dir, '../fixtures/regrade-runner.ts');
@@ -49,9 +49,11 @@ async function projectFixture(selectedCases = ['fixture/regrade']): Promise<IReg
     });
   }
 
-  for (const name of ['package.json', 'bun.lock', 'collections.json']) {
+  for (const name of ['package.json', 'bun.lock']) {
     await Bun.write(resolve(project, name), await Bun.file(resolve(projectSource, name)).bytes());
   }
+
+  await writeJson(resolve(project, 'collections.json'), fixtureCollectionRegistry());
 
   const first = loadedCase('fixture/regrade').definition;
   first.vars.task = 'Return done and write candidate-output.txt.';

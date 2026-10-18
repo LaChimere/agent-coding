@@ -24,7 +24,7 @@ const help = `Codex evaluations
 
   bun run start -- validate [--collection development|holdout]
   bun run start -- calibrate
-  bun run start -- run [--candidate REPO] [--case ID ...] [--profile default]
+  bun run start -- run [--candidate REPO] [--case ID ...] [--profile engineering]
                       [--repeat 1] [--concurrency 2] [--codex EXECUTABLE]
                       [--collection development|holdout]
   bun run start -- regrade RUN_DIRECTORY [--case ID ...] [--grading FILE]
@@ -141,7 +141,7 @@ export async function runCli(args: readonly string[], project: string): Promise<
       }
 
       const executable = await resolveCodexExecutable(
-        resolve(project, 'profiles', values.profile ?? 'default'),
+        resolve(project, 'profiles', values.profile ?? 'engineering'),
         values.codex,
       );
 
@@ -149,7 +149,7 @@ export async function runCli(args: readonly string[], project: string): Promise<
         project,
         candidates: [resolve(values.candidate ?? resolve(project, '..'))],
         selectedCases: values.case ?? [],
-        profile: values.profile ?? 'default',
+        profile: values.profile ?? 'engineering',
         concurrency: positiveInteger(values.concurrency, 2),
         repetitions: positiveInteger(values.repeat, 1),
         codexExecutable: resolve(executable),

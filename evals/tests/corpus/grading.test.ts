@@ -2,7 +2,6 @@ import { afterEach, expect, test } from 'bun:test';
 import { mkdir, mkdtemp, rm } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { loadCases } from '../../src/corpus/cases.ts';
-import { selectCollection } from '../../src/corpus/collections.ts';
 import { applyGradingOverrides } from '../../src/corpus/grading.ts';
 import { buildCoverageReport } from '../../src/results/coverage.ts';
 import { collection, loadedCase } from '../fixtures/contracts.ts';
@@ -47,7 +46,9 @@ test('corrects reference guidance without changing the frozen task or execution 
 
 test('removing a diagnostic does not leave its retired scoring prose in requirements or coverage', async () => {
   const project = resolve(import.meta.dir, '../..');
-  const original = (await loadCases(project, await selectCollection(project), ['anti-slop/0']))[0];
+  const original = (
+    await loadCases(project, { caseRoot: 'cases', fixtureRoot: 'fixtures' }, ['anti-slop/0'])
+  )[0];
   if (original === undefined) {
     throw new Error('The readiness-review regression case is missing.');
   }

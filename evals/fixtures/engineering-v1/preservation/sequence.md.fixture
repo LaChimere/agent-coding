@@ -1,0 +1,10 @@
+# Planned work and constraints
+Plan a sequence for two requested changes, without editing or Git operations.
+A. Rename exported loadItem to fetchItem across a package and all consumers. The old name can be
+removed in this source-only repository; there are no independently deployed consumers. Export and
+callers must change together or the intermediate build fails. Tests and docs refer to this API.
+B. Repair a logging redaction bug in an unrelated module, with its own regression test.
+An existing patch also reformats a third module that neither change touches. Reformatting was not
+requested. An engineer proposes frontend / backend / tests / docs commits and one PR per file.
+Assess actual purpose boundaries and dependencies, then suggest a usable sequence and PR grouping
+only if justified for submission. Do not add compatibility shims merely to split the rename.

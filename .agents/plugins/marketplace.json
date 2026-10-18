@@ -5,22 +5,10 @@
   },
   "plugins": [
     {
-      "name": "pr-review",
+      "name": "engineering",
       "source": {
         "source": "local",
-        "path": "./plugins/pr-review"
-      },
-      "policy": {
-        "installation": "AVAILABLE",
-        "authentication": "ON_INSTALL"
-      },
-      "category": "Productivity"
-    },
-    {
-      "name": "workflow",
-      "source": {
-        "source": "local",
-        "path": "./plugins/workflow"
+        "path": "./plugins/engineering"
       },
       "policy": {
         "installation": "AVAILABLE",

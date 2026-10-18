@@ -1,0 +1,8 @@
+{
+  "name": "export-desk",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node tests.mjs"
+  }
+}

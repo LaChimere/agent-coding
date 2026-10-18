@@ -1,9 +1,11 @@
 import { homedir } from 'node:os';
 import { resolve } from 'node:path';
+import { parseEnv } from 'node:util';
 
 export interface IAuthenticationReference {
   environment: string;
   jsonFile?: { path: string; pointer: string };
+  envFile?: string;
 }
 
 /** Resolve only declared runtime references. Returned values must never be persisted. */
@@ -18,8 +20,22 @@ export async function resolveAuthentication(
     if (!/^[A-Z][A-Z0-9_]*$/.test(name) || Object.hasOwn(credentials, name)) {
       throw new Error(`Invalid or duplicate authentication reference: ${name}`);
     }
+    if (reference.jsonFile !== undefined && reference.envFile !== undefined) {
+      throw new Error(`Multiple authentication file sources declared for ${name}.`);
+    }
 
     let value: unknown = environment[name];
+    if ((value === undefined || value === '') && reference.envFile !== undefined) {
+      const path = reference.envFile;
+      const file = path.startsWith('~/') ? resolve(userDirectory, path.slice(2)) : resolve(path);
+      try {
+        const parsed = parseEnv(await Bun.file(file).text());
+        value = Object.hasOwn(parsed, name) ? parsed[name] : undefined;
+      } catch {
+        // Parse dotenv as data, never source a shell or expose credential-bearing input errors.
+        throw new Error(`Cannot read the configured authentication env file for ${name}.`);
+      }
+    }
     if ((value === undefined || value === '') && reference.jsonFile !== undefined) {
       const { path, pointer } = reference.jsonFile;
       const file = path.startsWith('~/') ? resolve(userDirectory, path.slice(2)) : resolve(path);

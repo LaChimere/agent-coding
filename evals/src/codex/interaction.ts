@@ -11,6 +11,11 @@ export interface IInteractionEvent {
   reason: string;
 }
 
+export interface IUserContinuation {
+  text: string;
+  newThread: boolean;
+}
+
 /** Supplies only predeclared user information and exact command authorization. */
 export class ScriptedUser {
   readonly issues: string[] = [];
@@ -29,7 +34,7 @@ export class ScriptedUser {
     this._record = record;
   }
 
-  async afterTurn(output: string): Promise<string | null> {
+  async afterTurn(output: string): Promise<IUserContinuation | null> {
     const next = this._metadata.turns[this._replyBoundary];
     if (next === undefined) {
       return null;
@@ -45,10 +50,12 @@ export class ScriptedUser {
       request: output,
       response: next.reply,
       replyBoundary: this._replyBoundary,
-      reason: 'Matched the next declared user reply.',
+      reason: next.newThread
+        ? 'Matched a declared user reply for a fresh native thread.'
+        : 'Matched the next declared user reply.',
     });
 
-    return next.reply;
+    return { text: next.reply, newThread: next.newThread ?? false };
   }
 
   async handle(method: string, params: unknown): Promise<unknown> {

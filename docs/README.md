@@ -9,5 +9,10 @@ Written for humans and agents. Lead with the conclusion, use the repository's vo
 | [validation.md](validation.md) | Which checks to run for each kind of change |
 | [decisions.md](decisions.md) | Settled decisions; reviews check that a change does not overturn one |
 | [lessons.md](lessons.md) | Recurring pitfalls of this repo's prompts, skills and evals, with occurrence counts |
+| [engineering/design.md](engineering/design.md) | Accepted portable engineering package, responsibilities and acceptance requirements |
+| [engineering/implementation.md](engineering/implementation.md) | Current redesign progress, observed evidence and unresolved qualification |
+| [engineering/hosts.md](engineering/hosts.md) | Native installation paths, host boundaries and qualification levels |
 | [evaluation/](evaluation/design.md) | Evaluation framework design, plans and acceptance records |
-| [coding-orchestration/](coding-orchestration/design.md) | Coding-orchestration design and validation records |
+| [coding-orchestration/](coding-orchestration/design.md) | Historical specialist design and its validation records |
+
+- [Practice alignment and capability preservation](engineering/alignment.md)

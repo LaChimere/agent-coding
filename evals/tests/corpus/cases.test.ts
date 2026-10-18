@@ -79,6 +79,49 @@ test('sends authorization with the task without leaking grading guidance or futu
   expect(promptfooCase(source, '/project')).toMatchObject({ vars: { task: prompt } });
 });
 
+test('only after-turn replies may request a fresh native context', () => {
+  const source = definition();
+  source.metadata.turns = [
+    { when: 'after-turn', match: 'done', reply: 'Resume.', newThread: true },
+  ];
+  expect(parseCase(source).metadata.turns[0]?.newThread).toBeTrue();
+  expect(candidatePrompt(source)).not.toContain('Resume.');
+  source.metadata.turns[0] = {
+    when: 'user-input',
+    match: 'question',
+    reply: 'Answer.',
+    newThread: true,
+  };
+  expect(() => parseCase(source)).toThrow('after-turn');
+  expect(() =>
+    parseCase({
+      ...source,
+      metadata: {
+        ...source.metadata,
+        turns: [{ when: 'after-turn', match: 'done', reply: 'Resume.', newThread: 'yes' }],
+      },
+    }),
+  ).toThrow('after-turn');
+});
+
+test('project skill writes are exact directories rather than a metadata-root bypass', () => {
+  const source = definition();
+  source.metadata.execution.projectSkillWrites = ['.agents/skills/verify-example'];
+  expect(parseCase(source).metadata.execution.projectSkillWrites).toEqual([
+    '.agents/skills/verify-example',
+  ]);
+  for (const path of [
+    '.agents',
+    '.agents/skills',
+    '.agents/skills/../other',
+    '.git/config',
+    '/outside',
+  ]) {
+    source.metadata.execution.projectSkillWrites = [path];
+    expect(() => parseCase(source)).toThrow();
+  }
+});
+
 test('Git baselines name only declared fixture targets and remain optional for old cases', () => {
   const source = definition();
   expect(Object.hasOwn(parseCase(source).metadata.execution, 'gitBaseline')).toBeFalse();

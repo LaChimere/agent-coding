@@ -5,12 +5,8 @@
   },
   "plugins": [
     {
-      "name": "pr-review",
-      "source": "./plugins/pr-review"
-    },
-    {
-      "name": "workflow",
-      "source": "./plugins/workflow"
+      "name": "engineering",
+      "source": "./plugins/engineering"
     }
   ]
 }

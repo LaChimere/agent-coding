@@ -1,6 +1,8 @@
 let count = 0;
 let activeTurnId = '';
-const threadId = 'fixture-thread';
+let threadId = 'fixture-thread';
+let threadCount = 0;
+const handoffMode = Reflect.get(process.env, 'FAKE_HANDOFF_MODE');
 const send = (value: unknown) => process.stdout.write(`${JSON.stringify(value)}\n`);
 const complete = (id: string, status: string) =>
   send({
@@ -23,7 +25,7 @@ for await (const line of console) {
   const message = JSON.parse(line) as {
     id?: number;
     method: string;
-    params: { threadId?: string; turnId?: string; input?: { text: string }[] };
+    params: { threadId?: string; turnId?: string; model?: string; input?: { text: string }[] };
   };
 
   if (message.id === undefined) {
@@ -37,9 +39,13 @@ for await (const line of console) {
       reply({ userAgent: 'fixture/0.154.0' });
       break;
     case 'thread/start':
+      threadCount += 1;
+      if (threadCount === 1 || handoffMode !== 'reuse') {
+        threadId = threadCount === 1 ? 'fixture-thread' : `fixture-thread-${threadCount}`;
+      }
       reply({
         thread: { id: threadId },
-        model: 'fixture-model',
+        model: threadCount > 1 && handoffMode === 'model' ? 'different-model' : 'fixture-model',
         modelProvider: 'fixture-provider',
         reasoningEffort: 'high',
       });

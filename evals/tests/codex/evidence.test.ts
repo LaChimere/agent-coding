@@ -5,6 +5,31 @@ import { collectEvidence, projectEvidence, readProtocol } from '../../src/codex/
 import type { ICodexTransportRecord } from '../../src/codex/transport.ts';
 import { normalizeCodexUsage } from '../../src/codex/usage.ts';
 
+test('handoff evidence keeps both execution owners and selects the final owner answer', () => {
+  const answer = (threadId: string, text: string) =>
+    event('item/completed', {
+      threadId,
+      turnId: `${threadId}-turn`,
+      item: { id: `${threadId}-answer`, type: 'agentMessage', phase: 'final_answer', text },
+    });
+  const records = [
+    answer('first', 'handoff written'),
+    answer('second', 'verified repair'),
+    answer('worker', 'unaccepted worker claim'),
+  ];
+
+  const evidence = projectEvidence(records, ['first', 'second'], 'protocol.jsonl');
+
+  expect(evidence.output).toBe('verified repair');
+  expect(evidence.threadIds).toEqual(['first', 'second', 'worker']);
+  expect(evidence.conversation.map((message) => message.content)).toEqual([
+    'handoff written',
+    'verified repair',
+    'unaccepted worker claim',
+  ]);
+  expect(evidence.actorRelations).toEqual([]);
+});
+
 test('retains native instruction containers without promoting assistant or tool text', async () => {
   const directory = await mkdtemp(resolve('.cache/evidence-test-'));
   try {

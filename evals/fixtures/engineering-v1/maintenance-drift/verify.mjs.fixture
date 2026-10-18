@@ -1,0 +1,5 @@
+import { execFileSync } from 'node:child_process';
+import assert from 'node:assert/strict';
+const result = JSON.parse(execFileSync(process.execPath, ['summary.mjs', 'rows.json'], { encoding: 'utf8' }));
+assert.equal(result.count, 2);
+console.log('Verified actual CLI count=2');

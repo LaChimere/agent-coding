@@ -1,0 +1,10 @@
+---
+name: verify-summary
+description: Verify the summary CLI through its real command.
+---
+# Verify Summary
+Launch/doctor: `node --version`; no long-lived process is needed.
+Drive: `node cli.mjs rows.json` from the project root.
+Evidence: capture the command and returned JSON in an owned evidence directory.
+Cleanup: remove temporary inputs only; keep evidence.
+Read [the feature map](features/README.md).

@@ -22,3 +22,7 @@ enabled = true
 max_concurrent_threads_per_session = 6
 default_subagent_model = "gpt-6-luna"
 default_subagent_reasoning_effort = "max"
+
+# Portable methods use this host policy without imposing it on other hosts.
+[plugins."engineering@agent-coding"]
+enabled = true
