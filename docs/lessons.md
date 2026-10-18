@@ -70,5 +70,8 @@ following local rules implement D-008's structural-first prevention policy.
   `evals/out/preservation-independent-review/result.json`; configuration/distribution checks and
   the four capability-preservation cases in the active development collection.
 - Occurrences: 1 redesign and its correction episode.
-- Status: Structural package/configuration checks now protect the declared surface. Behavioral
-  cases cover retained methods; acceptance results remain version-bound in the implementation record.
+- Status: Structural package/configuration checks now protect the declared surface. PR #15 also
+  exposed missing coverage for Pi and Grok adapter files; all supported host artifacts are now
+  checked, and isolated deletion controls prove those two omissions fail. Personal host policy
+  remains allowed. Behavioral cases cover retained methods; acceptance results remain version-bound
+  in the implementation record.

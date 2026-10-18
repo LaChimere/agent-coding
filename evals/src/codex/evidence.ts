@@ -72,6 +72,7 @@ export interface INativeEvidence {
   /** Execution-owner threads come first in order; remaining entries include observed workers. */
   threadIds: string[];
   turnIds: string[];
+  /** Latest execution owner's answer; empty when that owner has not answered. */
   output: string;
   activation: {
     status: 'inferred' | 'unknown';
@@ -117,7 +118,8 @@ export function projectEvidence(
   source: string,
 ): Omit<INativeEvidence, 'actors' | 'toolRecords' | 'instructionContext'> {
   const items = new Map<string, IEvidenceItem>();
-  const owners = new Set(typeof rootThreadId === 'string' ? [rootThreadId] : rootThreadId);
+  const owners = typeof rootThreadId === 'string' ? [rootThreadId] : rootThreadId;
+  const currentOwner = owners.at(-1);
   const threads = new Set(owners);
   const turns = new Set<string>();
   const actorRelations: {
@@ -174,7 +176,7 @@ export function projectEvidence(
 
   const answers = result.filter(({ threadId, item }) => {
     const { type, phase } = item;
-    return owners.has(threadId) && type === 'agentMessage' && phase !== 'commentary';
+    return threadId === currentOwner && type === 'agentMessage' && phase !== 'commentary';
   });
 
   const last = answers.at(-1)?.item;

@@ -30,6 +30,50 @@ test('handoff evidence keeps both execution owners and selects the final owner a
   expect(evidence.actorRelations).toEqual([]);
 });
 
+test('late old-owner messages never replace the current owner output', () => {
+  const answer = (method: string, threadId: string, text: string) =>
+    event(method, {
+      threadId,
+      turnId: `${threadId}-turn`,
+      item: { id: `${threadId}-answer`, type: 'agentMessage', phase: 'final_answer', text },
+    });
+  const current = answer('item/completed', 'current', 'current answer');
+  const late = answer('item/completed', 'previous', 'old answer');
+  const inputs = [
+    [current, late],
+    [answer('item/started', 'previous', 'old draft'), current, late],
+  ];
+
+  for (const records of inputs) {
+    const evidence = projectEvidence(records, ['previous', 'current'], 'protocol.jsonl');
+
+    expect(evidence.output).toBe('current answer');
+    expect(evidence.items).toHaveLength(2);
+    expect(evidence.conversation.map(({ content }) => content)).toContain('old answer');
+  }
+});
+
+test('a current owner without an answer does not inherit an earlier owner answer', () => {
+  const records = [
+    event('item/completed', {
+      threadId: 'previous',
+      turnId: 'previous-turn',
+      item: { id: 'old-answer', type: 'agentMessage', text: 'previous result' },
+    }),
+    event('item/completed', {
+      threadId: 'current',
+      turnId: 'current-turn',
+      item: { id: 'progress', type: 'agentMessage', phase: 'commentary', text: 'starting' },
+    }),
+  ];
+
+  const evidence = projectEvidence(records, ['previous', 'current'], 'protocol.jsonl');
+
+  expect(evidence.output).toBe('');
+  expect(evidence.threadIds).toEqual(['previous', 'current']);
+  expect(evidence.conversation.map(({ content }) => content)).toEqual(['previous result']);
+});
+
 test('retains native instruction containers without promoting assistant or tool text', async () => {
   const directory = await mkdtemp(resolve('.cache/evidence-test-'));
   try {
