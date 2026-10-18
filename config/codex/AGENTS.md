@@ -33,7 +33,7 @@ qualified names such as `$engineering:implement-task`; the host owns sessions an
 | Create verification support or check behavior | `create-verification-skill` or `verify-behavior` |
 | Review an artifact | `code-review`; its index selects the detailed checking methods |
 | Challenge assumptions or request an independent critic | `spar` when explicitly requested; `rubber-duck` when requested or justified by risk |
-| Prepare or execute authorized Git/publication work | `release-software` and its Git reference |
+| Prepare or execute authorized Git/publication work | `release-and-rollout` and its Git reference |
 | Maintain verification, project knowledge or prevent recurring mistakes | `maintain-verification-skill`, `prevent-recurring-mistakes`; project-knowledge reference for docs |
 | Triage incoming issues, CI or alerts | Shared continuous-work reference; use the configured ordinary_worker for classification and escalate supported work to the configured main role when available |
 | Resume, delegate, or operate a persistent objective | Shared working agreement; independent-review and continuous-work references when applicable |

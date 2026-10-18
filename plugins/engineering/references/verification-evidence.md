@@ -18,6 +18,17 @@ they must not supply the very behavior being claimed. A compilation result does 
 an unexercised user journey. Use a mutation, reverted implementation or negative control when
 needed to establish that a check detects the relevant failure; do not add them as ceremony.
 
+For serialization and other transformations, derive input classes from the contract, including
+empty values, boundaries and interacting features. Prefer an established independent consumer
+or oracle where available. A separately written checker can share the implementation's mistaken
+assumptions; prove a disputed boundary with known inputs and a failing control.
+
+Keep product failures distinct from verification-tool errors through setup, execution, cleanup
+and evidence persistence. Give tool errors a distinguishable result and, for CLI helpers, exit status. Preserve
+earlier failures if cleanup also fails; if evidence cannot be saved, report that explicitly through
+an available output channel rather than claiming a saved result. Exercise a representative error
+at a boundary the helper owns when claiming that boundary is handled.
+
 For real-app checks, reach the actual user entry point. Confirm prerequisites and the running
 build, perform the action, observe the resulting state and relevant side effects. Internal
 setters, test-only endpoints and a final screenshot alone may omit the behavior under test.

@@ -62,6 +62,6 @@ independence when required. Fix confirmed in-scope issues and record legitimate 
 Update directly affected documentation, feature maps and architecture explanations following
 [project knowledge](../../references/project-knowledge.md). Report what
 changed, why, exact validation and remaining gaps. Keep ready-to-merge distinct from merged or
-released; use [release-software](../release-software/SKILL.md) only within publication authority.
+released; use [release-and-rollout](../release-and-rollout/SKILL.md) only within publication authority.
 When a real repeat failure surfaced, consider [prevent-recurring-mistakes](../prevent-recurring-mistakes/SKILL.md)
 within scope; do not manufacture a lesson or enlarge the task to create one.

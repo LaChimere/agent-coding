@@ -22,49 +22,65 @@ test('the active engineering collection grades outcomes while retaining the lega
   );
 });
 
-test('the cold-start CLI oracle rejects the original bug and accepts alternative valid quoting', async () => {
-  const [item] = await loadCases(project, await selectCollection(project), [
-    'engineering/cold-start-exporter',
-  ]);
-  if (item === undefined) {
-    throw new Error('Cold-start case is missing.');
-  }
-  const assertion = item.definition.assert.find((check) => check.metric === 'csv-cli');
-  if (assertion === undefined) {
-    throw new Error('Cold-start CLI assertion is missing.');
-  }
-  const { rule: sourceRule } = assertion.config;
-  const rule = parseRule(sourceRule);
-  if (rule.type !== 'command') {
-    throw new Error('Cold-start behavior needs an executable CLI oracle.');
-  }
-  const root = await mkdtemp(resolve('.cache/engineering-oracle-'));
-
-  try {
-    for (const fixture of item.definition.metadata.fixture) {
-      const target = resolve(root, fixture.target);
-      await mkdir(dirname(target), { recursive: true });
-      await Bun.write(target, Bun.file(resolve(project, 'fixtures', fixture.source)));
+test.each([
+  ['engineering/cold-start-exporter', 'csv-cli'],
+  ['engineering/fresh-context-handoff', 'handoff-correctness'],
+])(
+  '%s CLI oracle rejects empty-field loss and accepts alternative valid quoting',
+  async (caseId, metric) => {
+    const [item] = await loadCases(project, await selectCollection(project), [caseId]);
+    if (item === undefined) {
+      throw new Error('Cold-start case is missing.');
     }
-    const verify = () =>
-      Bun.spawn(rule.command, { cwd: root, stdout: 'ignore', stderr: 'ignore' }).exited;
+    const assertion = item.definition.assert.find((check) => check.metric === metric);
+    if (assertion === undefined) {
+      throw new Error('Cold-start CLI assertion is missing.');
+    }
+    const { rule: sourceRule } = assertion.config;
+    const rule = parseRule(sourceRule);
+    if (rule.type !== 'command') {
+      throw new Error('Cold-start behavior needs an executable CLI oracle.');
+    }
+    const root = await mkdtemp(resolve('.cache/engineering-oracle-'));
 
-    expect(await verify()).not.toBe(0);
+    try {
+      for (const fixture of item.definition.metadata.fixture) {
+        const target = resolve(root, fixture.target);
+        await mkdir(dirname(target), { recursive: true });
+        await Bun.write(target, Bun.file(resolve(project, 'fixtures', fixture.source)));
+      }
+      const verify = () =>
+        Bun.spawn(rule.command, { cwd: root, stdout: 'ignore', stderr: 'ignore' }).exited;
 
-    // Quoting every field is valid; the oracle must not require the minimal-quoting implementation.
-    await Bun.write(
-      resolve(root, 'format.mjs'),
-      `export function formatCsvRow(fields) {
+      expect(await verify()).not.toBe(0);
+
+      // This otherwise valid encoder loses the distinction between [] and [''].
+      await Bun.write(
+        resolve(root, 'format.mjs'),
+        `export function formatCsvRow(fields) {
+  return fields.map(value => /[",\\r\\n]/.test(value)
+    ? '"' + value.replaceAll('"', '""') + '"' : value).join(',') + '\\r\\n';
+}
+`,
+      );
+
+      expect(await verify()).not.toBe(0);
+
+      // Quoting every field is valid; the oracle must not require the minimal-quoting implementation.
+      await Bun.write(
+        resolve(root, 'format.mjs'),
+        `export function formatCsvRow(fields) {
   return fields.map(value => '"' + value.replaceAll('"', '""') + '"').join(',') + '\\r\\n';
 }
 `,
-    );
+      );
 
-    expect(await verify()).toBe(0);
-  } finally {
-    await rm(root, { recursive: true });
-  }
-});
+      expect(await verify()).toBe(0);
+    } finally {
+      await rm(root, { recursive: true });
+    }
+  },
+);
 
 test('local release evidence requires the actual immutable artifact and a post-deploy execution', async () => {
   const [item] = await loadCases(project, await selectCollection(project), [

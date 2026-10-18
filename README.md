@@ -18,7 +18,7 @@ use the host's existing scheduling and state.
 | `create-verification-skill` | Project-local launch/doctor/drive/evidence/cleanup tools and a feature map, actually exercised |
 | `verify-behavior` | Observed behavior, failure paths, performance and side effects for a named version/environment |
 | `code-review` | Verified findings, counterevidence, review coverage and bounded re-review |
-| `release-software` | Authorized integration/publication with exact artifacts, staged rollout and recovery |
+| `release-and-rollout` | Authorized integration/publication with exact artifacts, staged rollout and recovery |
 | `prevent-recurring-mistakes` | Structural or executable prevention proved against an actual prior error |
 | `maintain-verification-skill` | Proven map/harness corrections, separated from product regressions |
 | `spar` | Evidence-based opposing perspectives on an explicitly selected decision |
@@ -63,7 +63,10 @@ criteria and fixture answers are never distributed to executing agents.
 
 The breaking engineering redesign is implemented with representative local acceptance.
 Capability-preservation refinements passed renewed scoped acceptance; the 16 native development
-cases passed all 36 checks. Prior reports still apply only to their frozen versions. Grok Bot native validation is deferred to the owner; Claude Code and Pi currently have scoped
+cases passed all 36 checks. Prior reports still apply only to their frozen versions.
+The owner's [Grok file-loaded cold-start result](docs/engineering/grok-acceptance.md) has been
+audited and locally reproduced, with bounded verifier corrections; native import remains unverified.
+Claude Code and Pi currently have scoped
 read-only review evidence, not full workflow parity. Old workflow/pr-review package names are
 retired without aliases; useful methods and personal host policy are preserved under D-009.
 See [the accepted design](docs/engineering/design.md)

@@ -47,7 +47,7 @@ actions. Small tasks do not require a formal plan or extra files.
 | `create-verification-skill` | A project without repeatable agent verification; returns a grounded project skill, necessary helpers and feature map, exercised once |
 | `verify-behavior` | Named behavior and version/environment; returns observed checks, effects and coverage limits |
 | `code-review` | A fixed code, configuration, test or design target; returns verified findings, counterevidence and coverage |
-| `release-software` | A preparation or authorized publication task; returns distinct integration, merge, deployment and post-release states |
+| `release-and-rollout` | A preparation or authorized publication task; returns distinct integration, merge, deployment and post-release states |
 | `prevent-recurring-mistakes` | Evidenced repeated mistakes or a consequential preventable failure; returns structural enforcement and proof against the original failure |
 | `maintain-verification-skill` | Existing verification support affected by project changes; returns proved map/harness corrections and separately reported product regressions |
 

@@ -1,9 +1,9 @@
 ---
-name: release-software
-description: Prepare or carry out authorized integration, merge, deployment and post-release verification, preserving artifact identity, rollout gates and data recovery requirements.
+name: release-and-rollout
+description: Prepare or carry out authorized integration, merge, staged rollout, post-release verification and recovery, preserving artifact identity, rollout gates and data recovery requirements.
 ---
 
-# Release software
+# Release and roll out software
 
 Read [the shared agreement](../../references/working-agreement.md). Resolve whether the request
 authorizes preparation only, a merge, a deployment or the whole release. Reuse explicit bounded

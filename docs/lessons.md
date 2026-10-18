@@ -75,3 +75,18 @@ following local rules implement D-008's structural-first prevention policy.
   checked, and isolated deletion controls prove those two omissions fail. Personal host policy
   remains allowed. Behavioral cases cover retained methods; acceptance results remain version-bound
   in the implementation record.
+
+## L-006: A verifier can share the implementation's blind spot
+
+- Rule: Derive boundary inputs from contracts and compare transformations with an independent
+  consumer. Prove the evaluator rejects the concrete faulty variant and accepts valid alternatives.
+  Distinguish verifier setup, cleanup and evidence errors from product failures.
+- Reason: Grok's initial CSV helper masked the singleton-empty-field bug; our existing cold-start
+  and handoff oracles also omitted that input. The returned helper's filesystem handling still
+  missed operations outside its catch, and its map assumed one Node reporter format.
+- Evidence: [Returned artifact audit and corrections](engineering/grok-acceptance.md), including
+  the owner-supplied report and archive identity; `evals/tests/corpus/engineering.test.ts`.
+- Occurrences: 1 acceptance episode, observed in both the generated verifier and our evaluator.
+- Status: Both repository oracles now have executable faulty/valid controls. The corrected project
+  carries helper failure-path tests; shared verification and maintenance methods cover the judgment
+  gaps. Revised agent behavior still needs a subsequent native run.

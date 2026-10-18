@@ -63,6 +63,6 @@ limit, reassess the approach after three unproductive rounds rather than repeati
 A cap or missing reviewer result never means approval.
 
 Use [the report contract](references/report-format.md) to double-confirm and communicate the result.
-Publication belongs to [release-software](../release-software/SKILL.md). When a repeated finding or
+Publication belongs to [release-and-rollout](../release-and-rollout/SKILL.md). When a repeated finding or
 missed incident reveals a systematic gap, route it to
 [prevent-recurring-mistakes](../prevent-recurring-mistakes/SKILL.md); feedback does not authorize a fix.

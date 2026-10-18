@@ -65,7 +65,7 @@ test('the engineering package exposes the complete approved skill set to Pi and 
     'implement-task',
     'maintain-verification-skill',
     'prevent-recurring-mistakes',
-    'release-software',
+    'release-and-rollout',
     'rubber-duck',
     'spar',
     'understand-codebase',
