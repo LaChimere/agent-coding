@@ -30,16 +30,16 @@ test.each([
   async (caseId, metric) => {
     const [item] = await loadCases(project, await selectCollection(project), [caseId]);
     if (item === undefined) {
-      throw new Error('Cold-start case is missing.');
+      throw new Error(`Case ${caseId} for metric ${metric} is missing.`);
     }
     const assertion = item.definition.assert.find((check) => check.metric === metric);
     if (assertion === undefined) {
-      throw new Error('Cold-start CLI assertion is missing.');
+      throw new Error(`Case ${caseId} is missing the ${metric} CLI assertion.`);
     }
     const { rule: sourceRule } = assertion.config;
     const rule = parseRule(sourceRule);
     if (rule.type !== 'command') {
-      throw new Error('Cold-start behavior needs an executable CLI oracle.');
+      throw new Error(`Case ${caseId} metric ${metric} needs an executable CLI oracle.`);
     }
     const root = await mkdtemp(resolve('.cache/engineering-oracle-'));
 

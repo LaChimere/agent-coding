@@ -75,3 +75,36 @@ pre-commit/pre-push hooks. The initial sandbox run failed at loopback binding; t
 suite passed with local port binding permitted. The corrected project separately passes its nine
 product tests, eight helper tests and three journeys. An isolated mutation returning success for
 tool errors is rejected by the helper tests. These are local checks, not remote CI or model runs.
+
+## PR #15 follow-up: retain the product verdict (2026-10-19)
+
+[Review](https://github.com/LaChimere/agent-coding/pull/15#discussion_r4307782143) found that a
+product failure followed by cleanup failure retained failed checks but lost
+the explicit product verdict. A separate `evals/out/grok-refinement-v2/project/` copy now records
+`productVerdict` independently of the overall result: a failed check establishes `FAIL`, completed
+product checks establish `PASS`, and interrupted evaluation without a conclusion stays `null`.
+Any tool error still takes overall `ERROR` / exit 2 precedence. The generated skill and console
+summary explain both outcomes. Shared verification guidance now requires retaining the explicit
+product outcome alongside later cleanup or evidence-write errors.
+
+The final new regression controls failed against the unchanged v1 helper in an isolated copy:
+product failure plus cleanup failure, product failure plus result-write failure, and interrupted
+evaluation after successful partial checks all lacked the required product verdict. The corrected
+helper passed all 11 tests, including explicit product-outcome assertions for the original eight
+scenarios. On macOS arm64 / Node 24.22.0, all 9 unchanged product tests and 3 journeys passed;
+doctor before and after reported no leftover temporary directories. The repository's targeted
+corpus suite passed 4 tests with Bun 1.4.2. Its three parameterized setup diagnostics now name both
+the actual case ID and metric, including the resumed-handoff case.
+
+New local, unpublished evidence is under ignored `evals/out/grok-refinement-v2/`, with a separate
+`project/evidence/codex-refinement-v2/` folder. `helper-final-before.log` and `helper-final-after.log`
+retain the final regression proof; `preservation-after.log` confirms all six product files and
+copied historical evidence are byte-identical and the original refinement tree/ZIP are unchanged.
+The v1 reports and copied v1 contents record remain historical. The finalized local v2 ZIP
+has SHA-256 `f7d6214c4513481d80aec798e534b3c5767581391d2ab613bc208b9e594fbb40`; its current contents manifest was checked against every archived file.
+
+The primary inspected the results and rejected an isolated mutation that discards product verdicts
+on tool errors. A scoped independent source review found no consequential issue in the new
+result model or tests. Full repository tests (327, zero failures), type/lint, build and corpus
+validation passed again. These are local checks, not new Grok behavior, native-host qualification
+or remote CI success.
