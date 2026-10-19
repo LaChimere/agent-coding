@@ -2,7 +2,7 @@
   "schema": "codex-evals/collections-v1",
   "collections": {
     "development": {
-      "version": "engineering-v1-method-refinement-2026-10-19",
+      "version": "engineering-v1-evidence-controls-2026-10-20",
       "caseRoot": "cases/engineering-v1",
       "fixtureRoot": "fixtures",
       "exposure": "seen"

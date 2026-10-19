@@ -214,6 +214,9 @@ positive specialist review, SPAR, Rubber Duck and coherent change sequencing. `r
 control and a decision-complete handoff. Existing design, storage and explanation/release cases
 also cover the refined methods. These synthetic scenarios do not establish production task
 frequency, application speedups or all host behavior.
+The performance control distinguishes unconsumed work from complete timing and checks
+batch-local serialization reuse on repeated immutable object references. Its timing samples are
+stipulated observations; work-count controls do not guarantee the reported speed ratio.
 The CSV oracle drives the real CLI and parses its output independently. Calibration established
 that the broken baseline fails and a valid alternative quoting implementation passes.
 

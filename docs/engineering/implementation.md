@@ -1,5 +1,38 @@
 # Engineering redesign implementation and acceptance
 
+**Local, unpublished evidence:** raw inventories, command logs, native runs, comparisons and
+review/repair records under ignored `evals/out/` are not attached to this PR. PR readers cannot
+independently inspect those records from the repository. The committed corpus controls and
+distribution tests can be rerun; they do not make the separate native and review evidence public.
+
+## 2026-10-20 evaluation-control refinement — verified in the recorded scope
+
+The performance-review case now uses an explicit repeated-object workload. Its batch-local
+cache serializes each distinct immutable object once while retaining every output row. The
+corpus control checks output equivalence, fewer serialization calls, the all-distinct control
+and fresh serialization after an object changes between batches. The new work-count assertion
+failed against the previous fixture (four calls instead of two).
+
+The rubric distinguishes reported synthetic timings from source-established work reduction.
+It accepts justified conditional conclusions and does not require attributing an exact timing
+ratio to the source alone. The development collection is versioned as
+`engineering-v1-evidence-controls-2026-10-20`; earlier runs and grades are retained unchanged.
+Their Study B passes establish the earlier grader's outcomes, not the validity of a positive
+control whose source did not establish the intended work difference. Current-case verification
+is separate from the historical comparisons below.
+
+The focused corpus suite passed 7/7 after the correction. `bun run check`,
+`bun run test:coverage` (330 tests; 97.06% line coverage) and `bun run build` passed with the
+frozen quality rules unchanged. Before/after and full-gate logs are retained locally as
+`evals/out/pr16-comments-{before,after,check,coverage,build}.log`.
+
+Native run `35522413-dc78-4c70-8945-a62a6c69a243` used the private `out` profile, one repetition
+and concurrency one. Both `measurement-validity` and `readonly` passed; report
+`8da319e6-10a8-4ff2-9377-d450c7cdca48` is retained under that run's `reports/` directory.
+The output distinguishes source-proven reuse from stipulated timing ratios and reports workload
+and measurement limits. This qualifies the revised case only, not a new matched comparison or
+a rerun of the whole native collection. Portable plugin and host configuration files are unchanged.
+
 ## 2026-10-19 method refinement — accepted within the recorded scope
 
 The authorized increment deepens PR #15's methods while retaining D-008/D-009, all eleven
