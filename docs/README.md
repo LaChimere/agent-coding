@@ -11,6 +11,7 @@ Written for humans and agents. Lead with the conclusion, use the repository's vo
 | [lessons.md](lessons.md) | Recurring pitfalls of this repo's prompts, skills and evals, with occurrence counts |
 | [engineering/design.md](engineering/design.md) | Accepted portable engineering package, responsibilities and acceptance requirements |
 | [engineering/implementation.md](engineering/implementation.md) | Current redesign progress, observed evidence and unresolved qualification |
+| [engineering/pstack-research-2026-10-19.md](engineering/pstack-research-2026-10-19.md) | Pinned upstream research and proposals; subsequent implementation is tracked in the acceptance record |
 | [engineering/grok-acceptance.md](engineering/grok-acceptance.md) | User-run Grok artifact, independent reproduction and bounded corrections |
 | [engineering/hosts.md](engineering/hosts.md) | Native installation paths, host boundaries and qualification levels |
 | [evaluation/](evaluation/design.md) | Evaluation framework design, plans and acceptance records |

@@ -62,8 +62,11 @@ criteria and fixture answers are never distributed to executing agents.
 ## Status and evidence
 
 The breaking engineering redesign is implemented with representative local acceptance.
-Capability-preservation refinements passed renewed scoped acceptance; the 16 native development
-cases passed all 36 checks. Prior reports still apply only to their frozen versions.
+PR #15's capability-preservation run passed 16 cases / 36 checks. The later method refinement
+extends the development collection to 19 scenarios / 42 checks; native acceptance and targeted
+rechecks cover that surface across the recorded revisions. Six matched baseline/final-candidate
+pairs passed on both sides, without establishing an overall quality or reliability gain.
+The acceptance record retains failed attempts, corrections and version-specific limits.
 The owner's [Grok file-loaded cold-start result](docs/engineering/grok-acceptance.md) has been
 audited and locally reproduced, with bounded verifier corrections; native import remains unverified.
 Claude Code and Pi currently have scoped
