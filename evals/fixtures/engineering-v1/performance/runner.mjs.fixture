@@ -1,0 +1,16 @@
+import { performance } from 'node:perf_hooks';
+import { consume } from './encoder.mjs';
+
+export function timingBeforeConsumption(encoder, rows, now = () => performance.now()) {
+  const start = now();
+  const result = encoder(rows);
+  const milliseconds = now() - start;
+  return { milliseconds, output: consume(result) };
+}
+
+export function timingAfterConsumption(encoder, rows, now = () => performance.now()) {
+  const start = now();
+  const output = consume(encoder(rows));
+  const milliseconds = now() - start;
+  return { milliseconds, output };
+}

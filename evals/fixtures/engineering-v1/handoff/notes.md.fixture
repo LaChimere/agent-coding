@@ -1,0 +1,7 @@
+# Export rollout notes
+
+Earlier unresolved choice: retain partial output after a failed streaming export or delete it. Keeping it helps offline diagnosis but risks users mistaking an incomplete CSV for a finished one; deleting it avoids that ambiguity but loses the diagnostic file. No retention duration or user research has been supplied. Existing behavior buffers the entire output, so this new choice is not settled by the old implementation.
+
+The latest update adds a separate rollout choice: enable streaming for internal users first, or keep buffering until the failure policy is settled. Internal rollout can expose real workload behavior sooner but still needs an agreed failure policy and rollback; waiting preserves current behavior and delays feedback. No rollout authorization has been given. The proposed change is not deployed.
+
+Settled decision: retain the current public CLI arguments and exact CSV byte format. Do not reopen it. Byte-equivalence checks on the recorded sample passed; crash/recovery coverage is not complete. No claim of production readiness follows from that sample.

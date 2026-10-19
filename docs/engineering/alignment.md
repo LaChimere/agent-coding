@@ -14,12 +14,22 @@ establish preservation. Current acceptance is tracked in [implementation.md](imp
 | [Lauren/pstack correct](https://github.com/cursor/plugins/blob/main/pstack/skills/correct/SKILL.md) and the owner's supplied inverse-pyramid post | Fix structure, then types/checks, then remaining judgment guidance; prove prior failures are caught | prevent-recurring-mistakes and change-quality; registry and faulty-verifier controls |
 | [pstack verification](https://github.com/cursor/plugins/blob/main/pstack/skills/create-verification-skill/SKILL.md) and [maintenance](https://github.com/cursor/plugins/blob/main/pstack/skills/maintain-verification-skill/SKILL.md) | Drive actual user behavior; maintain a truthful map; retain proof after cleanup | verification creation/maintenance; cold-start and drift/regression cases |
 | [pstack architect](https://github.com/cursor/plugins/blob/main/pstack/skills/architect/SKILL.md) | Understand existing reasons, design interfaces/ownership, prototype alternatives and revise a failing shape | understand-codebase, design-solution, SPAR and Rubber Duck; grounded design/critique cases |
+| [pstack benchmark checklist](https://github.com/cursor/plugins/blob/6b78e9f4e46c75d1697d837e51f07c2692e60b24/pstack/skills/benchmark-checklist/SKILL.md) | Verify actual work, output correctness, relevant tuning, variability and end-to-end meaning before trusting a measured conclusion | performance-evidence, loaded from design, implementation, verification and review; misleading and valid comparison cases |
+| [pstack blast radius](https://github.com/cursor/plugins/blob/6b78e9f4e46c75d1697d837e51f07c2692e60b24/pstack/skills/blast-radius/SKILL.md) | Resolve the material fact a design or correctness argument depends on across real consumers and lifecycle boundaries | assumption-checking with existing review and verification; defect and safe-control cases |
+| [pstack ketchup](https://github.com/cursor/plugins/blob/6b78e9f4e46c75d1697d837e51f07c2692e60b24/pstack/skills/ketchup/SKILL.md) | Make every pending human decision understandable without reconstructing the transcript | shared working agreement; complete-choice and no-choice controls |
 | [Felix](https://felixrieseberg.com/how-to-be-more-ambitious-a-tutorial-for-humans-with-models/) | Improve the outcome, use professional methods and raw evidence, bring useful outside perspectives and validation | design-solution, SPAR, verification and independent review; scope-preserving experiments and decision challenges |
 
 These are adaptations, not claims to reproduce the authors' infrastructure. Native hosts own
 execution and scheduling. Projects choose risk thresholds, human approvals and review budgets.
 Voting may screen candidates but does not replace source verification. PR throughput alone is not
 quality. A nightly job, merge queue or live incident feed needs separate setup and authorization.
+
+The 2026-10-19 increment deepens those methods without adding public skills or another task
+state system. Existing acceptance, caller analysis, ownership, recovery, review, release and
+structural prevention remain with their current owners; validate their behavior before adding
+duplicate guidance. The formal-verification generator is a future decision following a justified
+project pilot, not an imported default. Fewer steps are useful only when necessary depth and
+correctness survive. Source alignment is not evidence of improved runtime outcomes.
 
 ## Old capabilities and current ownership
 

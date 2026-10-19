@@ -12,7 +12,14 @@ choose the smallest checks that can actually establish it and the affected exist
 | Documents/configuration | Correct source facts, resolved references, parsed or exercised settings as applicable |
 | Critical state/data | Invariants, failure/recovery paths and risk-appropriate properties or fault injection |
 
-Inspect what a command runs before interpreting it. Test expectations must come from the
+For measured conclusions or comparisons, use [performance evidence](performance-evidence.md).
+When correctness depends on a material unresolved fact, use
+[assumption checking](assumption-checking.md). Reuse sufficient existing evidence; these methods
+do not require new tools or experiments for every task.
+
+Inspect what a command runs before interpreting it. Under restricted write scope, account for
+implicit shell/interpreter temporary files and caches; use an in-memory invocation or a
+task-authorized scratch path. Test expectations must come from the
 contract rather than the implementation under test. Mocks can isolate a genuine boundary;
 they must not supply the very behavior being claimed. A compilation result does not establish
 an unexercised user journey. Use a mutation, reverted implementation or negative control when

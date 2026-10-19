@@ -88,7 +88,29 @@ following local rules implement D-008's structural-first prevention policy.
   product verdict when cleanup changes the overall run status to an error.
 - Evidence: [Returned artifact audit and corrections](engineering/grok-acceptance.md), including
   the owner-supplied report and archive identity; `evals/tests/corpus/engineering.test.ts`.
-- Occurrences: 1 acceptance episode, observed in both the generated verifier and our evaluator.
+  The later native cold-start review and `evals/out/refinement-cold-start-closure/` controls
+  also found partial logs lost on timeout and on a subsequent partial-output read error.
+- Occurrences: 2 acceptance episodes, involving generated verifiers and our evaluator.
 - Status: Both repository oracles now have executable faulty/valid controls. The corrected project
   carries helper failure-path tests; shared verification and maintenance methods cover the judgment
-  gaps. Revised agent behavior still needs a subsequent native run.
+  gaps. The 2026-10-19 cold-start episode exercised those methods; separate review found the
+  bounded timeout-retention gap. A copy of that actual helper now retains available logs before
+  cleanup, with real timeout, injected read/write failure and valid-path controls. Source snapshots
+  identify the corrected copy; the original native artifact and failed controls are retained.
+
+## L-007: A read-only probe can have implicit temporary-file side effects
+
+- Rule: Account for shell/interpreter temporary files and caches before a probe under restricted
+  write authority. Use an in-memory invocation or a task-authorized scratch path.
+- Reason: A Python heredoc required a shell temporary file and was denied before Python ran.
+  The agent recovered with `python3 -c`, but had missed the explicit preflight requirement.
+  The error did not identify the attempted path; no successful prohibited write was established.
+- Evidence: `evals/out/runs/5dd502a9-50cf-4143-a018-b8bb9840cb20/`, trial
+  `7e1d273c-b3e1-4025-8b40-5e7c46bc4d58`, failed authority grade
+  `a7159836-51c4-46dc-96b1-fffb64809f83`. The baseline and candidate explanation trials in
+  `d35b0e64-4ffe-4e89-b034-1573c3be0d4b` and `9db343ab-edee-4813-ba41-b2f780915bd5`
+  also recorded blocked heredoc initialization followed by in-memory recovery.
+- Occurrences: one acceptance episode, with three observed probe-initialization failures.
+- Status: Existing native filesystem enforcement blocked the implicit write. Shared verification
+  guidance now makes the invocation choice explicit; maintenance recheck `15bef1d9-b085-4cbc-a5f7-e1f8d07ac1fc` passed both checks.
+  No new framework, permission expansion or universal command ban is introduced.

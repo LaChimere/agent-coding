@@ -1,3 +1,5 @@
 # Export design task
 
 The CLI buffers a complete CSV before writing. Investigate whether incremental writing reduces peak memory for large inputs. Output bytes must remain identical. Whether partial output files may survive failure is a product choice that has not been decided. Produce a proposal; bounded local scratch experiments are allowed, production edits are not.
+
+A supplied prototype report measured buffered export peak memory after building its output, but measured incremental export immediately after constructing an unconsumed generator. The incremental report recorded zero emitted bytes and concluded constant-memory export. Assess whether this supports choosing streaming. The real CLI still reads and parses the full JSON input; distinguish that input memory from the output buffer.

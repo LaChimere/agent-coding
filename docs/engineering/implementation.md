@@ -1,5 +1,143 @@
 # Engineering redesign implementation and acceptance
 
+## 2026-10-19 method refinement — accepted within the recorded scope
+
+The authorized increment deepens PR #15's methods while retaining D-008/D-009, all eleven
+public entries and the existing host/authority contracts. It adds performance and assumption
+references, conditional entry pointers and one shared human-decision handoff clarification.
+Source inspiration is pinned to pstack `6b78e9f4e46c75d1697d837e51f07c2692e60b24`, with
+the Claude Team and Felix practices mapped in [alignment.md](alignment.md).
+
+| Requirement | Implementation and observed acceptance |
+|---|---|
+| Performance evidence in design, implementation, verification and review | One bundled method; native design and read-only review reject skipped work and accept valid, bounded comparisons |
+| Assumptions across real versions, ownership and consumers | One bundled method; native review finds the actual save-failure/draft-deletion path and clears the safe control without inventing a caller or extra guard |
+| Complete human-decision handoffs | Shared rule retains both older and newer unresolved choices, options, consequences and unknowns; explanation-only control invents no approval |
+| Existing engineering depth and authority | All entries and adapters retained; the nineteen-case development surface is covered, with the failed maintenance authority check corrected and revalidated below |
+| Complete engineering episode | Native cold-start implementation and real CLI proof, followed by owner-triggered independent review, actual fault reproduction, correction in a copy, revalidation and review closure |
+| Formal-pilot decision | No justified in-scope pilot; ordinary source, consumer and fault controls address the demonstrated gaps |
+
+These are bounded Codex CLI observations on synthetic projects. Production installation,
+publication and renewed Claude Code, Pi, Grok Bot, App/IDE or cloud qualification were not part
+of this increment. Historical results below keep their original identities and limits.
+
+### Artifact identities and local checks
+
+The baseline is PR #15's merge `49896fe6c833c28f82a474ab1de9044256b5e319`.
+The initial candidate inventory, revision A, is `evals/out/refinement-source-identity.json`
+(40 runtime/config files; identifier `1b872f721685a69e6850581af9553f287d2864c04f50ea30bb11c6535df81ed2`).
+Revision B changes only `references/verification-evidence.md` in that runtime inventory:
+a short operational clarification about implicit temporary/cache writes. Its inventory is
+`evals/out/refinement-source-identity-v2.json`, with the documented hash encoding and identifier
+`6ee179525a72b968c1c193174f262bdb8ca6c73313085fe440f39e350f9541a3`.
+Each native run also freezes and verifies its installed candidate independently.
+
+The collection retains sixteen scenarios and adds three: supplied performance evidence,
+a safe storage-consumer control and a complete decision handoff. Validation reports 19 cases /
+42 checks. Fixture controls execute the actual broken/safe consumer and an alternative valid
+implementation; the timing control observes serialization before versus after consumption.
+These establish fixture validity, not general model-judge accuracy or application speedups.
+
+Bun 1.4.2, the frozen lockfile and unchanged quality configuration were used.
+`bun run check`, `bun run test:coverage` and `bun run build` passed: 330 tests, no failures,
+97.06% line coverage. The four existing Biome informational diagnostics remain.
+Focused corpus/inventory checks passed 11 tests. Distribution checks passed six tests and
+224 assertions, including a repeat after the final reference clarification.
+Logs are retained under `evals/out/refinement-{check,coverage,build}.log` and
+`evals/out/refinement-final-distribution.log`.
+Dependency installation alone used `CI=1 LEFTHOOK=0` to avoid changing shared Git hooks;
+the quality scripts were not disabled.
+
+### Native evidence
+
+All runs use Codex CLI 0.162.1, Bun 1.4.2, Promptfoo 0.123.0, the same private profile
+(`gpt-6-astra`, xhigh; configured graders unchanged), one repetition and concurrency two.
+The profile inventory is `d3d1e5e2df9784dfe8cf7d70663eecec59d1c2abb14b0208056c1dda0799d2c0`.
+The user explicitly authorized the configured gateway transmission after the initial automatic
+approval rejection; that rejected launch executed no evaluation. Credentials remain references.
+
+Run/report paths below are under `evals/out/runs/RUN/reports/REPORT.json`.
+
+| Run | Candidate and outcome | Report |
+|---|---|---|
+| `d35b0e64-4ffe-4e89-b034-1573c3be0d4b` | Baseline interrupted: one passed explanation case, six unknown; incomplete attempts retained | `b568df1f-f53f-4cd4-9c5e-c16be2465a05` |
+| `b660fb25-f6bf-4fae-bb74-9b455b479ba8` | Baseline recovery: six remaining cases / twelve checks passed | `07023f84-f0f9-42a7-94a4-377214b00927` |
+| `9db343ab-edee-4813-ba41-b2f780915bd5` | Revision A: seven comparison cases / fourteen checks passed | `4747ab59-8e3c-43db-9cb4-591b7b86eff8` |
+| `5dd502a9-50cf-4143-a018-b8bb9840cb20` | Revision A preservation: eleven cases passed, one authority check failed; 27/28 checks passed | `518214fb-1eb7-47c0-9d26-4bcd2fa73915` |
+| `9d06c1cd-9c91-4a22-9a93-04c2d961d367` | Revision B: exact recovery-six selection / twelve checks passed | `427f7a47-87bc-4ed3-b515-023f18d5a74d` |
+| `15bef1d9-b085-4cbc-a5f7-e1f8d07ac1fc` | Revision B: affected maintenance case / both checks passed | `c8b5dcfc-c0f5-46b3-8dff-732357fc366b` |
+
+The preservation failures were not converted into passes. In the failed maintenance trial,
+a heredoc required an implicit temporary file without the required preflight. The shell denied
+creation before Python ran; no exact destination or successful prohibited write was established.
+Independent review confirmed the preflight miss and the limited impact. Existing filesystem
+enforcement remained intact. Revision B clarifies in-memory invocation or task-authorized scratch;
+the recheck loaded that guidance, used in-memory commands and preserved the product regression
+and expected count. See [L-007](../lessons.md#l-007-a-read-only-probe-can-have-implicit-temporary-file-side-effects).
+
+Comparison `evals/out/comparisons/185c78f5-3085-4817-a6de-4005310df024.json` has one eligible
+original-baseline/revision-A explanation pair. The six interrupted pairs remain excluded.
+The first recovery-six/candidate-seven comparison was rejected for different selected membership
+(`4ce6fa5a-a7c4-476f-85aa-fe1f9ed5d816.json`). A matching revision-B six-case run resolved that
+execution-planning gap without weakening the comparator:
+`de91273c-7f5d-4709-af1d-8f95f8fa78e5.json` has six eligible pairs, all passed on both sides.
+The one earlier pair and six final pairs have different candidate revisions; they are not presented
+as one uniform seven-case revision-B experiment.
+
+The baseline already handled these comparison cases. The observations support preserved
+capabilities and working methods, not a measured quality or reliability increase. Elapsed times
+and raw usage remain in every report, including interrupted work. Token accounting is partial
+because parent/child inclusion is unestablished; token and cost comparisons are ineligible.
+Human review time and minutes saved were not measured. Different model-selected experiments
+and provider latency also prevent interpreting elapsed differences as a workflow speedup.
+The ballpark-estimate branch is documented but was not separately behaviorally qualified.
+
+### Complete episode, review and correction
+
+The native cold-start trial `9a739296-2958-42df-85cd-6612af83e48f` in the preservation run
+established a verification skill/map, proved a baseline, repaired CSV escaping, ran the real CLI
+against an independent CSV consumer and retained before/after and helper-error evidence.
+The fresh-context handoff and staged-release cases separately establish their actual phase
+boundaries; they do not stand in for review of the implemented artifact.
+
+A separate-context reviewer inspected the actual cold-start artifact using the candidate review
+method. It found a bounded timeout evidence-retention defect despite the native case passing.
+The owner reproduced it against the actual generated helper and repaired a copy, preserving the
+original captured artifact. Follow-up review found a related partial-output-read failure; a real
+timeout plus an injected filesystem read error reproduced that path before the final correction.
+Available process logs now have one finalization owner before cleanup, independent of CSV reads
+and evidence writes. No additional generic framework or public skill was introduced.
+
+`evals/out/refinement-cold-start-closure/` contains the corrected project, controls and evidence.
+Final helper SHA-256 is `598b4cdf317214a6b8839aad7dd3fbc1ba6220a6cd46daf11b688d89f893332b`.
+Real timeout controls retain exact partial stdout/stderr/CSV with product failure and exit 1;
+a subsequent CSV-read error retains the logs, product failure and distinct tool error with exit 2.
+An injected log-write error preserves a passing product outcome alongside the tool error.
+Normal baseline/escaping journeys and all thirteen formatter checks pass. The original CLI was
+restored after fault injection. Independent follow-up review closed the bounded changes.
+The copy omits its original Git metadata; source snapshots/hashes, not its parent-repository
+`git_head`, identify the tested artifact.
+
+This episode includes owner-triggered review and correction; it does not claim the native author
+automatically initiated independent review or repaired the reviewer findings. The initial package
+review, acceptance-coverage audit and follow-up reviews used separate contexts. They are recorded
+conversation evidence, not published reviews or specialist security qualification.
+
+### Formal-pilot assessment and remaining scope
+
+No new stateful production mechanism or costly uncovered invariant justified a formal pilot.
+The runtime changes are guidance; executable additions are synthetic fixtures and controls.
+Existing execution-owner tests cover stale/absent ownership, and the demonstrated helper gaps
+were reproduced and corrected with ordinary fault controls. No verifier dependency, model or
+generator was added. This is a scoped no-pilot decision, not a proof that the repository has no
+defects or that formal verification would never help another project.
+
+The implementation and recorded local acceptance are complete. Single-run observations do not
+qualify arbitrary projects or every branch of each method. Other-host history remains historical,
+and commits, publication and production installation require their own authorization.
+
+## PR-15 acceptance history
+
 **D-009 refinement complete within the recorded scope:** standing policy and useful review,
 challenge and engineering methods are preserved and integrated. The revised native run passed
 16/16 cases and 36/36 checks; independent static and actual-context forward checks passed.

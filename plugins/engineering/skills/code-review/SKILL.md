@@ -46,6 +46,12 @@ review; a SPAR disagreement is not automatically a defect.
 
 ## Establish proportionate hard evidence
 
+When a consequential performance claim affects the verdict, read
+[performance evidence](../../references/performance-evidence.md), including for read-only
+assessment of supplied measurements. For a material unresolved fact on which correctness
+depends, use [assumption checking](../../references/assumption-checking.md). These methods do not
+grant execution authority or require another probe when current evidence already suffices.
+
 Review test quality as well as production code. Use
 [verification evidence](../../references/verification-evidence.md) for permitted execution. For
 changed tests, identify the contract and credible regression they protect. Revert the implementation

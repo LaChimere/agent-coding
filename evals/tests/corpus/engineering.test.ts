@@ -13,7 +13,7 @@ test('the active engineering collection grades outcomes while retaining the lega
   const legacy = await Bun.file(resolve(project, 'collections.legacy-v1.json')).json();
 
   expect(current.caseRoot).toBe('cases/engineering-v1');
-  expect(cases).toHaveLength(16);
+  expect(cases).toHaveLength(19);
   expect(cases.every((item) => item.definition.metadata.assessment === 'outcome')).toBeTrue();
   expect(cases.every((item) => item.definition.metadata.requiredSkills.length === 0)).toBeTrue();
   expect(legacy.collections.development.caseRoot).toBe('cases');
@@ -119,6 +119,110 @@ test('local release evidence requires the actual immutable artifact and a post-d
 
     await Bun.write(resolve(root, 'deployed/app.mjs'), "console.log('wrong artifact');\n");
     expect(await run(rule.command)).not.toBe(0);
+  } finally {
+    await rm(root, { recursive: true });
+  }
+});
+
+test('performance fixture distinguishes generator construction from completed work', async () => {
+  const [item] = await loadCases(project, await selectCollection(project), [
+    'engineering/review-performance-record',
+  ]);
+  if (item === undefined) {
+    throw new Error('Performance evidence case is missing.');
+  }
+  const root = await mkdtemp(resolve('.cache/performance-evidence-'));
+
+  try {
+    for (const fixture of item.definition.metadata.fixture) {
+      const target = resolve(root, fixture.target);
+      await mkdir(dirname(target), { recursive: true });
+      await Bun.write(target, Bun.file(resolve(project, 'fixtures', fixture.source)));
+    }
+    const child = Bun.spawn(
+      [
+        process.execPath,
+        '-e',
+        `import assert from 'node:assert/strict';
+import { eager, lazy, batched } from './encoder.mjs';
+import { timingBeforeConsumption, timingAfterConsumption } from './runner.mjs';
+let serialized = 0;
+const rows = [1, 2, 3].map(id => ({ toJSON() { serialized += 1; return { id }; } }));
+const expected = '{"id":1}\\n{"id":2}\\n{"id":3}\\n';
+function check(timer, encoder, expectedWork) {
+  serialized = 0;
+  const result = timer(encoder, rows, () => serialized);
+  assert.equal(result.output, expected);
+  assert.equal(serialized, 3);
+  assert.equal(result.milliseconds, expectedWork);
+}
+check(timingBeforeConsumption, eager, 3);
+check(timingBeforeConsumption, lazy, 0);
+check(timingAfterConsumption, lazy, 3);
+check(timingAfterConsumption, batched, 3);
+`,
+      ],
+      { cwd: root, stdout: 'pipe', stderr: 'pipe' },
+    );
+    const error = await new Response(child.stderr).text();
+
+    expect(await child.exited, error).toBe(0);
+  } finally {
+    await rm(root, { recursive: true });
+  }
+});
+
+test.each([
+  ['engineering/review-storage-failure', false],
+  ['engineering/review-storage-safe', true],
+])('%s exercises the actual consumer on rejected and successful saves', async (caseId, safe) => {
+  const [item] = await loadCases(project, await selectCollection(project), [caseId]);
+  if (item === undefined) {
+    throw new Error('Storage consumer case is missing.');
+  }
+  const root = await mkdtemp(resolve('.cache/storage-consumer-'));
+
+  try {
+    for (const fixture of item.definition.metadata.fixture) {
+      const target = resolve(root, fixture.target);
+      await mkdir(dirname(target), { recursive: true });
+      await Bun.write(target, Bun.file(resolve(project, 'fixtures', fixture.source)));
+    }
+    const observe = async () => {
+      const child = Bun.spawn(
+        [
+          process.execPath,
+          '-e',
+          `import { publishDraft } from './caller.mjs';
+const drafts = new Map([['d', 'text']]);
+let rejected = false;
+try { await publishDraft({ save: async () => { throw new Error('offline'); } }, drafts, 'd'); }
+catch { rejected = true; }
+const retained = drafts.has('d');
+drafts.set('d', 'text');
+await publishDraft({ save: async () => {} }, drafts, 'd');
+console.log(JSON.stringify({ rejected, retained, removedAfterSuccess: !drafts.has('d') }));`,
+        ],
+        { cwd: root, stdout: 'pipe', stderr: 'pipe' },
+      );
+      const output = await new Response(child.stdout).text();
+      const error = await new Response(child.stderr).text();
+      expect(await child.exited, error).toBe(0);
+
+      return JSON.parse(output);
+    };
+
+    expect(await observe()).toEqual({ rejected: safe, retained: safe, removedAfterSuccess: true });
+
+    await Bun.write(
+      resolve(root, 'service.mjs'),
+      `export function submit(store, item) {
+  return store.save(item).then(() => ({ status: 'saved' }));
+}
+`,
+    );
+
+    expect(await observe()).toEqual({ rejected: true, retained: true, removedAfterSuccess: true });
   } finally {
     await rm(root, { recursive: true });
   }

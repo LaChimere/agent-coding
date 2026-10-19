@@ -33,6 +33,11 @@ prototype or experiment that distinguishes the options, with a measurable questi
 check. A clear small change needs neither multiple prototypes nor a separate design document.
 Keep prototype shortcuts explicit and separate from production readiness.
 
+Before using measured performance to choose between alternatives, including design-only
+prototypes, read [performance evidence](../../references/performance-evidence.md). When a design
+depends on a material unresolved fact, use [assumption checking](../../references/assumption-checking.md).
+Existing sufficient evidence may resolve either question without another experiment.
+
 ## Challenge and sequence when useful
 
 Use [SPAR](../spar/SKILL.md) for an explicitly requested opposing-perspective analysis, and

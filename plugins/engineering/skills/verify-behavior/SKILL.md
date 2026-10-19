@@ -15,8 +15,8 @@ Inspect the applicable project commands, existing verification skill and feature
 checks that establish the claim and affected contracts. Use the real entry point and data where
 required; compilation and mocked internals cannot establish unexercised interactions.
 
-For a bug fix, seek before/after evidence of the intended failure. For performance, keep the
-workload and measurement comparable. For recovery or concurrency, exercise credible ordering and
+For a bug fix, seek before/after evidence of the intended failure. For performance claims, use
+[performance evidence](../../references/performance-evidence.md). For recovery or concurrency, exercise credible ordering and
 failure conditions. For documentation-only tasks, source and reference checks may be sufficient.
 Add a test or control when coverage is missing within the authorized scope; tests are not quotas.
 

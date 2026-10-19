@@ -43,6 +43,13 @@ authorized project document rather than starting another competing state system.
 
 ## Evidence and completion
 
+When a human choice is pending, make it decidable from the current response: state the question,
+viable options, material consequences, decisive evidence and relevant unknowns. Include older
+unresolved choices when still applicable. Link bulky evidence without hiding the decision in it;
+do not invent questions or reopen settled choices. With no pending choice, report the result and
+limits concisely. Preserve explanations needed for understanding, and use existing visuals when
+helpful without creating artifacts merely to satisfy a presentation pattern.
+
 Bind claims to the version or artifact, environment, actual action and observed result. Keep
 facts, inferences and missing evidence distinct. Inspect worker artifacts and decisive outputs;
 their completion message is not acceptance. A command that prints success need not have checked
