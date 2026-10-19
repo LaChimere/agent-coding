@@ -64,6 +64,22 @@ and performance methods rather than separate public skills for each step.
 
 ## Working methods
 
+### Keep methods with their task owners
+
+Public entries represent distinct engineering outcomes. Detailed procedures belong behind the
+entry that needs them; shared references serve several entries without adding another workflow
+stage. This keeps specialized checks discoverable while avoiding an always-loaded checklist.
+Performance evidence and assumption checking follow this structure because they support design,
+implementation, verification and review of the same claim.
+
+Extend a method when a project exposes a demonstrated evidence gap. A trace investigation starts
+from a fixed capture and follows events back to actual source. An optimization attempt keeps a
+comparable measurement and correctness checks, including rejected attempts. Visual equivalence
+needs an agreed baseline and controlled rendering conditions when equivalence is the contract.
+These are task-specific techniques; their tooling and acceptance thresholds belong to the
+consuming project. A reusable procedure needs a demonstrated purpose before it becomes a new
+shared resource or public entry.
+
 ### Frame and execute
 
 Identify the desired outcome beyond the requested artifact, but preserve the selected scope.
@@ -94,9 +110,11 @@ and live coverage for every mapped feature, with unreachable prerequisites recor
 Recheck surprising environments and preserve evidence through failed attempts and cleanup.
 
 Performance conclusions and comparisons, including design-only choices and read-only review
-of supplied measurements, use the task-loaded performance method. It checks actual work,
+of supplied measurements, use
+[performance evidence](../../plugins/engineering/references/performance-evidence.md). It checks actual work,
 correctness, comparison conditions, interference, variability and end-to-end significance.
-When a decision depends on a material unresolved fact, the assumption method follows the real
+When a decision depends on a material unresolved fact,
+[assumption checking](../../plugins/engineering/references/assumption-checking.md) follows the real
 version, state owner and consumer before selecting sufficient evidence. Existing evidence may
 resolve the question without another experiment; product semantics remain a separate decision.
 
@@ -136,11 +154,28 @@ options, consequences, evidence and unknowns. Preserve older unresolved choices 
 do not manufacture questions or replace an explanation with a status list. Shared guidance owns
 this rule, while personal communication defaults remain in host configuration.
 
+### Select stronger verification for a concrete property
+
 Formal verification remains a conditional project experiment, not a lifecycle gate. Select it
 only for a costly property with a concrete coverage gap. A no-pilot outcome is valid when no
 in-scope target justifies the work. Any later pilot must distinguish model evidence, code-level
 verification and generated-input testing, retain failure/valid controls and exercise maintenance
 after a relevant change before proposing a reusable generator.
+
+Choose a supported method for the property's language and failure mode. A checked model
+establishes a result about that model; code verification depends on its encoded assumptions
+and bounds; generated-input tests cover the exercised inputs. Record which result was obtained.
+Testing a handwritten replacement does not establish the shipped implementation's behavior.
+When no suitable verifier supports the implementation, use appropriate tests against real code
+or leave implementation verification explicitly unproven.
+
+For a formal-verification pilot, the project method needs a runnable command, reproducible tool
+version, identification of the checked code and any model/code mapping, failing and valid
+controls, and a way to detect relevant code changes.
+Breaking the property in real code must be detected by the claimed workflow, or its sensitivity
+to implementation changes remains unproven. Exercise maintenance after a relevant change before
+generalizing the method. Distinguish a counterexample from timeout, inadequate bounds and tool
+or modeling errors; none of these outcomes should silently become a pass.
 
 ## Distribution
 
@@ -184,9 +219,13 @@ an SDK is not an already working integration. Missing capabilities retain explic
   deduplication and the distinction between findings and merge enforcement.
 - [Claude team workflow](https://claude.dev/blog/solving-code-review-at-anthropic/): human total
   effort, risk, convergence, staged delivery, incidents and shared understanding.
-- [pstack](https://github.com/cursor/plugins/tree/main/pstack): real application verification,
+- [pstack](https://github.com/cursor/plugins/tree/6b78e9f4e46c75d1697d837e51f07c2692e60b24/pstack): real application verification,
   feature maps, structural prevention and grounded design. Methods are adapted; personal model
   choices, fixed reviewer counts and automatic publication are not universal defaults.
+- [Formal-verification workflow](https://github.com/cursor/plugins/blob/6b78e9f4e46c75d1697d837e51f07c2692e60b24/pstack/skills/create-formal-verification-skill/SKILL.md),
+  [TLC](https://docs.tlapl.us/using:tlc:start) and
+  [Kani bounds](https://model-checking.github.io/kani/tutorial-loop-unwinding.html): distinguish
+  model properties, code correspondence and bounded implementation evidence.
 - [Lauren's workshop](https://maven.com/p/e23d9c/how-cursor-turned-ai-agents-into-better-engineers):
   establish reliable work before scaling, evaluate skills and maintain project constraints.
 - [Felix on ambition](https://felixrieseberg.com/how-to-be-more-ambitious-a-tutorial-for-humans-with-models/):
