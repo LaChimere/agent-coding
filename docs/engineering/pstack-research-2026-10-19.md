@@ -2,6 +2,10 @@
 
 Research date: 2026-10-19, Asia/Singapore. This is a source-grounded assessment and a set of proposals, not an accepted design or an implementation change.
 
+This research snapshot precedes the method refinement. See the [accepted design](design.md)
+and [implementation and acceptance record](implementation.md)
+for the subsequently selected changes, executed evaluations and remaining limits.
+
 ## Conclusion
 
 pstack is a substantial, opinionated engineering workflow system built around a routing skill, task playbooks, specialist skills, executable helpers, and host-specific capabilities. Its most useful contribution is the conversion of broad advice into concrete actions and evidence requirements. The current `agent-coding` engineering package already incorporates much of that approach. Replacing our package or reproducing pstack's command inventory would add duplication without demonstrated benefit.
@@ -222,7 +226,9 @@ These qualifications follow from the inspected [autonomy principle][autonomy-pri
 
 ## 11. A bounded way to test the proposed additions
 
-No experiment in this section has been run. These are possible next tasks, not acceptance criteria added to the repository.
+At the research cutoff, no experiment in this section had been run. These were possible next
+tasks, not additional repository acceptance criteria. The linked implementation record describes
+the subsequently selected experiments; it does not qualify every proposal below.
 
 | Trial | Compare | Observe |
 |---|---|---|
