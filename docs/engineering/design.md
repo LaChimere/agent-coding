@@ -228,5 +228,8 @@ an SDK is not an already working integration. Missing capabilities retain explic
   model properties, code correspondence and bounded implementation evidence.
 - [Lauren's workshop](https://maven.com/p/e23d9c/how-cursor-turned-ai-agents-into-better-engineers):
   establish reliable work before scaling, evaluate skills and maintain project constraints.
+- [Lauren Tan's inverse-pyramid model](https://x.com/poteto/status/2111133080526495985):
+  prioritize codebase structure, types and automated checks; reserve prose and human review
+  for the judgment that remains.
 - [Felix on ambition](https://felixrieseberg.com/how-to-be-more-ambitious-a-tutorial-for-humans-with-models/):
   outcome altitude, methodological depth, useful range and outside validation.

@@ -10,8 +10,12 @@ export function* lazy(rows) {
 
 export function batched(rows) {
   const chunks = [];
+  const encoded = new Map();
   for (const row of rows) {
-    chunks.push(JSON.stringify(row) + '\n');
+    if (!encoded.has(row)) {
+      encoded.set(row, JSON.stringify(row));
+    }
+    chunks.push(encoded.get(row) + '\n');
   }
   return chunks.join('');
 }

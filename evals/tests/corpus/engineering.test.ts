@@ -124,7 +124,7 @@ test('local release evidence requires the actual immutable artifact and a post-d
   }
 });
 
-test('performance fixture distinguishes generator construction from completed work', async () => {
+test('performance fixture distinguishes timed work and per-batch serialization reuse', async () => {
   const [item] = await loadCases(project, await selectCollection(project), [
     'engineering/review-performance-record',
   ]);
@@ -160,6 +160,33 @@ check(timingBeforeConsumption, eager, 3);
 check(timingBeforeConsumption, lazy, 0);
 check(timingAfterConsumption, lazy, 3);
 check(timingAfterConsumption, batched, 3);
+
+const first = { id: 1 };
+const second = { id: 2 };
+const repeated = [first, second, first, second];
+function countedEncoding(encoder, input) {
+  const stringify = JSON.stringify;
+  let calls = 0;
+  JSON.stringify = (...args) => {
+    calls += 1;
+    return stringify(...args);
+  };
+  try {
+    return { output: encoder(input), calls };
+  } finally {
+    JSON.stringify = stringify;
+  }
+}
+const eagerResult = countedEncoding(eager, repeated);
+const reusedResult = countedEncoding(batched, repeated);
+assert.equal(reusedResult.output, eagerResult.output);
+assert.equal(eagerResult.calls, 4);
+assert.equal(reusedResult.calls, 2);
+assert.equal(countedEncoding(batched, [{ id: 1 }, { id: 1 }]).calls, 2);
+first.id = 3;
+const nextBatch = countedEncoding(batched, repeated);
+assert.equal(nextBatch.output, eager(repeated));
+assert.equal(nextBatch.calls, 2);
 `,
       ],
       { cwd: root, stdout: 'pipe', stderr: 'pipe' },
