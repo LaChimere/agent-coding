@@ -31,7 +31,8 @@ while sequencing useful slices; a working slice does not complete a larger autho
   Exercise the existing boundary before/after; remove the replaced path when within scope.
 - **Performance:** establish comparable workload and measurements, inspect traces or other raw
   evidence, change a supported bottleneck and remeasure without sacrificing correctness or merely
-  changing the benchmark. Report variability and remaining limits.
+  changing the benchmark. Before planning from a measured baseline or reporting a conclusion,
+  use [performance evidence](../../references/performance-evidence.md).
 
 Use existing build and verification tools. If the project cannot be driven reliably, use
 [create-verification-skill](../create-verification-skill/SKILL.md) within the authorized project

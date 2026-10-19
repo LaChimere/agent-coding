@@ -93,6 +93,13 @@ rather than changing expectations to match them. A whole-map coverage claim requ
 and live coverage for every mapped feature, with unreachable prerequisites recorded explicitly.
 Recheck surprising environments and preserve evidence through failed attempts and cleanup.
 
+Performance conclusions and comparisons, including design-only choices and read-only review
+of supplied measurements, use the task-loaded performance method. It checks actual work,
+correctness, comparison conditions, interference, variability and end-to-end significance.
+When a decision depends on a material unresolved fact, the assumption method follows the real
+version, state owner and consumer before selecting sufficient evidence. Existing evidence may
+resolve the question without another experiment; product semantics remain a separate decision.
+
 ### Review and release
 
 Pin the review target. Select relevant aspects, find candidates, check counterevidence, remove
@@ -123,6 +130,17 @@ Prove new enforcement catches a real failure and preserves valid behavior. Apply
 method to this repository's distribution, references, host drift and unreliable skill behavior.
 Keep useful architectural explanations and operating knowledge current without promoting every
 transcript detail into a standing instruction.
+
+Human handoffs make each pending material choice decidable from the current response, with
+options, consequences, evidence and unknowns. Preserve older unresolved choices when relevant;
+do not manufacture questions or replace an explanation with a status list. Shared guidance owns
+this rule, while personal communication defaults remain in host configuration.
+
+Formal verification remains a conditional project experiment, not a lifecycle gate. Select it
+only for a costly property with a concrete coverage gap. A no-pilot outcome is valid when no
+in-scope target justifies the work. Any later pilot must distinguish model evidence, code-level
+verification and generated-input testing, retain failure/valid controls and exercise maintenance
+after a relevant change before proposing a reusable generator.
 
 ## Distribution
 

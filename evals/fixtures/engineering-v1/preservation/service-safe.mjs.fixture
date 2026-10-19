@@ -1,0 +1,4 @@
+export async function submit(store, item) {
+  await store.save(item);
+  return { status: 'saved' };
+}

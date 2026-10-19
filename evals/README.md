@@ -144,7 +144,7 @@ add distinct daily-work scenarios; two begin with an audit and authorize changes
 later. Their initial response, action boundaries and final result are checked
 separately. This synthetic collection does not represent monthly task frequencies.
 
-The default `collections.json` selects the sixteen engineering-v1 outcome scenarios.
+The default `collections.json` selects the nineteen engineering-v1 outcome scenarios.
 `collections.engineering-v1.json` records that preset; `collections.legacy-v1.json` preserves
 the original 338-case selection and `profiles/default` preserves its runtime baseline.
 To run a historical preset deliberately, apply its `collections.development` object to `collections.json` in
@@ -205,13 +205,15 @@ an absent or different diagnostic grade does not exclude a decidable core result
 
 ## Engineering outcome collection
 
-`cases/engineering-v1/outcomes.json` contains sixteen scenarios covering a real executable synthetic
+`cases/engineering-v1/outcomes.json` retains sixteen scenarios covering a real executable synthetic
 CSV project, read-only understanding, design uncertainty, verification maintenance, false-positive
 review, stale release identity, current-state handoff, structural recurrence prevention and an
 unavailable runtime. Two staged episodes add an actual fresh Codex thread handoff and an
 authorized local artifact release. Further cases cover verification drift and tool repair,
-positive specialist review, SPAR, Rubber Duck and coherent change sequencing. This sample is not
-a claim about production task frequency or all host behavior.
+positive specialist review, SPAR, Rubber Duck and coherent change sequencing. `refinement.json` adds read-only performance-evidence assessment, a safe storage-consumer
+control and a decision-complete handoff. Existing design, storage and explanation/release cases
+also cover the refined methods. These synthetic scenarios do not establish production task
+frequency, application speedups or all host behavior.
 The CSV oracle drives the real CLI and parses its output independently. Calibration established
 that the broken baseline fails and a valid alternative quoting implementation passes.
 

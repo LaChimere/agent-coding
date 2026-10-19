@@ -1,0 +1,10 @@
+import { submit } from './service.mjs';
+
+export async function publishDraft(store, drafts, id) {
+  const item = drafts.get(id);
+  const result = await submit(store, item);
+  if (result.status === 'saved') {
+    drafts.delete(id);
+  }
+  return result;
+}

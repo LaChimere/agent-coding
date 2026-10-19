@@ -1,0 +1,12 @@
+import assert from 'node:assert/strict';
+import { publishDraft } from './caller.mjs';
+
+const error = new Error('offline');
+const drafts = new Map([['draft-1', 'text']]);
+await assert.rejects(
+  publishDraft({ save: async () => { throw error; } }, drafts, 'draft-1'),
+  error,
+);
+assert.equal(drafts.get('draft-1'), 'text');
+await publishDraft({ save: async () => {} }, drafts, 'draft-1');
+assert.equal(drafts.has('draft-1'), false);
