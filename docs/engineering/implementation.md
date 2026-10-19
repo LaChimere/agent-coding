@@ -5,8 +5,8 @@
 The authorized increment deepens PR #15's methods while retaining D-008/D-009, all eleven
 public entries and the existing host/authority contracts. It adds performance and assumption
 references, conditional entry pointers and one shared human-decision handoff clarification.
-Source inspiration is pinned to pstack `6b78e9f4e46c75d1697d837e51f07c2692e60b24`, with
-the Claude Team and Felix practices mapped in [alignment.md](alignment.md).
+The [design](design.md) explains method ownership and extension criteria;
+[capability alignment](alignment.md) maps each method to its owner, evidence and source references.
 
 | Requirement | Implementation and observed acceptance |
 |---|---|

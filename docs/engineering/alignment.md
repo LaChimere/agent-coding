@@ -1,35 +1,41 @@
 # Practice alignment and capability preservation
 
-D-009 corrects the first redesign's loss of useful capabilities. Each row identifies a method's
-owner and the observation needed to assess it. A short skill or passing unrelated case does not
-establish preservation. Current acceptance is tracked in [implementation.md](implementation.md).
+D-009 corrects the first redesign's loss of useful capabilities. The project assigns each
+capability an owner and an observable check. Shorter guidance or an unrelated passing case does
+not establish preservation. Current acceptance is tracked in [implementation.md](implementation.md).
 
-## Source principles and their application
+## Capabilities, owners and evidence
 
-| Source | Principle applied | Product owner and evidence |
-|---|---|---|
-| [Claude Team](https://claude.dev/blog/solving-code-review-at-anthropic/) | Layered verification, independent review, verified findings, risk-based human approval, convergence and post-release learning | implement-task, code-review, release-and-rollout and continuous-work; actual review, permission and release cases |
-| [Claude review docs](https://code.claude.com/docs/en/code-review) | Find, verify, rank; trusted project review policy; findings are distinct from approval | code-review method index/report; positive and clean cases plus policy-source checks |
-| [Claude best practices](https://code.claude.com/docs/en/best-practices) | Runnable feedback, focused contexts, broad standing rules and on-demand methods | verification skills; retained host standing policy; fresh-context handoff |
-| [Lauren/pstack correct](https://github.com/cursor/plugins/blob/main/pstack/skills/correct/SKILL.md) and the owner's supplied inverse-pyramid post | Fix structure, then types/checks, then remaining judgment guidance; prove prior failures are caught | prevent-recurring-mistakes and change-quality; registry and faulty-verifier controls |
-| [pstack verification](https://github.com/cursor/plugins/blob/main/pstack/skills/create-verification-skill/SKILL.md) and [maintenance](https://github.com/cursor/plugins/blob/main/pstack/skills/maintain-verification-skill/SKILL.md) | Drive actual user behavior; maintain a truthful map; retain proof after cleanup | verification creation/maintenance; cold-start and drift/regression cases |
-| [pstack architect](https://github.com/cursor/plugins/blob/main/pstack/skills/architect/SKILL.md) | Understand existing reasons, design interfaces/ownership, prototype alternatives and revise a failing shape | understand-codebase, design-solution, SPAR and Rubber Duck; grounded design/critique cases |
-| [pstack benchmark checklist](https://github.com/cursor/plugins/blob/6b78e9f4e46c75d1697d837e51f07c2692e60b24/pstack/skills/benchmark-checklist/SKILL.md) | Verify actual work, output correctness, relevant tuning, variability and end-to-end meaning before trusting a measured conclusion | performance-evidence, loaded from design, implementation, verification and review; misleading and valid comparison cases |
-| [pstack blast radius](https://github.com/cursor/plugins/blob/6b78e9f4e46c75d1697d837e51f07c2692e60b24/pstack/skills/blast-radius/SKILL.md) | Resolve the material fact a design or correctness argument depends on across real consumers and lifecycle boundaries | assumption-checking with existing review and verification; defect and safe-control cases |
-| [pstack ketchup](https://github.com/cursor/plugins/blob/6b78e9f4e46c75d1697d837e51f07c2692e60b24/pstack/skills/ketchup/SKILL.md) | Make every pending human decision understandable without reconstructing the transcript | shared working agreement; complete-choice and no-choice controls |
-| [Felix](https://felixrieseberg.com/how-to-be-more-ambitious-a-tutorial-for-humans-with-models/) | Improve the outcome, use professional methods and raw evidence, bring useful outside perspectives and validation | design-solution, SPAR, verification and independent review; scope-preserving experiments and decision challenges |
+| Capability | Project owner and method | Evidence to inspect | Supporting references |
+|---|---|---|---|
+| Engineering delivery | `implement-task`, `code-review`, `release-and-rollout` and continuous work compose verification, review, approval and learning | Actual review, authorization, rollout and recovery episodes; total human effort where measured | [Claude team workflow](https://claude.dev/blog/solving-code-review-at-anthropic/) |
+| Review decisions | `code-review` selects applicable methods, verifies candidates against trusted policy and deduplicates findings | Supported findings, valid counterexamples and policy-source checks; findings remain separate from merge approval | [Review methodology](https://code.claude.com/docs/en/code-review) |
+| Focused working context | Host standing rules remain available; task-specific methods load when needed | Runnable verification and fresh-context handoff with preserved constraints | [Working practices](https://code.claude.com/docs/en/best-practices) |
+| Structural prevention | `prevent-recurring-mistakes` and change quality prefer ownership, types and executable checks before judgment guidance | Prior failure rejected and valid behavior accepted; registry and faulty-verifier controls | [Structural correction](https://github.com/cursor/plugins/blob/6b78e9f4e46c75d1697d837e51f07c2692e60b24/pstack/skills/correct/SKILL.md) |
+| Project verification | Creation and maintenance skills drive the actual product and maintain its feature map | Cold-start journeys, drift and regression cases, retained evidence after cleanup | [Verification creation](https://github.com/cursor/plugins/blob/6b78e9f4e46c75d1697d837e51f07c2692e60b24/pstack/skills/create-verification-skill/SKILL.md), [maintenance](https://github.com/cursor/plugins/blob/6b78e9f4e46c75d1697d837e51f07c2692e60b24/pstack/skills/maintain-verification-skill/SKILL.md) |
+| Grounded design | `understand-codebase` and `design-solution` recover rationale, inspect callers and test consequential alternatives | Source-grounded interfaces, ownership and experiments; SPAR and Rubber Duck when applicable | [Architecture method](https://github.com/cursor/plugins/blob/6b78e9f4e46c75d1697d837e51f07c2692e60b24/pstack/skills/architect/SKILL.md) |
+| Performance conclusions | `performance-evidence` is shared by design, implementation, verification and review | Actual completed work, correct outputs, relevant conditions, variability and end-to-end meaning; misleading and valid controls | [Benchmark method](https://github.com/cursor/plugins/blob/6b78e9f4e46c75d1697d837e51f07c2692e60b24/pstack/skills/benchmark-checklist/SKILL.md) |
+| Empirical assumptions | `assumption-checking` follows real versions, state owners and consumers | A reachable defect or concrete counterevidence, without invented callers or unnecessary probes | [Boundary analysis](https://github.com/cursor/plugins/blob/6b78e9f4e46c75d1697d837e51f07c2692e60b24/pstack/skills/blast-radius/SKILL.md) |
+| Human decisions | The shared working agreement makes every pending choice understandable in the current response | Older unresolved choices, options, consequences, evidence and unknowns; no fabricated approval when settled | [Decision handoff](https://github.com/cursor/plugins/blob/6b78e9f4e46c75d1697d837e51f07c2692e60b24/pstack/skills/ketchup/SKILL.md) |
+| Useful ambition | Design, verification and independent review consider better outcomes, professional methods and outside evidence within selected scope | Scope-preserving experiments and substantive challenges to assumptions | [Outcome and methodological depth](https://felixrieseberg.com/how-to-be-more-ambitious-a-tutorial-for-humans-with-models/) |
 
-These are adaptations, not claims to reproduce the authors' infrastructure. Native hosts own
-execution and scheduling. Projects choose risk thresholds, human approvals and review budgets.
-Voting may screen candidates but does not replace source verification. PR throughput alone is not
-quality. A nightly job, merge queue or live incident feed needs separate setup and authorization.
+These references explain the methods' provenance. Project decisions define the architecture:
+native hosts own execution and scheduling, while consuming projects choose risk thresholds,
+approval rules and review budgets. Agreement between reviewers remains a screening signal;
+source and runtime evidence establish findings. PR throughput alone is not a quality measure.
 
-The 2026-10-19 increment deepens those methods without adding public skills or another task
-state system. Existing acceptance, caller analysis, ownership, recovery, review, release and
-structural prevention remain with their current owners; validate their behavior before adding
-duplicate guidance. The formal-verification generator is a future decision following a justified
-project pilot, not an imported default. Fewer steps are useful only when necessary depth and
-correctness survive. Source alignment is not evidence of improved runtime outcomes.
+## Extending the methods
+
+Deepen an existing owner when a demonstrated gap needs more specific guidance. Add a public
+entry or state mechanism only for a distinct project need, with its own maintenance and
+verification case. Acceptance, caller analysis, ownership, recovery, review, release and
+structural prevention retain their existing owners.
+
+Formal verification starts with a justified project property and coverage gap. A successful
+project method and a subsequent maintenance exercise can inform a later generator decision.
+Scheduling, integrations and publication retain their explicit authority boundaries. Fewer
+steps are useful only when necessary depth and correctness survive; source alignment alone
+does not establish improved runtime outcomes.
 
 ## Old capabilities and current ownership
 
