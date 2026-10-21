@@ -62,6 +62,53 @@ Native syntax may differ; natural language remains supported. A request to inves
 review remains read-only. `implement-task` contains task-dependent feature, repair, refactoring
 and performance methods rather than separate public skills for each step.
 
+## Development lifecycle flow
+
+The skills compose into the following lifecycle. Each activity has a purpose, evidence and a
+next action; findings can return work to an earlier activity. Enter and finish where the task's
+scope and acceptance require: an investigation may end with an explanation, a small change may
+proceed directly to implementation and verification, and release preparation may end awaiting
+publication authority. The diagram summarizes method composition, not a runtime state machine
+or a requirement to execute every activity.
+
+```mermaid
+flowchart TD
+    A[Establish goal, scope and acceptance] --> B[Understand code and actual behavior]
+    B --> C{Material design decision needed?}
+    C -->|Yes| D[Explore alternatives, experiment and decide]
+    C -->|No| E[Implement the change]
+    D --> E
+    E --> F[Verify real user paths and side effects]
+    F -->|Defect found| E
+    F -->|Evidence sufficient| G{Review requested or warranted by risk?}
+    G -->|Yes| H[Review the fixed artifact]
+    H -->|Confirmed defect| E
+    H -->|Delivery requirements met| I[Prepare delivery or release]
+    G -->|No| I
+    I --> J[Merge and deploy within authority]
+    J --> K[Verify the deployed outcome and observe]
+    K -->|Defect found| B
+    K --> L[Update affected project knowledge and verification support]
+    L -->|Evidenced failure warrants prevention| M[Add and prove structural safeguards]
+```
+
+`understand-codebase`, `design-solution`, `implement-task`, `verify-behavior`, `code-review`
+and `release-and-rollout` own the main delivery path. `spar` and `rubber-duck` support design
+or review when applicable. Review uses an independent context when required and available;
+missing independence remains an explicit limitation.
+
+Verification support and learning can enter throughout the flow. Use
+`create-verification-skill` when a project lacks repeatable verification and
+`maintain-verification-skill` when its verification support drifts. Update affected project
+knowledge during the relevant work. `prevent-recurring-mistakes` turns an evidenced recurring
+or consequential failure into a proved safeguard. These activities do not depend on deployment.
+
+At any handoff or interruption, retain the goal, authority, current version and state, completed
+work, evidence, failed hypotheses, unresolved decisions and next authorized action. The current
+owner checks actual state before continuing. Native hosts retain scheduling and persistence;
+the release method distinguishes ready-to-merge, merged, ready-to-deploy, deployed and
+behavior-verified even though the diagram groups those activities for readability.
+
 ## Working methods
 
 ### Keep methods with their task owners
