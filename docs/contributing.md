@@ -17,8 +17,12 @@ Written for humans and agents contributing to `agent-coding`. Routed from the ro
 ## Documentation rules
 
 - Update directly coupled docs in the same change.
+- Document the supported implementation. Remove superseded instructions and documents with their
+  references; Git history retains prior versions. Query mutable inventories instead of duplicating
+  their counts in guides.
 - If you add, remove, or rename a skill, update `README.md`.
-- If you retire a skill or change its scope, update active references and affected evaluation cases while preserving historical evidence.
+- If you retire a skill or change its scope, update active references and affected evaluation
+  cases. Preserve original run artifacts; prior instructions remain available in Git history.
 - Treat repo-root `AGENTS.md` and the contributor docs it routes to as high-impact documentation for this repo, not as a global orchestration layer.
 
 ## Change map

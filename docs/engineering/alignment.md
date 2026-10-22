@@ -1,8 +1,8 @@
 # Practice alignment and capability preservation
 
-D-009 corrects the first redesign's loss of useful capabilities. The project assigns each
-capability an owner and an observable check. Shorter guidance or an unrelated passing case does
-not establish preservation. Current acceptance is tracked in [implementation.md](implementation.md).
+The project assigns each capability an owner and an observable check. Shorter guidance or an
+unrelated passing case does not establish preservation. Current acceptance is tracked in
+[implementation.md](implementation.md).
 
 ## Capabilities, owners and evidence
 
@@ -37,9 +37,9 @@ Scheduling, integrations and publication retain their explicit authority boundar
 steps are useful only when necessary depth and correctness survive; source alignment alone
 does not establish improved runtime outcomes.
 
-## Old capabilities and current ownership
+## Supporting methods and host policy
 
-| Existing capability | Disposition and rationale | Current entry/resource |
+| Capability | Responsibility | Entry/resource |
 |---|---|---|
 | Host standing Communication / Authority | Retained continuously; relevant even without skill invocation | config/codex/AGENTS.md, config/claude/CLAUDE.md and config/copilot/copilot-instructions.md |
 | Codex approval, network, discovery, memories, Code Mode, wakefulness and agent settings | Retained as personal host configuration, not universal method defaults | config/codex/config.toml and agents/ |
@@ -54,16 +54,11 @@ does not establish improved runtime outcomes.
 | Shared-state interruption recovery | Preserved rerunnable scoped scripts and credential/side-effect boundaries | references/stateful-work.md |
 | Cheap classification then stronger investigation | Preserved as a host-configurable strategy; no mandatory model in portable policy | continuous-work and personal Codex routing |
 | Project docs, decision/lesson records, explainers and directly related refresh | Preserved; established contracts outrank unauthorized implementation changes | references/project-knowledge.md |
-| Three-occurrence promotion threshold | Replaced: consequential first failures can justify structural prevention | prevent-recurring-mistakes and D-008 |
 | Claude shared-component confirmation and publication boundaries | Retained as host-specific authority, including inside autonomous work | config/claude/CLAUDE.md |
 | Claude/Copilot three-round review budget | Retained as host-specific bounds; exhaustion never becomes approval | Personal host guidance |
-| Claude mandatory 3–5 reviewers, two model families and Opus-only document writer | Replaced with proportionate methods and selectable specialist/model capabilities; file count and model labels do not prove quality | independent-review and host guidance |
-| Legacy endpoint/model and orchestrator assumptions | Preserve known local exclusions pending revalidation; use observed native capabilities instead of assuming old tool names | Claude personal capability guidance |
-| Old plugin names and aliases | Retired; capabilities above survive under their current owners | one engineering package |
 | Independent image-scanning specialist | Unchanged; separate domain capability | skills/scan-image-vulnerabilities/ |
 
-The initial four-host scope did not justify deleting other useful host guidance. The retained
-Copilot adapter uses the same complete methods without inventing a native installer; it remains
+The Copilot adapter uses the same complete methods without inventing a native installer; it remains
 unqualified until exercised in that host. No host's behavior is inferred from another.
 
 ## Acceptance rules for further refinement

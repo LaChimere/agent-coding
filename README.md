@@ -62,23 +62,21 @@ criteria and fixture answers are never distributed to executing agents.
 ## Status and evidence
 
 The breaking engineering redesign is implemented with representative local acceptance.
-PR #15's capability-preservation run passed 16 cases / 36 checks. The later method refinement
-extends the development collection to 19 scenarios / 42 checks; native acceptance and targeted
-rechecks cover that surface across the recorded revisions. Six matched baseline/final-candidate
-pairs passed on both sides, without establishing an overall quality or reliability gain.
-The acceptance record retains failed attempts, corrections and version-specific limits.
+Capability-preservation runs, later method refinement and targeted rechecks cover the recorded
+revisions. Matched baseline/final-candidate comparisons passed on both sides, without establishing
+an overall quality or reliability gain. The [acceptance record](docs/engineering/implementation.md)
+retains the exact run scope, results, failed attempts, corrections and version-specific limits.
+The [evaluation guide](evals/README.md) explains how to validate the selected collection.
 The owner's [Grok file-loaded cold-start result](docs/engineering/grok-acceptance.md) has been
 audited and locally reproduced, with bounded verifier corrections; native import remains unverified.
 Claude Code and Pi currently have scoped
-read-only review evidence, not full workflow parity. Old workflow/pr-review package names are
-retired without aliases; useful methods and personal host policy are preserved under D-009.
+read-only review evidence, not full workflow parity.
 See [the accepted design](docs/engineering/design.md)
-and [requirement-by-requirement acceptance](docs/engineering/implementation.md).
+and [implementation and qualification](docs/engineering/implementation.md).
 
 Package validity, installation, discovery, invocation and successful outcomes are distinct
 claims. Support for one host does not prove another host or a mixed handoff. Installation
 instructions describe the intended path; the acceptance record states what has actually run.
-Historical evaluation records remain historical and do not qualify the new package.
 
 ## Maintaining this project
 

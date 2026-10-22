@@ -1,23 +1,17 @@
 # Codex Evaluation Framework Design
 
-The engine contract below remains applicable. The engineering redesign uses the versioned
-`engineering` profile and `engineering-v1` development collection; original baselines and
-records remain retained. See [current product acceptance](../engineering/implementation.md).
-
-> The repository owner approved the evaluation scope, framework, grading, interaction, and aggregation policies during the design discussion on 2026-09-11. This document incorporates those decisions and the subsequent requirement to use the Workflow design template in English. The original implementation and qualification evidence is tracked in [the framework implementation record](plan.md); design approval is separate from execution evidence.
-
-The subsequent [evaluation refinement design](refinement-design.md) records the
-agreed direction for task coverage, grading validity, holdout use, and a new
-baseline before runtime instruction changes. Its [implementation plan](refinement-plan.md)
-tracks the current refinement and qualification. The collection and grading
-interfaces below include that approved refinement; original acceptance remains
-a historical record.
+This is the maintained evaluation engine contract. The default runtime profile is `engineering`,
+and `collections.json` selects the active case roots. See [the evaluation guide](../../evals/README.md)
+for setup and commands, and [engineering acceptance](../engineering/implementation.md) for product
+qualification and remaining limits.
 
 ## Background and problem
 
 The agent-coding repository distributes skills, plugins, and Codex configuration intended to improve coding work. Maintainers need to know whether a change helps Codex complete real tasks, preserves required behavior, and changes the time, token usage, or cost of doing the work. A plausible final response is insufficient: the agent can claim completion while leaving an invalid artifact, skipping required review, or exceeding its authorized scope.
 
-Earlier evaluations used separate corpus tooling and external execution scripts, as recorded in [coding orchestration validation](../coding-orchestration/validation.md). The TypeScript/Bun project at [evals/](../../evals/) now connects the central cases and fixtures to actual Codex execution, complete evidence, independent grading, and interpretable resource measurements. Cases and fixtures remain separate from distributed runtime content.
+The TypeScript/Bun project at [evals/](../../evals/) connects the central cases and fixtures to
+actual Codex execution, complete evidence, independent grading, and interpretable resource
+measurements. Cases and fixtures remain separate from distributed runtime content.
 
 The current [Codex configuration](../../config/codex/config.toml) is a mergeable orchestration fragment, accompanied by instructions and role files. It preserves the user's provider, credentials, and primary model settings rather than specifying a complete standalone environment. Establishing the evaluation baseline therefore requires more than copying the current repository fragment into a temporary directory.
 
@@ -33,7 +27,9 @@ Quality, time, token usage, and cost are separate dimensions. The initial design
 
 The system under evaluation is limited to repository-owned skills/, plugins/, and config/codex/. External personal skills and plugins are excluded initially. Required CLI versions, language runtimes, tools, and services are execution conditions, not additional subjects of effectiveness evaluation.
 
-Codex is the model execution and effectiveness target. Claude Code and Copilot CLI retain necessary distribution, installation, discovery, and adaptation checks, but their routine model-effectiveness evaluations are removed. Desktop UI, IDE, and cloud compatibility need separate evidence.
+Codex is this runner's model execution and effectiveness target. Claude Code, Pi, Grok Bot and
+Copilot require separate host qualification. Desktop UI, IDE, and cloud compatibility also need
+their own evidence.
 
 The initial design does not introduce a general agent platform, multiple interchangeable evaluation frameworks, a model that simulates the user, automatic Git-diff-based case selection, or a separate hosted management service. It also does not switch production installations or authorize commits, publication, or remote pipeline actions.
 
@@ -97,7 +93,10 @@ The main interfaces are between a selected case and its prepared environment, be
 
 These responsibilities do not require separate services or a generic module hierarchy. If one project command is needed to perform mandatory preparation, it composes the necessary operations and invokes the framework; it does not implement another case scheduler or grading engine.
 
-Promptfoo's [Codex App Server provider](https://www.promptfoo.dev/docs/providers/openai-codex-app-server/) was the first native route identified for integration because the project needs thread identity, permission requests, plugin behavior, and execution events. The implemented route uses Promptfoo's public provider interface with a repository adapter to native Codex App Server. This adapter supplies the case's prepared environment, scripted user responses and retained evidence; Codex still owns the agent loop and tools. Concrete qualification is recorded in [the acceptance report](acceptance.md), rather than inferred from the existence of a documented provider.
+The implemented route uses Promptfoo's public provider interface with a repository adapter to
+native Codex App Server. This adapter supplies the case's prepared environment, scripted user
+responses and retained evidence; Codex still owns the agent loop and tools. Concrete qualification
+is recorded in [engineering acceptance](../engineering/implementation.md).
 
 ### Records and ownership
 
@@ -109,7 +108,10 @@ A grading record belongs to a trial but has its own identity, rubric version, mo
 
 A report fixes its trial manifest, grading definitions, selected grading-record identifiers for each trial and check, and resource-accounting scope. Selected records must belong to the referenced trial and match the report's grading definition. Selection follows a declared rule rather than choosing favorable verdicts. Applying a later grading record produces a new report or an explicit report version; an existing report never silently resolves its checks against the latest available grades.
 
-New generated records live under evals/out/runs/ and retain references to their original inputs and evidence. Cases, suites, fixtures, rubrics, reference materials, and TypeScript preparation, interaction, collection, and reporting code belong to the evals/ subproject. Historical .skill-evals/ evidence retains its original meaning. This document and the implementation plan belong in docs/evaluation/.
+Generated records live under `evals/out/runs/` and retain references to their original inputs and
+evidence. Cases, suites, fixtures, rubrics, reference materials, and TypeScript preparation,
+interaction, collection, and reporting code belong to the `evals/` subproject. This maintained
+contract lives in `docs/evaluation/`.
 
 Each run uses its own local Promptfoo SQLite database for native exports. The owner approved this integration refinement after Promptfoo 0.123.0's JSON/HTML export path was observed querying SQLite even with persistence disabled. Project JSON records and original evidence remain authoritative; the database is an export aid, not a shared history store or service. Each run executes in a fresh process because Promptfoo caches its database connection.
 
@@ -291,7 +293,9 @@ If only grading rules or grading configuration change, both sides can be regrade
 
 The collection registry selects development cases under evals/cases/ and fixtures under evals/fixtures/, with holdout tasks in separate roots. Selection precedes all task discovery and copying. Run/report scope records retain frozen collection identity, membership, provenance and known exposure. Each case directly declares its requirements, criteria, execution conditions and fixture bindings. Tests validate that corpus and reject unused fixture payloads. Import maps, transition aliases and migration-specific checks are not part of the maintained implementation. Historical reports retain their original case identities and frozen inputs; changing current case identities does not rewrite earlier observations. Current readers accept the new contracts only, without old-format compatibility or migration. Regrading uses frozen execution inputs and optional explicit assertion/reference corrections; it does not discover the current corpus or permit new obligations.
 
-Claude/Copilot effectiveness runners can be retired while retaining their required adaptation checks. Old JSON formats are not a permanent compatibility requirement. Detailed delivery slices, verification commands, and execution progress belong in the implementation plan rather than this design.
+Implementation progress and qualification belong in
+[engineering acceptance](../engineering/implementation.md); supported commands belong in
+[the evaluation guide](../../evals/README.md).
 
 ## Decisions and trade-offs
 
@@ -327,7 +331,9 @@ Preserving raw evidence and grading versions adds storage and bookkeeping. It en
 
 ## Risks and open questions
 
-No product-policy question remains open. The implementation has completed the qualifications recorded in [the acceptance report](acceptance.md). The following risks remain relevant when changing runtime integration, case inputs or grading contracts.
+No product-policy question remains open. Product qualification and limits are tracked in
+[engineering acceptance](../engineering/implementation.md). The following risks remain
+relevant when changing runtime integration, case inputs or grading contracts.
 
 | Risk or assumption | Impact and resolution direction |
 | --- | --- |
@@ -342,4 +348,7 @@ No product-policy question remains open. The implementation has completed the qu
 | Concurrency and interruption | Shared state or uncertain request completion can contaminate trials or duplicate work. Validate isolation and failure handling under the selected concurrency; preserve incomplete records when recovery is uncertain. |
 | Corpus coverage | Case edits may omit behavioral requirements, mandatory execution conditions or adaptation checks. Validate the requirements and criteria declared in each case, check fixture usage, and preserve the proof-or-refusal rule. |
 
-Current tooling versions and commands are documented in [the evaluation guide](../../evals/README.md); qualification results and limits are recorded in [the acceptance report](acceptance.md). Recheck affected behavior when those conditions change. Expanding scope, changing agreed behavior or accepting substantial new maintenance cost requires an explicit design revision.
+Current tooling versions and commands are documented in [the evaluation guide](../../evals/README.md);
+product qualification results and limits are recorded in [engineering acceptance](../engineering/implementation.md).
+Recheck affected behavior when those conditions change. Expanding scope, changing agreed behavior
+or accepting substantial new maintenance cost requires an explicit design revision.

@@ -9,14 +9,9 @@ A case specifies a task and its checks. A trial is one fresh Codex execution of
 that case; fixture files establish its starting workspace. Regrading adds a new
 judgment of saved evidence, not another trial.
 
-The [framework design](../docs/evaluation/design.md) and
-[refinement design](../docs/evaluation/refinement-design.md) define the contract.
-The [refinement implementation plan](../docs/evaluation/refinement-plan.md) records
-current implementation progress. The [coverage map](../docs/evaluation/refinement-coverage.md)
-and [refinement acceptance report](../docs/evaluation/refinement-acceptance.md)
-record required capabilities, checks and qualification status. The original framework
-[plan](../docs/evaluation/plan.md) and [acceptance](../docs/evaluation/acceptance.md)
-are historical records, not qualification of the refined corpus.
+The [framework design](../docs/evaluation/design.md) defines the maintained engine contract.
+The [engineering acceptance record](../docs/engineering/implementation.md) records product
+implementation, native qualification and remaining limits.
 
 ## Setup
 
@@ -36,7 +31,7 @@ weakened or bypassed.
 
 The published `profiles/engineering/` template retains the declared model/provider and credential
 reference shape, with engineering activation and explicit current tool dependencies. Live evaluations
-require a configured private copy; the public gateway placeholder is intentionally unusable. The original `profiles/default/` remains unchanged for historical experiments. Runs never reread global instructions or installed personal
+require a configured private copy; the public gateway placeholder is intentionally unusable. Runs never reread global instructions or installed personal
 skills. `runtime.json` declares the local Codex executable, required tools and
 their code-library read paths, and credential references. Shared dependencies use
 `toolReadPaths`; OS-specific dependencies use `toolReadPathsByPlatform` with
@@ -68,8 +63,7 @@ The published engineering profile uses a reserved non-routable gateway placehold
 `--profile out` for live evaluations. Recorded acceptance runs used the owner's explicitly selected
 local gateway; that address is not distributed. The declared credential reference reads `GITHUB_COPILOT_API_KEY` from an injected
 environment value first, otherwise from `~/.codex/.env`. The dotenv file is parsed as data; only
-the named value is returned, with no shell evaluation or unrelated variable import. The legacy
-default profile retains its original localhost/JSON reference for historical replay. Changes to
+the named value is returned, with no shell evaluation or unrelated variable import. Changes to
 a gateway or credential source must be explicit profile updates, not silent reads of mutable
 global configuration. Credential values remain in memory and the owned child environment;
 never place them in profiles, case files or logs. Tool
@@ -79,8 +73,8 @@ host sandbox can fail during preparation. Launching the harness outside that
 outer sandbox does not disable the trial's native permission checks. Runtime
 tool paths and probe results remain part of the environment fingerprint; running
 the same corpus on multiple platforms does not make unlike environments valid
-matched comparison pairs. See [validation evidence](../docs/coding-orchestration/validation.md)
-for tested CLI versions, platforms and limits.
+matched comparison pairs. See the
+[engineering acceptance record](../docs/engineering/implementation.md) for current product qualification.
 
 ## Commands
 
@@ -137,44 +131,25 @@ authoring/validation contexts can prepare holdouts without disclosing their
 contents or diagnostic feedback to the tuning context. These records document
 known exposure, not a guarantee about model training data.
 
-The maintained ordinary-task registry preset is `collections.natural-v5.json`: 44 tasks
-covering implementation, review, documentation and planning, with no required
-skills or fixed tool/delegation path. Four tasks in `cases/v5/session-context.json`
-add distinct daily-work scenarios; two begin with an audit and authorize changes
-later. Their initial response, action boundaries and final result are checked
-separately. This synthetic collection does not represent monthly task frequencies.
+The default `collections.json` selects the engineering-v1 outcome collection;
+`collections.engineering-v1.json` records that preset. Run `bun run start -- validate`
+to validate the selected collection and report its case and check counts.
+Case IDs and contracts live under the selected `caseRoot`.
 
-The default `collections.json` selects the nineteen engineering-v1 outcome scenarios.
-`collections.engineering-v1.json` records that preset; `collections.legacy-v1.json` preserves
-the original 338-case selection and `profiles/default` preserves its runtime baseline.
-To run a historical preset deliberately, apply its `collections.development` object to `collections.json` in
-the checkout used for that evaluation, preserving the existing holdout configuration.
-Then the normal `validate` and `run --case <id>` commands use the selected roots.
-The CLI does not select a registry by filename or accept `--collection natural-v5`.
-
-Cases in `cases/pr-review-entry-v1/` are separate artifact outcome regressions with
-PR Review available. They check findings and read-only conduct, not skill invocation;
-keep their results separate from the 44-task sample. Intermediate v2/v3/v4 definitions and one obsolete fixture
-are retained byte-for-byte in `out/refinement-history-20261002/`, rather than
-maintained as parallel active suites. Completed runs retain their own frozen inputs,
-criteria and reports. Compare candidates within one frozen collection; do not
-compare aggregate scores across versions or overwrite old results.
-
-`cases/workflow-commit-v1/` contains two specialist outcome regressions for commit
-decomposition and atomicity. They retain the existing skill invocation names as
-availability prerequisites and check commit boundaries, deferred PR grouping and
-advisory authority. They are separate from the 44-task daily sample and the original
-338-case registry; select that case root for targeted execution using the same
-registry configuration mechanism.
+The CLI selects `development` or `holdout` from `collections.json`; it does not select a registry
+by filename. Keep the collection's cases, required skills and runtime profile consistent when
+configuring another evaluation checkout.
+Completed runs retain their frozen inputs, criteria and reports. Compare candidates within one
+frozen collection; do not compare aggregate scores across versions or overwrite old results.
 
 ## Running and comparing
 
 ```sh
 # Explicit subset or repeated samples
-bun run start -- run --case native/verified-fix --repeat 3 --concurrency 2
+bun run start -- run --profile out --case engineering/cold-start-exporter --repeat 3 --concurrency 2
 
 # A separate candidate checkout; each invocation freezes a fresh run
-bun run start -- run --candidate /absolute/path/to/candidate --case native/verified-fix
+bun run start -- run --profile out --candidate /absolute/path/to/candidate --case engineering/cold-start-exporter
 
 # Supply explicit pricing or attributable charges when available
 bun run start -- report out/runs/RUN_ID --prices /path/to/prices.json --charges /path/to/charges.json
@@ -205,7 +180,7 @@ an absent or different diagnostic grade does not exclude a decidable core result
 
 ## Engineering outcome collection
 
-`cases/engineering-v1/outcomes.json` retains sixteen scenarios covering a real executable synthetic
+`cases/engineering-v1/outcomes.json` contains scenarios covering a real executable synthetic
 CSV project, read-only understanding, design uncertainty, verification maintenance, false-positive
 review, stale release identity, current-state handoff, structural recurrence prevention and an
 unavailable runtime. Two staged episodes add an actual fresh Codex thread handoff and an
@@ -290,12 +265,10 @@ The candidate receives `vars.task` followed by `metadata.authorization.scope`.
 Promptfoo displays that same composed prompt, and the execution fingerprint
 includes it. Future scripted replies, approval decisions, requirements, references
 and assertions are not included in the initial candidate prompt.
-Every requirement maps to a core or diagnostic assertion. See
-[`native-interaction.json`](cases/native-interaction.json) for runnable examples.
-Use [`refinement-probes.json`](cases/refinement-probes.json) for clarification,
-blockers and same-worker repair scenarios. Configured worker/reviewer invocations
-are covered by [`role-probes.json`](cases/role-probes.json).
-Cases use their current skill or suite names, and fixture bindings resolve
+Every requirement maps to a core or diagnostic assertion. See the active
+[`outcomes.json`](cases/engineering-v1/outcomes.json) and
+[`refinement.json`](cases/engineering-v1/refinement.json) for examples.
+Fixture bindings resolve
 under the selected collection's fixture root. The corpus inventory test validates the actual case
 files and rejects unreferenced fixture payloads.
 Programmatic rules are validated by the shared case parser, including explicit
@@ -353,11 +326,10 @@ dimension retains the pair in its planned denominator and records an exclusion.
 A classification change alone does not invalidate the all-trial or resource
 comparisons; their other eligibility checks still apply.
 
-The original six owner-confirmed calibration observations cover three samples
-across both model methods. The refinement adds representative positive, negative,
-alternative and insufficient-evidence examples; their confirmation and actual
-calibration status are recorded in the refinement plan. Agreement on a finite
-calibration set does not establish the accuracy of every domain rubric.
+Calibration examples live in [`calibration/samples.json`](calibration/samples.json), and
+owner confirmations live in [`calibration/labels.json`](calibration/labels.json).
+Each run records its actual observations and agreement in `out/calibration/RUN_ID/calibration.json`.
+Agreement on a finite calibration set does not establish the accuracy of every domain rubric.
 Review disagreements and add representative human-labeled examples as criteria evolve.
 Each calibration run freezes its price snapshot and records grader time, tokens
 and estimated cost. Calibration does not add candidate execution samples.

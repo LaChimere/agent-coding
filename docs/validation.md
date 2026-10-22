@@ -45,7 +45,6 @@ source identity, discovery, invocation, actual behavior and gaps. Native App/IDE
 needs its own evidence. Installing a package or exercising a CLI does not qualify another host.
 Do not switch production plugins, copy secrets or activate routines during local acceptance.
 
-Original collections and `profiles/default` remain historical baselines. The new collection's
-results do not overwrite or directly aggregate with old task populations. Holdout contents remain
+Results from different task populations do not directly aggregate. Holdout contents remain
 outside tuning and require their explicit collection boundary. Model evaluations consume real
 resources; record usage and failed attempts rather than treating missing telemetry as zero.

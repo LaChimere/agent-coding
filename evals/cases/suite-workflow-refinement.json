@@ -56,7 +56,7 @@
       "assessment": "mechanism",
       "workFamily": null,
       "provenance": {
-        "source": "docs/coding-orchestration/design.md",
+        "source": "https://github.com/LaChimere/agent-coding/blob/88731b870d0c28370ae88415c3918ee754496f18/docs/coding-orchestration/design.md",
         "group": "suite:workflow-refinement"
       }
     },
@@ -147,7 +147,7 @@
       "assessment": "mechanism",
       "workFamily": null,
       "provenance": {
-        "source": "docs/coding-orchestration/design.md",
+        "source": "https://github.com/LaChimere/agent-coding/blob/88731b870d0c28370ae88415c3918ee754496f18/docs/coding-orchestration/design.md",
         "group": "suite:workflow-refinement"
       }
     },
@@ -238,7 +238,7 @@
       "assessment": "mechanism",
       "workFamily": null,
       "provenance": {
-        "source": "docs/coding-orchestration/design.md",
+        "source": "https://github.com/LaChimere/agent-coding/blob/88731b870d0c28370ae88415c3918ee754496f18/docs/coding-orchestration/design.md",
         "group": "suite:workflow-refinement"
       }
     },
@@ -329,7 +329,7 @@
       "assessment": "mechanism",
       "workFamily": null,
       "provenance": {
-        "source": "docs/coding-orchestration/design.md",
+        "source": "https://github.com/LaChimere/agent-coding/blob/88731b870d0c28370ae88415c3918ee754496f18/docs/coding-orchestration/design.md",
         "group": "suite:workflow-refinement"
       }
     },
@@ -420,7 +420,7 @@
       "assessment": "mechanism",
       "workFamily": null,
       "provenance": {
-        "source": "docs/coding-orchestration/design.md",
+        "source": "https://github.com/LaChimere/agent-coding/blob/88731b870d0c28370ae88415c3918ee754496f18/docs/coding-orchestration/design.md",
         "group": "suite:workflow-refinement"
       }
     },
@@ -511,7 +511,7 @@
       "assessment": "mechanism",
       "workFamily": null,
       "provenance": {
-        "source": "docs/coding-orchestration/design.md",
+        "source": "https://github.com/LaChimere/agent-coding/blob/88731b870d0c28370ae88415c3918ee754496f18/docs/coding-orchestration/design.md",
         "group": "suite:workflow-refinement"
       }
     },
@@ -602,7 +602,7 @@
       "assessment": "mechanism",
       "workFamily": null,
       "provenance": {
-        "source": "docs/coding-orchestration/design.md",
+        "source": "https://github.com/LaChimere/agent-coding/blob/88731b870d0c28370ae88415c3918ee754496f18/docs/coding-orchestration/design.md",
         "group": "suite:workflow-refinement"
       }
     },
@@ -693,7 +693,7 @@
       "assessment": "mechanism",
       "workFamily": null,
       "provenance": {
-        "source": "docs/coding-orchestration/design.md",
+        "source": "https://github.com/LaChimere/agent-coding/blob/88731b870d0c28370ae88415c3918ee754496f18/docs/coding-orchestration/design.md",
         "group": "suite:workflow-refinement"
       }
     },

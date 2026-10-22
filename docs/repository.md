@@ -37,5 +37,5 @@ candidate copy, rather than manually pretending an unregistered checkout is inst
 switch production installs or copy credential values for acceptance.
 
 Each supported host needs its own source identity, loading, invocation and behavior evidence.
-Mixed-tool work also needs actual handoff evidence. Missing capability remains explicit. Historical
-results, frozen profiles and holdouts are retained separately from the active redesign's cases.
+Mixed-tool work also needs actual handoff evidence. Missing capability remains explicit.
+Run records retain their frozen inputs; holdouts stay separate from development cases.

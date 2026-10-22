@@ -1,8 +1,7 @@
 # Portable engineering methods
 
-Status: accepted for implementation on 2026-10-18. Implementation and acceptance evidence
-live in [implementation.md](implementation.md). This design supersedes the specialist-only
-product scope in [the previous design](../coding-orchestration/design.md).
+Status: accepted and implemented with scoped qualification. Implementation and acceptance
+evidence live in [implementation.md](implementation.md).
 
 ## Outcome
 
