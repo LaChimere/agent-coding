@@ -1,0 +1,21 @@
+# Existing local retry implementation
+
+Design how to enable retries for one more GET endpoint in our Node.js client. No code changes
+are requested. The endpoint has the same cancellation, deadline and attempt-budget requirements
+as the already-supported GET endpoint. The approved application policy prohibits automatic POST
+retries. Keep the existing public API and dependency set.
+
+`src/retry-read.mjs` is the maintained helper already used by the supported endpoint. Its source
+creates an attempt counter and combined deadline/caller signal for each invocation, passes that
+signal to the transport and backoff timer, and retries only transient failures for GET requests.
+The new endpoint reaches the same transport with the same arguments and error contract.
+
+The retained local verification record at project revision local-12 passes:
+- cancellation during the backoff timer;
+- independent budgets for overlapping requests;
+- deadline expiry during backoff and during transport;
+- no retry for POST or permanent errors;
+- existing GET endpoint wiring through the helper.
+
+The new endpoint's wiring has not yet been changed or verified. Read-only network access is
+permitted if needed. Propose the integration and focused validation.

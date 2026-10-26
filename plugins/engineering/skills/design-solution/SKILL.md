@@ -20,6 +20,27 @@ Consider whether the requested mechanism serves the actual outcome. Identify use
 or expert methods the initial request omitted. Surface a materially different outcome as an option;
 greater ambition does not override the user's scope. Keep the investigation proportionate.
 
+## Examine existing solutions
+
+When a key mechanism is unfamiliar or the available evidence does not support a design choice,
+inspect existing repository implementations, current dependencies and official documentation
+before designing it from scratch. If a material gap remains, make a focused search for comparable
+open-source projects on GitHub or other primary sources, within the task's access boundaries.
+Reuse sufficient evidence already available; routine changes need no external survey.
+
+Compare relevant source, tests and issue records against this project's constraints. Consider
+applicability, dependency and maintenance costs, known limitations and maintenance status;
+popularity or recent commits alone do not establish quality. Prefer applicable designs supported
+by evidence. Distinguish borrowing a design from adding a dependency or copying code: before
+either of the latter, verify provenance, license compatibility and required attribution, and
+resolve material adoption choices under the existing authority rules.
+
+Stop when the evidence supports explaining the viable choice and its trade-offs, with remaining
+uncertainties and project-specific validation identified. Cite the decisive sources and inspected
+versions where available; no fixed project count or separate research report is required. If
+access is unavailable or no suitable precedent is found, state the gap and continue supported
+analysis without claiming external validation. Existing projects do not prove behavior here.
+
 ## Make the design concrete
 
 Start with caller usage and observable behavior. Specify the types/data shape, ownership,

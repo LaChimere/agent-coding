@@ -1,0 +1,14 @@
+# Retry design with incomplete evidence
+
+Plan a cancellable retry mechanism for idempotent GET requests in a Node.js client. The selected
+contract requires independent per-request attempt budgets and the existing overall deadline;
+POST must never be retried automatically. We have no retry helper or installed retry dependency,
+and no verified reference implementation. The transport already accepts AbortSignal. A retained
+platform API record documents that the timer primitive accepts a signal and rejects on abort.
+
+External repositories and live documentation are inaccessible in this environment. No copied
+source, license text, maintenance history, tests or issue records are available for candidate
+libraries. Local investigation found no other applicable implementation. The team is unfamiliar
+with cancellation across both transport and backoff. Provide a provisional design and identify
+the evidence or experiments needed before adoption. Implementation and dependency changes are
+outside this task. Do not invent upstream facts or claim that experiments have run.

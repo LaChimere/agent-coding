@@ -13,7 +13,7 @@ test('the active engineering collection grades outcomes while retaining the lega
   const legacy = await Bun.file(resolve(project, 'collections.legacy-v1.json')).json();
 
   expect(current.caseRoot).toBe('cases/engineering-v1');
-  expect(cases).toHaveLength(19);
+  expect(cases).toHaveLength(22);
   expect(cases.every((item) => item.definition.metadata.assessment === 'outcome')).toBeTrue();
   expect(cases.every((item) => item.definition.metadata.requiredSkills.length === 0)).toBeTrue();
   expect(legacy.collections.development.caseRoot).toBe('cases');

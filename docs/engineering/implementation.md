@@ -5,6 +5,44 @@ review/repair records under ignored `evals/out/` are not attached to this PR. PR
 independently inspect those records from the repository. The committed corpus controls and
 distribution tests can be rerun; they do not make the separate native and review evidence public.
 
+## 2026-10-26 existing-solution design method — local checks passed; behavior unverified
+
+`design-solution` now examines existing solutions when a key mechanism is unfamiliar or a
+material design choice lacks evidence. It checks repository implementations, current dependencies
+and official documentation first, then comparable open-source projects when needed. The method
+compares source, tests, issues, applicability and costs; distinguishes design borrowing from
+dependency adoption or code copying; and stops once a choice and its remaining validation needs
+can be explained. Missing external evidence remains explicit. Global prompts and other skill
+routes are unchanged.
+
+The development collection `engineering-v1-existing-solutions-2026-10-26` adds three design
+cases: frozen candidate comparison, sufficient local reuse and unavailable external evidence.
+Each explicitly invokes the design skill; these are method checks, not implicit-routing tests.
+The local-reuse control permits read-only networking to detect unnecessary research. Candidate
+records are fictional snapshots. Their source/test/issue evidence does not establish live GitHub
+retrieval, current upstream maintenance, license clearance or behavior in a real client.
+
+Local validation used Bun 1.4.2 and the frozen lockfile, with existing quality rules unchanged:
+
+- `bun run start -- validate`: 22 cases, 48 checks; passed.
+- `bun run check`: passed, retaining four existing informational diagnostics.
+- `bun run test:coverage`: 330 passed, 0 failed; 97.06% line coverage.
+- `bun run build`: passed.
+- `bun test --isolate tests/distribution.test.ts`: 6 passed, 0 failed.
+- `git diff --check`: passed.
+
+The first full test attempt under the outer sandbox had 28 failures, including loopback listeners
+and isolation probes. The unchanged suite passed in the permitted execution environment. Both
+logs are retained under `evals/out/existing-solutions/` as `coverage.log` and
+`coverage-permitted.log`, alongside `install.log`, `validate.log`, `check.log`, `build.log`,
+`distribution.log` and the candidate/case hashes in `source-identity.json`.
+
+Native model behavior and live GitHub research are **not run**: this worktree has no configured
+private evaluation profile, and the published template retains its non-routable gateway.
+No profile or provider was selected implicitly. The local checks establish corpus and package
+integrity, not improved agent judgment or cross-host qualification. Production installation and
+publication were not performed; earlier run evidence remains unchanged.
+
 ## 2026-10-20 evaluation-control refinement — verified in the recorded scope
 
 The performance-review case now uses an explicit repeated-object workload. Its batch-local
