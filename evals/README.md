@@ -189,6 +189,15 @@ positive specialist review, SPAR, Rubber Duck and coherent change sequencing. `r
 control and a decision-complete handoff. Existing design, storage and explanation/release cases
 also cover the refined methods. These synthetic scenarios do not establish production task
 frequency, application speedups or all host behavior.
+
+The existing-solution design cases in `refinement.json` compare frozen candidate evidence,
+reuse a sufficient local implementation without external research, and continue provisional
+analysis when external evidence is unavailable. They check applicability, adoption boundaries
+and evidence limits. The candidate records are fictional fixtures, not live upstream claims;
+these cases do not establish that real GitHub discovery or retrieval works. The local-reuse
+control permits read-only network access so avoiding an unnecessary survey is a judgment check,
+not merely compliance with a network prohibition.
+
 The performance control distinguishes unconsumed work from complete timing and checks
 batch-local serialization reuse on repeated immutable object references. Its timing samples are
 stipulated observations; work-count controls do not guarantee the reported speed ratio.

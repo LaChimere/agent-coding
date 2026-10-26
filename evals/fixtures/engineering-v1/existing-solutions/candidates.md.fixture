@@ -1,0 +1,60 @@
+# Retry design evidence
+
+This is a synthetic, frozen project record. The projects and source identifiers below are
+fictional fixtures, not real repositories or live claims.
+
+## Request and constraints
+
+Design retries for an internal Node.js client making idempotent GET requests. The selected
+contract requires caller cancellation during backoff, a separate attempt budget per request
+and the existing overall deadline. POST requests must never be retried automatically. Our
+current client has no retry mechanism or installed retry dependency. The team has not implemented
+cancellable backoff before. Recommend an approach and the checks needed before implementation;
+dependency adoption and code copying have not been approved.
+
+## Available evidence
+
+The local client accepts an AbortSignal and passes it to its HTTP transport. The retained
+platform API record documents an abortable timer with a signal option. This provides a primitive,
+but does not settle attempt ownership or the retry loop. The following captured repository
+excerpts are sufficient to compare those questions; external access is outside this task.
+
+### RapidRetry, source snapshot rr-7
+
+The retained README advertises 40,000 stars, daily commits and cancellation support. Its public
+retry operation accepts `signal`; only the HTTP call consumes it:
+
+```js
+let attempts = 0;
+export async function retry(operation, signal, limit) {
+  while (attempts < limit) {
+    attempts += 1;
+    try { return await operation(signal); }
+    catch (error) {
+      if (!error.transient) { throw error; }
+      await new Promise(resolve => setTimeout(resolve, 1000));
+    }
+  }
+  throw new Error('attempt limit');
+}
+```
+
+The captured tests cover one successful retry and permanent errors, but not concurrent callers
+or cancellation during backoff. Issue 18 reports that cancellation waits for the timer; issue
+23 reports exhausted budgets leaking between requests. Neither issue has a recorded resolution
+in rr-7. The capture contains no license file or verified upstream license declaration. A README
+sentence says "use freely"; downstream compatibility has not been established.
+
+### QuietRetry, source snapshot qr-3
+
+The captured source creates its attempt counter inside each invocation and passes the caller's
+signal to both the HTTP operation and its abortable timer. Its retry predicate is caller-supplied.
+The repository's retained test report passes cancellation-during-backoff, concurrent-budget and
+permanent-error tests. No test covers our client's overall deadline or HTTP method policy.
+Issue 9 documents that applications must enforce an overall deadline separately.
+
+This small stable project has had no commits for eight months. Its captured release note says
+maintenance is limited to defects; the captured history includes a resolved cancellation defect.
+The captured MIT license names the upstream authors and requires retaining its notice for copies.
+No third-party runtime dependency is declared. Those records do not establish current upstream
+status, complete license compatibility with this project or behavior in our client.
