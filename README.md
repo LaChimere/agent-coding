@@ -47,7 +47,7 @@ providers and credentials remain outside the portable methods.
 ```text
 plugins/engineering/     # Lifecycle and challenge skills, bundled methods and native metadata
 config/codex/            # Personal standing rules, runtime settings and worker profiles
-config/claude/           # Personal standing rules and Claude Code method routing
+config/claude/           # Personal standing rules, method routing and reviewer subagent
 config/pi/              # Pi entry instructions
 config/copilot/          # Retained personal policy and method routing
 config/grok-bot/         # Bot instructions and optional, inactive routine templates

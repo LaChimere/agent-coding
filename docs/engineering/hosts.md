@@ -25,15 +25,23 @@ a skill appear functional. CLI evidence does not qualify every App, IDE or cloud
 ## Claude Code
 
 ```sh
-claude plugin marketplace add /absolute/path/to/agent-coding
+claude plugin marketplace add LaChimere/agent-coding
 claude plugin install engineering@agent-coding --scope user
 ```
 
-For verification use an isolated configuration directory and a disposable candidate, not personal
-settings. Check the installed plugin and a fresh session inventory. Commands include
-`/engineering:implement-task` and `/engineering:code-review`; optional `config/claude/CLAUDE.md`
-contains native entry guidance. The bundled Claude review command and managed PR review service
-are different capabilities with different instruction/loading and execution behavior.
+The GitHub source installs the published revision. After pushing a refinement, run
+`claude plugin marketplace update agent-coding` and `claude plugin update engineering@agent-coding`.
+To verify an unpublished candidate, register the local path in an isolated configuration
+directory, not personal settings. Check the installed plugin and a fresh session inventory.
+Commands include `/engineering:implement-task` and `/engineering:code-review`.
+
+The optional `config/claude` files supply personal standing guidance aligned with the Codex
+`AGENTS.md` and one subagent, `reviewer` (read-only review, inherited model). Copy them to
+`~/.claude/CLAUDE.md` and `~/.claude/agents/`. Built-in Explore, Plan and general-purpose
+subagents cover the Codex worker roles; select a cheaper model per call where useful. The reviewer
+lacks Edit/Write, but retains Bash, so its read-only boundary is partly instructed. The bundled
+Claude review command and managed PR review service are different capabilities with different
+instruction/loading and execution behavior.
 
 For an Agent SDK handoff, supply the actual working directory and absolute artifact locations in
 the task as well as `cwd`. The SDK's minimal default prompt may not communicate the filesystem

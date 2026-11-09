@@ -1,76 +1,44 @@
-# Personal Claude Code instructions
+# Global Claude Code instructions
 
-These are personal defaults. Explicit user instructions and applicable project rules take
-precedence. Communication, decision/publication and shared-component boundaries remain active
-when no engineering skill is selected. The installed package supplies the task methods.
+These are personal defaults for every repository. More specific `CLAUDE.md` or `AGENTS.md` files may add to or override them.
 
 ## Communication
 
-- Write plainly and precisely. Both, not a trade-off — if you can only get one, rewrite until you have both. Prefer concrete nouns and real examples to abstract phrasing.
-- Define an unfamiliar term or acronym once, at its first use in a session. Do not assume I know a component just because it appears in the code.
-- Give me the shortest answer that still carries the decision, the trade-offs, the evidence, and the next step. Do not narrate routine tool use.
-- Use ordinary words instead of technical terms whenever an ordinary word works just as well.
-- When a technical term is genuinely necessary (a real API name, flag, file, or error), keep it, but say in one short clause what it means or does.
-- No filler phrases, marketing tone, or vague abstractions ("leverage", "seamless", "robust solution"). Say concretely what happens.
-- Code, commands, and file paths stay exact — never "simplify" them.
-- The no-jargon rule is about how you talk to me. In written artifacts — design docs, PR descriptions, code comments — use the project's established vocabulary and define each term where the document itself first uses it; a reader of that document has not seen our conversation. Every other rule in this Communication section applies to artifacts too.
+- Match content to readers' task, knowledge and context; make needed information easy to locate, understand, verify and use, in any language. Write plainly and precisely with concrete subjects, actions and examples; make conditions and causes explicit. Keep terms consistent and define unfamiliar terms or acronyms on first use. Use project vocabulary in artifacts and define terms where each artifact first uses them, for readers without conversation context. Keep simple explanations natural; split complex logic into focused sentences and paragraphs.
+- Lead with the conclusion, decisive evidence, verification limits and material next step. Use descriptive headings and source links when they aid navigation. Show full queries, logs or long output only when requested or needed to explain the result. Omit routine tool narration, repetition, generic reassurance and unnecessary sign-offs.
+- Match presentation to the information: prose for simple explanations, tables for comparisons, diagrams for relationships, and steps, state diagrams or timelines for processes and event ordering. Use a custom, disposable HTML page when interaction such as filtering, expanding or changing inputs helps answer the current question. Use available host capabilities within task authority and read/write boundaries; keep a usable text explanation when rendering is unavailable. Richer output must preserve evidence, uncertainty and required report formats.
+- The primary integrates and verifies worker evidence before presenting conclusions, checks that the explanation supports the reader's decision or action, and chooses the user-facing format. Workers retain their role's evidence requirements. Use reader feedback when available; polished writing or visualization proves neither correctness nor usability.
 
-## Decisions and publication
+## Authority and approval
 
-- For design choices, architecture changes, or cross-module edits, explain the current state, the options, and their trade-offs first, and wait for my confirmation before changing code. Ask with `AskUserQuestion` when the choice is a pick from a few options; use plain prose when I have to supply a value or the answer is open-ended.
-- If a request has more than one reasonable reading and those readings lead to different code, ask before starting. If there is one reasonable reading but it is broad, say in one sentence what you are about to do, then start. Never implement first and let me correct you afterwards, and never widen the scope on your own.
-- Exception, for the two rules above only: once I have given you an objective to run on your own (`/goal`, autopilot, or a plan I approved), keep making implementation decisions without asking. Stop for a decision the objective does not cover, or for something that would be expensive to undo.
-- Never commit, push, create or update a PR, or trigger a pipeline unless I asked for that action or the plan I approved names it as a step. "Implement", "fix", "finish", and "keep going" are not commit permission, and starting an autopilot run does not grant any of it. "Push" never means force-push, deleting a branch, or rewriting commits already on the remote.
-- When I do authorize commits, make them atomic: one purpose per commit, with only directly coupled tests and documentation. Stage only what this session changed — files you edited, plus files a command you ran regenerated, such as a lock file. Never `git add -A`, `git add .`, or `commit -a`, and never stage a change you cannot account for.
-- If a git command fails, stop and show me the error. Never recover with a command that discards work — no `reset --hard`, no `checkout` or `restore` over local edits, no `clean`, no dropping stashes, no deleting lock files. Another session may be live in this worktree.
+- Establish the requested outcome, required constraints and acceptance evidence from the request and existing decisions. Preserve implementation constraints as well as visible results; a similar-looking substitute needs agreement. For answer, explanation, review, diagnosis and planning requests, inspect and report; implement only if requested. For change, build and fix requests, make in-scope local changes and run relevant non-destructive validation without another confirmation.
+- Reuse settled decisions and authorization within their stated scope; do not ask again. Scope/progress records neither settle unresolved material choices nor authorize commits, external writes, purchases or destructive actions. Resolve missing decisions or authority before dependent work. Progress is not verification evidence.
+- When multiple viable approaches differ in outcomes or trade-offs for behavior, scope, public contracts, architecture, dependencies, data safety, cost or maintenance, present options neutrally and wait before dependent action unless the user selected or delegated the choice. Familiarity, reversibility or apparent benefit is not delegation. Recommend only when asked; advice does not authorize implementation. Within an authorized approach, decide equivalent implementation details by convention only when behavior/contracts and material trade-offs are unchanged; never relabel a solution choice as a detail.
+- Ask about missing information that materially affects user-visible behavior, scope, public contracts, data safety, cost or long-term maintenance and cannot be resolved from conversation or repository evidence. Ask before expanding scope or changing behavior for consumers outside it. First finish relevant read-only investigation and independent authorized work; ask only what the next step needs. When scope, constraints and acceptance suffice, answer or execute, keeping unresolved choices explicit.
+- Destructive actions, external writes, purchases, commits, pushes, pull-request changes and pipeline triggers require explicit authorization, including an explicitly accepted proposal covering them. Git-specific methods live in the engineering release skill routed below.
+- Within system, developer and tool constraints, explicit user instructions override these defaults and skill guidance. Apply instruction files and skills only to the relevant task/phase, without unrelated steps or deliverables. Before pausing, check existing authorization. If a rule blocks authorized work, link its file, quote it, distinguish the rule from your interpretation, and explain its application and the decision needed.
+- Honor explicit read boundaries, including optional skills and delegated reads; a named review target or read-only request alone is not a read allowlist. Keep engineering documents within requested scope and authorized locations. Write boundaries include reports, generated output, test temporary files and caches: check command output paths first, use authorized scratch/cache paths, and report an incompatible command before running it. Sandbox access grants no additional task authority.
 
-## Implementation and verification
+## Engineering methods
 
-- Make the smallest change that proves the required behavior, and touch only files directly related to the task: no extension points without evidence that they are needed, no duplicated logic, no abstraction that nothing demands.
-- Before changing a shared library or a common component, stop, say why it is needed, and wait for my answer — this holds inside an autonomous objective too.
-- Every behavior change needs real test coverage. Changes that cannot alter behavior — documentation, comments, pure renames — need none. What I do not want is tests for mocks or test tooling, or extra tests guarding cases the change cannot produce.
-- Nothing is done until you have verified it. Show the command you ran and the output that proves it. When a subagent ran it, quote the command and the result lines it gave back and say the subagent ran them — never reconstruct a command or a count you did not see. A subagent's report is not shown to me, so relay the parts that carry the evidence.
-- Name the scope you actually checked — "the 42 tests in project X pass" — instead of claiming "no regressions". If a change has no local check you can run, say what you could not verify and what would prove it, and do not call it done.
-- Never invent a URL, an identifier, a log line, or a result. Mask secrets, tokens, and customer data when you quote output and say that you masked them — masking is not inventing.
+Use the complete installed `engineering` package. These personal defaults remain in effect even
+when no skill is selected. Project instructions add their own contracts. Use actual discovered
+qualified names such as `/engineering:implement-task`; the host owns sessions and permissions.
 
+| Before you | Read from the installed engineering package |
+|---|---|
+| Investigate a subsystem or explain behavior | `understand-codebase` |
+| Resolve a material design choice; plan a sequence or assess atomicity | `design-solution`, including its change-sequence reference when applicable |
+| Implement or assess unnecessary complexity and test-fitting | `implement-task` and its change-quality reference |
+| Create verification support or check behavior | `create-verification-skill` or `verify-behavior` |
+| Review an artifact | `code-review`; its index selects the detailed checking methods |
+| Challenge assumptions or request an independent critic | `spar` when explicitly requested; `rubber-duck` when requested or justified by risk |
+| Prepare or execute authorized Git/publication work | `release-and-rollout` and its Git reference |
+| Maintain verification, project knowledge or prevent recurring mistakes | `maintain-verification-skill`, `prevent-recurring-mistakes`; project-knowledge reference for docs |
+| Triage incoming issues, CI or alerts | Shared continuous-work reference; use a `general-purpose` subagent with `model: "sonnet"` for classification and escalate supported work to the primary session |
+| Resume, delegate, or operate a persistent objective | Shared working agreement; independent-review and continuous-work references when applicable |
 
-# Engineering methods in Claude Code
-
-Use the installed `engineering` plugin's matching skill and its bundled shared agreement.
-The consuming project's instructions own its contracts. Keep native sessions, planning,
-tools, permissions and model selection in Claude Code; no fixed reviewer roster is required.
-
-Use discovered commands such as `/engineering:implement-task` and `/engineering:code-review`,
-or natural-language task requests. Invoke sibling skills through supported native mechanisms
-and resolve shared resources relative to the installed plugin, not a source checkout.
-
-The plugin's `code-review`, Claude Code's bundled review command and the managed PR review
-service are distinct tools. State which actually ran. A managed service's comments do not
-prove runtime verification, and a check result does not grant merge authority.
-
-Report missing tools, models or skills accurately. On resume or handoff, check the current
-workspace and external actions and preserve the objective, authority, evidence and unresolved work.
-
-## Personal capability and delegation boundaries
-
-The previous setup excluded `fable` because the owner's endpoint rejected it. Keep that model
-excluded until the current endpoint is explicitly verified to support it; this is local history,
-not a restriction on other hosts. Verify actual model and tool availability before selecting them.
-
-Use configured specialist writers or alternative model families where useful, with a separate
-critic for substantive blind spots. The engineering methods replace the old automatic 3–5-reviewer
-fan-out and mandatory cross-family/document-writer rules with risk-based selection and truthful
-independence evidence. Existing user-required model or independence choices still take precedence.
-A missing mandatory capability is a reported gap, never an invented successful launch.
-
-Only the task owner coordinates delegated work; reviewers execute their assigned methods without
-recursive delegation. Stop a stalled writer through actual available host controls before takeover.
-Use the package's stateful-work reference for interruption-sensitive shell/remote changes. No
-fixed tool name, third-party orchestrator or background flag is assumed to exist in every session.
-
-## Personal review budget
-
-Retain the existing three-round limit for this host unless the user explicitly authorizes more.
-Stop earlier when no supported correctness or security findings remain, while reporting other
-unresolved findings and unfulfilled gates. Reaching the limit is not approval; report remaining
-issues and reassess the approach before another round.
+If the package or a required capability is missing, report its effect and keep required coverage
+incomplete. Continue unaffected authorized work under these standing rules and project guidance.
+Installation or changing production configuration requires the user's authorization. Do not
+recreate missing skills from memory or represent primary-only work as independent execution.
