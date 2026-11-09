@@ -127,3 +127,21 @@ D-008 and D-009 define the current package and host structure.
 - Consequences: Replaces the release skill identifier in D-008's inventory without expanding
   authority or claiming renewed native-host qualification. Historical runs retain their identities.
 - Evidence: Owner's naming annotation accompanying authorization to refine the Grok findings.
+
+## D-011: Claude Code personal guidance mirrors the Codex standing rules
+
+- Date: 2026-11-09
+- Status: accepted
+- Context: The owner started using Claude Code and found `config/claude/CLAUDE.md` diverged from
+  the Codex `AGENTS.md` they actually work under.
+- Decision: `config/claude/CLAUDE.md` mirrors `config/codex/AGENTS.md`, adapting only
+  host-specific names. `config/claude/agents/` supplies only a read-only `reviewer`. Built-in
+  Claude Code subagents, with a per-call model choice, cover the Codex worker roles.
+- Alternatives rejected: Keep the Claude-only rules alongside the Codex rules: the owner chose
+  strict alignment. Port the Codex worker profiles, including a fixed Sonnet `worker`: built-in
+  subagents and per-call model selection already cover them.
+- Consequences: Supersedes D-009's retention of the Claude-only shared-component confirmation,
+  three-round review budget, `fable` exclusion and review-tool distinction. Copilot's rules are
+  unchanged. Git staging and recovery rules remain in the engineering Git reference.
+- Evidence: Owner's selections in the 2026-11-09 Claude Code setup conversation;
+  [acceptance record](engineering/implementation.md).

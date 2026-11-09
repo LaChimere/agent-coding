@@ -43,7 +43,7 @@ does not establish improved runtime outcomes.
 |---|---|---|
 | Host standing Communication / Authority | Retained continuously; relevant even without skill invocation | config/codex/AGENTS.md, config/claude/CLAUDE.md and config/copilot/copilot-instructions.md |
 | Codex approval, network, discovery, memories, Code Mode, wakefulness and agent settings | Retained as personal host configuration, not universal method defaults | config/codex/config.toml and agents/ |
-| Fixed personal worker profiles | Retained as available user-configured choices; portable methods do not require them | config/codex/agents/ |
+| Fixed personal worker profiles | Retained as available user-configured choices; portable methods do not require them | config/codex/agents/; Claude keeps only the reviewer in config/claude/agents/ |
 | Main PR/artifact review and six detailed checking briefs | Integrated, including applicability, scope and double-confirmation | code-review and references/reviewers/ |
 | SPAR | Preserved as an explicit standalone challenge; composed into design/review on request | spar |
 | Rubber Duck | Preserved as a standalone constructive critic and optional risk-selected review | rubber-duck |
@@ -52,10 +52,10 @@ does not establish improved runtime outcomes.
 | Revert/mutation verification | Preserved as selected proof methods; universal execution removed in favor of task/risk scope | verification-evidence and code-review |
 | Git authorization, selective staging, exact-head merge and safe failure recovery | Preserved separately from merely reporting review results | release-and-rollout and references/git-publication.md |
 | Shared-state interruption recovery | Preserved rerunnable scoped scripts and credential/side-effect boundaries | references/stateful-work.md |
-| Cheap classification then stronger investigation | Preserved as a host-configurable strategy; no mandatory model in portable policy | continuous-work and personal Codex routing |
+| Cheap classification then stronger investigation | Preserved as a host-configurable strategy; no mandatory model in portable policy | continuous-work and personal Codex/Claude routing |
 | Project docs, decision/lesson records, explainers and directly related refresh | Preserved; established contracts outrank unauthorized implementation changes | references/project-knowledge.md |
-| Claude shared-component confirmation and publication boundaries | Retained as host-specific authority, including inside autonomous work | config/claude/CLAUDE.md |
-| Claude/Copilot three-round review budget | Retained as host-specific bounds; exhaustion never becomes approval | Personal host guidance |
+| Claude shared-component confirmation and publication boundaries | Removed by D-011; the Codex-aligned Authority rules and the Git reference apply | None |
+| Copilot three-round review budget | Retained as a host-specific bound; exhaustion never becomes approval. Removed for Claude by D-011 | config/copilot/copilot-instructions.md |
 | Independent image-scanning specialist | Unchanged; separate domain capability | skills/scan-image-vulnerabilities/ |
 
 The Copilot adapter uses the same complete methods without inventing a native installer; it remains

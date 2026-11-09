@@ -122,7 +122,7 @@ enabled = true
 test('every supported host retains its adapter artifacts', async () => {
   const adapters = {
     codex: ['AGENTS.md', 'config.toml'],
-    claude: ['CLAUDE.md'],
+    claude: ['CLAUDE.md', 'agents/reviewer.md'],
     pi: ['AGENTS.md'],
     'grok-bot': ['INSTRUCTIONS.md', 'routines.md'],
     copilot: ['copilot-instructions.md'],
@@ -145,6 +145,8 @@ test('every supported host retains its adapter artifacts', async () => {
       expect((await Bun.file(path).text()).trim().length, path).toBeGreaterThan(0);
     }
   }
+
+  expect((await readdir(resolve(root, 'claude/agents'))).sort()).toEqual(['reviewer.md']);
 });
 
 test.each(pluginNames)(

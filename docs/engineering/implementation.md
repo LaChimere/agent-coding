@@ -5,6 +5,30 @@ review/repair records under ignored `evals/out/` are not attached to this PR. PR
 independently inspect those records from the repository. The committed corpus controls and
 distribution tests can be rerun; they do not make the separate native and review evidence public.
 
+## 2026-11-09 Claude Code personal setup — discovery verified; shared-reference loading failed once
+
+`config/claude/CLAUDE.md` now mirrors the Codex `AGENTS.md` standing rules and routing. Its
+earlier Claude-only rules were removed at the owner's direction ([D-011](../decisions.md)).
+`config/claude/agents/` adds only `reviewer` (read-only tools, inherited model); built-in Explore,
+Plan and general-purpose subagents cover the Codex worker roles. A `worker` (Sonnet) subagent was
+added, then removed before use, because per-call model selection covers it. The distribution test
+requires `config/claude/agents/` to contain exactly `reviewer.md`; with the file removed, it failed.
+
+The owner's production install used Claude Code 2.1.319. The plugin came from the GitHub marketplace
+`LaChimere/agent-coding` at `bbf62c3`, installed at user scope. The config files were copied to
+`~/.claude`. The `code-review`, `grilling` and `setup-matt-pocock-skills` user-skill links were
+removed, matching the Codex disables.
+
+- `claude plugin details engineering@agent-coding`: 11 skills, ~736 always-on tokens.
+- In a fresh `claude -p` session, the inventory listed all 11 `engineering:` skills and the
+  `reviewer` subagent, without the removed skills, and reported the new CLAUDE.md heading.
+- In one `/engineering:understand-codebase` read-only run, the session answered from the source with
+  line references and changed no files. It **did not read** `references/working-agreement.md`,
+  although the skill's first line requires that read. This one run does not establish a failure
+  rate. It is a refinement candidate for skill loading on Claude Code.
+
+Behavior of other lifecycle skills and of the `reviewer` subagent is not run.
+
 ## 2026-10-26 existing-solution design method — local checks passed; behavior unverified
 
 `design-solution` now examines existing solutions when a key mechanism is unfamiliar or a
