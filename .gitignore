@@ -31,3 +31,6 @@ __pycache__/
 
 # Hermetic scanner shim invocation logs
 .scan-fixture-calls/
+
+# macOS Finder metadata
+.DS_Store
