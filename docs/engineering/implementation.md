@@ -5,6 +5,55 @@ review/repair records under ignored `evals/out/` are not attached to this PR. PR
 independently inspect those records from the repository. The committed corpus controls and
 distribution tests can be rerun; they do not make the separate native and review evidence public.
 
+## 2026-11-11 Claude Code measurements — no skill or reference change
+
+Two candidate refinements were measured on Claude Code 2.1.322 (model `claude-opus-5-5`, the
+owner's login and global `CLAUDE.md`, auto permission mode, the repository plugin loaded with
+`--plugin-dir` in fresh fixture workspaces). A subagent graded anonymized runs against the case
+rubrics without the version key; the primary spot-checked them. Neither change was kept, because
+neither showed an effect. Total cost: USD 16.32.
+
+- **Shared agreement loading.** Four `engineering-v1` cases, five runs each, with an explicit skill
+  command. `references/working-agreement.md` was read in 3 of 20 runs, yet all 35 rubric grades
+  passed, with no mutations or commits. The owner's always-loaded `CLAUDE.md` carries the rules
+  these cases exercise. Not measured: handoff, delegation, long implementation and users without
+  that `CLAUDE.md`.
+- **Agent-context and runbook guidance** in `references/project-knowledge.md`, with three temporary
+  cases (write a short `CLAUDE.md` from notes with a stale command; diagnose and write a runbook;
+  diagnose only). The HEAD plugin and the candidate ran three times each. HEAD showed real
+  failures: an unadopted note copied as a rule, a missing no-network constraint and an
+  out-of-scope edit to the incident record. The candidate read the reference in 1 of 9 runs, so
+  its slightly better counts (context 2/3 vs 1/3, runbook scope 3/3 vs 2/3) are not attributable
+  to the guidance. No side effect: the diagnose-only control wrote no file in 12 runs, and a
+  regression rerun of the four cases was clean. The guidance and the cases were reverted.
+- Codex native runs were not performed: no private evaluation profile is configured.
+
+## 2026-11-11 Claude Code Git guard hook — local and live checks passed; not installed
+
+Decided in [D-012](../decisions.md). `config/claude/settings.json` registers one Bash
+`PreToolUse` hook, `config/claude/hooks/git-guard.py`.
+
+- `evals/tests/claude-hooks.test.ts` (67 cases) passes with the PATH `python3` (3.11) and the
+  macOS system `/usr/bin/python3` (3.9.6). The hook returns `ask` for 43 commands, including `-C`,
+  `-c`, `env`, absolute-path and chained forms, and forms that hid the command from the first
+  version: a `#` comment line before it, an unbalanced quote, `for`/`if` bodies, `xargs`,
+  `timeout` and command substitution. It leaves 23 ordinary commands, such as `git add <file>`,
+  `clean -n`, `branch -d` and Git text inside a quoted commit message, to the normal permission
+  flow. Removing the comment, parse-failure, any-position or Python 3.9 handling, or the `:branch`
+  push check, each makes the suite fail.
+- Live `claude -p` runs with Claude Code 2.1.322 in a disposable repository, auto permission mode,
+  with the hook loaded through `--settings`: `git add -A` was denied with the git-guard reason;
+  `git status` and `git add a.txt` ran. After the revision, `printf ... && for f in a.txt; do git
+  checkout -- "$f"; done` was denied and the modified file was left unchanged.
+- A reviewer read-only hook was built and withdrawn (D-012). In live runs the real `reviewer`
+  instructions alone made the subagent decline writes before any call, while review found that
+  the lexical allowlist both missed writing forms (`sed --in-place=bak`, `git reflog expire`) and
+  denied permitted checks (`cd x && git status`, `bun test`). A hook declared in a project-level
+  subagent's frontmatter did not run in 2.1.322; user-level agents were not tested.
+- Not verified: the interactive `ask` prompt in auto mode (documented, not driven here), which
+  `python3` a desktop-launched Claude Code uses, and installation into `~/.claude`, which needs
+  the owner's authorization.
+
 ## 2026-11-09 Claude Code personal setup — discovery verified; shared-reference loading failed once
 
 `config/claude/CLAUDE.md` now mirrors the Codex `AGENTS.md` standing rules and routing. Its

@@ -36,10 +36,17 @@ directory, not personal settings. Check the installed plugin and a fresh session
 Commands include `/engineering:implement-task` and `/engineering:code-review`.
 
 The optional `config/claude` files supply personal standing guidance aligned with the Codex
-`AGENTS.md` and one subagent, `reviewer` (read-only review, inherited model). Copy them to
-`~/.claude/CLAUDE.md` and `~/.claude/agents/`. Built-in Explore, Plan and general-purpose
-subagents cover the Codex worker roles; select a cheaper model per call where useful. The reviewer
-lacks Edit/Write, but retains Bash, so its read-only boundary is partly instructed. The bundled
+`AGENTS.md`, one subagent, `reviewer` (read-only review, inherited model), and one `PreToolUse`
+hook. Copy `CLAUDE.md`, `agents/` and `hooks/` into `~/.claude/`, and merge the `hooks` key of
+`settings.json` into `~/.claude/settings.json` rather than replacing that file. Copy `hooks/`
+first: if the script is missing, `python3` exits with status 2 and every Bash call is blocked.
+The hook needs `python3` 3.9 or later. `git-guard.py` returns `ask` for broad staging, discarding,
+forced branch deletion and force/deleting pushes, so the owner confirms each one; in `claude -p`
+nobody can confirm, so those commands are denied. It guards against mistakes, not evasion:
+commands inside quoted strings (`bash -c '...'`), `eval` or scripts are not inspected. Built-in
+Explore, Plan and general-purpose subagents cover the Codex worker roles; select a cheaper model
+per call where useful. The reviewer lacks Edit/Write, but retains Bash, so its read-only boundary
+is partly instructed. The bundled
 Claude review command and managed PR review service are different capabilities with different
 instruction/loading and execution behavior.
 

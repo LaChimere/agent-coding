@@ -145,3 +145,28 @@ D-008 and D-009 define the current package and host structure.
   unchanged. Git staging and recovery rules remain in the engineering Git reference.
 - Evidence: Owner's selections in the 2026-11-09 Claude Code setup conversation;
   [acceptance record](engineering/implementation.md).
+
+## D-012: Claude Code asks before broad or irreversible Git commands with a hook
+
+- Date: 2026-11-11 (revised 2026-11-12)
+- Status: accepted
+- Context: The engineering Git reference forbids broad staging and work-discarding commands and
+  requires authorization for force-pushes and branch deletion, but Claude Code relied on
+  instructions only.
+- Decision: `config/claude/` adds `settings.json` with one Bash `PreToolUse` hook, `git-guard.py`,
+  which returns `ask` for the covered Git commands. The owner merges the `hooks` key into user
+  settings. The hook guards against mistakes, not deliberate evasion: when it cannot tell whether
+  a command containing `git` is safe, it asks rather than passes.
+- Alternatives rejected: `deny` for the Git commands: it would block a command the owner
+  explicitly asked for, which the standing rules allow. Permission prefix rules alone: variants
+  such as `git -C . add --all` bypass them. A second hook denying non-allowlisted Bash commands
+  in the `reviewer` subagent: the reviewer already declined writes from its instructions in live
+  runs, while a lexical allowlist both missed writing forms and blocked read-only checks that
+  `agents/reviewer.md` permits. Enforced read-only review would need an OS-level sandbox instead.
+- Consequences: Refines D-011: `config/claude/` now also carries Claude-only enforcement with no
+  Codex counterpart file, while the standing rules stay aligned. In `claude -p` the covered Git
+  commands are denied because nobody can confirm them. Detection is lexical: commands inside quoted
+  strings (`bash -c '...'`), `eval`, scripts or aliases pass through, and a commented-out Git
+  command still asks.
+- Evidence: `evals/tests/claude-hooks.test.ts`; live `claude -p` runs recorded in
+  [implementation.md](engineering/implementation.md) (2026-11-11 section).

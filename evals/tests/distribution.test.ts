@@ -122,7 +122,7 @@ enabled = true
 test('every supported host retains its adapter artifacts', async () => {
   const adapters = {
     codex: ['AGENTS.md', 'config.toml'],
-    claude: ['CLAUDE.md', 'agents/reviewer.md'],
+    claude: ['CLAUDE.md', 'agents/reviewer.md', 'settings.json', 'hooks/git-guard.py'],
     pi: ['AGENTS.md'],
     'grok-bot': ['INSTRUCTIONS.md', 'routines.md'],
     copilot: ['copilot-instructions.md'],
@@ -147,6 +147,7 @@ test('every supported host retains its adapter artifacts', async () => {
   }
 
   expect((await readdir(resolve(root, 'claude/agents'))).sort()).toEqual(['reviewer.md']);
+  expect((await readdir(resolve(root, 'claude/hooks'))).sort()).toEqual(['git-guard.py']);
 });
 
 test.each(pluginNames)(
