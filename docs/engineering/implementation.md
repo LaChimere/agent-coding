@@ -5,7 +5,7 @@ review/repair records under ignored `evals/out/` are not attached to this PR. PR
 independently inspect those records from the repository. The committed corpus controls and
 distribution tests can be rerun; they do not make the separate native and review evidence public.
 
-## 2026-11-27 Antigravity host adapter — local package and hook checks passed; not installed
+## 2026-11-27/28 Antigravity host adapter — live installation, discovery, invocation and git-guard verified
 
 Decided in [D-013](../decisions.md). Added `plugins/engineering/.antigravity-plugin/plugin.json`
 and `config/antigravity/` (`AGENTS.md`, `hooks.json`, `hooks/git-guard.py`, `plugins.json`).
@@ -17,16 +17,47 @@ and `config/antigravity/` (`AGENTS.md`, `hooks.json`, `hooks/git-guard.py`, `plu
 - `evals/tests/antigravity-hooks.test.ts` (68 cases) and `evals/tests/claude-hooks.test.ts`
   (67 cases) verify the shared dual-protocol `git-guard.py` script (identical across both host
   directories) under PATH `python3` and macOS `/usr/bin/python3`, covering all 43 guarded Git
-  commands, 22 passed commands, and malformed/non-matching tool inputs.
+  commands (`force_ask` on Antigravity; `ask` on Claude Code), 22 passed commands (`allow` on
+  Antigravity; empty stdout on Claude Code), and malformed/non-matching tool inputs.
 - Full local validation passed: `git diff --check`, `bun run check` (`tsc --noEmit` and
   `biome check --error-on-warnings .`), `bun run test:coverage` (466 pass, 0 fail across 45 files,
   run with loopback port binding permitted per [validation.md](../validation.md)), `bun run build`,
   and `bun run start -- validate` (22 cases, 48 checks).
-- Not verified: live Antigravity plugin discovery (`GetAllPlugins`), live global-rule loading
-  (`~/.gemini/config/AGENTS.md` vs `~/.gemini/GEMINI.md` vs plugin `rules/AGENTS.md`), live skill
-  and subagent invocation, live `PreToolUse` `"ask"` prompting and empty-stdout passthrough on
-  non-guarded `run_command` calls, and installation into `~/.gemini/config/`, which requires the
-  owner's authorization.
+- Live `agy 1.5.18` package, discovery, invocation and hook checks on the owner's machine
+  (unpublished local `agy` session IDs recorded below for traceability):
+  - `agy plugin validate --json plugins/engineering`: 0 errors, 0 warnings (1 optional note for no
+    `logo`); identified `.antigravity-plugin/plugin.json` and all 11 skills.
+  - `agy plugin install https://github.com/LaChimere/agent-coding` (after merging PR #19 to
+    `origin/main` at `19c0030`): auto-detected `plugins/`, installed `engineering` into
+    `~/.gemini/config/plugins/engineering` with all 11 skills and all 10 shared `references/*.md`
+    files intact. Both `agy plugin list --json` and the Antigravity App Language Server
+    `GetAllPlugins` RPC reported `engineering` (`enabled: true`, 11 skills).
+  - Global rules: verified both `~/.gemini/config/AGENTS.md` (session
+    `b936c4b9-1d4c-4e98-a5e3-405455e432ae`) and the final installed `~/.gemini/AGENTS.md` (session
+    `3acd9e98-f27a-4b02-b8e5-e497d212618e`) loaded as `user_global`
+    (`# Global Antigravity instructions`) in fresh `agy -p` sessions.
+  - Skill invocation (`understand-codebase` in session `b936c4b9-1d4c-4e98-a5e3-405455e432ae` and
+    `release-and-rollout` in session `0977bf2a-e088-4a1f-a6b6-040d970a131b`): read `SKILL.md` and
+    resolved relative `references/working-agreement.md` and `references/git-publication.md` from
+    `~/.gemini/config/plugins/engineering/`.
+  - `git-guard` live fix and recheck (against the post-`19c0030` updated `git-guard.py` installed
+    at `~/.gemini/config/hooks/git-guard.py`): initial live testing on `19c0030`'s `"ask"` hook
+    (`ec41aca0-db0e-4ded-b6e9-54b3b5417eef` and probe `ea1b7211-669e-49f7-8969-3bb6ebe4f2a2`) found
+    that Antigravity's default sandbox auto-approved sandboxed `run_command` calls under
+    `"decision": "ask"`, allowing `git add -A` to run. Updating Antigravity's output to
+    `"force_ask"` (and `"allow"` for non-guarded `run_command` calls per
+    [Antigravity's hooks documentation](https://antigravity.google/docs/hooks)) fixed the bypass:
+    against global `~/.gemini/config/hooks.json` + `./hooks/git-guard.py`, `git status --short`,
+    `ls -la && git status --short --branch`, and `git add a.txt` passed through
+    (`3acd9e98-f27a-4b02-b8e5-e497d212618e`, `0977bf2a-e088-4a1f-a6b6-040d970a131b`), while both
+    `git add -A` (`0977bf2a-e088-4a1f-a6b6-040d970a131b`) and
+    `for f in a.txt; do git checkout -- "$f"; done` (`1ae34470-36f8-4336-8167-6dd6d50054bd`) were
+    denied with `denied_actions: [{"action": "command", "display_name": "Bash"}]`.
+- Not verified: local-directory plugin registration via `config/antigravity/plugins.json`,
+  interactive Antigravity App/CLI confirmation prompt UI for `force_ask`, Antigravity IDE
+  extension rule/hook loading, `research` / `define_subagent` delegation, and full multi-skill
+  behavioral/episode parity beyond the exercised `understand-codebase` and `release-and-rollout`
+  reads.
 
 ## 2026-11-11 Claude Code measurements — no skill or reference change
 

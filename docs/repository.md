@@ -27,8 +27,8 @@ Standalone specialists remain usable when installed alone. Required optional ext
 must be identified, not silently installed or imitated.
 
 Codex uses `.agents/plugins/marketplace.json`; Claude Code uses `.claude-plugin/marketplace.json`.
-Their native manifests share package identity and version. Antigravity uses
-`plugins/engineering/.antigravity-plugin/plugin.json` registered via `plugins.json`. Pi reads the
+Their native manifests share package identity and version. Antigravity uses `plugins/engineering/.antigravity-plugin/plugin.json`, installed via
+`agy plugin install` (or registered via `plugins.json` for local checkouts). Pi reads the
 engineering package's `package.json` resource declarations. Grok Bot uses the complete methods on its computer through
 its actual available import/file mechanisms; do not invent a native plugin command or qualify
 Grok from a CLI test. Details and evidence levels are in [hosts.md](engineering/hosts.md).
