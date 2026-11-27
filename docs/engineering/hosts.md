@@ -8,9 +8,19 @@ integration instructions.
 ## Antigravity
 
 `plugins/engineering/.antigravity-plugin/plugin.json` exposes the complete engineering package
-natively to Antigravity without copying `skills/` or `references/`. Register the repository's
-`plugins/` directory in `~/.gemini/config/plugins.json` (using `config/antigravity/plugins.json`
-as a template and replacing `/absolute/path/to/agent-coding/plugins` with the local checkout path):
+natively to Antigravity without copying `skills/` or `references/`. Install the published revision
+directly from GitHub with the Antigravity CLI (`agy`):
+
+```sh
+agy plugin install https://github.com/LaChimere/agent-coding
+```
+
+`agy plugin install` detects the repository's `plugins/` directory, copies `plugins/engineering`
+(all 11 skills and `references/`) into `~/.gemini/config/plugins/engineering`, and syncs it to
+both the Antigravity CLI (`agy plugin list --json`) and the Antigravity App (`GetAllPlugins`).
+To test an unpublished local checkout instead, run `agy plugin validate ./plugins/engineering`
+and install locally or register the local `plugins/` directory in `~/.gemini/config/plugins.json`
+using `config/antigravity/plugins.json` as a template:
 
 ```json
 {
@@ -25,25 +35,25 @@ as a template and replacing `/absolute/path/to/agent-coding/plugins` with the lo
 
 The optional `config/antigravity` files supply personal standing guidance aligned with
 `config/codex/AGENTS.md` and `config/claude/CLAUDE.md` (`AGENTS.md`), plus the `PreToolUse`
-Git guard (`hooks.json` and `hooks/git-guard.py`). Copy `hooks/` into `~/.gemini/config/`, and
-merge `hooks.json` and `plugins.json` into `~/.gemini/config/hooks.json` and
-`~/.gemini/config/plugins.json` rather than replacing existing entries. Copy `hooks/` before
-merging `hooks.json`: `hooks.json` runs `./hooks/git-guard.py` relative to its own directory, and
-a missing script exits nonzero on every `run_command` call. For global standing rules, verify
-which path your Antigravity release auto-loads (`~/.gemini/config/AGENTS.md`, `~/.gemini/GEMINI.md`,
-or a personal plugin's `rules/AGENTS.md`) before relying on `config/antigravity/AGENTS.md` being
-active in every session.
+Git guard (`hooks.json` and `hooks/git-guard.py`). Copy `AGENTS.md` to `~/.gemini/AGENTS.md`
+(works across Antigravity App, CLI, and IDE extensions; `~/.gemini/config/AGENTS.md` is also
+supported by App and CLI, so keep only one copy to avoid duplicate loading). Copy `hooks/` into
+`~/.gemini/config/`, and merge `hooks.json` into `~/.gemini/config/hooks.json` rather than
+replacing existing entries. Copy `hooks/` before merging `hooks.json`: `hooks.json` runs
+`./hooks/git-guard.py` relative to its own directory, and a missing script exits nonzero on every
+`run_command` call.
 
 The hook needs `python3` 3.9 or later and shares the exact same script as Claude Code
-(`config/claude/hooks/git-guard.py`), handling Antigravity's `run_command` payload and returning
-`{"decision": "ask", "reason": "..."}` for broad staging, discarding, forced branch deletion and
-force/deleting pushes. Like Claude Code, `"ask"` guards against mistakes rather than deliberate
-evasion; in Antigravity `"ask"` respects cached "Always Allow" grants (switch to `"force_ask"`
-locally if you want to prompt even when a matching command prefix was cached). For non-guarded
-commands, the script prints nothing and exits 0 rather than emitting `"allow"` (which could
-auto-approve unrelated commands); because Antigravity's `PreToolUse` schema marks JSON output and
-`decision` as required, verify non-guarded `run_command` passthrough in an isolated session before
-enabling `hooks.json` globally.
+(`config/claude/hooks/git-guard.py`), handling Antigravity's `run_command` payload. For broad
+staging, discarding, forced branch deletion and force/deleting pushes it returns
+`{"decision": "force_ask", "reason": "..."}` — `"force_ask"` rather than `"ask"` is required
+because Antigravity's default sandbox auto-approves sandboxed `run_command` calls under `"ask"`,
+bypassing the guard. In non-interactive `agy -p` runs nobody can confirm, so guarded commands are
+denied. For non-guarded `run_command` calls it returns `{"decision": "allow"}`, matching
+Antigravity's required `PreToolUse` `decision` contract and delegating to the next hook or default
+permission policy (distinct from `"auto_approve"`). Like Claude Code, it guards against mistakes
+rather than deliberate evasion: commands inside quoted strings (`bash -c '...'`), `eval` or scripts
+are not inspected.
 
 No static `agents/reviewer.md` file is maintained for Antigravity: use the built-in `research`
 subagent (read-only sandbox with no shell network access; retains command execution inside that

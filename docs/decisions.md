@@ -173,32 +173,44 @@ D-008 and D-009 define the current package and host structure.
 
 ## D-013: Antigravity uses a native plugin manifest and mirrors Codex/Claude standing rules and git-guard
 
-- Date: 2026-11-27
+- Date: 2026-11-27 (revised 2026-11-28)
 - Status: accepted
 - Context: The owner wanted to use the `engineering` plugin, standing personal guidance and Git
   guard on Antigravity without duplicating the skills or letting the Git guard logic drift from
-  Claude Code.
-- Decision: Add `plugins/engineering/.antigravity-plugin/plugin.json` so Antigravity discovers the
-  existing single-source `plugins/engineering/` package natively via `~/.gemini/config/plugins.json`.
-  Add `config/antigravity/` with `AGENTS.md` (mirroring `config/codex/AGENTS.md` and
-  `config/claude/CLAUDE.md`, adapting only host-specific names and subagent routing), `plugins.json`,
-  `hooks.json` and `hooks/git-guard.py`. Keep `config/claude/hooks/git-guard.py` and
-  `config/antigravity/hooks/git-guard.py` as one identical dual-protocol script returning `"ask"`
-  (aligned with D-012) and verified byte-for-byte in tests. Omit a static `agents/reviewer.md`:
+  Claude Code. Live testing with `agy 1.5.18` also showed that Antigravity's default sandbox
+  auto-approves sandboxed `run_command` calls under `PreToolUse` `"ask"`, bypassing the guard, and
+  confirmed that [Antigravity's hooks documentation](https://antigravity.google/docs/hooks)
+  requires a `decision` field where `"allow"` delegates to the next hook or default policy
+  (distinct from `"auto_approve"`).
+- Decision: Add `plugins/engineering/.antigravity-plugin/plugin.json` so Antigravity installs and
+  discovers the existing single-source `plugins/engineering/` package natively via
+  `agy plugin install https://github.com/LaChimere/agent-coding` (or `plugins.json` for local
+  checkouts). Add `config/antigravity/` with `AGENTS.md` (mirroring `config/codex/AGENTS.md` and
+  `config/claude/CLAUDE.md`, adapting only host-specific names and subagent routing; installed at
+  `~/.gemini/AGENTS.md` for App/CLI/IDE coverage), `plugins.json`, `hooks.json` and
+  `hooks/git-guard.py`. Keep `config/claude/hooks/git-guard.py` and
+  `config/antigravity/hooks/git-guard.py` as one identical dual-protocol script verified
+  byte-for-byte in tests: Claude Code emits `"ask"` / empty stdout (D-012), while Antigravity emits
+  `"force_ask"` for guarded Git commands (matching Claude's effective prompt/deny gate) and
+  `{"decision": "allow"}` for non-guarded `run_command` calls. Omit a static `agents/reviewer.md`:
   Antigravity's built-in read-only `research` subagent and `define_subagent` (`EnableWriteTools: false`)
   already cover independent read-only review.
 - Alternatives rejected: Placing `plugin.json` at `plugins/engineering/` root (less symmetrical
-  with `.codex-plugin/plugin.json` and `.claude-plugin/plugin.json`); using `"force_ask"` by
-  default (the owner chose alignment with Claude's `"ask"` decision); symlinking `git-guard.py`
-  between host directories (breaks self-contained file copying and the distribution test's
-  regular-file check); maintaining a static `agents/reviewer.md` alongside built-in read-only
-  subagent primitives.
+  with `.codex-plugin/plugin.json` and `.claude-plugin/plugin.json`); returning `"ask"` for
+  Antigravity (live `agy 1.5.18` testing proved `"ask"` is bypassed by default sandbox execution);
+  emitting empty stdout for Antigravity passthrough (conflicts with the documented required
+  `decision` schema); symlinking `git-guard.py` between host directories (breaks self-contained
+  file copying and the distribution test's regular-file check); maintaining a static
+  `agents/reviewer.md` alongside built-in read-only subagent primitives.
 - Consequences: `plugins/engineering/package.json` includes `.antigravity-plugin` in `files`.
   `config/antigravity/hooks.json` invokes `./hooks/git-guard.py` relative to its config directory.
   Distribution tests validate the Antigravity manifest, `config/antigravity/` artifacts and JSON
   adapter schemas; `evals/tests/antigravity-hooks.test.ts` exercises the Antigravity `PreToolUse`
-  contract and guards script parity with Claude Code. Live Antigravity plugin discovery, global-rule
-  loading path, skill/subagent invocation, and `PreToolUse` `"ask"` / empty-stdout passthrough
-  behavior remain unverified until installed and exercised separately.
+  contract (`force_ask` / `allow`) and guards script parity with Claude Code. Live `agy 1.5.18`
+  qualification covers package validation, GitHub installation, CLI/App discovery, global
+  `~/.gemini/AGENTS.md` loading, read-only `understand-codebase` / `release-and-rollout`
+  shared-reference invocation, and `git-guard` passthrough/blocking; interactive App confirmation
+  UI, subagent delegation, and full multi-skill workflow parity remain unverified.
 - Evidence: `evals/tests/distribution.test.ts`, `evals/tests/antigravity-hooks.test.ts`,
-  `evals/tests/claude-hooks.test.ts`; [implementation.md](engineering/implementation.md) (2026-11-27 section).
+  `evals/tests/claude-hooks.test.ts`; live `agy 1.5.18` runs recorded in
+  [implementation.md](engineering/implementation.md) (2026-11-27/28 section).

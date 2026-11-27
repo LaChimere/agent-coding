@@ -71,8 +71,9 @@ The [evaluation guide](evals/README.md) explains how to validate the selected co
 The owner's [Grok file-loaded cold-start result](docs/engineering/grok-acceptance.md) has been
 audited and locally reproduced, with bounded verifier corrections; native import remains unverified.
 Claude Code and Pi currently have scoped
-read-only review evidence, not full workflow parity. Antigravity currently has local package and
-hook unit tests, not live host discovery or behavior qualification.
+read-only review evidence, not full workflow parity. Antigravity currently has live package
+validation, GitHub CLI install, CLI/App discovery, global-rule/skill invocation and `git-guard`
+hook checks, not full multi-skill workflow parity.
 See [the accepted design](docs/engineering/design.md)
 and [implementation and qualification](docs/engineering/implementation.md).
 
