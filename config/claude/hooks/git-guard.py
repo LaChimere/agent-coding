@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
-"""Claude Code PreToolUse hook: ask before irreversible or broad Git commands.
+"""PreToolUse hook (Claude Code & Antigravity): ask before irreversible or broad Git commands.
 
-Reads the hook input from stdin. For a Bash call whose command runs one of the Git operations
-below, it prints a PreToolUse decision of "ask", so the person confirms it in a permission
-prompt. Every other call gets no decision and follows the normal permission flow.
+Reads the hook input from stdin. For a Claude Code `Bash` call or an Antigravity `run_command`
+call whose command runs one of the Git operations below, it prints a PreToolUse decision of
+"ask", so the person confirms it in a permission prompt. Every other call prints nothing and
+exits 0 to defer to the normal permission flow (never emitting "allow", which could bypass
+normal approval prompts; Antigravity empty-stdout passthrough still requires live verification).
 "ask" rather than "deny" keeps an explicit instruction from the person executable. In
-non-interactive `claude -p` runs nobody can answer, so the call is denied.
+non-interactive runs nobody can answer, so the call is denied.
 
 This guards against mistakes, not against deliberate evasion. Covered: `add -A/--all/-u/--update/.`,
 `commit -a/--all`, `reset --hard`, `clean` without `-n/--dry-run`, `checkout` that discards files
@@ -106,32 +108,53 @@ def reason_for(arguments: list[str]) -> str | None:
     return None
 
 
-def ask(reason: str) -> dict:
+def extract_command(payload: dict) -> tuple[str, str] | None:
+    if payload.get("tool_name") == "Bash":
+        tool_input = payload.get("tool_input")
+        if isinstance(tool_input, dict):
+            return "claude", str(tool_input.get("command", ""))
+        return None
+    tool_call = payload.get("toolCall")
+    if isinstance(tool_call, dict) and tool_call.get("name") == "run_command":
+        args = tool_call.get("args")
+        if isinstance(args, dict):
+            return "antigravity", str(args.get("CommandLine", ""))
+        return None
+    return None
+
+
+def ask(host: str, reason: str) -> dict:
+    message = f"git-guard: {reason}. Confirm only if you asked for it."
+    if host == "antigravity":
+        return {
+            "decision": "ask",
+            "reason": message,
+        }
     return {
         "hookSpecificOutput": {
             "hookEventName": "PreToolUse",
             "permissionDecision": "ask",
-            "permissionDecisionReason": f"git-guard: {reason}. Confirm only if you asked for it.",
+            "permissionDecisionReason": message,
         }
     }
 
 
 def decide(payload: dict) -> dict | None:
-    if payload.get("tool_name") != "Bash":
+    extracted = extract_command(payload)
+    if extracted is None:
         return None
-    tool_input = payload.get("tool_input")
-    command = str(tool_input.get("command", "")) if isinstance(tool_input, dict) else ""
+    host, command = extracted
     try:
         segments = split_segments(command)
     except ValueError:
         if re.search(r"(^|[\s;&|(`/])git(\s|$)", command):
-            return ask("this Git command could not be parsed")
+            return ask(host, "this Git command could not be parsed")
         return None
     for segment in segments:
         for arguments in git_invocations(segment):
             reason = reason_for(arguments)
             if reason:
-                return ask(f"`git {' '.join(arguments)}` {reason}")
+                return ask(host, f"`git {' '.join(arguments)}` {reason}")
     return None
 
 
