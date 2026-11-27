@@ -5,6 +5,29 @@ review/repair records under ignored `evals/out/` are not attached to this PR. PR
 independently inspect those records from the repository. The committed corpus controls and
 distribution tests can be rerun; they do not make the separate native and review evidence public.
 
+## 2026-11-27 Antigravity host adapter — local package and hook checks passed; not installed
+
+Decided in [D-013](../decisions.md). Added `plugins/engineering/.antigravity-plugin/plugin.json`
+and `config/antigravity/` (`AGENTS.md`, `hooks.json`, `hooks/git-guard.py`, `plugins.json`).
+
+- `evals/tests/distribution.test.ts` (7 cases) validates `.antigravity-plugin/plugin.json` metadata
+  parity with `.claude-plugin/plugin.json`, `.antigravity-plugin` inclusion in `package.json`,
+  valid skill references, all `config/antigravity/` adapter files, and the JSON structures of
+  `config/antigravity/hooks.json` and `config/antigravity/plugins.json`.
+- `evals/tests/antigravity-hooks.test.ts` (68 cases) and `evals/tests/claude-hooks.test.ts`
+  (67 cases) verify the shared dual-protocol `git-guard.py` script (identical across both host
+  directories) under PATH `python3` and macOS `/usr/bin/python3`, covering all 43 guarded Git
+  commands, 22 passed commands, and malformed/non-matching tool inputs.
+- Full local validation passed: `git diff --check`, `bun run check` (`tsc --noEmit` and
+  `biome check --error-on-warnings .`), `bun run test:coverage` (466 pass, 0 fail across 45 files,
+  run with loopback port binding permitted per [validation.md](../validation.md)), `bun run build`,
+  and `bun run start -- validate` (22 cases, 48 checks).
+- Not verified: live Antigravity plugin discovery (`GetAllPlugins`), live global-rule loading
+  (`~/.gemini/config/AGENTS.md` vs `~/.gemini/GEMINI.md` vs plugin `rules/AGENTS.md`), live skill
+  and subagent invocation, live `PreToolUse` `"ask"` prompting and empty-stdout passthrough on
+  non-guarded `run_command` calls, and installation into `~/.gemini/config/`, which requires the
+  owner's authorization.
+
 ## 2026-11-11 Claude Code measurements — no skill or reference change
 
 Two candidate refinements were measured on Claude Code 2.1.322 (model `claude-opus-5-5`, the

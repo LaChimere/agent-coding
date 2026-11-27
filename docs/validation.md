@@ -39,7 +39,7 @@ before a candidate turn. A refused preparation is `not-run`, not a failed skill 
 Preserve every failed/refused run and its configuration. Correct environment declarations with
 concrete evidence, never by disabling the isolation probes.
 
-Qualify Codex, Claude Code, Pi and Grok Bot separately using the levels in
+Qualify Antigravity, Codex, Claude Code, Pi and Grok Bot separately using the levels in
 [hosts.md](engineering/hosts.md). Use isolated configuration and candidate copies. Record versions,
 source identity, discovery, invocation, actual behavior and gaps. Native App/IDE/cloud coverage
 needs its own evidence. Installing a package or exercising a CLI does not qualify another host.

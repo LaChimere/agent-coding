@@ -5,6 +5,51 @@ new revision is actually published. They do not update production settings autom
 [Acceptance](implementation.md) records tested versions and observed support separately from these
 integration instructions.
 
+## Antigravity
+
+`plugins/engineering/.antigravity-plugin/plugin.json` exposes the complete engineering package
+natively to Antigravity without copying `skills/` or `references/`. Register the repository's
+`plugins/` directory in `~/.gemini/config/plugins.json` (using `config/antigravity/plugins.json`
+as a template and replacing `/absolute/path/to/agent-coding/plugins` with the local checkout path):
+
+```json
+{
+  "entries": [
+    {
+      "path": "/absolute/path/to/agent-coding/plugins",
+      "include_only": ["engineering"]
+    }
+  ]
+}
+```
+
+The optional `config/antigravity` files supply personal standing guidance aligned with
+`config/codex/AGENTS.md` and `config/claude/CLAUDE.md` (`AGENTS.md`), plus the `PreToolUse`
+Git guard (`hooks.json` and `hooks/git-guard.py`). Copy `hooks/` into `~/.gemini/config/`, and
+merge `hooks.json` and `plugins.json` into `~/.gemini/config/hooks.json` and
+`~/.gemini/config/plugins.json` rather than replacing existing entries. Copy `hooks/` before
+merging `hooks.json`: `hooks.json` runs `./hooks/git-guard.py` relative to its own directory, and
+a missing script exits nonzero on every `run_command` call. For global standing rules, verify
+which path your Antigravity release auto-loads (`~/.gemini/config/AGENTS.md`, `~/.gemini/GEMINI.md`,
+or a personal plugin's `rules/AGENTS.md`) before relying on `config/antigravity/AGENTS.md` being
+active in every session.
+
+The hook needs `python3` 3.9 or later and shares the exact same script as Claude Code
+(`config/claude/hooks/git-guard.py`), handling Antigravity's `run_command` payload and returning
+`{"decision": "ask", "reason": "..."}` for broad staging, discarding, forced branch deletion and
+force/deleting pushes. Like Claude Code, `"ask"` guards against mistakes rather than deliberate
+evasion; in Antigravity `"ask"` respects cached "Always Allow" grants (switch to `"force_ask"`
+locally if you want to prompt even when a matching command prefix was cached). For non-guarded
+commands, the script prints nothing and exits 0 rather than emitting `"allow"` (which could
+auto-approve unrelated commands); because Antigravity's `PreToolUse` schema marks JSON output and
+`decision` as required, verify non-guarded `run_command` passthrough in an isolated session before
+enabling `hooks.json` globally.
+
+No static `agents/reviewer.md` file is maintained for Antigravity: use the built-in `research`
+subagent (read-only sandbox with no shell network access; retains command execution inside that
+sandbox) or `define_subagent` with `EnableWriteTools: false` (omits file-write and
+command-execution tools) for independent read-only review.
+
 ## Codex
 
 Register a candidate repository containing the marketplace, then install the package through
@@ -125,6 +170,9 @@ the guidance. Personal host preferences remain allowed under D-009; they are not
 
 ## Primary references
 
+- [Antigravity plugins](https://antigravity.google/docs/plugins)
+- [Antigravity hooks](https://antigravity.google/docs/hooks)
+- [Antigravity rules](https://antigravity.google/docs/rules)
 - [Codex plugins](https://developers.openai.com/plugins/build/plugins)
 - [Claude plugin reference](https://code.claude.com/docs/en/plugins-reference)
 - [Pi packages](https://github.com/earendil-works/pi/blob/main/packages/coding-agent/docs/packages.md)

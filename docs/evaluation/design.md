@@ -27,8 +27,8 @@ Quality, time, token usage, and cost are separate dimensions. The initial design
 
 The system under evaluation is limited to repository-owned skills/, plugins/, and config/codex/. External personal skills and plugins are excluded initially. Required CLI versions, language runtimes, tools, and services are execution conditions, not additional subjects of effectiveness evaluation.
 
-Codex is this runner's model execution and effectiveness target. Claude Code, Pi, Grok Bot and
-Copilot require separate host qualification. Desktop UI, IDE, and cloud compatibility also need
+Codex is this runner's model execution and effectiveness target. Antigravity, Claude Code, Pi,
+Grok Bot and Copilot require separate host qualification. Desktop UI, IDE, and cloud compatibility also need
 their own evidence.
 
 The initial design does not introduce a general agent platform, multiple interchangeable evaluation frameworks, a model that simulates the user, automatic Git-diff-based case selection, or a separate hosted management service. It also does not switch production installations or authorize commits, publication, or remote pipeline actions.

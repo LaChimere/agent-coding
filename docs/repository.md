@@ -8,9 +8,9 @@ and [acceptance record](engineering/implementation.md) define the current redesi
 
 - `plugins/engineering/` owns the complete portable engineering package: task skills, shared
   references, task-specific resources and native metadata. It does not implement another runtime.
-- `config/` owns host adapters and retained personal settings for Codex, Claude Code, Pi, Grok Bot
-  and the existing Copilot consumer. Standing policy, native syntax and capability differences
-  belong here; reusable product methods remain in the plugin.
+- `config/` owns host adapters and retained personal settings for Antigravity, Codex, Claude Code,
+  Pi, Grok Bot and the existing Copilot consumer. Standing policy, native syntax and capability
+  differences belong here; reusable product methods remain in the plugin.
 - `skills/` holds independently useful standalone specialists and their bundled resources.
 - `evals/` owns development cases, inert fixtures, versioned profiles, execution and grading.
   Runtime packages exclude these materials. Follow `evals/AGENTS.md` and preserve its quality baseline.
@@ -27,8 +27,9 @@ Standalone specialists remain usable when installed alone. Required optional ext
 must be identified, not silently installed or imitated.
 
 Codex uses `.agents/plugins/marketplace.json`; Claude Code uses `.claude-plugin/marketplace.json`.
-Their native manifests share package identity and version. Pi reads the engineering package's
-`package.json` resource declarations. Grok Bot uses the complete methods on its computer through
+Their native manifests share package identity and version. Antigravity uses
+`plugins/engineering/.antigravity-plugin/plugin.json` registered via `plugins.json`. Pi reads the
+engineering package's `package.json` resource declarations. Grok Bot uses the complete methods on its computer through
 its actual available import/file mechanisms; do not invent a native plugin command or qualify
 Grok from a CLI test. Details and evidence levels are in [hosts.md](engineering/hosts.md).
 

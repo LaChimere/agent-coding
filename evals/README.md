@@ -2,7 +2,7 @@
 
 Evaluate this repository's skills, complete plugins, and `config/codex` through
 native Codex. Promptfoo schedules cases and runs assertions; project records keep
-execution, quality, time, token usage, and cost separate. This runner executes Codex. The engineering product also targets Claude Code, Pi and Grok Bot;
+execution, quality, time, token usage, and cost separate. This runner executes Codex. The engineering product also targets Antigravity, Claude Code, Pi and Grok Bot;
 those hosts require separate native qualification and are not proven by this runner.
 
 A case specifies a task and its checks. A trial is one fresh Codex execution of
