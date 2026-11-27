@@ -12,7 +12,8 @@
     "skills",
     "references",
     ".codex-plugin",
-    ".claude-plugin"
+    ".claude-plugin",
+    ".antigravity-plugin"
   ],
   "pi": {
     "skills": [
