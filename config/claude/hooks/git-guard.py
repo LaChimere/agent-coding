@@ -2,21 +2,23 @@
 """PreToolUse hook (Claude Code & Antigravity): ask before irreversible or broad Git commands.
 
 Reads the hook input from stdin. For a Claude Code `Bash` call or an Antigravity `run_command`
-call whose command runs one of the Git operations below, it prints a PreToolUse decision of
-"ask", so the person confirms it in a permission prompt. Every other call prints nothing and
-exits 0 to defer to the normal permission flow (never emitting "allow", which could bypass
-normal approval prompts; Antigravity empty-stdout passthrough still requires live verification).
-"ask" rather than "deny" keeps an explicit instruction from the person executable. In
-non-interactive runs nobody can answer, so the call is denied.
+call whose command runs one of the Git operations below, it prints a PreToolUse confirmation
+decision ("ask" for Claude Code; "force_ask" for Antigravity so default sandbox auto-allow does
+not bypass the guard), so the person confirms it in a permission prompt. For non-guarded
+commands, Claude Code gets empty stdout (defer to normal permission flow) and Antigravity gets
+{"decision": "allow"} (Antigravity's required PreToolUse schema for delegating to the next hook
+or default policy, distinct from "auto_approve"). "ask"/"force_ask" rather than "deny" keeps an
+explicit instruction from the person executable; in non-interactive runs nobody can answer, so
+the call is denied.
 
 This guards against mistakes, not against deliberate evasion. Covered: `add -A/--all/-u/--update/.`,
 `commit -a/--all`, `reset --hard`, `clean` without `-n/--dry-run`, `checkout` that discards files
 (`--`, `.`, `-f`), `restore` of the worktree, `switch -f/--discard-changes`, `branch -D`,
 `stash drop/clear`, and force or deleting `push` (including `:branch`). Every unquoted `git`
 word is checked, also after `env`, `xargs`, `do`, `then` or a path. A command that cannot be
-tokenized, for example with an unbalanced quote, gets "ask" when it contains the word `git`.
-Commands inside quoted strings such as `bash -c '...'`, `eval`, scripts or aliases are not
-detected.
+tokenized, for example with an unbalanced quote, gets a confirmation decision when it contains
+the word `git`. Commands inside quoted strings such as `bash -c '...'`, `eval`, scripts or
+aliases are not detected.
 """
 
 from __future__ import annotations
@@ -112,13 +114,21 @@ def extract_command(payload: dict) -> tuple[str, str] | None:
     if payload.get("tool_name") == "Bash":
         tool_input = payload.get("tool_input")
         if isinstance(tool_input, dict):
-            return "claude", str(tool_input.get("command", ""))
+            command = tool_input.get("command")
+            if command is None:
+                return "claude", ""
+            if isinstance(command, str):
+                return "claude", command
         return None
     tool_call = payload.get("toolCall")
     if isinstance(tool_call, dict) and tool_call.get("name") == "run_command":
         args = tool_call.get("args")
         if isinstance(args, dict):
-            return "antigravity", str(args.get("CommandLine", ""))
+            command = args.get("CommandLine")
+            if command is None:
+                return "antigravity", ""
+            if isinstance(command, str):
+                return "antigravity", command
         return None
     return None
 
@@ -127,7 +137,7 @@ def ask(host: str, reason: str) -> dict:
     message = f"git-guard: {reason}. Confirm only if you asked for it."
     if host == "antigravity":
         return {
-            "decision": "ask",
+            "decision": "force_ask",
             "reason": message,
         }
     return {
@@ -137,6 +147,12 @@ def ask(host: str, reason: str) -> dict:
             "permissionDecisionReason": message,
         }
     }
+
+
+def passthrough(host: str) -> dict | None:
+    if host == "antigravity":
+        return {"decision": "allow"}
+    return None
 
 
 def decide(payload: dict) -> dict | None:
@@ -149,13 +165,13 @@ def decide(payload: dict) -> dict | None:
     except ValueError:
         if re.search(r"(^|[\s;&|(`/])git(\s|$)", command):
             return ask(host, "this Git command could not be parsed")
-        return None
+        return passthrough(host)
     for segment in segments:
         for arguments in git_invocations(segment):
             reason = reason_for(arguments)
             if reason:
                 return ask(host, f"`git {' '.join(arguments)}` {reason}")
-    return None
+    return passthrough(host)
 
 
 def main() -> None:
