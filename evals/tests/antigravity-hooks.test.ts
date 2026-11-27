@@ -6,9 +6,9 @@ const hook = resolve(import.meta.dir, '../../config/antigravity/hooks/git-guard.
 const claudeHook = resolve(import.meta.dir, '../../config/claude/hooks/git-guard.py');
 const systemPython = '/usr/bin/python3';
 
-async function decision(payload: unknown, python = 'python3'): Promise<string | undefined> {
+async function decisionRaw(stdin: string, python = 'python3'): Promise<string | undefined> {
   const child = Bun.spawn([python, '-I', hook], {
-    stdin: new Blob([JSON.stringify(payload)]),
+    stdin: new Blob([stdin]),
     stdout: 'pipe',
     stderr: 'pipe',
   });
@@ -16,15 +16,28 @@ async function decision(payload: unknown, python = 'python3'): Promise<string | 
   const [output, code] = await Promise.all([new Response(child.stdout).text(), child.exited]);
 
   expect(code).toBe(0);
+
   if (output.trim().length === 0) {
     return undefined;
   }
+
   const parsed = JSON.parse(output) as {
     decision: string;
-    reason: string;
+    reason?: string;
   };
-  expect(parsed.reason.startsWith('git-guard: ')).toBeTrue();
+  if (parsed.decision === 'force_ask') {
+    expect(Object.keys(parsed).sort()).toEqual(['decision', 'reason']);
+    expect(parsed.reason?.startsWith('git-guard: ')).toBeTrue();
+  } else {
+    expect(Object.keys(parsed)).toEqual(['decision']);
+    expect(parsed.reason).toBeUndefined();
+  }
+
   return parsed.decision;
+}
+
+async function decision(payload: unknown, python = 'python3'): Promise<string | undefined> {
+  return decisionRaw(JSON.stringify(payload), python);
 }
 
 function payload(tool: string, args: Record<string, string>): unknown {
@@ -124,14 +137,14 @@ test('Antigravity and Claude git-guard scripts stay identical', async () => {
   expect(antigravityScript).toBe(claudeScript);
 });
 
-test.each(guarded)('Antigravity git-guard asks before %s', async (command) => {
-  expect(await decision(runCommand(command))).toBe('ask');
+test.each(guarded)('Antigravity git-guard force-asks before %s', async (command) => {
+  expect(await decision(runCommand(command))).toBe('force_ask');
 });
 
 test.each(passed)(
-  'Antigravity git-guard leaves %s to the normal permission flow',
+  'Antigravity git-guard allows %s to follow the normal permission flow',
   async (command) => {
-    expect(await decision(runCommand(command))).toBeUndefined();
+    expect(await decision(runCommand(command))).toBe('allow');
   },
 );
 
@@ -140,18 +153,47 @@ test('Antigravity git-guard ignores other tools and malformed input', async () =
     await decision(payload('write_file', Object.fromEntries([['Path', 'git add -A']]))),
   ).toBeUndefined();
   expect(await decision('not an object')).toBeUndefined();
+  expect(await decisionRaw('{invalid json')).toBeUndefined();
+  expect(
+    await decision({
+      hookEventName: 'PreToolUse',
+      toolCall: { name: 'run_command' },
+    }),
+  ).toBeUndefined();
   expect(
     await decision({
       hookEventName: 'PreToolUse',
       toolCall: { name: 'run_command', args: 'git add -A' },
     }),
   ).toBeUndefined();
+  expect(
+    await decision({
+      hookEventName: 'PreToolUse',
+      toolCall: {
+        name: 'run_command',
+        args: Object.fromEntries([['CommandLine', ['git', 'add', '-A']]]),
+      },
+    }),
+  ).toBeUndefined();
+  expect(
+    await decision({ hookEventName: 'PreToolUse', toolCall: { name: 'run_command', args: {} } }),
+  ).toBe('allow');
+  expect(await decision(runCommand(''))).toBe('allow');
+  expect(
+    await decision({
+      hookEventName: 'PreToolUse',
+      toolCall: {
+        name: 'run_command',
+        args: Object.fromEntries([['CommandLine', null]]),
+      },
+    }),
+  ).toBe('allow');
 });
 
 test.skipIf(!existsSync(systemPython))(
   'Antigravity git-guard runs on the macOS system Python',
   async () => {
-    expect(await decision(runCommand('git add -A'), systemPython)).toBe('ask');
-    expect(await decision(runCommand('git status'), systemPython)).toBeUndefined();
+    expect(await decision(runCommand('git add -A'), systemPython)).toBe('force_ask');
+    expect(await decision(runCommand('git status'), systemPython)).toBe('allow');
   },
 );
