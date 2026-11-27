@@ -1,0 +1,8 @@
+{
+  "entries": [
+    {
+      "path": "/absolute/path/to/agent-coding/plugins",
+      "include_only": ["engineering"]
+    }
+  ]
+}

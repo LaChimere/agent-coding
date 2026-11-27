@@ -79,6 +79,7 @@ test('the engineering package exposes the complete approved skill set to Pi and 
   expect((await readdir(resolve(root, 'skills'))).sort()).toEqual(expected);
   expect(manifest.files).toContain('skills');
   expect(manifest.files).toContain('references');
+  expect(manifest.files).toContain('.antigravity-plugin');
   expect(manifest.files).not.toContain('evals');
   await expect(stat(resolve(root, 'references/working-agreement.md'))).resolves.toBeDefined();
 });
@@ -121,6 +122,7 @@ enabled = true
 
 test('every supported host retains its adapter artifacts', async () => {
   const adapters = {
+    antigravity: ['AGENTS.md', 'hooks.json', 'hooks/git-guard.py', 'plugins.json'],
     codex: ['AGENTS.md', 'config.toml'],
     claude: ['CLAUDE.md', 'agents/reviewer.md', 'settings.json', 'hooks/git-guard.py'],
     pi: ['AGENTS.md'],
@@ -146,8 +148,35 @@ test('every supported host retains its adapter artifacts', async () => {
     }
   }
 
+  expect((await readdir(resolve(root, 'antigravity/hooks'))).sort()).toEqual(['git-guard.py']);
   expect((await readdir(resolve(root, 'claude/agents'))).sort()).toEqual(['reviewer.md']);
   expect((await readdir(resolve(root, 'claude/hooks'))).sort()).toEqual(['git-guard.py']);
+});
+
+test('Antigravity JSON adapter configs declare valid hook and plugin entries', async () => {
+  const root = resolve(repository, 'config/antigravity');
+  const hooks = (await Bun.file(resolve(root, 'hooks.json')).json()) as Record<
+    string,
+    Record<string, { matcher?: string; hooks?: { type?: string; command?: string }[] }[]>
+  >;
+  const plugins = (await Bun.file(resolve(root, 'plugins.json')).json()) as {
+    entries?: Record<string, unknown>[];
+  };
+
+  const preToolUse = hooks['git-guard']?.['PreToolUse'];
+  expect(preToolUse).toBeDefined();
+  expect(preToolUse?.length).toBe(1);
+  expect(preToolUse?.[0]?.matcher).toBe('run_command');
+  expect(preToolUse?.[0]?.hooks).toEqual([
+    {
+      type: 'command',
+      command: 'python3 -I ./hooks/git-guard.py',
+    },
+  ]);
+
+  expect(plugins.entries?.length).toBe(1);
+  expect(plugins.entries?.[0]?.['path']).toBe('/absolute/path/to/agent-coding/plugins');
+  expect(plugins.entries?.[0]?.['include_only']).toEqual(['engineering']);
 });
 
 test.each(pluginNames)(
@@ -165,6 +194,9 @@ test.each(pluginNames)(
       const shared = (await Bun.file(
         resolve(installed, '.claude-plugin/plugin.json'),
       ).json()) as Record<string, unknown>;
+      const antigravity = (await Bun.file(
+        resolve(installed, '.antigravity-plugin/plugin.json'),
+      ).json()) as Record<string, unknown>;
 
       const common = [
         'name',
@@ -175,9 +207,21 @@ test.each(pluginNames)(
         'repository',
         'keywords',
       ];
+      const antigravityCommon = [
+        'name',
+        'version',
+        'description',
+        'author',
+        'homepage',
+        'repository',
+      ];
 
       expect(Object.keys(shared).sort()).toEqual([...common].sort());
       expect(Object.fromEntries(common.map((key) => [key, codex[key]]))).toEqual(shared);
+      expect(Object.keys(antigravity).sort()).toEqual([...antigravityCommon].sort());
+      expect(Object.fromEntries(antigravityCommon.map((key) => [key, shared[key]]))).toEqual(
+        antigravity,
+      );
       const { name: declaredName, version, skills, interface: ui } = codex;
 
       expect(declaredName).toBe(name);
@@ -259,6 +303,9 @@ test.each(pluginNames)('plugin %s manifests reference only existing skills', asy
   const shared = (await Bun.file(
     resolve(pluginRoot, '.claude-plugin/plugin.json'),
   ).json()) as Record<string, unknown>;
+  const antigravity = (await Bun.file(
+    resolve(pluginRoot, '.antigravity-plugin/plugin.json'),
+  ).json()) as Record<string, unknown>;
   const skillsRoot = resolve(pluginRoot, String(codex['skills']));
   const skills = new Set<string>();
 
@@ -275,7 +322,7 @@ test.each(pluginNames)('plugin %s manifests reference only existing skills', asy
 
   expect(skills.size).toBeGreaterThan(0);
 
-  for (const prose of [...proseOf(codex), ...proseOf(shared)]) {
+  for (const prose of [...proseOf(codex), ...proseOf(shared), ...proseOf(antigravity)]) {
     for (const [, sigil, token] of prose.matchAll(/(\$?)\b([a-z0-9]+(?:-[a-z0-9]+)+)\b/gu)) {
       if (token === undefined || (sigil === '' && nonSkillCompounds.has(token))) {
         continue;
