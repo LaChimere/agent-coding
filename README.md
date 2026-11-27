@@ -1,6 +1,6 @@
 # Agent Coding
 
-Portable engineering methods for Grok Bot, Codex, Claude Code and Pi. Use one tool or combine
+Portable engineering methods for Antigravity, Grok Bot, Codex, Claude Code and Pi. Use one tool or combine
 several: the same methods preserve goals, authority and evidence while the host runs the work.
 
 The `engineering` plugin covers understanding a project, designing and implementing tasks,
@@ -46,6 +46,7 @@ providers and credentials remain outside the portable methods.
 
 ```text
 plugins/engineering/     # Lifecycle and challenge skills, bundled methods and native metadata
+config/antigravity/      # Personal standing rules, plugin registration template and Git guard hook
 config/codex/            # Personal standing rules, runtime settings and worker profiles
 config/claude/           # Personal standing rules, method routing, reviewer subagent and Git guard hook
 config/pi/              # Pi entry instructions
@@ -70,7 +71,8 @@ The [evaluation guide](evals/README.md) explains how to validate the selected co
 The owner's [Grok file-loaded cold-start result](docs/engineering/grok-acceptance.md) has been
 audited and locally reproduced, with bounded verifier corrections; native import remains unverified.
 Claude Code and Pi currently have scoped
-read-only review evidence, not full workflow parity.
+read-only review evidence, not full workflow parity. Antigravity currently has local package and
+hook unit tests, not live host discovery or behavior qualification.
 See [the accepted design](docs/engineering/design.md)
 and [implementation and qualification](docs/engineering/implementation.md).
 

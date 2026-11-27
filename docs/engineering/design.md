@@ -230,8 +230,8 @@ inside that tree; resources never depend on a source checkout or evaluation asse
 skill independently does not imply support for installing arbitrary extracted folders.
 Standalone specialist capabilities remain under `skills/` when they have an independent purpose.
 
-Host configuration remains under `config/codex`, `config/claude`, `config/pi` and
-`config/grok-bot`. Public methods have one maintained source. Native format, invocation,
+Host configuration remains under `config/antigravity`, `config/codex`, `config/claude`,
+`config/pi` and `config/grok-bot`. Public methods have one maintained source. Native format, invocation,
 permissions and capability differences belong in adapters; credentials, private endpoints and
 personal model preferences do not belong in portable policy. Personal host adapters may retain
 those choices, standing communication/authority rules and available worker profiles. Retire old

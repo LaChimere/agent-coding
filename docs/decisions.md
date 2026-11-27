@@ -170,3 +170,35 @@ D-008 and D-009 define the current package and host structure.
   command still asks.
 - Evidence: `evals/tests/claude-hooks.test.ts`; live `claude -p` runs recorded in
   [implementation.md](engineering/implementation.md) (2026-11-11 section).
+
+## D-013: Antigravity uses a native plugin manifest and mirrors Codex/Claude standing rules and git-guard
+
+- Date: 2026-11-27
+- Status: accepted
+- Context: The owner wanted to use the `engineering` plugin, standing personal guidance and Git
+  guard on Antigravity without duplicating the skills or letting the Git guard logic drift from
+  Claude Code.
+- Decision: Add `plugins/engineering/.antigravity-plugin/plugin.json` so Antigravity discovers the
+  existing single-source `plugins/engineering/` package natively via `~/.gemini/config/plugins.json`.
+  Add `config/antigravity/` with `AGENTS.md` (mirroring `config/codex/AGENTS.md` and
+  `config/claude/CLAUDE.md`, adapting only host-specific names and subagent routing), `plugins.json`,
+  `hooks.json` and `hooks/git-guard.py`. Keep `config/claude/hooks/git-guard.py` and
+  `config/antigravity/hooks/git-guard.py` as one identical dual-protocol script returning `"ask"`
+  (aligned with D-012) and verified byte-for-byte in tests. Omit a static `agents/reviewer.md`:
+  Antigravity's built-in read-only `research` subagent and `define_subagent` (`EnableWriteTools: false`)
+  already cover independent read-only review.
+- Alternatives rejected: Placing `plugin.json` at `plugins/engineering/` root (less symmetrical
+  with `.codex-plugin/plugin.json` and `.claude-plugin/plugin.json`); using `"force_ask"` by
+  default (the owner chose alignment with Claude's `"ask"` decision); symlinking `git-guard.py`
+  between host directories (breaks self-contained file copying and the distribution test's
+  regular-file check); maintaining a static `agents/reviewer.md` alongside built-in read-only
+  subagent primitives.
+- Consequences: `plugins/engineering/package.json` includes `.antigravity-plugin` in `files`.
+  `config/antigravity/hooks.json` invokes `./hooks/git-guard.py` relative to its config directory.
+  Distribution tests validate the Antigravity manifest, `config/antigravity/` artifacts and JSON
+  adapter schemas; `evals/tests/antigravity-hooks.test.ts` exercises the Antigravity `PreToolUse`
+  contract and guards script parity with Claude Code. Live Antigravity plugin discovery, global-rule
+  loading path, skill/subagent invocation, and `PreToolUse` `"ask"` / empty-stdout passthrough
+  behavior remain unverified until installed and exercised separately.
+- Evidence: `evals/tests/distribution.test.ts`, `evals/tests/antigravity-hooks.test.ts`,
+  `evals/tests/claude-hooks.test.ts`; [implementation.md](engineering/implementation.md) (2026-11-27 section).
