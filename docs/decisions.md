@@ -94,8 +94,8 @@ D-008, D-009 and D-014 define the current package and host structure.
 - Context: The owner found that D-008's implementation discarded standing communication and
   authority guidance, personal Codex settings, detailed review methods and SPAR/Rubber Duck.
   Passing the selected new cases did not demonstrate preservation of those capabilities.
-- Decision: Preserve capabilities that support, or gain value from, the combined Claude Team,
-  Lauren Tan's and Felix's practices. Keep nine lifecycle entry points plus independently callable
+- Decision: Preserve capabilities that support, or gain value from, the combined Claude Team and
+  Felix practices. Keep nine lifecycle entry points plus independently callable
   `spar` and `rubber-duck`; integrate their methods into design/review without mandatory extra rounds.
   Restore detailed review briefs and place sequencing, atomicity, quality, publication and knowledge
   methods under explicit task owners. Keep personal host policy separate from portable methods,
