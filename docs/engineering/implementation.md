@@ -115,8 +115,8 @@ permission mode, the candidate package loaded with `--plugin-dir` and the instal
     `technical-writing` against 5.0; English PR description 3.3 with the `release-and-rollout`
     pointer against 3.7; English rewrite 3.7 with `unslop` against 3.3. The English baseline is
     already strong, so only the Chinese gains are clear.
-  - A method-fidelity review found material unexplained losses in six skills, and a wording
-    contradiction in the formal-verification pair. These were restored:
+  - A review of the skills' methods found material gaps in six skills, and a wording
+    contradiction in the formal-verification pair. These were fixed:
     - `optimize-metric`: the user's target, a green regression baseline before any change, and
       error and work counts in every keep decision.
     - `figure-it-out`: the plan structure, an append-only trail, an audit of the trail against

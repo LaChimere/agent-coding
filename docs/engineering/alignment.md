@@ -61,7 +61,7 @@ authority rules, and name no models. Evidence for each skill is recorded in
 | Comment removal | `no-comments` | The worker edits an isolated copy and returns a patch; flags named `RESHAPE`; fixes through `implement-task` |
 | Prose cleanup | `unslop` | Owner-chosen style rules; the Chinese list combines patterns seen in model output during this work with the two Chinese style guides |
 | Technical documents | `technical-writing` | Chinese rules from the Chinese copywriting guidelines and Ruan Yifeng's style guide; “” quotes are the owner's choice and the ellipsis follows GB/T 15834 |
-| Formal verification creation and upkeep | `create-formal-verification-skill`, `maintain-formal-verification-skill` | Conditional methods, not lifecycle gates; TLC is the default for models |
+| Formal verification creation and upkeep | `create-formal-verification-skill`, `maintain-formal-verification-skill` | Conditional methods, not lifecycle gates; the cheapest tool that answers the question, chosen with the user before any install |
 
 ## Supporting methods and host policy
 

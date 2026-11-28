@@ -219,10 +219,9 @@ D-008, D-009 and D-014 define the current package and host structure.
 
 - Date: 2026-11-28
 - Status: accepted; implementation evidence in [implementation.md](engineering/implementation.md)
-- Context: The owner chose to add capabilities the package lacked, aiming at better outcomes. The
-  evidence is in [implementation.md](engineering/implementation.md). D-008 and D-009 fixed the inventory
-  at nine lifecycle entry points plus `spar` and `rubber-duck`, and the design required a
-  demonstrated purpose before a new public entry.
+- Context: The owner chose to add capabilities the package lacked, aiming at better outcomes. D-008
+  and D-009 fixed the inventory at nine lifecycle entry points plus `spar` and `rubber-duck`, and
+  the design required a demonstrated purpose before a new public entry.
 - Decision: Add fifteen skills to the engineering package: `arena`, `swarm`, `interrogate`,
   `optimize-metric`, `figure-it-out`, `resume-work`, `reframe`, `sharpen`, `teach`, `reflect`,
   `no-comments`, `unslop`, `technical-writing`, `create-formal-verification-skill` and
