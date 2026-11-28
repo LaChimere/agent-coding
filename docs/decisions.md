@@ -3,7 +3,7 @@
 Settled decisions for contributions to `agent-coding`. Each entry records its context, decision,
 alternatives, consequences, status and evidence. Overturning a settled decision needs an explicit
 new decision that identifies the entry it supersedes. Only applicable decisions are listed;
-D-008 and D-009 define the current package and host structure.
+D-008, D-009 and D-014 define the current package and host structure.
 
 ## D-001: AGENTS.md files are routing-only
 
@@ -230,12 +230,13 @@ D-008 and D-009 define the current package and host structure.
   `no-comments`, `unslop`, `technical-writing`, `create-formal-verification-skill` and
   `maintain-formal-verification-skill`. A new skill is admitted when it has a distinct outcome, a
   distinct invocation, works when called on its own and has its own evidence. As in pstack, these
-  skills are user-invoked on every host: frontmatter `disable-model-invocation: true` for Claude
-  Code, Pi, Antigravity and Grok Bot, and `agents/openai.yaml` with
-  `policy.allow_implicit_invocation: false` for Codex. The lifecycle skills stay model-invocable and
-  may point to the new skills by relative link. All pstack-derived content is rewritten in this
-  package's words, host-neutral, under the existing authority rules and with no fixed model names;
-  provenance is recorded in [alignment.md](engineering/alignment.md). The repository and the package
+  skills are user-invoked: every skill carries frontmatter `disable-model-invocation: true`, which
+  Claude Code, Pi, Antigravity and Copilot CLI read, and `agents/openai.yaml` with
+  `policy.allow_implicit_invocation: false`, which Codex reads. Grok Bot's handling of the flag is
+  unverified. The lifecycle skills stay model-invocable and may point to the new skills by
+  relative link. All pstack-derived content is rewritten in this package's words, host-neutral,
+  under the existing authority rules and with no fixed model names; provenance is recorded in
+  [alignment.md](engineering/alignment.md). The repository and the package
   carry an MIT license held by LaChimere. The formal-verification skills ship as conditional
   methods, not lifecycle gates.
 - Alternatives rejected: Installing pstack alongside the package, because `poteto-mode` autonomy
@@ -245,14 +246,19 @@ D-008 and D-009 define the current package and host structure.
   router and loads linked references rarely. Model-invoked descriptions for the new skills, because
   pstack keeps them user-invoked and multi-agent skills have real cost. Copying or rewriting the
   `statechart` tooling, which stays an optional external capability.
-- Consequences: Supersedes the fixed inventory in D-008 and D-009 and the design rule that a new
-  public entry needs a prior demonstrated purpose; their other consequences stand. Distribution
-  tests list model-invoked and user-invoked skills separately, check both manual-invocation
-  mechanisms, the package license and the absence of Cursor-only names. The installed skill-creator
-  validator rejects the `disable-model-invocation` key, so new skills are validated with that key
-  removed. The manual-invocation metadata alone controls invocation; personal host guidance in
-  `config/` is unchanged, because explicit invocation and `resume-work` recall worked without it
-  and an always-loaded note would add context to every turn. Pointers from lifecycle skills stay
-  only where measurement shows an effect.
+- Consequences: Supersedes the fixed inventory in D-008 and D-009, the design rule that a new
+  public entry needs a prior demonstrated purpose, and the rule that formal verification exercise
+  maintenance after a relevant change before a reusable generator is proposed. The other
+  consequences of D-008 and D-009 stand, and so do the design's conditions for a new shared
+  resource or state mechanism.
+  Distribution tests list model-invoked and user-invoked skills separately and check both
+  manual-invocation settings, the package license and the absence of Cursor-only names and model
+  slugs. The manual-invocation metadata alone controls invocation where a host's skill loader
+  reads it; a file-backed workflow that reads `SKILL.md` directly does not enforce it. Personal
+  host guidance in `config/` is unchanged, because explicit invocation and `resume-work` recall
+  worked without it and an always-loaded note would add context to every turn. One lifecycle
+  pointer is kept: `release-and-rollout` points PR descriptions to `technical-writing`, on a 3 of 3
+  read rate and fewer hits of that skill's own writing rules; a blind ranking showed no clear
+  quality gain in English. The other measured pointers were never followed and were reverted.
 - Evidence: `evals/tests/distribution.test.ts`; Claude Code runs recorded in
   [implementation.md](engineering/implementation.md) (2026-11-28 section).

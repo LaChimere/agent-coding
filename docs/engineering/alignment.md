@@ -28,11 +28,14 @@ source and runtime evidence establish findings. PR throughput alone is not a qua
 
 Deepen an existing owner when a demonstrated gap needs more specific guidance. Add a public
 entry only under the D-014 admission rule: a distinct outcome, a distinct invocation, independent
-use and its own evidence. Acceptance, caller analysis, ownership, recovery, review, release and
-structural prevention retain their existing owners.
+use and its own evidence. Add a state mechanism only for a distinct project need, with its own
+maintenance and verification case. Acceptance, caller analysis, ownership, recovery, review,
+release and structural prevention retain their existing owners.
 
 Formal verification starts with a justified project property and coverage gap. The D-014
 formal-verification skills keep that condition and report a no-target result when none exists.
+D-014 ships them as a generator and its upkeep pass without first exercising maintenance on a
+real project.
 Scheduling, integrations and publication retain their explicit authority boundaries. Fewer
 steps are useful only when necessary depth and correctness survive; source alignment alone
 does not establish improved runtime outcomes.
@@ -41,9 +44,10 @@ does not establish improved runtime outcomes.
 
 Each skill rewrites methods from
 [pstack at `b7b93c3`](https://github.com/cursor/plugins/tree/b7b93c36be9bcc36a74db438e0fd385d660bc559/pstack)
-(2026-11-26, MIT). No pstack text is copied. Cursor tool names, paths, model slugs, autonomy rules
-and publication steps are replaced by host-neutral wording and the shared authority rules.
-Evidence for each skill is recorded in [implementation.md](implementation.md).
+(2026-11-26, MIT). The skills are written in this package's words: a check of every run of twelve
+consecutive words against the pstack sources finds none in common. Cursor tool names, paths, model
+slugs, autonomy rules and publication steps are replaced by host-neutral wording and the shared
+authority rules. Evidence for each skill is recorded in [implementation.md](implementation.md).
 
 | Capability | Owner | pstack sources | Main adaptation |
 |---|---|---|---|
@@ -57,9 +61,9 @@ Evidence for each skill is recorded in [implementation.md](implementation.md).
 | Deeper requests | `sharpen` | `skills/sharpen`, `skills/in-your-own-words` | Restatement first; preference choices stay with the user |
 | Paced explanation | `teach` | `skills/teach` | Investigation follows `understand-codebase` instead of pstack `how` and `why` |
 | Session lessons | `reflect` | `skills/reflect` | Source edits only, after approval; enforceable items to `prevent-recurring-mistakes` |
-| Comment removal | `no-comments` | `skills/no-comments`, `agents/comment-sicko.md` | No persona; flags named `RESHAPE`; fixes through `implement-task` |
-| Prose cleanup | `unslop` | `skills/unslop` | Owner-chosen style rules; Chinese catalog from observed output and Chinese style guides |
-| Technical documents | `technical-writing` | `skills/technical-writing` | Chinese rules from the Chinese copywriting guidelines and Ruan Yifeng's style guide |
+| Comment removal | `no-comments` | `skills/no-comments`, `agents/comment-sicko.md` | No persona; the worker edits an isolated copy and returns a patch; flags named `RESHAPE`; fixes through `implement-task` |
+| Prose cleanup | `unslop` | `skills/unslop` | Owner-chosen style rules; the Chinese list combines patterns seen in model output during this work with the two Chinese style guides |
+| Technical documents | `technical-writing` | `skills/technical-writing` | Chinese rules from the Chinese copywriting guidelines and Ruan Yifeng's style guide; “” quotes are the owner's choice and the ellipsis follows GB/T 15834 |
 | Formal verification creation and upkeep | `create-formal-verification-skill`, `maintain-formal-verification-skill` | Same names | `statechart` is an optional external capability; TLC is the default path |
 
 ## Supporting methods and host policy

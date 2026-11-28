@@ -16,7 +16,7 @@ agy plugin install https://github.com/LaChimere/agent-coding
 ```
 
 `agy plugin install` detects the repository's `plugins/` directory, copies `plugins/engineering`
-(all 11 skills and `references/`) into `~/.gemini/config/plugins/engineering`, and syncs it to
+(every skill and `references/`) into `~/.gemini/config/plugins/engineering`, and syncs it to
 both the Antigravity CLI (`agy plugin list --json`) and the Antigravity App (`GetAllPlugins`).
 To test an unpublished local checkout instead, run `agy plugin validate ./plugins/engineering`
 and install locally or register the local `plugins/` directory in `~/.gemini/config/plugins.json`
@@ -141,8 +141,8 @@ must say whether package auto-discovery or this explicit loading mode was exerci
 Provide the complete `plugins/engineering` tree to an authorized project folder on the Bot's
 computer, preserving `skills/` and `references/` together. Configure the Bot with the reviewed
 `config/grok-bot/INSTRUCTIONS.md`, pointing it to that package location. Native skill import,
-when available, must be checked for preservation of relative dependencies and discovery of all
-eleven entries; no universal Grok plugin installation command is asserted here.
+when available, must be checked for preservation of relative dependencies and discovery of every
+skill; no universal Grok plugin installation command is asserted here.
 
 A file-backed workflow must actually read the appropriate SKILL.md and its shared reference and
 execute the representative task. A successful file upload alone does not qualify use. Where a
@@ -161,24 +161,29 @@ the maintainer's local corrections are not another Grok run.
 
 ## User-invoked skills
 
-D-014 skills are hidden from model invocation and run when the user names them. Each host has
-its own mechanism; the package carries both forms for every such skill.
+D-014 skills are hidden from model invocation and run when the user names them. The package
+carries two forms of the same setting: frontmatter `disable-model-invocation: true` and, for Codex,
+`agents/openai.yaml` with `policy.allow_implicit_invocation: false`.
 
-| Host | Mechanism | Explicit invocation | Evidence level |
-|---|---|---|---|
-| Claude Code | Frontmatter `disable-model-invocation: true` | `/engineering:<skill>` | Discovery, explicit invocation and hidden-from-model behavior observed on 2.1.332 |
-| Codex | `agents/openai.yaml` with `policy.allow_implicit_invocation: false` | `$engineering:<skill>`; `$<skill>` for repository skills | On 0.172.0, an isolated `CODEX_HOME` install cached all 26 skills and showed only the 11 lifecycle skills to the model. With the candidate temporarily installed as the owner's plugin, `codex exec` ran `$engineering:sharpen` from the plugin cache and followed it; the install was then restored byte for byte. Repository skills in `.agents/skills` behaved the same |
-| Pi | Frontmatter `disable-model-invocation: true` | `/skill:<skill>` | With `--no-skills --skill`, Pi 1.3.0 loaded all 26 skills and its real system prompt listed only the 11 lifecycle skills; `/skill:sharpen` expanded the package skill. Pi 1.3.0's provider calls failed with `model_not_supported`; after Pi updated itself to 1.7.0, `gpt-6.1-sol` followed `/skill:sharpen` |
-| Antigravity | Frontmatter `disable-model-invocation` | `/engineering:<skill>` for plugin skills; `/<skill>` for workspace skills | An install under a temporary `HOME` listed all 26 skills and `agy plugin validate --strict` passed. With the candidate temporarily installed as the owner's plugin, the model did not list `sharpen`, `teach` or `arena`; `/sharpen` was not found, and `/engineering:sharpen` expanded the plugin skill and was followed. The install was then restored byte for byte. Workspace skills in `.agents/skills` respond to `/sharpen` |
-| Grok Bot | Frontmatter `disable-model-invocation` | Slash command | Grok 1.0.70 bundled documentation only |
-| Copilot CLI | Frontmatter `disable-model-invocation` | `/<skill>` in interactive sessions | On 1.0.117 with an isolated `COPILOT_HOME`, `copilot skill list` found all 26 skills placed in a fixture's `.agents/skills`. The model listed only the lifecycle skills, and its own attempt to call `sharpen` failed with "Skill model invocation disabled". `-p` mode did not expand `/sharpen`; an interactive session did and recorded `skill.invoked` |
+| Host | Setting it reads | Explicit invocation |
+|---|---|---|
+| Claude Code | Frontmatter | `/engineering:<skill>` |
+| Codex | `agents/openai.yaml` | `$engineering:<skill>`; `$<skill>` for repository skills |
+| Pi | Frontmatter | `/skill:<skill>` |
+| Antigravity | Frontmatter | `/engineering:<skill>` for plugin skills; `/<skill>` for workspace skills |
+| Copilot CLI | Frontmatter | `/<skill>` in interactive sessions; `-p` does not expand it |
+| Grok Bot | Unverified | Unverified |
 
-Pi's default discovery loads `~/.agents/skills` before a `--skill` package, and the first name
-wins. On the owner's machine the personal `teach` and `code-review` shadow the package's skills of
-the same name. Use the isolated `pi --no-skills --skill <package>/skills` invocation to load the
-package's versions. Claude Code keeps both names apart (`teach` and `engineering:teach`), and
-Antigravity lists the personal and package `code-review` side by side. Details and commands are in
+The setting works only where the host's own skill loader reads it. A file-backed workflow, such as
+the Grok Bot and Copilot instructions in `config/` that tell the agent to read a matching
+`SKILL.md`, does not enforce it. The checks behind this table are in
 [implementation.md](implementation.md).
+
+On Pi, default discovery loads `~/.agents/skills` before a `--skill` package, and the first name
+wins, so a personal skill with the same name as a package skill, such as `teach`, hides the
+package's version. Use the isolated `pi --no-skills --skill <package>/skills` invocation to load the
+package's versions. Claude Code keeps both names apart (`teach` and `engineering:teach`), and
+Antigravity lists a personal and a package skill of the same name side by side.
 
 ## Qualification levels
 
@@ -215,4 +220,5 @@ the guidance. Personal host preferences remain allowed under D-009; they are not
 
 `config/copilot/copilot-instructions.md` preserves the existing personal standing policy and points
 to the same engineering package. Use the host's actual supported skill/file loading mechanism.
-Native installation, discovery and behavior have not been qualified for this revision.
+Native installation and behavior have not been qualified for this revision; the discovery and
+invocation checks of the D-014 skills are recorded in [implementation.md](implementation.md).
