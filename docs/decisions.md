@@ -259,6 +259,8 @@ D-008, D-009 and D-014 define the current package and host structure.
   worked without it and an always-loaded note would add context to every turn. One lifecycle
   pointer is kept: `release-and-rollout` points PR descriptions to `technical-writing`, on a 3 of 3
   read rate and fewer hits of that skill's own writing rules; a blind ranking showed no clear
-  quality gain in English. The other measured pointers were never followed and were reverted.
+  quality gain in English. The owner kept it on 2026-11-28 because PR descriptions that follow the
+  owner-approved writing rules are the goal, so a missing English quality gain is no reason to
+  revert it. The other measured pointers were never followed and were reverted.
 - Evidence: `evals/tests/distribution.test.ts`; Claude Code runs recorded in
   [implementation.md](engineering/implementation.md) (2026-11-28 section).
