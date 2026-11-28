@@ -169,11 +169,14 @@ hosts, without evaluation runs):
     viewing tools only.
   - Pi: the real system prompt of a `--no-skills --skill` session listed only the 11 lifecycle
     skills, and `/skill:sharpen` expanded the package skill. The configured `github-copilot`
-    provider first answered `model_not_supported` for all four listed models because Pi's local
-    model catalog was stale. With the owner's go-ahead to finish the checks, `pi update --models`
-    refreshed the catalog after `models-store.json` was backed up. The configured default model,
-    `gpt-6.1-sol`, then followed `/skill:sharpen` with the restatement and deepening and left the
-    fixture unchanged. The backed-up catalog was restored and its checksum matched again.
+    provider answered `model_not_supported` for all four listed models on Pi 1.3.0. At 16:55:26
+    local time Pi installed 1.7.0 through its own update mechanism, while these checks were
+    running Pi commands and before `pi update --models` refreshed the backed-up model catalog.
+    On 1.7.0 the configured default model, `gpt-6.1-sol`, followed `/skill:sharpen` with the
+    restatement and deepening and left the fixture unchanged. The catalog was restored to its
+    backed-up checksum, and a later call on 1.7.0 with that catalog still succeeded, so the
+    upgrade, not the catalog refresh, removed the error. The upgrade to 1.7.0 was not rolled
+    back.
 - **Installed plugin path on the owner's Codex and Antigravity**, with the owner's approval to
   test on the production installs and restore them afterwards:
   - Before the test, `config.toml`, the `agent-coding` plugin cache and marketplace clone for
