@@ -167,7 +167,11 @@ hosts, without evaluation runs):
     viewing tools only.
   - Pi: the real system prompt of a `--no-skills --skill` session listed only the 11 lifecycle
     skills, and `/skill:sharpen` expanded the package skill. The configured `github-copilot`
-    provider answered `model_not_supported` for all four listed models, so no reply was observed.
+    provider first answered `model_not_supported` for all four listed models because Pi's local
+    model catalog was stale. With the owner's go-ahead to finish the checks, `pi update --models`
+    refreshed the catalog after `models-store.json` was backed up. The configured default model,
+    `gpt-6.1-sol`, then followed `/skill:sharpen` with the restatement and deepening and left the
+    fixture unchanged. The backed-up catalog was restored and its checksum matched again.
 - **Installed plugin path on the owner's Codex and Antigravity**, with the owner's approval to
   test on the production installs and restore them afterwards:
   - Before the test, `config.toml`, the `agent-coding` plugin cache and marketplace clone for
@@ -198,8 +202,10 @@ hosts, without evaluation runs):
     sharpen". It then read `sharpen/SKILL.md` and followed it.
   - Its failed reads of `.agents/references/` came from the fixture, which copied only the skill
     folders.
-  - An interactive session started under a pseudo-terminal exited during the terminal capability
-    handshake, so interactive `/sharpen` could not be run headlessly.
+  - A first interactive attempt exited at the terminal handshake because standard input was empty.
+    A Python `pty` driver then answered the terminal queries and chose the session-only folder
+    trust in the isolated home. Interactive `/sharpen` recorded a `skill.invoked` event that loaded
+    `sharpen/SKILL.md`, and the reply followed the restatement and deepening steps.
 - **Grok Bot.** Not checked, by the owner's decision.
 
 Local validation with the pinned Bun 1.4.2, run from a scratch cache because only Bun 1.4.5 was
@@ -211,10 +217,13 @@ lefthook's install, which wrote an example `lefthook.yml` at the repository root
 and the earlier `pre-commit` and `pre-push` hooks were left unchanged. `LEFTHOOK=0` before the
 install avoids this side effect.
 
-Not verified: a Pi model reply, because of the provider error; explicit invocation in an
-interactive Copilot session; any check on Grok Bot; behavior evaluation outside Claude Code,
-which the owner excluded. Single runs show each skill working on one fixture, not across
-projects. The live `~/.claude/CLAUDE.md` was not updated, and nothing is committed.
+The live `~/.claude/CLAUDE.md`, identical to `config/claude/CLAUDE.md` at the base commit, was
+backed up and replaced with the committed version, which adds only the user-invoked paragraph. A
+fresh `claude -p` session quoted that paragraph and its session-record path from the file.
+
+Not verified: any check on Grok Bot; behavior evaluation outside Claude Code, which the owner
+excluded. Single runs show each skill working on one fixture, not across projects. Session records
+of the test runs remain in each host's history.
 
 ## 2026-11-27/28 Antigravity host adapter — live installation, discovery, invocation and git-guard verified
 

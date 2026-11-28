@@ -1,10 +1,9 @@
 # Plan: expand the engineering package with pstack methods
 
-Status: implemented locally on 2026-11-28 under [D-014](../decisions.md), with behavior
-evaluated on Claude Code only, as the owner chose. Results, kept and reverted pointers, and
-unverified hosts are recorded in [implementation.md](implementation.md). Nothing is committed;
-commits, pushes, PRs, production installs and changes to live personal configuration each need
-their own authorization.
+Status: implemented on 2026-11-28 under [D-014](../decisions.md), with behavior evaluated on
+Claude Code only, as the owner chose, and basic checks on the other hosts. Results, kept and
+reverted pointers, and the remaining gaps are recorded in [implementation.md](implementation.md).
+The work is committed and submitted for review; merging needs its own authorization.
 
 ## Goal
 
@@ -329,7 +328,5 @@ Also run the installed skill-creator validator on each new skill.
 
 ## Open items for the owner
 
-1. Authorization for commits, PRs and the live `~/.claude/CLAUDE.md` update. Implementation
-   was authorized on 2026-11-28.
-2. A Pi model reply. Only the `github-copilot` provider is logged in, and it rejected every listed
-   model. Another provider login, or restored model access, is the owner's to set up.
+1. Review and merge of the pull request. Implementation, the commits, the pull request and the
+   live `~/.claude/CLAUDE.md` update were authorized on 2026-11-28 and are done.
