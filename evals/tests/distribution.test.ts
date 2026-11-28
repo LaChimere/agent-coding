@@ -49,6 +49,73 @@ const userInvokedSkills = [
   'technical-writing',
   'unslop',
 ];
+// Cursor's pstack setup references these; they mean nothing on the package's hosts.
+const cursorOnlyReference =
+  /\.cursor\/|\bcursor-team-kit\b|\bpstack-models\b|\bpoteto-mode\b|\bgeneralPurpose\b|\bAskQuestion\b|environment: "cloud"|\bbugbot\b/iu;
+// A model slug: a family with a version-bearing suffix, an o-series slug or a bare Claude tier.
+const modelSlug =
+  /\b(?:claude|gemini|grok|gpt|composer)-(?=[a-z0-9.-]*\d)[a-z0-9][a-z0-9.-]*|\bo[1-9]-(?:mini|pro)\b|\b(?:opus|sonnet|haiku)\b/iu;
+
+// Bun keeps the last of duplicate keys while other hosts' parsers reject them, so reject them here.
+function parseUniqueYaml(text: string, label: string): unknown {
+  const scopes: { indent: number; keys: Set<string> }[] = [];
+
+  for (const line of text.split('\n')) {
+    const match = line.match(/^( *)([\w-]+):/u);
+
+    if (match === null) {
+      continue;
+    }
+
+    const indent = match[1]?.length ?? 0;
+    const key = match[2] ?? '';
+
+    while ((scopes.at(-1)?.indent ?? -1) > indent) {
+      scopes.pop();
+    }
+
+    if (scopes.at(-1)?.indent !== indent) {
+      scopes.push({ indent, keys: new Set() });
+    }
+
+    const keys = scopes.at(-1)?.keys;
+
+    if (keys?.has(key)) {
+      throw new Error(`${label} repeats the key ${key}`);
+    }
+
+    keys?.add(key);
+  }
+
+  return Bun.YAML.parse(text);
+}
+
+async function skillFrontmatter(skill: string): Promise<Record<string, unknown>> {
+  const path = resolve(repository, 'plugins/engineering/skills', skill, 'SKILL.md');
+  const block = (await Bun.file(path).text()).match(/^---\n([\s\S]*?)\n---\n/u)?.[1];
+
+  if (block === undefined) {
+    throw new Error(`${skill}/SKILL.md has no frontmatter`);
+  }
+
+  return parseUniqueYaml(block, `${skill}/SKILL.md`) as Record<string, unknown>;
+}
+
+async function codexImplicitInvocation(skill: string): Promise<unknown> {
+  const file = Bun.file(
+    resolve(repository, 'plugins/engineering/skills', skill, 'agents/openai.yaml'),
+  );
+
+  if (!(await file.exists())) {
+    return undefined;
+  }
+
+  const metadata = parseUniqueYaml(await file.text(), `${skill}/agents/openai.yaml`) as {
+    policy?: Record<string, unknown>;
+  };
+
+  return metadata.policy?.['allow_implicit_invocation'];
+}
 
 test('Codex and Claude catalogs distribute the same local plugin roots', async () => {
   const directories = await readdir(resolve(repository, 'plugins'), { withFileTypes: true });
@@ -108,35 +175,76 @@ test('the engineering package exposes the complete approved skill set to Pi and 
 });
 
 test.each(userInvokedSkills)(
-  'user-invoked skill %s is hidden from model invocation on every host mechanism',
+  'user-invoked skill %s opts out of model invocation in frontmatter and Codex policy',
   async (skill) => {
-    const root = resolve(repository, 'plugins/engineering/skills', skill);
-    const document = await Bun.file(resolve(root, 'SKILL.md')).text();
-    const frontmatter = document.match(/^---\n([\s\S]*?)\n---\n/u)?.[1] ?? '';
-    const policy = await Bun.file(resolve(root, 'agents/openai.yaml')).text();
+    const metadata = await skillFrontmatter(skill);
+    const implicitInvocation = await codexImplicitInvocation(skill);
 
-    expect(frontmatter).toMatch(/^disable-model-invocation: true$/mu);
-    expect(policy).toMatch(/^policy:\n {2}allow_implicit_invocation: false$/mu);
+    expect(metadata['disable-model-invocation']).toBe(true);
+    expect(implicitInvocation).toBe(false);
   },
 );
 
-test.each(modelInvokedSkills)('lifecycle skill %s stays model-invocable', async (skill) => {
-  const root = resolve(repository, 'plugins/engineering/skills', skill);
+test.each(modelInvokedSkills)(
+  'lifecycle skill %s keeps model invocation enabled',
+  async (skill) => {
+    const metadata = await skillFrontmatter(skill);
+    const implicitInvocation = await codexImplicitInvocation(skill);
 
-  expect(await Bun.file(resolve(root, 'SKILL.md')).text()).not.toContain(
-    'disable-model-invocation',
-  );
-  expect(await Bun.file(resolve(root, 'agents/openai.yaml')).exists()).toBeFalse();
+    expect(metadata['disable-model-invocation'] ?? false).toBe(false);
+    expect(implicitInvocation ?? true).toBe(true);
+  },
+);
+
+test.each([
+  '~/.cursor/rules/pstack-models.mdc',
+  'install cursor-team-kit',
+  'subagent_type: "generalPurpose"',
+  'call AskQuestion first',
+  'environment: "cloud"',
+  'wait for BugBot',
+  'follow poteto-mode',
+])('the Cursor-only guard flags %p', (text) => {
+  expect(cursorOnlyReference.test(text)).toBeTrue();
 });
 
-test('the engineering package carries no Cursor-only names, paths or model slugs', async () => {
+test.each([
+  'claude-opus-4-5',
+  'claude-4.5-sonnet',
+  'gemini-2.5-pro',
+  'gpt-5',
+  'gpt-5.1-codex',
+  'grok-4',
+  'grok-code-fast-1',
+  'composer-1',
+  'o3-mini',
+  'Sonnet',
+])('the model-slug guard flags %p', (text) => {
+  expect(modelSlug.test(text)).toBeTrue();
+});
+
+test.each([
+  'Claude Code',
+  '.claude-plugin/plugin.json',
+  'claude-code',
+  'Grok Bot',
+  'grok-bot',
+  'gemini-cli',
+  'move the cursor',
+  'the pstack `statechart` skill',
+])('the Cursor-only and model-slug guards allow %p', (text) => {
+  expect(cursorOnlyReference.test(text)).toBeFalse();
+  expect(modelSlug.test(text)).toBeFalse();
+});
+
+test('the engineering package names no Cursor-only resources or model slugs', async () => {
   const root = resolve(repository, 'plugins/engineering');
-  const cursorOnly =
-    /\.cursor\/|\bcursor-team-kit\b|pstack-models|\bgeneralPurpose\b|\bAskQuestion\b|environment: "cloud"|\bBugbot\b|\b(?:claude|gemini|grok)-[a-z0-9]+-[0-9][a-z0-9-]*\b/u;
   const offenders: string[] = [];
 
-  for await (const path of new Bun.Glob('**/*.{md,yaml,json}').scan({ cwd: root, dot: true })) {
-    if (cursorOnly.test(await Bun.file(resolve(root, path)).text())) {
+  for await (const path of new Bun.Glob('**/*').scan({ cwd: root, dot: true })) {
+    const text = await Bun.file(resolve(root, path)).text();
+
+    if (cursorOnlyReference.test(text) || modelSlug.test(text)) {
       offenders.push(path);
     }
   }
