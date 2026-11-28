@@ -7,10 +7,6 @@ Check each command's actual source path: Pi can discover user `.agents/skills` e
 agent directory, and duplicate names can shadow this package. For an isolated invocation, use
 `--no-skills --skill` with the complete installed package's `skills` directory. Preserve its sibling
 references. Do not remove or overwrite other packages to resolve a collision without permission.
-The package's user-invoked skills, listed in its README, run when the user names them, for
-example `/skill:resume-work`, or when a lifecycle skill links to one. Pi keeps session records in
-`~/.pi/agent/sessions/<slug>/`, where `<slug>` is the workspace path without its leading `/`,
-with each `/` replaced by `-` and `--` added at both ends.
 
 Use Pi's native session, print/JSON, RPC or SDK interface as appropriate. A method that benefits
 from independent work does not imply that a delegation extension exists. Inspect available tools

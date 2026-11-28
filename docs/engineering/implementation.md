@@ -10,8 +10,7 @@ distribution tests can be rerun; they do not make the separate native and review
 Decided in [D-014](../decisions.md). Added
 fifteen user-invoked skills, each with `disable-model-invocation: true` and
 `agents/openai.yaml` (`policy.allow_implicit_invocation: false`); an MIT `LICENSE` at the
-repository root and in the package; and user-invocable notes with session-record locations in the
-host configuration files. The owner limited behavior evaluation to Claude Code.
+repository root and in the package. The owner limited behavior evaluation to Claude Code.
 
 Structural checks:
 
@@ -88,14 +87,17 @@ permission mode, the candidate package loaded with `--plugin-dir` and the instal
 - **Same-name `teach`.** The session init listed both `teach` (the owner's personal skill) and
   `engineering:teach`, and `/engineering:teach` loaded the package skill from the candidate path,
   so the package skill is not shadowed on Claude Code.
-- **Routing text.** With the candidate `config/claude/CLAUDE.md` appended through
-  `--append-system-prompt-file`, the model quoted the new user-invoked paragraph, gave the
-  `~/.claude/projects/<slug>/<session>.jsonl` session-record path, and still selected
-  `understand-codebase` (2 of 2) or no skill (2 of 2) for natural requests, reading no
-  user-invoked skill. An earlier attempt that placed the file as the fixture's project
-  `CLAUDE.md` showed that the project file was not loaded in these scratch `-p` runs; no
-  user-invoked skill was read in those six runs. Their logs were deleted by mistake before the
-  rerun, so only this summary and their working directories remain.
+- **Host guidance note, later reverted.** A draft added a paragraph to the five `config/` host
+  guidance files naming the user-invoked skills and each host's session-record location. With it
+  appended through `--append-system-prompt-file`, the model quoted the paragraph and still
+  selected `understand-codebase` (2 of 2) or no skill (2 of 2) for natural requests. An earlier
+  attempt that placed the file as the fixture's project `CLAUDE.md` showed that the project file
+  was not loaded in these scratch `-p` runs; no user-invoked skill was read in those six runs.
+  Their logs were deleted by mistake before the rerun, so only this summary and their working
+  directories remain. The paragraph was then reverted: the smoke runs and host checks had already
+  invoked the skills explicitly under the old guidance, `resume-work` recall found the earlier
+  Claude session without a path note, and the note would add always-loaded context for skills
+  meant to cost none.
 - **Independent reviews** (fresh-context read-only subagents, given the files and none of the
   implementing agent's conclusions):
   - Smoke grading against each SKILL.md contract: 14 PASS, 1 PARTIAL, 0 FAIL. `figure-it-out` was
@@ -189,8 +191,8 @@ hosts, without evaluation runs):
     showed its Git marketplace source and 11 cached skills. The worktree source was left in
     place. Session records of these runs stay in each host's history.
 - **Same-name skills on Pi.** Following the owner's decision to keep the name `teach`, Pi users
-  load the package's versions with the isolated `--no-skills --skill` form recorded in
-  `config/pi/AGENTS.md` and [hosts.md](hosts.md).
+  load the package's versions with the isolated `--no-skills --skill` form that
+  `config/pi/AGENTS.md` and [hosts.md](hosts.md) already describe.
 - **Copilot CLI 1.0.117**, with an isolated `COPILOT_HOME` that held no credentials, the login
   coming from the system keychain, and the 26 skills placed in a fixture's `.agents/skills`.
   - `copilot skill list` listed all 26 as project skills. Its changelog records "Fully honor the
@@ -217,9 +219,9 @@ lefthook's install, which wrote an example `lefthook.yml` at the repository root
 and the earlier `pre-commit` and `pre-push` hooks were left unchanged. `LEFTHOOK=0` before the
 install avoids this side effect.
 
-The live `~/.claude/CLAUDE.md`, identical to `config/claude/CLAUDE.md` at the base commit, was
-backed up and replaced with the committed version, which adds only the user-invoked paragraph. A
-fresh `claude -p` session quoted that paragraph and its session-record path from the file.
+The live `~/.claude/CLAUDE.md` briefly carried that paragraph, and a fresh `claude -p` session
+quoted it. With the paragraph reverted, the live file was restored from its backup and again
+matches `config/claude/CLAUDE.md` (checksum `7cc235f…`).
 
 Not verified: any check on Grok Bot; behavior evaluation outside Claude Code, which the owner
 excluded. Single runs show each skill working on one fixture, not across projects. Session records

@@ -250,7 +250,9 @@ D-008 and D-009 define the current package and host structure.
   tests list model-invoked and user-invoked skills separately, check both manual-invocation
   mechanisms, the package license and the absence of Cursor-only names. The installed skill-creator
   validator rejects the `disable-model-invocation` key, so new skills are validated with that key
-  removed. Personal routing tables list the new skills as user-invocable rather than as reading
-  instructions. Pointers from lifecycle skills stay only where measurement shows an effect.
+  removed. The manual-invocation metadata alone controls invocation; personal host guidance in
+  `config/` is unchanged, because explicit invocation and `resume-work` recall worked without it
+  and an always-loaded note would add context to every turn. Pointers from lifecycle skills stay
+  only where measurement shows an effect.
 - Evidence: `evals/tests/distribution.test.ts`; Claude Code runs recorded in
   [implementation.md](engineering/implementation.md) (2026-11-28 section).
