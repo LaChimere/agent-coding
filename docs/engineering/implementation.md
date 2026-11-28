@@ -309,6 +309,10 @@ of the new runs. Their reports were returned in the session; the grader's log ex
   `code-review` collisions. `agy plugin validate --strict --json` (`hosts/agy-validate-rewrite.json`)
   found 26 skills and no errors. No manual-invocation metadata changed in the rewrite.
 
+The package version moves from 1.0.0 to 1.1.0 in `package.json` and the three native manifests,
+so installed plugin caches pick up the new skills; the change adds skills and breaks no existing
+entry point.
+
 Validation of the final tree with Bun 1.4.2: `git diff --check`; `bun run start -- validate` (22
 cases, 48 checks); `bun run check` (exit 0; 8 `useLiteralKeys` infos, one more than before, from the
 test's bracket access to `allow_implicit_invocation`, which the naming rule requires); `bun run

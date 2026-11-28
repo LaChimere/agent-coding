@@ -1,6 +1,6 @@
 {
   "name": "@lachimere/agent-coding-engineering",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Portable engineering methods with evidence and native host execution.",
   "license": "MIT",
   "private": true,
