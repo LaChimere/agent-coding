@@ -71,7 +71,7 @@ delays the first paint".
    and holds the number, and in both cases the error and work counts match the start and the checks
    pass. A change that makes work fail early is no gain. Otherwise undo exactly this change,
    including one that merely might help. When ideas were built in parallel, measure each one you
-   keep on top of the changes already kept, and undo it if its gain no longer shows.
+   keep on top of the changes already kept, and undo it if it no longer meets this test.
 4. Add the row to the log.
 
 Keep a change only on measured evidence, never because the code looks faster. After several

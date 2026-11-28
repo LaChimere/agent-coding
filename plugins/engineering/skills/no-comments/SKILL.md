@@ -50,9 +50,11 @@ reaches outside the scope or misstates a flag's reason, and run the worker once 
 named. If the second patch is also rejected, report the pass as failed and leave the tree unchanged.
 Restore a deleted comment only with exact evidence that it matches an exception. Check every kept
 comment the same way, and delete one that matches no exception or that you cannot settle. Apply the
-suppression rule to any suppression in scope that the worker missed. In the copy, with the patch
-applied, run the project's build, lint and tests that cover the scope. Apply the patch to the real
-tree only when they pass; otherwise restore the comments the failures trace to, or report them.
+suppression rule to any suppression in scope that the worker missed. In the copy, run the project's
+build, lint and tests that cover the scope before and after applying the patch. A new failure from a
+deleted suppression that carries a `RESHAPE` flag is expected: keep the deletion and list the
+failure with its flag. Restore the comments that any other new failure traces to. Apply the patch to
+the real tree once no other new failure remains, and report the failures that existed before.
 
 ## Act on the flags
 

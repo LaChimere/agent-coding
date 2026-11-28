@@ -31,7 +31,7 @@ const modelInvokedSkills = [
   'understand-codebase',
   'verify-behavior',
 ];
-// D-014: pstack-derived methods are user-invoked on every host.
+// D-014: pstack-derived methods are user-invoked.
 const userInvokedSkills = [
   'arena',
   'create-formal-verification-skill',

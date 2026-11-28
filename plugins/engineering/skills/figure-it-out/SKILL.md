@@ -73,8 +73,8 @@ authorized work. A later run reads the latest rows first and appends a `start` r
 
 Check the whole result against the done condition on the real product. Compare the log with what
 happened in the session; a choice, undo, change of direction or gate fix that is missing from the
-log is a gap, so add its row, and fix any row whose evidence pointer does not resolve. Then have a
-fresh-context reader review the log and the diff, as in
+log is a gap, so add its row, and append a corrected row for any row whose evidence pointer does not
+resolve. Then have a fresh-context reader review the log and the diff, as in
 [independent review](../../references/independent-review.md), and report what it says the human
 should look at. Your own reading does not count as that review, and without delegation say the
 review was not independent. Send a correction that keeps recurring to

@@ -32,9 +32,10 @@ A check is both updated and bug when realigning it with the code makes the prope
 
 ## What you may edit
 
-Your edits are limited to the verification: models, harnesses, property files and the project skill.
+Your edits are limited to the verification: models, harnesses, property files, the project skill,
+and proof annotations in product files that leave runtime behavior unchanged, each file listed.
 Product code changes only when the user asks; the one exception is a temporary break in a scratch
-copy that includes the uncommitted verification files, as in step 5. When the current code fails a property, keep the property and the model as they
+copy that includes every uncommitted file, as in step 5. When the current code fails a property, keep the property and the model as they
 are and report the failure. Correcting a verification that does not describe the code repairs drift;
 it does not relax the property.
 
@@ -71,8 +72,8 @@ it does not relax the property.
    down the property before and after with the evidence for the change. Leave the bounds alone
    unless the change invalidates them, and report any bound you lowered.
 5. **Rerun and decide.** Make breaks and runs on older commits only in a scratch copy that includes
-   the uncommitted verification files, never in the user's tree, and apply every repair to the files
-   in the user's tree.
+   every uncommitted file, never in the user's tree, and apply every repair to the files in the
+   user's tree.
    - **Pass with full exploration:** break the new code in the way the property protects against,
      for example by removing a new check or swapping two new steps, and confirm that the check
      reports it. If it does not, the verification is too weak: repair it and repeat this step. Then
@@ -87,7 +88,7 @@ it does not relax the property.
      error:** the check is blocked. Report the cause.
 6. **Update the project skill.** Update the covered code, commands, bounds, assumptions, open
    findings and sync commit, setting the sync commit to the commit you checked. Keep a distinct
-   result and exit status for each outcome the tool can tell apart, as
+   result and exit status for each result the tool can tell apart, as
    `create-formal-verification-skill` requires. A blocked check keeps its old sync
    commit; say so. Then follow the project skill once as a later agent would.
 

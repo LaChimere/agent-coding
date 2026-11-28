@@ -44,8 +44,8 @@ it.
   be interrupted in the check cannot be interrupted in the code. Names come from the repository.
 - **Shown to fail.** Show each property failing on a broken version of the code it protects, for
   example with a check removed or two steps swapped. A check that was never seen failing proves
-  nothing. Make every temporary break in a scratch copy that includes the uncommitted verification
-  files, never in the user's tree.
+  nothing. Make every temporary break in a scratch copy that includes every uncommitted file, never
+  in the user's tree.
 - **Findings reported as found.** When the current code violates the property, report the
   counterexample in the code's terms. Keep the property and the model as they are instead of relaxing
   them until the check passes, and change product code only when the user asks. Proof annotations a
@@ -73,21 +73,22 @@ verified code, run the check, read which of the five results it got, separate a 
 from a mistake in the model, and adjust the verification after a deliberate change. The check's
 command prints a distinct result and exit status for each result the tool can tell apart, and reports
 the bound and whether exploration finished. Include the coverage record, the sync commit and the
-counterexample of each open finding. Make the command check each property separately or continue
-past a known counterexample, so an open finding hides no new failure. Tell the next agent to
+counterexample of each open finding. Make the command check each property separately and, where the
+tool allows, continue past a known counterexample, so an open finding hides no new failure. Tell the next agent to
 advance the sync commit only once it has confirmed that the verification still matches the code at
 that commit. Use the repository's real commands, paths and nouns, with no placeholders.
 
 For a TLA+ model, the pstack `statechart` skill can draw TLC results as Mermaid state charts with the
 shortest path to each failure. It runs its own TLC passes, bounded after the first failure, so its
 output explains a result while the plain TLC run stays the verdict, and a rule it lists as not
-checked is not a pass. Mention it in the generated skill only as optional, copy none of its
+checked is not a pass. Its first run installs Java and TLC over the network, which needs the same
+approval as any other install. Mention it in the generated skill only as optional, copy none of its
 commands, and make the plain TLC command the default.
 
 ## Prove the skill before handing off
 
-In a scratch copy that includes the uncommitted verification files, follow the generated skill once
-as a later agent would, on a temporary edit to the real code that violates the property. The check
+In a scratch copy that includes every uncommitted file, follow the generated skill once as a later
+agent would, on a temporary edit to the real code that violates the property. The check
 must report the violation. Remove the temporary edit and confirm the check returns to its earlier
 result: a pass, or failure only on the findings you report. A generated skill that never ran is a
 draft. If it misses the violation or a step fails to run, change the skill or the verification and
