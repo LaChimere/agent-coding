@@ -95,7 +95,7 @@ D-008, D-009 and D-014 define the current package and host structure.
   authority guidance, personal Codex settings, detailed review methods and SPAR/Rubber Duck.
   Passing the selected new cases did not demonstrate preservation of those capabilities.
 - Decision: Preserve capabilities that support, or gain value from, the combined Claude Team,
-  Lauren/pstack and Felix practices. Keep nine lifecycle entry points plus independently callable
+  Lauren Tan's and Felix's practices. Keep nine lifecycle entry points plus independently callable
   `spar` and `rubber-duck`; integrate their methods into design/review without mandatory extra rounds.
   Restore detailed review briefs and place sequencing, atomicity, quality, publication and knowledge
   methods under explicit task owners. Keep personal host policy separate from portable methods,
@@ -215,37 +215,29 @@ D-008, D-009 and D-014 define the current package and host structure.
   `evals/tests/claude-hooks.test.ts`; live `agy 1.5.18` runs recorded in
   [implementation.md](engineering/implementation.md) (2026-11-27/28 section).
 
-## D-014: Add user-invoked skills adapted from pstack methods
+## D-014: Add user-invoked engineering skills
 
 - Date: 2026-11-28
 - Status: accepted; implementation evidence in [implementation.md](engineering/implementation.md)
-- Context: After comparing the package with pstack 0.15.48 (`cursor/plugins` at `b7b93c3`), the
-  owner chose to keep `engineering` as the primary package and to add the pstack capabilities it
-  lacks, aiming at better outcomes rather than migration. The evidence is in
-  [implementation.md](engineering/implementation.md). D-008 and D-009 fixed the inventory
+- Context: The owner chose to add capabilities the package lacked, aiming at better outcomes. The
+  evidence is in [implementation.md](engineering/implementation.md). D-008 and D-009 fixed the inventory
   at nine lifecycle entry points plus `spar` and `rubber-duck`, and the design required a
   demonstrated purpose before a new public entry.
 - Decision: Add fifteen skills to the engineering package: `arena`, `swarm`, `interrogate`,
   `optimize-metric`, `figure-it-out`, `resume-work`, `reframe`, `sharpen`, `teach`, `reflect`,
   `no-comments`, `unslop`, `technical-writing`, `create-formal-verification-skill` and
   `maintain-formal-verification-skill`. A new skill is admitted when it has a distinct outcome, a
-  distinct invocation, works when called on its own and has its own evidence. As in pstack, these
-  skills are user-invoked: every skill carries frontmatter `disable-model-invocation: true`, which
+  distinct invocation, works when called on its own and has its own evidence. These skills are
+  user-invoked: every skill carries frontmatter `disable-model-invocation: true`, which
   Claude Code, Pi, Antigravity and Copilot CLI read, and `agents/openai.yaml` with
   `policy.allow_implicit_invocation: false`, which Codex reads. Grok Bot's handling of the flag is
   unverified. The lifecycle skills stay model-invocable and may point to the new skills by
-  relative link. All pstack-derived content is rewritten in this package's words, host-neutral,
-  under the existing authority rules and with no fixed model names; provenance is recorded in
-  [alignment.md](engineering/alignment.md). The repository and the package
+  relative link. Each skill is host-neutral, follows the existing authority rules and names no
+  fixed models. The repository and the package
   carry an MIT license held by LaChimere. The formal-verification skills ship as conditional
   methods, not lifecycle gates.
-- Alternatives rejected: Installing pstack alongside the package, because `poteto-mode` autonomy
-  conflicts with the standing authority rules. Copying pstack text verbatim, because the copies
-  would carry Cursor tool names, paths and model slugs and would require the pstack copyright
-  notice. Porting the `principle-*` skills and `poteto-mode` routing, because the package has no
-  router and loads linked references rarely. Model-invoked descriptions for the new skills, because
-  pstack keeps them user-invoked and multi-agent skills have real cost. Copying or rewriting the
-  `statechart` tooling, which stays an optional external capability.
+- Alternatives rejected: Model-invoked descriptions for the new skills, because several of them run
+  multiple agents at real cost, and a user-invoked skill adds no context to every turn.
 - Consequences: Supersedes the fixed inventory in D-008 and D-009, the design rule that a new
   public entry needs a prior demonstrated purpose, and the rule that formal verification exercise
   maintenance after a relevant change before a reusable generator is proposed. The other

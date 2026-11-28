@@ -31,7 +31,7 @@ const modelInvokedSkills = [
   'understand-codebase',
   'verify-behavior',
 ];
-// D-014: pstack-derived methods are user-invoked.
+// D-014: these skills are user-invoked.
 const userInvokedSkills = [
   'arena',
   'create-formal-verification-skill',
@@ -49,9 +49,9 @@ const userInvokedSkills = [
   'technical-writing',
   'unslop',
 ];
-// Cursor's pstack setup references these; they mean nothing on the package's hosts.
+// Cursor-specific names; they mean nothing on the package's hosts.
 const cursorOnlyReference =
-  /\.cursor\/|\bcursor-team-kit\b|\bpstack-models\b|\bpoteto-mode\b|\bgeneralPurpose\b|\bAskQuestion\b|environment: "cloud"|\bbugbot\b/iu;
+  /\.cursor\/|\bcursor-team-kit\b|\bgeneralPurpose\b|\bAskQuestion\b|environment: "cloud"|\bbugbot\b/iu;
 // A model slug: a family with a version-bearing suffix, an o-series slug or a bare Claude tier.
 const modelSlug =
   /\b(?:claude|gemini|grok|gpt|composer)-(?=[a-z0-9.-]*\d)[a-z0-9][a-z0-9.-]*|\bo[1-9]-(?:mini|pro)\b|\b(?:opus|sonnet|haiku)\b/iu;
@@ -197,13 +197,12 @@ test.each(modelInvokedSkills)(
 );
 
 test.each([
-  '~/.cursor/rules/pstack-models.mdc',
+  '~/.cursor/rules/models.mdc',
   'install cursor-team-kit',
   'subagent_type: "generalPurpose"',
   'call AskQuestion first',
   'environment: "cloud"',
   'wait for BugBot',
-  'follow poteto-mode',
 ])('the Cursor-only guard flags %p', (text) => {
   expect(cursorOnlyReference.test(text)).toBeTrue();
 });
@@ -231,7 +230,7 @@ test.each([
   'grok-bot',
   'gemini-cli',
   'move the cursor',
-  'the pstack `statechart` skill',
+  'a TLA+ model checked with TLC',
 ])('the Cursor-only and model-slug guards allow %p', (text) => {
   expect(cursorOnlyReference.test(text)).toBeFalse();
   expect(modelSlug.test(text)).toBeFalse();

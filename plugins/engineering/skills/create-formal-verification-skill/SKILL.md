@@ -74,16 +74,10 @@ from a mistake in the model, and adjust the verification after a deliberate chan
 command prints a distinct result and exit status for each result the tool can tell apart, and reports
 the bound and whether exploration finished. Include the coverage record, the sync commit and the
 counterexample of each open finding. Make the command check each property separately and, where the
-tool allows, continue past a known counterexample, so an open finding hides no new failure. Tell the next agent to
-advance the sync commit only once it has confirmed that the verification still matches the code at
-that commit. Use the repository's real commands, paths and nouns, with no placeholders.
-
-For a TLA+ model, the pstack `statechart` skill can draw TLC results as Mermaid state charts with the
-shortest path to each failure. It runs its own TLC passes, bounded after the first failure, so its
-output explains a result while the plain TLC run stays the verdict, and a rule it lists as not
-checked is not a pass. Its first run installs Java and TLC over the network, which needs the same
-approval as any other install. Mention it in the generated skill only as optional, copy none of its
-commands, and make the plain TLC command the default.
+tool allows, continue past a known counterexample, so an open finding hides no new failure. Tell the
+next agent to advance the sync commit only once it has confirmed that the verification still
+matches the code at that commit. Use the repository's real commands, paths and nouns, with no
+placeholders.
 
 ## Prove the skill before handing off
 

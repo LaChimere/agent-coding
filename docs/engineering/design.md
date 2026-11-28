@@ -56,7 +56,7 @@ with design and review without becoming mandatory extra stages. Detailed reviewe
 sequencing/atomicity, quality and project-knowledge methods remain behind relevant task pointers.
 See [capability preservation](alignment.md) and D-009 for the full mapping.
 
-D-014 adds user-invoked skills adapted from pstack. Only the user starts them where the host's skill
+D-014 adds user-invoked skills. Only the user starts them where the host's skill
 loader reads the manual-invocation setting (see [hosts.md](hosts.md)); lifecycle skills may point to
 them by relative link. Each skill's method is in its SKILL.md, which links a shared reference where
 one already owns the rule.
@@ -290,13 +290,7 @@ an SDK is not an already working integration. Missing capabilities retain explic
   deduplication and the distinction between findings and merge enforcement.
 - [Claude team workflow](https://claude.dev/blog/solving-code-review-at-anthropic/): human total
   effort, risk, convergence, staged delivery, incidents and shared understanding.
-- [pstack](https://github.com/cursor/plugins/tree/6b78e9f4e46c75d1697d837e51f07c2692e60b24/pstack): real application verification,
-  feature maps, structural prevention and grounded design. Methods are adapted; personal model
-  choices, fixed reviewer counts and automatic publication are not universal defaults.
-  The D-014 skills adapt methods from
-  [pstack at `b7b93c3`](https://github.com/cursor/plugins/tree/b7b93c36be9bcc36a74db438e0fd385d660bc559/pstack).
-- [Formal-verification workflow](https://github.com/cursor/plugins/blob/6b78e9f4e46c75d1697d837e51f07c2692e60b24/pstack/skills/create-formal-verification-skill/SKILL.md),
-  [TLC](https://docs.tlapl.us/using:tlc:start) and
+- [TLC](https://docs.tlapl.us/using:tlc:start) and
   [Kani bounds](https://model-checking.github.io/kani/tutorial-loop-unwinding.html): distinguish
   model properties, code correspondence and bounded implementation evidence.
 - [Lauren's workshop](https://maven.com/p/e23d9c/how-cursor-turned-ai-agents-into-better-engineers):

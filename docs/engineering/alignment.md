@@ -11,12 +11,12 @@ unrelated passing case does not establish preservation. Current acceptance is tr
 | Engineering delivery | `implement-task`, `code-review`, `release-and-rollout` and continuous work compose verification, review, approval and learning | Actual review, authorization, rollout and recovery episodes; total human effort where measured | [Claude team workflow](https://claude.dev/blog/solving-code-review-at-anthropic/) |
 | Review decisions | `code-review` selects applicable methods, verifies candidates against trusted policy and deduplicates findings | Supported findings, valid counterexamples and policy-source checks; findings remain separate from merge approval | [Review methodology](https://code.claude.com/docs/en/code-review) |
 | Focused working context | Host standing rules remain available; task-specific methods load when needed | Runnable verification and fresh-context handoff with preserved constraints | [Working practices](https://code.claude.com/docs/en/best-practices) |
-| Structural prevention | `prevent-recurring-mistakes` and change quality prefer ownership, types and executable checks before judgment guidance | Prior failure rejected and valid behavior accepted; registry and faulty-verifier controls | [Lauren Tan’s inverse-pyramid model](https://x.com/poteto/status/2111133080526495985), [structural correction](https://github.com/cursor/plugins/blob/6b78e9f4e46c75d1697d837e51f07c2692e60b24/pstack/skills/correct/SKILL.md) |
-| Project verification | Creation and maintenance skills drive the actual product and maintain its feature map | Cold-start journeys, drift and regression cases, retained evidence after cleanup | [Verification creation](https://github.com/cursor/plugins/blob/6b78e9f4e46c75d1697d837e51f07c2692e60b24/pstack/skills/create-verification-skill/SKILL.md), [maintenance](https://github.com/cursor/plugins/blob/6b78e9f4e46c75d1697d837e51f07c2692e60b24/pstack/skills/maintain-verification-skill/SKILL.md) |
-| Grounded design | `understand-codebase` and `design-solution` recover rationale, inspect callers, examine existing solutions when evidence is insufficient and test consequential alternatives | Source-grounded choices, applicability and adoption boundaries, interfaces, ownership and experiments; SPAR and Rubber Duck when applicable | [Architecture method](https://github.com/cursor/plugins/blob/6b78e9f4e46c75d1697d837e51f07c2692e60b24/pstack/skills/architect/SKILL.md); [existing-solution method](../../plugins/engineering/skills/design-solution/SKILL.md#examine-existing-solutions) |
-| Performance conclusions | `performance-evidence` is shared by design, implementation, verification and review | Actual completed work, correct outputs, relevant conditions, variability and end-to-end meaning; misleading and valid controls | [Benchmark method](https://github.com/cursor/plugins/blob/6b78e9f4e46c75d1697d837e51f07c2692e60b24/pstack/skills/benchmark-checklist/SKILL.md) |
-| Empirical assumptions | `assumption-checking` follows real versions, state owners and consumers | A reachable defect or concrete counterevidence, without invented callers or unnecessary probes | [Boundary analysis](https://github.com/cursor/plugins/blob/6b78e9f4e46c75d1697d837e51f07c2692e60b24/pstack/skills/blast-radius/SKILL.md) |
-| Human decisions | The shared working agreement makes every pending choice understandable in the current response | Older unresolved choices, options, consequences, evidence and unknowns; no fabricated approval when settled | [Decision handoff](https://github.com/cursor/plugins/blob/6b78e9f4e46c75d1697d837e51f07c2692e60b24/pstack/skills/ketchup/SKILL.md) |
+| Structural prevention | `prevent-recurring-mistakes` and change quality prefer ownership, types and executable checks before judgment guidance | Prior failure rejected and valid behavior accepted; registry and faulty-verifier controls | [Lauren Tan’s inverse-pyramid model](https://x.com/poteto/status/2111133080526495985) |
+| Project verification | Creation and maintenance skills drive the actual product and maintain its feature map | Cold-start journeys, drift and regression cases, retained evidence after cleanup | — |
+| Grounded design | `understand-codebase` and `design-solution` recover rationale, inspect callers, examine existing solutions when evidence is insufficient and test consequential alternatives | Source-grounded choices, applicability and adoption boundaries, interfaces, ownership and experiments; SPAR and Rubber Duck when applicable | [Existing-solution method](../../plugins/engineering/skills/design-solution/SKILL.md#examine-existing-solutions) |
+| Performance conclusions | `performance-evidence` is shared by design, implementation, verification and review | Actual completed work, correct outputs, relevant conditions, variability and end-to-end meaning; misleading and valid controls | — |
+| Empirical assumptions | `assumption-checking` follows real versions, state owners and consumers | A reachable defect or concrete counterevidence, without invented callers or unnecessary probes | — |
+| Human decisions | The shared working agreement makes every pending choice understandable in the current response | Older unresolved choices, options, consequences, evidence and unknowns; no fabricated approval when settled | — |
 | Useful ambition | Design, verification and independent review consider better outcomes, professional methods and outside evidence within selected scope | Scope-preserving experiments and substantive challenges to assumptions | [Outcome and methodological depth](https://felixrieseberg.com/how-to-be-more-ambitious-a-tutorial-for-humans-with-models/) |
 
 These references explain the methods' provenance. Project decisions define the architecture:
@@ -40,31 +40,28 @@ Scheduling, integrations and publication retain their explicit authority boundar
 steps are useful only when necessary depth and correctness survive; source alignment alone
 does not establish improved runtime outcomes.
 
-## User-invoked skills adapted from pstack (D-014)
+## User-invoked skills (D-014)
 
-Each skill rewrites methods from
-[pstack at `b7b93c3`](https://github.com/cursor/plugins/tree/b7b93c36be9bcc36a74db438e0fd385d660bc559/pstack)
-(2026-11-26, MIT). The skills are written in this package's words: a check of every run of twelve
-consecutive words against the pstack sources finds none in common. Cursor tool names, paths, model
-slugs, autonomy rules and publication steps are replaced by host-neutral wording and the shared
-authority rules. Evidence for each skill is recorded in [implementation.md](implementation.md).
+Each skill's method is in its SKILL.md. The skills use host-neutral wording and the shared
+authority rules, and name no models. Evidence for each skill is recorded in
+[implementation.md](implementation.md).
 
-| Capability | Owner | pstack sources | Main adaptation |
-|---|---|---|---|
-| Multi-candidate synthesis | `arena` | `skills/arena`, `skills/architect` | No model roster or vendor rule; owner reads every candidate |
-| Parallel fan-out with proven results | `swarm` | `skills/swarm` | Host delegation; at most one relaunch; gaps are not passes |
-| Run-proven adversarial challenge | `interrogate` | `skills/interrogate`, `skills/in-your-own-words` | Read-only target; isolated reproductions |
-| Measured metric climbing | `optimize-metric` | Hillclimb playbook, `skills/benchmark-checklist`, `skills/show-me-your-work` | No automatic commits or PRs; harness checks inline |
-| Workflow design for large or unattended work | `figure-it-out` | `skills/figure-it-out`, Multi-phase plan playbook, `skills/show-me-your-work` | Principles inline; framing checkpoint before long runs |
-| Pause, resume and recall | `resume-work` | `skills/recall`, Session pickup and Pause safely playbooks | One checkpoint contract; no automatic WIP commit; host session records |
-| Expert vocabulary | `reframe` | `skills/reframe` | Output in the user's language |
-| Deeper requests | `sharpen` | `skills/sharpen`, `skills/in-your-own-words` | Restatement first; preference choices stay with the user |
-| Paced explanation | `teach` | `skills/teach` | Investigation follows `understand-codebase` instead of pstack `how` and `why` |
-| Session lessons | `reflect` | `skills/reflect` | Source edits only, after approval; enforceable items to `prevent-recurring-mistakes` |
-| Comment removal | `no-comments` | `skills/no-comments`, `agents/comment-sicko.md` | No persona; the worker edits an isolated copy and returns a patch; flags named `RESHAPE`; fixes through `implement-task` |
-| Prose cleanup | `unslop` | `skills/unslop` | Owner-chosen style rules; the Chinese list combines patterns seen in model output during this work with the two Chinese style guides |
-| Technical documents | `technical-writing` | `skills/technical-writing` | Chinese rules from the Chinese copywriting guidelines and Ruan Yifeng's style guide; “” quotes are the owner's choice and the ellipsis follows GB/T 15834 |
-| Formal verification creation and upkeep | `create-formal-verification-skill`, `maintain-formal-verification-skill` | Same names | `statechart` is an optional external capability; TLC is the default path |
+| Capability | Owner | Main design choice |
+|---|---|---|
+| Multi-candidate synthesis | `arena` | Any model the host offers; the owner reads and scores every candidate |
+| Parallel fan-out with proven results | `swarm` | Host delegation; at most one relaunch; gaps are not passes |
+| Run-proven adversarial challenge | `interrogate` | Read-only target; isolated reproductions |
+| Measured metric climbing | `optimize-metric` | No automatic commits or PRs; measurement checks inline |
+| Workflow design for large or unattended work | `figure-it-out` | Framing checkpoint before long runs; append-only decision log |
+| Pause, resume and recall | `resume-work` | One checkpoint contract; no automatic WIP commit; host session records |
+| Expert vocabulary | `reframe` | Output in the user's language |
+| Deeper requests | `sharpen` | Restatement first; preference choices stay with the user |
+| Paced explanation | `teach` | Investigation follows `understand-codebase` |
+| Session lessons | `reflect` | Source edits only, after approval; enforceable items to `prevent-recurring-mistakes` |
+| Comment removal | `no-comments` | The worker edits an isolated copy and returns a patch; flags named `RESHAPE`; fixes through `implement-task` |
+| Prose cleanup | `unslop` | Owner-chosen style rules; the Chinese list combines patterns seen in model output during this work with the two Chinese style guides |
+| Technical documents | `technical-writing` | Chinese rules from the Chinese copywriting guidelines and Ruan Yifeng's style guide; “” quotes are the owner's choice and the ellipsis follows GB/T 15834 |
+| Formal verification creation and upkeep | `create-formal-verification-skill`, `maintain-formal-verification-skill` | Conditional methods, not lifecycle gates; TLC is the default for models |
 
 ## Supporting methods and host policy
 

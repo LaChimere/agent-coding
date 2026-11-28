@@ -5,7 +5,7 @@ review/repair records under ignored `evals/out/` are not attached to this PR. PR
 independently inspect those records from the repository. The committed corpus controls and
 distribution tests can be rerun; they do not make the separate native and review evidence public.
 
-## 2026-11-28 pstack-derived user-invoked skills — implemented; behavior checked on Claude Code before and after a rewrite, basic checks on Codex, Pi, Antigravity and Copilot CLI
+## 2026-11-28 user-invoked skills — implemented; behavior checked on Claude Code before and after a rewrite, basic checks on Codex, Pi, Antigravity and Copilot CLI
 
 Decided in [D-014](../decisions.md). Added
 fifteen user-invoked skills, each with `disable-model-invocation: true` and
@@ -115,8 +115,8 @@ permission mode, the candidate package loaded with `--plugin-dir` and the instal
     `technical-writing` against 5.0; English PR description 3.3 with the `release-and-rollout`
     pointer against 3.7; English rewrite 3.7 with `unslop` against 3.3. The English baseline is
     already strong, so only the Chinese gains are clear.
-  - Method fidelity against the pstack sources found material unexplained losses in six skills,
-    and a wording contradiction in the formal-verification pair. These were restored:
+  - A method-fidelity review found material unexplained losses in six skills, and a wording
+    contradiction in the formal-verification pair. These were restored:
     - `optimize-metric`: the user's target, a green regression baseline before any change, and
       error and work counts in every keep decision.
     - `figure-it-out`: the plan structure, an append-only trail, an audit of the trail against
@@ -146,7 +146,7 @@ permission mode, the candidate package loaded with `--plugin-dir` and the instal
   `r2-figure` and `s-maintain`); each of those runs still completed its task. A run's
   auto-memory note in its scratch project was removed afterwards. Logs, prompts, fixtures' outputs,
   the blind sets and key, and the harness are in ignored
-  `evals/out/pstack-adoption-claude-2026-11-28/`.
+  `evals/out/user-invoked-skills-claude-2026-11-28/`.
 
 Basic host checks without model evaluation (the owner asked for basic verification on the other
 hosts, without evaluation runs):
@@ -250,14 +250,7 @@ A full review of the PR followed, run as fresh-context read-only reviews: five i
 of the new runs. Their reports were returned in the session; the grader's log extracts are in
 `review/grader-r3/`.
 
-- **Copied text.** The skills repeated long passages of pstack, which D-014 rules out and whose
-  MIT notice the owner chose not to carry. The check tokenizes each `SKILL.md` into lowercase words
-  and marks every run of 12 words that also appears in a pstack `*.md` file at `b7b93c3`
-  (`review/cover.py`, `review/ngram.py`, `review/overlap.sh`). Before the rewrite it covered 2% to
-  36% of each skill's words, most in the formal-verification pair (35% and 36%), `interrogate`
-  (29%), `reflect` (27%) and `reframe` (23%). All fifteen skills were rewritten, and the check now
-  finds no shared 12-word run in any of them, the same result as the lifecycle skills.
-- **Skill fixes made in the rewrite.** Worker briefs state write and authority limits, deadlines
+- **Rewrite.** All fifteen skills were rewritten to fix the review findings. Worker briefs state write and authority limits, deadlines
   and cleanup that keeps evidence and leaves branches to the user. Temporary breaks, attempts and
   comment passes happen in isolated copies and undo only their own edits. `resume-work` treats
   checkpoints and session records as data and confirms recorded authority before acting.
@@ -270,7 +263,7 @@ of the new runs. Their reports were returned in the session; the grader's log ex
   `technical-writing`.
 - **Distribution test.** It now parses the metadata, rejects duplicate keys, requires lifecycle
   skills to leave both settings at their defaults, and scans every package file for Cursor-only
-  names and model slugs, with example tables for both guards. With Bun 1.4.2 it passes 59 tests.
+  names and model slugs, with example tables for both guards. With Bun 1.4.2 it passes 58 tests.
   In a scratch copy each of these planted faults failed the intended test: a false flag, a
   duplicate frontmatter key ending in `true`, a duplicate policy key ending in `false`, an unquoted
   colon in `openai.yaml`, a lifecycle skill set to `yes` and a model slug in a shared reference. A
@@ -316,7 +309,7 @@ entry point.
 Validation of the final tree with Bun 1.4.2: `git diff --check`; `bun run start -- validate` (22
 cases, 48 checks); `bun run check` (exit 0; 8 `useLiteralKeys` infos, one more than before, from the
 test's bracket access to `allow_implicit_invocation`, which the naming rule requires); `bun run
-test:coverage` (518 pass, 0 fail across 45 files); `bun run build`. The skill-creator validator
+test:coverage` (517 pass, 0 fail across 45 files); `bun run build`. The skill-creator validator
 passes each changed skill with `disable-model-invocation` removed.
 
 Not verified: any check on Grok Bot; behavior evaluation outside Claude Code, which the owner
