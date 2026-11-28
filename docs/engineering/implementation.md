@@ -289,11 +289,21 @@ of the new runs. Their reports were returned in the session; the grader's log ex
   that a non-interactive run cannot get; `no-comments` had two overlapping exception rules; and
   `technical-writing` had no rule for a PR with no recorded reason, so the Chinese run invented one.
   Model mistakes also counted: skipped profiling, a stray `__pycache__` and spacing around
-  full-width quotes. The four skills were rerun on the final text (`logs/r4-*`, hash in
-  `logs/r4-candidate-hash.txt`, matching the final skills) for USD 2.34. `interrogate` left no
-  worktree or branch, `no-comments` checked the patch in its copy and reported the `tax` rounding
-  and the unused import as decisions, `optimize-metric` logged its stopping rule as unconfirmed,
-  and the Chinese PR description said that no reason was recorded.
+  full-width quotes. The four skills were rerun after the second review round (`logs/r4-*`, hash in
+  `logs/r4-candidate-hash.txt`) for USD 2.34. `interrogate` left no worktree or branch,
+  `no-comments` checked the patch in its copy and reported the `tax` rounding and the unused import
+  as decisions, `optimize-metric` logged its stopping rule as unconfirmed, and the Chinese PR
+  description said that no reason was recorded.
+- **Final review round.** One more fresh-context review found that the new check gate in
+  `no-comments` could restore a suppression the skill had just deleted, because deleting a lint
+  suppression is meant to make lint report the problem. The gate now compares checks before and
+  after the patch and expects failures from flagged suppressions. Small fixes followed in the
+  formal-verification pair (scratch copies include every uncommitted file; `maintain` may edit
+  proof annotations), `figure-it-out` (corrections are appended), `optimize-metric`, the README and
+  a test comment. A `no-comments` run on the fixture with a project lint script added
+  (`logs/r5-nocomments-lint.*`, `templates/comments-lint`, USD 0.75) ran the lint in its copy
+  before and after the patch, kept `# noqa: F401` as a style-only suppression, and reported the
+  `tax` rounding and the unused import as decisions.
 - **Host checks on the rewritten text.** The Pi 1.7.0 loader (`hosts/pi-check-1.7.0.out`) loaded
   26 skills, flagged 15 as manual-only, put 11 in the prompt and showed the same `teach` and
   `code-review` collisions. `agy plugin validate --strict --json` (`hosts/agy-validate-rewrite.json`)
@@ -307,6 +317,11 @@ passes each changed skill with `disable-model-invocation` removed.
 
 Not verified: any check on Grok Bot; behavior evaluation outside Claude Code, which the owner
 excluded. The Codex, Antigravity, Pi and Copilot model runs used the text before the rewrite. The
+r3 runs used the text before the second review round. Of the skills that round and the final round
+changed, only `interrogate`, `no-comments`, `optimize-metric` and the Chinese `technical-writing`
+case were rerun; the final edits to the formal-verification pair, `figure-it-out` and
+`optimize-metric` have no run of their own. The `no-comments` path in which a flagged suppression's
+deletion makes a check fail was not exercised. The
 reflect run's approval gate was not exercised, because its setup session already edited the guidance
 it would have proposed. Single runs show each skill working on one fixture, not across projects.
 Session records of the test runs remain in each host's history.

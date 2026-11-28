@@ -7,7 +7,8 @@ The `engineering` plugin covers understanding a project, designing and implement
 real verification, review, release and prevention of recurring mistakes. Its nine lifecycle skills and two challenge skills are
 entry points, not a mandatory nine-stage pipeline. Small tasks remain small; persistent goals
 use the host's existing scheduling and state. A further set of user-invoked skills, adapted from
-pstack, runs only when you call it by name.
+pstack, runs only when you call it by name, on hosts whose skill loader reads that setting (see
+[hosts](docs/engineering/hosts.md)).
 
 ## Skills
 
