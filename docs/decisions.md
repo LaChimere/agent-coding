@@ -3,7 +3,7 @@
 Settled decisions for contributions to `agent-coding`. Each entry records its context, decision,
 alternatives, consequences, status and evidence. Overturning a settled decision needs an explicit
 new decision that identifies the entry it supersedes. Only applicable decisions are listed;
-D-008 and D-009 define the current package and host structure.
+D-008, D-009 and D-014 define the current package and host structure.
 
 ## D-001: AGENTS.md files are routing-only
 
@@ -94,8 +94,8 @@ D-008 and D-009 define the current package and host structure.
 - Context: The owner found that D-008's implementation discarded standing communication and
   authority guidance, personal Codex settings, detailed review methods and SPAR/Rubber Duck.
   Passing the selected new cases did not demonstrate preservation of those capabilities.
-- Decision: Preserve capabilities that support, or gain value from, the combined Claude Team,
-  Lauren/pstack and Felix practices. Keep nine lifecycle entry points plus independently callable
+- Decision: Preserve capabilities that support, or gain value from, the combined Claude Team and
+  Felix practices. Keep nine lifecycle entry points plus independently callable
   `spar` and `rubber-duck`; integrate their methods into design/review without mandatory extra rounds.
   Restore detailed review briefs and place sequencing, atomicity, quality, publication and knowledge
   methods under explicit task owners. Keep personal host policy separate from portable methods,
@@ -214,3 +214,44 @@ D-008 and D-009 define the current package and host structure.
 - Evidence: `evals/tests/distribution.test.ts`, `evals/tests/antigravity-hooks.test.ts`,
   `evals/tests/claude-hooks.test.ts`; live `agy 1.5.18` runs recorded in
   [implementation.md](engineering/implementation.md) (2026-11-27/28 section).
+
+## D-014: Add user-invoked engineering skills
+
+- Date: 2026-11-28
+- Status: accepted; implementation evidence in [implementation.md](engineering/implementation.md)
+- Context: The owner chose to add capabilities the package lacked, aiming at better outcomes. D-008
+  and D-009 fixed the inventory at nine lifecycle entry points plus `spar` and `rubber-duck`, and
+  the design required a demonstrated purpose before a new public entry.
+- Decision: Add fifteen skills to the engineering package: `arena`, `swarm`, `interrogate`,
+  `optimize-metric`, `figure-it-out`, `resume-work`, `reframe`, `sharpen`, `teach`, `reflect`,
+  `no-comments`, `unslop`, `technical-writing`, `create-formal-verification-skill` and
+  `maintain-formal-verification-skill`. A new skill is admitted when it has a distinct outcome, a
+  distinct invocation, works when called on its own and has its own evidence. These skills are
+  user-invoked: every skill carries frontmatter `disable-model-invocation: true`, which
+  Claude Code, Pi, Antigravity and Copilot CLI read, and `agents/openai.yaml` with
+  `policy.allow_implicit_invocation: false`, which Codex reads. Grok Bot's handling of the flag is
+  unverified. The lifecycle skills stay model-invocable and may point to the new skills by
+  relative link. Each skill is host-neutral, follows the existing authority rules and names no
+  fixed models. The repository and the package
+  carry an MIT license held by LaChimere. The formal-verification skills ship as conditional
+  methods, not lifecycle gates.
+- Alternatives rejected: Model-invoked descriptions for the new skills, because several of them run
+  multiple agents at real cost, and a user-invoked skill adds no context to every turn.
+- Consequences: Supersedes the fixed inventory in D-008 and D-009, the design rule that a new
+  public entry needs a prior demonstrated purpose, and the rule that formal verification exercise
+  maintenance after a relevant change before a reusable generator is proposed. The other
+  consequences of D-008 and D-009 stand, and so do the design's conditions for a new shared
+  resource or state mechanism.
+  Distribution tests list model-invoked and user-invoked skills separately and check both
+  manual-invocation settings, the package license and the absence of Cursor-only names and model
+  slugs. The manual-invocation metadata alone controls invocation where a host's skill loader
+  reads it; a file-backed workflow that reads `SKILL.md` directly does not enforce it. Personal
+  host guidance in `config/` is unchanged, because explicit invocation and `resume-work` recall
+  worked without it and an always-loaded note would add context to every turn. One lifecycle
+  pointer is kept: `release-and-rollout` points PR descriptions to `technical-writing`, on a 3 of 3
+  read rate and fewer hits of that skill's own writing rules; a blind ranking showed no clear
+  quality gain in English. The owner kept it on 2026-11-28 because PR descriptions that follow the
+  owner-approved writing rules are the goal, so a missing English quality gain is no reason to
+  revert it. The other measured pointers were never followed and were reverted.
+- Evidence: `evals/tests/distribution.test.ts`; Claude Code runs recorded in
+  [implementation.md](engineering/implementation.md) (2026-11-28 section).

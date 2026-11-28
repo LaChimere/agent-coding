@@ -56,9 +56,32 @@ with design and review without becoming mandatory extra stages. Detailed reviewe
 sequencing/atomicity, quality and project-knowledge methods remain behind relevant task pointers.
 See [capability preservation](alignment.md) and D-009 for the full mapping.
 
+D-014 adds user-invoked skills. Only the user starts them where the host's skill
+loader reads the manual-invocation setting (see [hosts.md](hosts.md)); lifecycle skills may point to
+them by relative link. Each skill's method is in its SKILL.md, which links a shared reference where
+one already owns the rule.
+
+| Skill | Input and result |
+|---|---|
+| `arena` | One artifact to get right; returns a synthesized candidate with rubric scores, grafts and verification |
+| `swarm` | A job split into slices or raced attempts; returns one report of PASS, ISSUES or BLOCKED results with evidence and gaps |
+| `interrogate` | A change or design; returns only failures that a rerun against the real code reproduces |
+| `optimize-metric` | One metric and a target; returns kept and reverted experiments against a frozen, vetted harness |
+| `figure-it-out` | Large, ambiguous or unattended work; returns a designed workflow, verdicts against a done predicate and a decision trail |
+| `resume-work` | A pause, resume or recall request; returns a checkpoint, a resume point or a recall summary |
+| `reframe` | A description of what the user is building; returns expert terms with verified sources, neighboring fields and a rewritten description |
+| `sharpen` | A task request; returns a deeper rewrite of the request within the same scope |
+| `teach` | A subsystem, change or concept; returns an explanation built up at the user's pace |
+| `reflect` | The current session; returns proposed edits to the skills and guidance it used, applied only after approval |
+| `no-comments` | A diff; returns a reviewed patch that removes narrating comments, flags the code they excused and offers to encode stated constraints |
+| `unslop` | English or Chinese text; returns it without AI writing patterns |
+| `technical-writing` | A document, PR description or commit message; returns it in one documentation mode with sentence and typography rules applied |
+| `create-formal-verification-skill` | A repository with a costly, poorly tested property; returns a proved project verification skill or a no-target result |
+| `maintain-formal-verification-skill` | Existing formal verification after code changes; returns per-check outcomes separating drift from bugs |
+
 These are independent entry points in one installed package, not mandatory stages.
-Native syntax may differ; natural language remains supported. A request to investigate or
-review remains read-only. `implement-task` contains task-dependent feature, repair, refactoring
+Native syntax may differ; natural language remains supported for the lifecycle skills, while
+user-invoked skills run when named. A request to investigate or review remains read-only. `implement-task` contains task-dependent feature, repair, refactoring
 and performance methods rather than separate public skills for each step.
 
 ## Development lifecycle flow
@@ -124,7 +147,8 @@ comparable measurement and correctness checks, including rejected attempts. Visu
 needs an agreed baseline and controlled rendering conditions when equivalence is the contract.
 These are task-specific techniques; their tooling and acceptance thresholds belong to the
 consuming project. A reusable procedure needs a demonstrated purpose before it becomes a new
-shared resource or public entry.
+shared resource. A new public entry meets the D-014 admission rule: a distinct outcome, a distinct
+invocation, independent use and its own evidence.
 
 ### Frame and execute
 
@@ -203,10 +227,12 @@ this rule, while personal communication defaults remain in host configuration.
 ### Select stronger verification for a concrete property
 
 Formal verification remains a conditional project experiment, not a lifecycle gate. Select it
-only for a costly property with a concrete coverage gap. A no-pilot outcome is valid when no
-in-scope target justifies the work. Any later pilot must distinguish model evidence, code-level
-verification and generated-input testing, retain failure/valid controls and exercise maintenance
-after a relevant change before proposing a reusable generator.
+only for a costly property with a concrete coverage gap. A no-target outcome is valid when no
+in-scope target justifies the work. Under D-014 the user-invoked
+`create-formal-verification-skill` and `maintain-formal-verification-skill` carry this method;
+D-014 ships the generator without the earlier prerequisite of a maintenance exercise on a real
+project. Each run must distinguish model evidence, code-level verification and generated-input
+testing, retain failure and valid controls, and prove the generated check against a scratch break.
 
 Choose a supported method for the property's language and failure mode. A checked model
 establishes a result about that model; code verification depends on its encoded assumptions
@@ -219,8 +245,7 @@ For a formal-verification pilot, the project method needs a runnable command, re
 version, identification of the checked code and any model/code mapping, failing and valid
 controls, and a way to detect relevant code changes.
 Breaking the property in real code must be detected by the claimed workflow, or its sensitivity
-to implementation changes remains unproven. Exercise maintenance after a relevant change before
-generalizing the method. Distinguish a counterexample from timeout, inadequate bounds and tool
+to implementation changes remains unproven. Distinguish a counterexample from timeout, inadequate bounds and tool
 or modeling errors; none of these outcomes should silently become a pass.
 
 ## Distribution
@@ -265,17 +290,8 @@ an SDK is not an already working integration. Missing capabilities retain explic
   deduplication and the distinction between findings and merge enforcement.
 - [Claude team workflow](https://claude.dev/blog/solving-code-review-at-anthropic/): human total
   effort, risk, convergence, staged delivery, incidents and shared understanding.
-- [pstack](https://github.com/cursor/plugins/tree/6b78e9f4e46c75d1697d837e51f07c2692e60b24/pstack): real application verification,
-  feature maps, structural prevention and grounded design. Methods are adapted; personal model
-  choices, fixed reviewer counts and automatic publication are not universal defaults.
-- [Formal-verification workflow](https://github.com/cursor/plugins/blob/6b78e9f4e46c75d1697d837e51f07c2692e60b24/pstack/skills/create-formal-verification-skill/SKILL.md),
-  [TLC](https://docs.tlapl.us/using:tlc:start) and
+- [TLC](https://docs.tlapl.us/using:tlc:start) and
   [Kani bounds](https://model-checking.github.io/kani/tutorial-loop-unwinding.html): distinguish
   model properties, code correspondence and bounded implementation evidence.
-- [Lauren's workshop](https://maven.com/p/e23d9c/how-cursor-turned-ai-agents-into-better-engineers):
-  establish reliable work before scaling, evaluate skills and maintain project constraints.
-- [Lauren Tan's inverse-pyramid model](https://x.com/poteto/status/2111133080526495985):
-  prioritize codebase structure, types and automated checks; reserve prose and human review
-  for the judgment that remains.
 - [Felix on ambition](https://felixrieseberg.com/how-to-be-more-ambitious-a-tutorial-for-humans-with-models/):
   outcome altitude, methodological depth, useful range and outside validation.

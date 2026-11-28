@@ -8,7 +8,11 @@ behavioral acceptance.
 ## Local checks
 
 Use the repository-pinned Bun 1.4.2 with the frozen lockfile. Keep disposable tool downloads and
-caches in an authorized scratch directory; do not change production runtimes for this task.
+caches in an authorized scratch directory; do not change production runtimes for this task. Run
+`CI=true bun install --frozen-lockfile` in `evals/`. Without `CI`, lefthook's postinstall step runs
+`lefthook install -f`, which writes an example `lefthook.yml` at the repository root and a
+`prepare-commit-msg` hook into the Git hooks directory that all worktrees share. `CI=true` skips only
+that install step; the hooks already installed still run.
 
 - `git diff --check`: whitespace and patch structure.
 - In `evals/`, `bun run start -- validate`: active development corpus and grading bindings.
@@ -17,7 +21,9 @@ caches in an authorized scratch directory; do not change production runtimes for
 - In `evals/`, `bun test --isolate tests/distribution.test.ts`: native manifests, complete package,
   shared resource links, skill identities and Pi declarations. This does not prove host discovery.
 - Validate each new skill's frontmatter and placeholders with the installed skill-creator validator.
-  Inspect actual methods and outcomes separately; a formatting pass cannot prove good judgment.
+  The validator rejects the `disable-model-invocation` key, so validate a user-invoked skill from a
+  scratch copy with that key removed. Inspect actual methods and outcomes separately; a formatting
+  pass cannot prove good judgment.
 
 Tests that start loopback servers need an execution environment that allows binding. If an outer
 sandbox blocks them, run the unchanged checks in a permitted environment and preserve their own

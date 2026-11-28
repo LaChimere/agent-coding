@@ -16,7 +16,7 @@ agy plugin install https://github.com/LaChimere/agent-coding
 ```
 
 `agy plugin install` detects the repository's `plugins/` directory, copies `plugins/engineering`
-(all 11 skills and `references/`) into `~/.gemini/config/plugins/engineering`, and syncs it to
+(every skill and `references/`) into `~/.gemini/config/plugins/engineering`, and syncs it to
 both the Antigravity CLI (`agy plugin list --json`) and the Antigravity App (`GetAllPlugins`).
 To test an unpublished local checkout instead, run `agy plugin validate ./plugins/engineering`
 and install locally or register the local `plugins/` directory in `~/.gemini/config/plugins.json`
@@ -141,8 +141,8 @@ must say whether package auto-discovery or this explicit loading mode was exerci
 Provide the complete `plugins/engineering` tree to an authorized project folder on the Bot's
 computer, preserving `skills/` and `references/` together. Configure the Bot with the reviewed
 `config/grok-bot/INSTRUCTIONS.md`, pointing it to that package location. Native skill import,
-when available, must be checked for preservation of relative dependencies and discovery of all
-eleven entries; no universal Grok plugin installation command is asserted here.
+when available, must be checked for preservation of relative dependencies and discovery of every
+skill; no universal Grok plugin installation command is asserted here.
 
 A file-backed workflow must actually read the appropriate SKILL.md and its shared reference and
 execute the representative task. A successful file upload alone does not qualify use. Where a
@@ -158,6 +158,32 @@ The owner ran the cold-start bundle in their Bot and supplied the resulting proj
 [artifact audit](grok-acceptance.md) records file-based loading, local reproduction, verifier
 corrections and limits. Native import, routine execution and the revised methods remain unverified;
 the maintainer's local corrections are not another Grok run.
+
+## User-invoked skills
+
+D-014 skills are hidden from model invocation and run when the user names them. The package
+carries two forms of the same setting: frontmatter `disable-model-invocation: true` and, for Codex,
+`agents/openai.yaml` with `policy.allow_implicit_invocation: false`.
+
+| Host | Setting it reads | Explicit invocation |
+|---|---|---|
+| Claude Code | Frontmatter | `/engineering:<skill>` |
+| Codex | `agents/openai.yaml` | `$engineering:<skill>`; `$<skill>` for repository skills |
+| Pi | Frontmatter | `/skill:<skill>` |
+| Antigravity | Frontmatter | `/engineering:<skill>` for plugin skills; `/<skill>` for workspace skills |
+| Copilot CLI | Frontmatter | `/<skill>` in interactive sessions; `-p` does not expand it |
+| Grok Bot | Unverified | Unverified |
+
+The setting works only where the host's own skill loader reads it. A file-backed workflow, such as
+the Grok Bot and Copilot instructions in `config/` that tell the agent to read a matching
+`SKILL.md`, does not enforce it. The checks behind this table are in
+[implementation.md](implementation.md).
+
+On Pi, default discovery loads `~/.agents/skills` before a `--skill` package, and the first name
+wins, so a personal skill with the same name as a package skill, such as `teach`, hides the
+package's version. Use the isolated `pi --no-skills --skill <package>/skills` invocation to load the
+package's versions. Claude Code keeps both names apart (`teach` and `engineering:teach`), and
+Antigravity lists a personal and a package skill of the same name side by side.
 
 ## Qualification levels
 
@@ -194,4 +220,5 @@ the guidance. Personal host preferences remain allowed under D-009; they are not
 
 `config/copilot/copilot-instructions.md` preserves the existing personal standing policy and points
 to the same engineering package. Use the host's actual supported skill/file loading mechanism.
-Native installation, discovery and behavior have not been qualified for this revision.
+Native installation and behavior have not been qualified for this revision; the discovery and
+invocation checks of the D-014 skills are recorded in [implementation.md](implementation.md).

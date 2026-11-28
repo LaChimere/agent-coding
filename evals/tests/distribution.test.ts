@@ -18,6 +18,104 @@ const sharedCatalog = (await Bun.file(
   plugins: { name: string; source: string }[];
 };
 const pluginNames = codexCatalog.plugins.map((plugin) => plugin.name);
+const modelInvokedSkills = [
+  'code-review',
+  'create-verification-skill',
+  'design-solution',
+  'implement-task',
+  'maintain-verification-skill',
+  'prevent-recurring-mistakes',
+  'release-and-rollout',
+  'rubber-duck',
+  'spar',
+  'understand-codebase',
+  'verify-behavior',
+];
+// D-014: these skills are user-invoked.
+const userInvokedSkills = [
+  'arena',
+  'create-formal-verification-skill',
+  'figure-it-out',
+  'interrogate',
+  'maintain-formal-verification-skill',
+  'no-comments',
+  'optimize-metric',
+  'reflect',
+  'reframe',
+  'resume-work',
+  'sharpen',
+  'swarm',
+  'teach',
+  'technical-writing',
+  'unslop',
+];
+// Cursor-specific names; they mean nothing on the package's hosts.
+const cursorOnlyReference =
+  /\.cursor\/|\bcursor-team-kit\b|\bgeneralPurpose\b|\bAskQuestion\b|environment: "cloud"|\bbugbot\b/iu;
+// A model slug: a family with a version-bearing suffix, an o-series slug or a bare Claude tier.
+const modelSlug =
+  /\b(?:claude|gemini|grok|gpt|composer)-(?=[a-z0-9.-]*\d)[a-z0-9][a-z0-9.-]*|\bo[1-9]-(?:mini|pro)\b|\b(?:opus|sonnet|haiku)\b/iu;
+
+// Bun keeps the last of duplicate keys while other hosts' parsers reject them, so reject them here.
+function parseUniqueYaml(text: string, label: string): unknown {
+  const scopes: { indent: number; keys: Set<string> }[] = [];
+
+  for (const line of text.split('\n')) {
+    const match = line.match(/^( *)([\w-]+):/u);
+
+    if (match === null) {
+      continue;
+    }
+
+    const indent = match[1]?.length ?? 0;
+    const key = match[2] ?? '';
+
+    while ((scopes.at(-1)?.indent ?? -1) > indent) {
+      scopes.pop();
+    }
+
+    if (scopes.at(-1)?.indent !== indent) {
+      scopes.push({ indent, keys: new Set() });
+    }
+
+    const keys = scopes.at(-1)?.keys;
+
+    if (keys?.has(key)) {
+      throw new Error(`${label} repeats the key ${key}`);
+    }
+
+    keys?.add(key);
+  }
+
+  return Bun.YAML.parse(text);
+}
+
+async function skillFrontmatter(skill: string): Promise<Record<string, unknown>> {
+  const path = resolve(repository, 'plugins/engineering/skills', skill, 'SKILL.md');
+  const block = (await Bun.file(path).text()).match(/^---\n([\s\S]*?)\n---\n/u)?.[1];
+
+  if (block === undefined) {
+    throw new Error(`${skill}/SKILL.md has no frontmatter`);
+  }
+
+  return parseUniqueYaml(block, `${skill}/SKILL.md`) as Record<string, unknown>;
+}
+
+async function codexImplicitInvocation(skill: string): Promise<unknown> {
+  const file = Bun.file(
+    resolve(repository, 'plugins/engineering/skills', skill, 'agents/openai.yaml'),
+  );
+
+  if (!(await file.exists())) {
+    return undefined;
+  }
+
+  const metadata = parseUniqueYaml(await file.text(), `${skill}/agents/openai.yaml`) as {
+    policy?: Record<string, unknown>;
+  };
+
+  return metadata.policy?.['allow_implicit_invocation'];
+}
 
 test('Codex and Claude catalogs distribute the same local plugin roots', async () => {
   const directories = await readdir(resolve(repository, 'plugins'), { withFileTypes: true });
@@ -58,19 +156,7 @@ test('the engineering package exposes the complete approved skill set to Pi and 
     version: string;
     skills: string;
   };
-  const expected = [
-    'code-review',
-    'create-verification-skill',
-    'design-solution',
-    'implement-task',
-    'maintain-verification-skill',
-    'prevent-recurring-mistakes',
-    'release-and-rollout',
-    'rubber-duck',
-    'spar',
-    'understand-codebase',
-    'verify-behavior',
-  ];
+  const expected = [...modelInvokedSkills, ...userInvokedSkills].sort();
 
   expect(manifest.version).toBe(native.version);
   expect(manifest.pi.skills.map((path) => resolve(root, path))).toEqual([
@@ -80,8 +166,89 @@ test('the engineering package exposes the complete approved skill set to Pi and 
   expect(manifest.files).toContain('skills');
   expect(manifest.files).toContain('references');
   expect(manifest.files).toContain('.antigravity-plugin');
+  expect(manifest.files).toContain('LICENSE');
   expect(manifest.files).not.toContain('evals');
   await expect(stat(resolve(root, 'references/working-agreement.md'))).resolves.toBeDefined();
+  expect(await Bun.file(resolve(root, 'LICENSE')).text()).toBe(
+    await Bun.file(resolve(repository, 'LICENSE')).text(),
+  );
+});
+
+test.each(userInvokedSkills)(
+  'user-invoked skill %s opts out of model invocation in frontmatter and Codex policy',
+  async (skill) => {
+    const metadata = await skillFrontmatter(skill);
+    const implicitInvocation = await codexImplicitInvocation(skill);
+
+    expect(metadata['disable-model-invocation']).toBe(true);
+    expect(implicitInvocation).toBe(false);
+  },
+);
+
+test.each(modelInvokedSkills)(
+  'lifecycle skill %s keeps model invocation enabled',
+  async (skill) => {
+    const metadata = await skillFrontmatter(skill);
+    const implicitInvocation = await codexImplicitInvocation(skill);
+
+    expect(metadata['disable-model-invocation'] ?? false).toBe(false);
+    expect(implicitInvocation ?? true).toBe(true);
+  },
+);
+
+test.each([
+  '~/.cursor/rules/models.mdc',
+  'install cursor-team-kit',
+  'subagent_type: "generalPurpose"',
+  'call AskQuestion first',
+  'environment: "cloud"',
+  'wait for BugBot',
+])('the Cursor-only guard flags %p', (text) => {
+  expect(cursorOnlyReference.test(text)).toBeTrue();
+});
+
+test.each([
+  'claude-opus-4-5',
+  'claude-4.5-sonnet',
+  'gemini-2.5-pro',
+  'gpt-5',
+  'gpt-5.1-codex',
+  'grok-4',
+  'grok-code-fast-1',
+  'composer-1',
+  'o3-mini',
+  'Sonnet',
+])('the model-slug guard flags %p', (text) => {
+  expect(modelSlug.test(text)).toBeTrue();
+});
+
+test.each([
+  'Claude Code',
+  '.claude-plugin/plugin.json',
+  'claude-code',
+  'Grok Bot',
+  'grok-bot',
+  'gemini-cli',
+  'move the cursor',
+  'a TLA+ model checked with TLC',
+])('the Cursor-only and model-slug guards allow %p', (text) => {
+  expect(cursorOnlyReference.test(text)).toBeFalse();
+  expect(modelSlug.test(text)).toBeFalse();
+});
+
+test('the engineering package names no Cursor-only resources or model slugs', async () => {
+  const root = resolve(repository, 'plugins/engineering');
+  const offenders: string[] = [];
+
+  for await (const path of new Bun.Glob('**/*').scan({ cwd: root, dot: true })) {
+    const text = await Bun.file(resolve(root, path)).text();
+
+    if (cursorOnlyReference.test(text) || modelSlug.test(text)) {
+      offenders.push(path);
+    }
+  }
+
+  expect(offenders).toEqual([]);
 });
 
 test('personal Codex configuration retains selected capabilities outside portable method policy', async () => {

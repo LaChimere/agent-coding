@@ -5,6 +5,324 @@ review/repair records under ignored `evals/out/` are not attached to this PR. PR
 independently inspect those records from the repository. The committed corpus controls and
 distribution tests can be rerun; they do not make the separate native and review evidence public.
 
+## 2026-11-28 user-invoked skills — implemented; behavior checked on Claude Code before and after a rewrite, basic checks on Codex, Pi, Antigravity and Copilot CLI
+
+Decided in [D-014](../decisions.md). Added
+fifteen user-invoked skills, each with `disable-model-invocation: true` and
+`agents/openai.yaml` (`policy.allow_implicit_invocation: false`); an MIT `LICENSE` at the
+repository root and in the package. The owner limited behavior evaluation to Claude Code. A full
+review of the change then led to a rewrite of all fifteen skills; the evidence below up to
+"Review and rewrite" applies to the text before that rewrite.
+
+Structural checks:
+
+- `evals/tests/distribution.test.ts` lists model-invoked and user-invoked skills separately and
+  checks both manual-invocation forms, the package `LICENSE` and the absence of Cursor-only names
+  and model slugs. The first version matched the metadata as text; the review replaced that with
+  parsed values (see "Review and rewrite").
+- The installed skill-creator `quick_validate.py` rejects `disable-model-invocation` as an
+  unexpected key. Each new skill passes with only that key removed; the existing skills pass
+  unchanged.
+- `agy plugin validate --json plugins/engineering` found 26 skills with no errors and one optional
+  note about a missing logo. No Antigravity model run took place.
+
+Claude Code 2.1.332 runs (model `claude-opus-5-5`, the owner's login and global `CLAUDE.md`, auto
+permission mode, the candidate package loaded with `--plugin-dir` and the installed
+`engineering@agent-coding` disabled per run, fixtures in fresh scratch Git repositories):
+
+- **Discovery and hiding.** The session init listed all 26 `engineering:` skills. Asked which
+  skills it could invoke itself, the model listed only the 11 lifecycle skills. A request to
+  explain config loading at the user's pace selected `understand-codebase`, not `teach`, and a
+  request to remove AI writing patterns invoked no skill.
+- **Smoke runs.** Each explicit invocation loaded the intended skill body and produced its
+  contract on a fixture with a planted defect where one applied:
+  - `interrogate` reproduced the `page_count` remainder-1 bug with three adversaries on Sonnet,
+    Haiku and Opus, reran each command and left the branch unchanged.
+  - `swarm` reported `count` as `ISSUES` and the two other commands as `PASS`, pinned to the SHA.
+  - `arena` scored three candidates on a six-item rubric, picked a base, recorded grafts and
+    verified the synthesized design.
+  - `optimize-metric` reached a 475x speedup (median of five alternating runs; limiter named)
+    with a decision log and no commit.
+  - `figure-it-out` recorded a behavior baseline, ran two verified steps and kept a trail.
+  - `resume-work` rechecked the checkpoint's "tests pass" claim, found both tests failing and
+    reported it.
+  - `reflect` returned accepted, rejected and backlog items over a three-session chain and
+    waited for approval without edits.
+  - `no-comments` removed the seven planted narrating, workaround, dead-code and suppression
+    comments and kept exactly the license header, public API docstring and vendor-constraint
+    comment.
+  - `reframe` opened 15 links and dropped one it could not confirm.
+  - `sharpen` returned a rewritten request and stopped. `teach` answered in Chinese with
+    diagrams that build up one part at a time.
+  - `create-formal-verification-skill` had no TLA+ toolchain available. It chose exhaustive
+    exploration of the real `Order` class, found the planted refund-without-payment bug, showed
+    the check failing on broken variants and generated a project skill with a sync record.
+  - `maintain-formal-verification-skill`, run after a fixture commit renamed a state, guarded
+    refunds and added `cancel()`, classified each change, updated the check, showed that it still
+    fails on two breaks and moved the sync commit.
+- **Writing comparisons** (three runs per arm, scored by a deterministic pattern check that flags
+  the planted inputs at 19 and 22 hits and clean controls at 0). The check counts dashes,
+  parentheses, colons, bold text, "一个" and "进行", which are the skills' own rules, so it measures
+  how well the output follows those rules; the blind ranking under "Independent reviews" is the
+  quality signal:
+  - `unslop` against a plain rewrite request: English hits 0, 0, 0 against 0, 0, 1; Chinese
+    0, 0, 1 against 0, 3, 3.
+  - `technical-writing` against a plain request for a Chinese PR description, whose baseline
+    loaded the owner's personal `pr` skill: 5, 6, 7 against 14, 16, 12.
+- **Pointers in lifecycle skills** (baseline package against candidate, same prompts):
+  - Kept: `release-and-rollout` linking `technical-writing` for PR descriptions. The candidate
+    read the skill in 3 of 3 runs, and PR pattern hits fell from 16, 16, 20 to 4, 10, 10. The
+    blind ranking showed no clear English gain. The pointer first covered commit messages too,
+    which no run measured; the review removed that half.
+  - Reverted: the `implement-task` link to `no-comments` and `technical-writing`. It was never
+    followed in 3 runs, and the baseline already added no narrating comments.
+  - Reverted: the `design-solution` link to `arena` and `reframe`. It was never followed in 2
+    runs, and no candidates were generated.
+  - Reverted after per-site measurement, because the candidate never read the target skill:
+    `code-review` to `interrogate` on a high-risk branch review (0 of 3); `verify-behavior` to
+    `swarm` for three commands (0 of 3); `implement-task` to `optimize-metric` for a 10x target
+    (0 of 3); `implement-task` to `figure-it-out` and `swarm` for a caller migration (0 of 3); the
+    working agreement to `resume-work` for a checkpoint pickup (0 of 3); and `design-solution` to
+    `reframe` for a vague design request (0 of 2). The baseline already found the planted review
+    bug and the false checkpoint claim in every run.
+- **Smoke grading notes.** The `no-comments` fixture planted nine comments; the run kept the two
+  expected comments (license header and vendor note), removed the seven others and kept the public
+  API docstring, checked line by line. The explicit `unslop` and `technical-writing` invocations in
+  the writing comparisons are their smoke runs. A further `technical-writing` run wrote a how-to
+  README section with verified commands and no pattern hits.
+- **Same-name `teach`.** The session init listed both `teach` (the owner's personal skill) and
+  `engineering:teach`, and `/engineering:teach` loaded the package skill from the candidate path,
+  so the package skill is not shadowed on Claude Code.
+- **Host guidance note, later reverted.** A draft added a paragraph to the five `config/` host
+  guidance files naming the user-invoked skills and each host's session-record location. With it
+  appended through `--append-system-prompt-file`, the model quoted the paragraph and still
+  selected `understand-codebase` (2 of 2) or no skill (2 of 2) for natural requests. An earlier
+  attempt that placed the file as the fixture's project `CLAUDE.md` showed that the project file
+  was not loaded in these scratch `-p` runs; no user-invoked skill was read in those six runs.
+  Their stream logs were deleted by mistake before the rerun; their Claude session records were
+  later recovered, as recorded below. The paragraph was then reverted: the smoke runs and host
+  checks had already invoked the skills explicitly under the old guidance, `resume-work` recall
+  found the earlier Claude session without a path note, and the note would add always-loaded
+  context for skills meant to cost none.
+- **Independent reviews** (fresh-context read-only subagents, given the files and none of the
+  implementing agent's conclusions). Their reports were returned in the session and not saved as
+  files; only the blind sets and key are in `evals/out/`:
+  - Smoke grading against each SKILL.md contract: 14 PASS, 1 PARTIAL, 0 FAIL. `figure-it-out` was
+    PARTIAL because it wrote no done predicate before changing code and reported a trail path with
+    one wrong character.
+  - Blind ranking of the anonymized writing outputs (1 is best, mean of three per arm): Chinese
+    rewrite 2.3 with `unslop` against 4.7 without; Chinese PR description 2.0 with
+    `technical-writing` against 5.0; English PR description 3.3 with the `release-and-rollout`
+    pointer against 3.7; English rewrite 3.7 with `unslop` against 3.3. The English baseline is
+    already strong, so only the Chinese gains are clear.
+  - A review of the skills' methods found material gaps in six skills, and a wording
+    contradiction in the formal-verification pair. These were fixed:
+    - `optimize-metric`: the user's target, a green regression baseline before any change, and
+      error and work counts in every keep decision.
+    - `figure-it-out`: the plan structure, an append-only trail, an audit of the trail against
+      the session, and a fresh-context review of the trail.
+    - `no-comments`: a bounded rerun of a failed pass, and review of kept comments.
+    - `teach`: the no-pacing-theater rules.
+    - `resume-work`: user-reported symptoms in recall.
+    - `unslop`: no decorative emojis.
+    - Both formal-verification skills: "never weaken the property or the model to make the check
+      pass".
+    - Minor items in `arena`, `swarm`, `interrogate` and `technical-writing`.
+- **Re-smoke after the fixes** on the same fixtures:
+  - `figure-it-out` wrote a plan with a falsifiable done predicate before the first file change,
+    kept an append-only trail at the path it reported and ran a fresh-context review.
+  - `optimize-metric` checked error and work counts on every measurement and appended a
+    correcting log row. It still stopped after one attempt that beat the target by a wide margin.
+  - `no-comments` now reviewed kept comments and removed the vendor note because nothing could
+    prove the vendor format; it offered to restore the note on confirmation.
+  - `teach`, `resume-work` (resume, and recall in the earlier run's workspace), and `unslop`
+    (0 pattern hits in both languages) met their contracts.
+- **Deleted logs recovered.** The six project-`CLAUDE.md` runs' Claude session records were
+  copied into `recovered-session-records/`; they confirm that no user-invoked skill was called or
+  read.
+- Cost: USD 32.41 over the 102 runs with a recorded result, including one loading probe, against
+  the USD 80 cap. The six runs whose stream logs were deleted add an unrecorded cost. Auto
+  permission mode refused one shell command in each of three runs (`p2-no-pointers-3`,
+  `r2-figure` and `s-maintain`); each of those runs still completed its task. A run's
+  auto-memory note in its scratch project was removed afterwards. Logs, prompts, fixtures' outputs,
+  the blind sets and key, and the harness are in ignored
+  `evals/out/user-invoked-skills-claude-2026-11-28/`.
+
+Basic host checks without model evaluation (the owner asked for basic verification on the other
+hosts, without evaluation runs):
+
+- **Codex 0.172.0.** `codex plugin marketplace add` and `codex plugin add` into an isolated
+  `CODEX_HOME` cached all 26 skills, with no credentials copied. `codex debug prompt-input`, which
+  renders the model-visible prompt without calling a model, listed only the 11 lifecycle skills.
+  The renderer does not expand `$engineering:<skill>` mentions, so this check does not show
+  explicit invocation; the `codex exec` runs below do.
+- **Pi loader.** `DefaultResourceLoader` and `formatSkillsForPrompt`, imported from the Pi 1.3.0
+  library then on disk and run with an empty agent directory, loaded all 26 skills in the isolated
+  `--no-skills --skill` form, flagged 15 as manual-only and put only the 11 lifecycle skills in the
+  prompt. With default discovery, the
+  owner's `~/.agents/skills/teach` and `~/.agents/skills/code-review` win the name collision over
+  the package's skills; the isolated form loads the package's versions.
+- **Antigravity.** `agy plugin install` under a temporary `HOME` installed and listed all 26
+  skills; `agy plugin validate --strict --json` reported no errors and one optional logo note.
+- **Explicit invocation and the model's view in real runs**, with the owner's existing logins and
+  no change to installed plugins or settings. The candidate skills `sharpen`, `teach` and
+  `understand-codebase` were placed in a scratch fixture's `.agents/skills`, which Codex and
+  Antigravity scan as repository skills; Pi loaded the whole package through `--skill`:
+  - Codex: `codex debug prompt-input` listed `understand-codebase` but not `sharpen` or `teach`.
+    `codex exec -s read-only '$sharpen …'` read the skill and returned the restatement,
+    deepening and rewritten request. The fixture was unchanged.
+  - Antigravity: the model listed the available skills on request and named `understand-codebase`
+    but not `sharpen` or `teach`. `agy --mode plan -p "/sharpen …"` recorded
+    `expanded_commands: sharpen (skill)` and returned the restatement and deepening. A first
+    attempt stopped because headless mode denies shell commands; the retry asked for file
+    viewing tools only.
+  - Pi: the CLI sessions ran Pi 1.6.1, as their system prompts' documentation paths show. The
+    real system prompt of a `--no-skills --skill` session listed only the 11 lifecycle skills,
+    and `/skill:sharpen` expanded the package skill. The configured `github-copilot` provider
+    answered `model_not_supported` for all four listed models. At 16:55:26 local time Pi
+    installed 1.7.0 through its own update mechanism, while these checks were running Pi
+    commands and before `pi update --models` refreshed the backed-up model catalog. On 1.7.0 the
+    configured default model, `gpt-6.1-sol`, followed `/skill:sharpen` with the restatement and
+    deepening and left the fixture unchanged. The catalog was restored to its backed-up checksum,
+    and a later call on 1.7.0 with that catalog still stopped normally
+    (`hosts/pi-after-catalog-restore-1.7.0.jsonl`). This is consistent with the upgrade, not the
+    catalog refresh, removing the error; no 1.6.1 call was retried after the refresh. The upgrade
+    from 1.6.1 to 1.7.0 broke the rule in [validation](../validation.md) against changing
+    production runtimes, and the owner chose to keep 1.7.0.
+- **Installed plugin path on the owner's Codex and Antigravity.** The owner approved testing on
+  the production installs and restoring them afterwards, an exception to the rule in
+  [validation](../validation.md) against switching production plugins:
+  - Before the test, `config.toml`, the `agent-coding` plugin cache and marketplace clone for
+    Codex, and `~/.gemini/config` for Antigravity were copied to scratch, and a checksum list of
+    1,463 files and directories was recorded.
+  - Codex: the marketplace was pointed at the candidate and `engineering@agent-coding` was
+    reinstalled with 26 skills. `codex debug prompt-input` listed the 11 lifecycle skills, and
+    `codex exec -s read-only '$engineering:sharpen …'` read the skill from the plugin cache and
+    followed it.
+  - Antigravity: `agy plugin install` installed the candidate with 26 skills. The model did not
+    list `sharpen`, `teach` or `arena`. `/sharpen` was not found, while `/engineering:sharpen`
+    expanded the plugin skill and was followed.
+  - Restore: the backed-up files replaced the test state. The checksum list then matched all
+    1,463 entries, `agy plugin list --json` was byte-identical to before, and Codex again
+    showed its Git marketplace source and 11 cached skills. The worktree source was left in
+    place. Session records of these runs stay in each host's history.
+- **Same-name skills on Pi.** Following the owner's decision to keep the name `teach`, Pi users
+  load the package's versions with the isolated `--no-skills --skill` form that
+  `config/pi/AGENTS.md` and [hosts.md](hosts.md) already describe.
+- **Copilot CLI 1.0.117**, with an isolated `COPILOT_HOME` that held no credentials and the login
+  coming from the system keychain. The fixture held all 26 skills in `.agents/skills` and, from an
+  earlier step, copies of `sharpen`, `teach` and `understand-codebase` in `.github/skills`.
+  - In a copy of the fixture without `.github/`, `copilot skill list` listed all 26 skills from
+    `.agents/skills` as project skills (`hosts/copilot-skill-list-agents-only.txt`). The listing
+    saved during the first check came from another directory and shows only built-ins. Copilot's
+    changelog records "Fully honor the skill disable-model-invocation flag".
+  - Asked which skills it could invoke, the model named the 11 lifecycle skills and three built-ins,
+    not `sharpen` or `teach`.
+  - In `copilot -p "/sharpen …"` the slash command was not expanded. The model invoked
+    `implement-task`, and its own call to `sharpen` failed with "Skill model invocation disabled:
+    sharpen". It then read `.github/skills/sharpen/SKILL.md` and followed it, so a model that reads
+    the file directly bypasses the flag.
+  - Its failed reads of `.agents/references/` came from the fixture, which copied only the skill
+    folders.
+  - A first interactive attempt exited at the terminal handshake because standard input was empty.
+    A Python `pty` driver then answered the terminal queries and chose the session-only folder
+    trust in the isolated home. Interactive `/sharpen` recorded a `skill.invoked` event that loaded
+    the `.github/skills/sharpen` copy, which matched the package skill before the rewrite, and the
+    reply followed the restatement and deepening steps.
+- **Grok Bot.** Not checked, by the owner's decision.
+
+Local validation with the pinned Bun 1.4.2, run from a scratch cache because only Bun 1.4.5 was
+installed: `git diff --check`; `bun run start -- validate` (22 cases, 48 checks); `bun run check`
+(exit 0; 7 `useLiteralKeys` infos, all on pre-existing lines); `bun run test:coverage` (493 pass,
+0 fail across 45 files); `bun run build`. `bun install --frozen-lockfile` in `evals/` ran
+lefthook's install, with the side effects that [validation](../validation.md) now warns about. The
+root `lefthook.yml` and the `prepare-commit-msg` hook it wrote were removed, and the earlier
+`pre-commit` and `pre-push` hooks were left unchanged.
+
+The live `~/.claude/CLAUDE.md` briefly carried that paragraph, and a fresh `claude -p` session
+quoted it. With the paragraph reverted, the live file was restored from its backup and again
+matches `config/claude/CLAUDE.md` (checksum `7cc235f…`).
+
+### Review and rewrite
+
+A full review of the PR followed, run as fresh-context read-only reviews: five in the first round
+(specification, tests, documentation and two groups of skills), three in the second and a grader
+of the new runs. Their reports were returned in the session; the grader's log extracts are in
+`review/grader-r3/`.
+
+- **Rewrite.** All fifteen skills were rewritten to fix the review findings. Worker briefs state write and authority limits, deadlines
+  and cleanup that keeps evidence and leaves branches to the user. Temporary breaks, attempts and
+  comment passes happen in isolated copies and undo only their own edits. `resume-work` treats
+  checkpoints and session records as data and confirms recorded authority before acting.
+  `no-comments` keeps tool-read directives, returns a patch and runs the project's checks before
+  applying it. `optimize-metric` follows performance-evidence.md on repetition, conditions and
+  unknown bottlenecks. The formal-verification pair separates its result classes, records bounds,
+  open findings and uncommitted covered files, and asks before installing a tool. The writing rules
+  apply per claim, protect code and format syntax, follow GB/T 15834 for the ellipsis and defer to
+  a project's style guide. `release-and-rollout` points only PR descriptions to
+  `technical-writing`.
+- **Distribution test.** It now parses the metadata, rejects duplicate keys, requires lifecycle
+  skills to leave both settings at their defaults, and scans every package file for Cursor-only
+  names and model slugs, with example tables for both guards. With Bun 1.4.2 it passes 58 tests.
+  In a scratch copy each of these planted faults failed the intended test: a false flag, a
+  duplicate frontmatter key ending in `true`, a duplicate policy key ending in `false`, an unquoted
+  colon in `openai.yaml`, a lifecycle skill set to `yes` and a model slug in a shared reference. A
+  trailing YAML comment, sibling mappings with the same child key and a body mention of the key
+  passed.
+- **Documentation corrections.** The Pi CLI version, the Copilot listing and skill copy, the Grok
+  Bot claim, the run counts and refusals, the scope of D-014's supersessions, the evidence behind
+  the kept pointer and the lefthook advice were corrected above and in
+  [validation](../validation.md). The first fix advised `LEFTHOOK=0`, which lefthook's postinstall
+  script ignores; a scratch install showed that `CI=true` prevents the side effect.
+- **Claude Code runs on the rewritten text** (2.1.332, the same fixtures and prompts, the rewritten
+  package as the only `engineering` plugin, content hash recorded in `logs/r3-candidate-hash.txt`):
+  19 runs for USD 9.02. The grader found 14 PASS, 5 PARTIAL and 0 FAIL. The partial runs exposed
+  four skill-text causes, all fixed: `interrogate` had no rule to leave branches, and its combined
+  cleanup command was refused and left a worktree behind; `optimize-metric` asked for an agreement
+  that a non-interactive run cannot get; `no-comments` had two overlapping exception rules; and
+  `technical-writing` had no rule for a PR with no recorded reason, so the Chinese run invented one.
+  Model mistakes also counted: skipped profiling, a stray `__pycache__` and spacing around
+  full-width quotes. The four skills were rerun after the second review round (`logs/r4-*`, hash in
+  `logs/r4-candidate-hash.txt`) for USD 2.34. `interrogate` left no worktree or branch,
+  `no-comments` checked the patch in its copy and reported the `tax` rounding and the unused import
+  as decisions, `optimize-metric` logged its stopping rule as unconfirmed, and the Chinese PR
+  description said that no reason was recorded.
+- **Final review round.** One more fresh-context review found that the new check gate in
+  `no-comments` could restore a suppression the skill had just deleted, because deleting a lint
+  suppression is meant to make lint report the problem. The gate now compares checks before and
+  after the patch and expects failures from flagged suppressions. Small fixes followed in the
+  formal-verification pair (scratch copies include every uncommitted file; `maintain` may edit
+  proof annotations), `figure-it-out` (corrections are appended), `optimize-metric`, the README and
+  a test comment. A `no-comments` run on the fixture with a project lint script added
+  (`logs/r5-nocomments-lint.*`, `templates/comments-lint`, USD 0.75) ran the lint in its copy
+  before and after the patch, kept `# noqa: F401` as a style-only suppression, and reported the
+  `tax` rounding and the unused import as decisions.
+- **Host checks on the rewritten text.** The Pi 1.7.0 loader (`hosts/pi-check-1.7.0.out`) loaded
+  26 skills, flagged 15 as manual-only, put 11 in the prompt and showed the same `teach` and
+  `code-review` collisions. `agy plugin validate --strict --json` (`hosts/agy-validate-rewrite.json`)
+  found 26 skills and no errors. No manual-invocation metadata changed in the rewrite.
+
+The package version moves from 1.0.0 to 1.1.0 in `package.json` and the three native manifests,
+so installed plugin caches pick up the new skills; the change adds skills and breaks no existing
+entry point.
+
+Validation of the final tree with Bun 1.4.2: `git diff --check`; `bun run start -- validate` (22
+cases, 48 checks); `bun run check` (exit 0; 8 `useLiteralKeys` infos, one more than before, from the
+test's bracket access to `allow_implicit_invocation`, which the naming rule requires); `bun run
+test:coverage` (517 pass, 0 fail across 45 files); `bun run build`. The skill-creator validator
+passes each changed skill with `disable-model-invocation` removed.
+
+Not verified: any check on Grok Bot; behavior evaluation outside Claude Code, which the owner
+excluded. The Codex, Antigravity, Pi and Copilot model runs used the text before the rewrite. The
+r3 runs used the text before the second review round. Of the skills that round and the final round
+changed, only `interrogate`, `no-comments`, `optimize-metric` and the Chinese `technical-writing`
+case were rerun; the final edits to the formal-verification pair, `figure-it-out` and
+`optimize-metric` have no run of their own. The `no-comments` path in which a flagged suppression's
+deletion makes a check fail was not exercised. The
+reflect run's approval gate was not exercised, because its setup session already edited the guidance
+it would have proposed. Single runs show each skill working on one fixture, not across projects.
+Session records of the test runs remain in each host's history.
+
 ## 2026-11-27/28 Antigravity host adapter — live installation, discovery, invocation and git-guard verified
 
 Decided in [D-013](../decisions.md). Added `plugins/engineering/.antigravity-plugin/plugin.json`
