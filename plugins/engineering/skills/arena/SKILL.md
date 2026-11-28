@@ -1,68 +1,74 @@
 ---
 name: arena
-description: Produce several independent candidates for one artifact, judge them against a rubric, build on the strongest and graft the best parts of the rest. User-invoked for a consequential design, interface, prompt or document where a single attempt could lock in the wrong shape.
+description: Have several independent attempts produce the same artifact, score them on a written rubric, then build the result on the best attempt and fold in what the others did better. Use it for a design, interface, prompt or document that is costly to get wrong on the first try.
 disable-model-invocation: true
 ---
 
 # Arena
 
-Read [the shared agreement](../../references/working-agreement.md). Candidates write only to
-their own isolated locations. The synthesized result enters the real tree only within the task's
-implementation authority, and material product choices stay with the user.
+Read [the shared agreement](../../references/working-agreement.md). Each attempt writes only inside
+its own scratch location. The combined result reaches the real tree only under the task's
+implementation authority.
 
-## Frame the contest
+## Set up the comparison
 
-1. Name the artifact each candidate produces and the grounding every candidate reads: the
-   relevant files, constraints and current behavior. Every candidate receives the same task text,
-   so that text is the contract.
-2. Write a rubric of three to six concrete criteria that can be graded for this task. The rubric
-   is for judging; candidates see only the task.
-3. Choose the candidate count, normally three, more when several design directions need a
-   hearing. Use the models the host offers; a different model family can help but is not
-   required. Record which models actually ran.
-4. Give each candidate its own output location: a separate worktree where possible, otherwise a
-   scratch directory outside the repository.
+1. Describe the output every attempt must deliver and list the inputs all attempts share: the
+   files, the constraints and how the system behaves now. All attempts get word for word the same
+   task statement, so write it as the contract.
+2. Write three to six criteria that can be graded for this task. The criteria are for scoring;
+   attempts see only the task statement.
+3. Decide how many attempts to run. Three is usual; run more when several distinct design
+   directions deserve a try. Any model the host offers may run an attempt, and mixing model
+   families is optional. Record the models that actually ran.
+4. Give each attempt a location of its own: a separate worktree when available, otherwise a
+   scratch folder outside the repository.
 
-The frame is complete when the artifact, grounding, rubric, count and output locations are
-written down.
+Setup is done when the output, shared inputs, criteria, attempt count and locations are written
+down.
 
-## Fan out
+## Launch
 
-Launch every candidate in one wave through the host's delegation mechanism. Each brief holds the
-task, the grounding paths, the candidate's output location and a request for the artifact plus a
-short rationale naming the alternatives it considered and rejected. Wait only on handles the host
-actually returned. A candidate that produces nothing drops out; continue with the rest and record
-the dropout. With fewer than two candidates left, the contest has failed, so relaunch or report it.
-Without delegation, write the candidates in sequence yourself and label the result
-non-independent.
+Start all attempts together with the host's delegation tool. Each brief contains the task
+statement, the paths of the shared inputs, the attempt's location, its limits (write only in that
+location; no commits, pushes, branch changes or writes to outside services) and a request for the
+artifact with a short note on the options it weighed and turned down. Track only the handles the
+host returned. An attempt with no artifact by the deadline you set at launch, after one status
+check, is stopped and
+counted as missing; continue with the others and note it. If fewer than two artifacts arrive, the
+comparison failed: rerun it once or report the failure. Without a delegation tool, produce the
+attempts one after another yourself and label the result as not independent.
 
-## Judge
+## Score
 
-Read every candidate in full before choosing. Score each against every rubric criterion rather
-than on overall impression. Optionally give one read-only, fresh-context judge, ideally on another
-model family, the candidates under anonymous labels and the same rubric, then compare its scores
-with yours. Agreement on the base confirms the choice. Disagreement points to bias or an ambiguous
-rubric, so reread both rationales before deciding.
+Read every artifact completely before deciding. Score each one on each criterion instead of
+forming a general impression. You may also give the artifacts, relabeled anonymously, and the
+criteria to one fresh-context judge that only reads, preferably from another model family, and
+compare its scores with yours. Matching scores support the choice without settling it. Mismatched
+scores point to bias or an unclear criterion, so reread both notes before deciding.
 
-Pick as base the candidate a future maintainer can extend most easily while keeping invariants:
-each piece of state has one owner, each task has one way to do it, and callers need to know the
-least. Between two close candidates, prefer the smaller interface and the cleaner boundary.
+The base is the artifact with the best total score. When two are close, take the one that is
+easier to maintain; for code, that means each piece of state has one owner, there is a single way
+to do each job, and callers depend on fewer details.
 
-## Graft
+## Combine
 
-Walk each remaining candidate once more for what deserves porting, usually one or two things
-from each. Fold every graft in by hand so the result stays one coherent design; pasted fragments
-from several designs are not a synthesis. When the candidates converge on one shape, record that
-agreement and keep the shape without grafts. When they diverge widely, the frame was
-underspecified: sharpen the task or rubric and run again rather than averaging the divergence.
+Go through each other artifact once more for parts worth adopting, usually one or two each. Rework
+every adopted part into the base by hand so the result reads as one design; fragments stitched
+together from several designs do not count. If the artifacts all reached the same shape, say so
+and keep that shape as it is. If they split into viable but very different directions, choosing
+between them is a product decision: unless the user delegated it, stop and return the directions
+with their scores instead of blending them. If the split comes from an unclear task statement,
+sharpen it and rerun once.
 
-## Verify and report
+## Check and report
 
-Verify the synthesized artifact like any other result: exercise it and check it against the
-rubric and the original constraints. A problem found here means the frame was wrong, so reframe
-and rerun, or a candidate already solved it and the graft was missed, so graft again.
+Check the combined artifact as you would any result: exercise it, then score it on the criteria
+and against the original constraints. When the check fails, find the cause. An adopted part caused
+the problem, or an attempt already solved it and that part was not adopted; combine again. Or the
+task statement was wrong; rerun at most once, then report.
 
-Return the artifact with a synthesis note: the base and why, rubric scores, the judge's verdict
-or that no judge ran, each graft with its source, what was rejected and why, convergence or
-dropouts, the models used and the verification result. Preserve the artifact and evidence, then
-remove the scratch locations you created.
+Return the artifact with a note on how it was built: the base and the reason, all scores, the
+judge's scores or that no judge ran, every adopted part and its source, what you turned down and
+why, convergence and missing attempts, the models used and the check result. Copy the artifacts
+and evidence the note cites to a location you name in the report. Then remove the scratch locations
+you made, after a failed run as well; leave branches for the user to delete.

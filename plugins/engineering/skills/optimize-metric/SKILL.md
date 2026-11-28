@@ -1,81 +1,90 @@
 ---
 name: optimize-metric
-description: Drive one measurable metric toward a target through a frozen, proven measurement harness and one-change experiments that are kept or reverted. User-invoked for sustained performance, size, cost or score improvement; a one-off fix stays in implement-task.
+description: Push one measurable number toward a target by testing one change at a time against a fixed, validated measurement and keeping only the changes that measurably help. Use it for sustained work on speed, size, cost or a score; a one-off fix belongs in implement-task.
 disable-model-invocation: true
 ---
 
 # Optimize a metric
 
-Read [the shared agreement](../../references/working-agreement.md). Implementation authority
-covers the code changes; commits, pushes and PRs need their own authorization. Correctness and
-simplicity outrank the number.
+Read [the shared agreement](../../references/working-agreement.md) and
+[performance evidence](../../references/performance-evidence.md). Implementation authority covers
+code edits; commits, pushes and PRs need their own authorization. Correct behavior and simple code
+matter more than the number.
 
-## Ground the workload
+## Pin down the problem
 
-1. Trace the target path and name the workload dimensions that can move the result: data size,
-   history, state and concurrency. Select a case that reproduces the user's complaint. If no case
-   reproduces it, fix the reproduction before optimizing anything.
-2. Fix one metric, the direction that counts as better and a checkable stop predicate: a target
-   plus a minimum number of attempts, so a lucky early win cannot end the climb. Use the user's
-   numbers when given; otherwise agree the target with the user before the first attempt.
+1. Follow the path being optimized and list the inputs that can move the number: data size,
+   history, state and concurrency. Pick a case that shows the problem the user described. If no
+   case shows it, fix the reproduction first.
+2. Settle one metric, which direction is better and a stop condition you can check: a target and a
+   minimum number of attempts, so one lucky early result cannot end the work. Take both from the
+   user when given; otherwise propose them and get the user's agreement before the first attempt.
+   If the user cannot answer before work starts, write the proposed values as the log's first row,
+   mark them unconfirmed and report them.
 
-## Build and freeze the harness
+## Build and fix the measurement
 
-Build a measurement harness and prove it is sensitive: contrasting realistic workloads separate
-as expected and the target case shows the symptom. Vet it before freezing:
+Build a measurement and show that it responds: different realistic inputs give clearly different
+numbers, and the chosen case shows the problem. Check it before fixing it in place:
 
-- **Limiter.** Name what bounds the number, such as CPU, I/O, locks or the load generator, from a
-  profile taken in a run you do not report.
-- **Tuning.** Run every side the way production runs it: release builds, production settings,
-  comparable caches, versions and data.
-- **Limits.** Check the result against physical bounds. Removing a part that takes 10% of the run
-  can make the run at most about 11% faster.
-- **Errors.** The harness counts failures and checks that outputs are correct.
-- **Work done.** The harness confirms the work happened inside the timed region and prints a
-  count of it.
-- **Repeatability.** Alternate the sides over at least five runs and report the median and
-  range. A gap inside the run-to-run variation is no measurable difference.
+- **Bottleneck.** Find what limits the number, such as CPU, I/O, locks or the load generator, from
+  a profile taken in a separate run. If it stays unknown, say so; it then limits what you can
+  conclude.
+- **Conditions.** Measure both sides under the conditions of the user's comparison: the same
+  builds, settings, caches, versions and data. A claim about production uses production builds and
+  settings.
+- **Ceiling.** Compare each result with what is physically possible. If a part takes 10% of the
+  run, removing it saves at most that 10%, so the run gets at most about 11% faster.
+- **Errors.** The measurement counts failures and checks that the outputs are right.
+- **Work.** The measurement confirms that the work happened inside the measured interval and
+  prints how much.
+- **Spread.** For a timed number, alternate the two sides over enough runs to show how much results
+  vary, and report the run count, median and range. A difference within that variation is no
+  measurable difference. A deterministic number such as a file size needs one run per side once you
+  have seen it repeat.
 
-If the harness cannot tell the cases apart, revise the workload or the metric. Choose the
-regression checks that must keep passing. Record the baseline metric and a green run of those
-checks on the unchanged code, then freeze the harness so it prints the metric, the error count
-and the count of work done on every run. A harness change is its
-own recorded step and never a way to make a candidate pass. For deeper checks use
-[performance evidence](../../references/performance-evidence.md).
+If the measurement cannot separate the cases, change the input or the metric. Choose the regression
+checks that must stay green. On the unchanged code, record the starting number and a green run of
+those checks. Then fix the measurement in place so every run prints the number, the error count and
+the work count. Changing the measurement is a separate, logged step and never a way to make an
+attempt pass.
 
-## Keep a decision log
+## Log every attempt
 
-Keep a TSV file outside the tracked tree, for example `decisions.tsv` in the work directory, with
-the columns `ts`, `attempt`, `hypothesis`, `change`, `before`, `after`, `delta`, `tests`, `verdict`
-and `note`. Write one row per attempt, kept or reverted, and read the log before each attempt.
-The log is append-only: a correction is a new row, and earlier rows stay.
-Commit it only when a reviewer needs the trail and commits are authorized.
+Keep a TSV file outside the tracked tree, such as `decisions.tsv` in the working folder, with the
+columns `ts`, `attempt`, `hypothesis`, `change`, `before`, `after`, `delta`, `tests`, `verdict` and
+`note`. Add one row per attempt, kept or undone, and read the file before each new attempt. Rows are
+only appended; to correct a row, add a new one. Commit the file only when a reviewer needs it and
+commits are authorized.
 
-## Run the loop
+## Run the attempts
 
-Each iteration tests one hypothesis tied to a named mechanism, such as "move X off the startup
-path because it blocks first paint".
+Each attempt tests one idea about a named cause, such as "take X off the startup path because it
+delays the first paint".
 
-1. Make the smallest change for that hypothesis. Independent hypotheses may run in parallel,
+1. Make the smallest change that tests the idea. Record the state before it so you can undo exactly
+   this change without touching anyone else's edits. Independent ideas may be built in parallel,
    each in its own worktree.
-2. Measure before and after with the frozen harness, and run the regression checks.
-3. Keep the change only when the metric moves past noise, the error and work counts match the
-   baseline and the checks stay green; a change that makes work fail fast is not a win. Otherwise
-   revert it completely; a change that only might help is reverted.
-4. Log the row.
+2. Measure with the fixed measurement, one attempt at a time on an otherwise quiet machine, and run
+   the regression checks.
+3. Keep the change only when the number moves beyond the variation, or when it simplifies the code
+   and holds the number, and in both cases the error and work counts match the start and the checks
+   pass. A change that makes work fail early is no gain. Otherwise undo exactly this change,
+   including one that merely might help. When ideas were built in parallel, measure each one you
+   keep on top of the changes already kept, and undo it if its gain no longer shows.
+4. Add the row to the log.
 
-Every kept change rests on a measurement, never on reading the code. On a plateau, several
-rejects in a row, switch category, combine near misses, reread the source or try a bolder idea
-before concluding. Keep a simplification that holds the number, and revert a win that breaks
-behavior.
+Keep a change only on measured evidence, never because the code looks faster. After several
+rejected attempts in a row, try another kind of idea, combine near misses, reread the source or try
+something bolder before you give up. Undo a gain that breaks behavior.
 
 ## Stop and report
 
-Stop when the predicate holds or when the remaining ideas cost more than they could return; while
-cheap untried hypotheses remain, keep climbing. Keep the predicate as set, and report being stuck
-rather than looping.
+Stop when the stop condition holds. Before that, continue while cheap untested ideas remain, and
+stop early only when what is left would cost more than it could gain, logging that reason. Keep the stop condition as
+agreed, and report being stuck instead of repeating attempts.
 
-Report the metric and target; baseline to final with the percent change, run count, range and
-limiter; iterations kept and reverted; each kept change in one line; the log path; and the most
-promising next idea. Call the result inconclusive when the limiter is unknown, a side ran
-untuned, or errors and work done went unchecked, and name the gap.
+Report the metric and target; the start and end values with the percent change, run count, range
+and bottleneck; how many attempts were kept and undone; one line per kept change; the log path; and
+the most promising next idea. Call the result inconclusive when errors or work went unchecked or the
+two sides ran under different conditions, and say what is missing.

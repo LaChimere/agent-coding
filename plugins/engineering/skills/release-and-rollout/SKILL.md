@@ -29,7 +29,7 @@ Read [Git publication](../../references/git-publication.md) before any Git mutat
 and [stateful work](../../references/stateful-work.md) before interruption-sensitive deployment.
 Before submission, assess commit/PR boundaries with
 [change sequencing](../design-solution/references/change-sequence.md), and write PR descriptions
-and commit messages as in [technical-writing](../technical-writing/SKILL.md).
+as in [technical-writing](../technical-writing/SKILL.md).
 
 ## Execute within authority
 

@@ -1,54 +1,66 @@
 ---
 name: interrogate
-description: Send adversaries to break a change or design and keep only the failures a run against the real code reproduces. User-invoked for an adversarial review, stress test or blind-spot hunt; reports findings without fixing them.
+description: Point adversarial workers at a change or design to make it fail, and report as findings only the failures you rerun and see against the real code. Use it for an adversarial review, a stress test or a hunt for blind spots; it reports and does not fix.
 disable-model-invocation: true
 ---
 
 # Interrogate
 
-Read [the shared agreement](../../references/working-agreement.md). The target stays read-only:
-adversaries reproduce failures in isolated copies, and this skill reports findings without
-applying fixes. Repairs go through [implement-task](../implement-task/SKILL.md) when authorized.
+Read [the shared agreement](../../references/working-agreement.md). The target is never modified:
+adversaries reproduce failures in isolated copies, and this skill only reports. Fixes go through
+[implement-task](../implement-task/SKILL.md) when they are authorized.
 
-## Frame
+## Set the target
 
-The scope is what the user names. Otherwise it is the branch diff from its merge base with the
-base branch, including uncommitted changes. Record the base, head and whether the working tree is
-included.
+Use the scope the user gives. Without one, use the branch's diff from its merge base with the base
+branch, plus uncommitted and untracked files. Record the base, the head and whether the working tree
+is part of the scope.
 
-State the intent in your own words from the user's message, the commits and the PR description:
-what the change must do and what it must keep working. Ask the user only when the intent cannot
-be recovered from those sources.
+Write down in your own words what the change is meant to achieve and what must keep working, drawing
+on the user's request, the commit messages and the PR description. Only if these leave the purpose
+unclear, ask the user.
 
-## Fan out
+## Launch the adversaries
 
-Launch two to four adversaries, normally three, in one wave through the host's delegation
-mechanism. Give each its own isolated copy of the scope, uncommitted changes included, in a
-worktree or scratch copy. Use the models the host offers; a different model family can help but
-is not required. Record which models actually ran. Give each adversary the scope, the intent and
-this brief:
+Start two to four adversaries, three by default, together through the host's delegation tool. Each
+gets its own copy of the scope, with the uncommitted and untracked files, in a worktree or scratch
+copy. Any model the host offers may run an adversary, and mixing model families is optional. Record
+the models that actually ran. Send each one the scope, the stated purpose and this brief:
 
-> Break this change. Prove each finding with a run against the real code: a failing test, a
-> reproduction script, or command output that shows the wrong behavior. For a design or plan,
-> run a prototype or probe the current tree. Keep reproductions in your own copy. Report each
-> finding with a title, the exact command, the output it printed and the output the intent
-> requires. Report only what you ran; style, naming, structure and risks that need a future
-> change to matter are out of scope. No findings is a valid result.
+> Try to make this change fail. Back every finding with something you ran against the real code: a
+> failing test, a script that reproduces the problem, or command output showing the bad behavior.
+> When the target is a design or a plan, build a prototype or probe the current tree. Run everything
+> in your own copy, and make no commits, pushes, branch changes or writes to outside services. For
+> each finding give a title, the exact command, what it printed and what the stated purpose requires
+> instead. Report only failures you ran. Style, naming, structure and risks that would need a later
+> change to matter are out of scope. Finding nothing is an acceptable result; then list what you
+> ran, and if you could not build or run the code, say so.
 
-## Verify
+An adversary with no report by the deadline you set at launch, after one status check, is stopped
+and counted as missing, and so is one that could not run the code. Without a delegation tool, take
+the adversary role yourself in a separate copy and label the result as not independent.
 
-Rerun each finding's command yourself in an isolated copy. Keep a finding when the output shows
-the failure and the failure breaks the stated intent; drop the rest with the reason. Merge
-findings that share a root cause. Keep every verified finding from every adversary, because
-adversaries find different failures and no single list wins.
+## Confirm
+
+Read each finding's command, and any script it runs, before you run it. Rerun it yourself in a
+fresh copy of the target that contains only the finding's own test or script, and only when its
+effects stay inside that copy and within the task's authority. List any other finding as not rerun,
+with the reason, apart from the dropped ones. Keep a finding when the rerun shows the failure and
+the failure contradicts the stated purpose; drop the rest and say why. Merge findings that share a
+root cause. Keep confirmed findings from every adversary, since each one tends to find different
+failures.
 
 ## Report
 
-- **Intent:** the restatement.
-- **Findings:** for each verified finding, the command, its output, how it breaks the intent and
-  which adversaries found it. Write "no verified findings" when none survive.
-- **Dropped:** for each adversary, the number of dropped findings and why.
-- **Coverage:** adversaries launched, models used and dropouts.
+- **Purpose:** your restatement.
+- **Findings:** for each confirmed finding, the command, its output, how it contradicts the purpose
+  and which adversaries found it. Write "no confirmed findings" when none remain.
+- **Not rerun:** each finding you did not rerun, with the reason.
+- **Dropped:** for each adversary, how many findings were dropped and why.
+- **Coverage:** adversaries started, models used and missing adversaries. If no adversary reported,
+  the run failed; say that instead of reporting no findings.
 
-For a full review across code, tests, errors, types and specification, use
-[code-review](../code-review/SKILL.md); this skill answers only whether the change can be broken.
+Copy the reproduction scripts and outputs the report cites to a location you name, then remove the
+copies you made, after a failed run as well; leave branches for the user to delete. For a complete
+review across code, tests, errors, types and specification, use [code-review](../code-review/SKILL.md);
+this skill answers only whether the change can be made to fail.
