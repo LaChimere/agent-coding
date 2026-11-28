@@ -221,8 +221,8 @@ D-008 and D-009 define the current package and host structure.
 - Status: accepted; implementation evidence in [implementation.md](engineering/implementation.md)
 - Context: After comparing the package with pstack 0.15.48 (`cursor/plugins` at `b7b93c3`), the
   owner chose to keep `engineering` as the primary package and to add the pstack capabilities it
-  lacks, aiming at better outcomes rather than migration. The plan, settled choices and evidence are
-  in [the adoption plan](engineering/pstack-adoption-plan.md). D-008 and D-009 fixed the inventory
+  lacks, aiming at better outcomes rather than migration. The evidence is in
+  [implementation.md](engineering/implementation.md). D-008 and D-009 fixed the inventory
   at nine lifecycle entry points plus `spar` and `rubber-duck`, and the design required a
   demonstrated purpose before a new public entry.
 - Decision: Add fifteen skills to the engineering package: `arena`, `swarm`, `interrogate`,

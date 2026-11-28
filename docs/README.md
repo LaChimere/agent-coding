@@ -14,6 +14,5 @@ Written for humans and agents. Lead with the conclusion, use the repository's vo
 | [engineering/alignment.md](engineering/alignment.md) | Capability ownership, preservation checks and supporting design references |
 | [engineering/grok-acceptance.md](engineering/grok-acceptance.md) | User-run Grok artifact, independent reproduction and bounded corrections |
 | [engineering/hosts.md](engineering/hosts.md) | Native installation paths, host boundaries and qualification levels |
-| [engineering/pstack-adoption-plan.md](engineering/pstack-adoption-plan.md) | Proposed plan to add pstack-derived skills: goal, settled decisions, skill inventory, measurement and sequence |
 | [evaluation/design.md](evaluation/design.md) | Maintained evaluation engine contract |
 | [Evaluation guide](../evals/README.md) | Current evaluation setup, collection selection and commands |

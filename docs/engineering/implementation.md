@@ -7,7 +7,7 @@ distribution tests can be rerun; they do not make the separate native and review
 
 ## 2026-11-28 pstack-derived user-invoked skills — implemented; behavior checked on Claude Code, basic checks on Codex, Pi, Antigravity and Copilot CLI
 
-Decided in [D-014](../decisions.md) following the [adoption plan](pstack-adoption-plan.md). Added
+Decided in [D-014](../decisions.md). Added
 fifteen user-invoked skills, each with `disable-model-invocation: true` and
 `agents/openai.yaml` (`policy.allow_implicit_invocation: false`); an MIT `LICENSE` at the
 repository root and in the package; and user-invocable notes with session-record locations in the
