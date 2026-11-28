@@ -214,3 +214,43 @@ D-008 and D-009 define the current package and host structure.
 - Evidence: `evals/tests/distribution.test.ts`, `evals/tests/antigravity-hooks.test.ts`,
   `evals/tests/claude-hooks.test.ts`; live `agy 1.5.18` runs recorded in
   [implementation.md](engineering/implementation.md) (2026-11-27/28 section).
+
+## D-014: Add user-invoked skills adapted from pstack methods
+
+- Date: 2026-11-28
+- Status: accepted; implementation evidence in [implementation.md](engineering/implementation.md)
+- Context: After comparing the package with pstack 0.15.48 (`cursor/plugins` at `b7b93c3`), the
+  owner chose to keep `engineering` as the primary package and to add the pstack capabilities it
+  lacks, aiming at better outcomes rather than migration. The plan, settled choices and evidence are
+  in [the adoption plan](engineering/pstack-adoption-plan.md). D-008 and D-009 fixed the inventory
+  at nine lifecycle entry points plus `spar` and `rubber-duck`, and the design required a
+  demonstrated purpose before a new public entry.
+- Decision: Add fifteen skills to the engineering package: `arena`, `swarm`, `interrogate`,
+  `optimize-metric`, `figure-it-out`, `resume-work`, `reframe`, `sharpen`, `teach`, `reflect`,
+  `no-comments`, `unslop`, `technical-writing`, `create-formal-verification-skill` and
+  `maintain-formal-verification-skill`. A new skill is admitted when it has a distinct outcome, a
+  distinct invocation, works when called on its own and has its own evidence. As in pstack, these
+  skills are user-invoked on every host: frontmatter `disable-model-invocation: true` for Claude
+  Code, Pi, Antigravity and Grok Bot, and `agents/openai.yaml` with
+  `policy.allow_implicit_invocation: false` for Codex. The lifecycle skills stay model-invocable and
+  may point to the new skills by relative link. All pstack-derived content is rewritten in this
+  package's words, host-neutral, under the existing authority rules and with no fixed model names;
+  provenance is recorded in [alignment.md](engineering/alignment.md). The repository and the package
+  carry an MIT license held by LaChimere. The formal-verification skills ship as conditional
+  methods, not lifecycle gates.
+- Alternatives rejected: Installing pstack alongside the package, because `poteto-mode` autonomy
+  conflicts with the standing authority rules. Copying pstack text verbatim, because the copies
+  would carry Cursor tool names, paths and model slugs and would require the pstack copyright
+  notice. Porting the `principle-*` skills and `poteto-mode` routing, because the package has no
+  router and loads linked references rarely. Model-invoked descriptions for the new skills, because
+  pstack keeps them user-invoked and multi-agent skills have real cost. Copying or rewriting the
+  `statechart` tooling, which stays an optional external capability.
+- Consequences: Supersedes the fixed inventory in D-008 and D-009 and the design rule that a new
+  public entry needs a prior demonstrated purpose; their other consequences stand. Distribution
+  tests list model-invoked and user-invoked skills separately, check both manual-invocation
+  mechanisms, the package license and the absence of Cursor-only names. The installed skill-creator
+  validator rejects the `disable-model-invocation` key, so new skills are validated with that key
+  removed. Personal routing tables list the new skills as user-invocable rather than as reading
+  instructions. Pointers from lifecycle skills stay only where measurement shows an effect.
+- Evidence: `evals/tests/distribution.test.ts`; Claude Code runs recorded in
+  [implementation.md](engineering/implementation.md) (2026-11-28 section).

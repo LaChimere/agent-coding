@@ -27,15 +27,40 @@ source and runtime evidence establish findings. PR throughput alone is not a qua
 ## Extending the methods
 
 Deepen an existing owner when a demonstrated gap needs more specific guidance. Add a public
-entry or state mechanism only for a distinct project need, with its own maintenance and
-verification case. Acceptance, caller analysis, ownership, recovery, review, release and
+entry only under the D-014 admission rule: a distinct outcome, a distinct invocation, independent
+use and its own evidence. Acceptance, caller analysis, ownership, recovery, review, release and
 structural prevention retain their existing owners.
 
-Formal verification starts with a justified project property and coverage gap. A successful
-project method and a subsequent maintenance exercise can inform a later generator decision.
+Formal verification starts with a justified project property and coverage gap. The D-014
+formal-verification skills keep that condition and report a no-target result when none exists.
 Scheduling, integrations and publication retain their explicit authority boundaries. Fewer
 steps are useful only when necessary depth and correctness survive; source alignment alone
 does not establish improved runtime outcomes.
+
+## User-invoked skills adapted from pstack (D-014)
+
+Each skill rewrites methods from
+[pstack at `b7b93c3`](https://github.com/cursor/plugins/tree/b7b93c36be9bcc36a74db438e0fd385d660bc559/pstack)
+(2026-11-26, MIT). No pstack text is copied. Cursor tool names, paths, model slugs, autonomy rules
+and publication steps are replaced by host-neutral wording and the shared authority rules.
+Evidence for each skill is recorded in [implementation.md](implementation.md).
+
+| Capability | Owner | pstack sources | Main adaptation |
+|---|---|---|---|
+| Multi-candidate synthesis | `arena` | `skills/arena`, `skills/architect` | No model roster or vendor rule; owner reads every candidate |
+| Parallel fan-out with proven results | `swarm` | `skills/swarm` | Host delegation; at most one relaunch; gaps are not passes |
+| Run-proven adversarial challenge | `interrogate` | `skills/interrogate`, `skills/in-your-own-words` | Read-only target; isolated reproductions |
+| Measured metric climbing | `optimize-metric` | Hillclimb playbook, `skills/benchmark-checklist`, `skills/show-me-your-work` | No automatic commits or PRs; harness checks inline |
+| Workflow design for large or unattended work | `figure-it-out` | `skills/figure-it-out`, Multi-phase plan playbook, `skills/show-me-your-work` | Principles inline; framing checkpoint before long runs |
+| Pause, resume and recall | `resume-work` | `skills/recall`, Session pickup and Pause safely playbooks | One checkpoint contract; no automatic WIP commit; host session records |
+| Expert vocabulary | `reframe` | `skills/reframe` | Output in the user's language |
+| Deeper requests | `sharpen` | `skills/sharpen`, `skills/in-your-own-words` | Restatement first; preference choices stay with the user |
+| Paced explanation | `teach` | `skills/teach` | Investigation follows `understand-codebase` instead of pstack `how` and `why` |
+| Session lessons | `reflect` | `skills/reflect` | Source edits only, after approval; enforceable items to `prevent-recurring-mistakes` |
+| Comment removal | `no-comments` | `skills/no-comments`, `agents/comment-sicko.md` | No persona; flags named `RESHAPE`; fixes through `implement-task` |
+| Prose cleanup | `unslop` | `skills/unslop` | Owner-chosen style rules; Chinese catalog from observed output and Chinese style guides |
+| Technical documents | `technical-writing` | `skills/technical-writing` | Chinese rules from the Chinese copywriting guidelines and Ruan Yifeng's style guide |
+| Formal verification creation and upkeep | `create-formal-verification-skill`, `maintain-formal-verification-skill` | Same names | `statechart` is an optional external capability; TLC is the default path |
 
 ## Supporting methods and host policy
 

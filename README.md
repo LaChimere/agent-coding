@@ -6,7 +6,8 @@ several: the same methods preserve goals, authority and evidence while the host 
 The `engineering` plugin covers understanding a project, designing and implementing tasks,
 real verification, review, release and prevention of recurring mistakes. Its nine lifecycle skills and two challenge skills are
 entry points, not a mandatory nine-stage pipeline. Small tasks remain small; persistent goals
-use the host's existing scheduling and state.
+use the host's existing scheduling and state. A further set of user-invoked skills, adapted from
+pstack, runs only when you call it by name.
 
 ## Skills
 
@@ -23,6 +24,27 @@ use the host's existing scheduling and state.
 | `maintain-verification-skill` | Proven map/harness corrections, separated from product regressions |
 | `spar` | Evidence-based opposing perspectives on an explicitly selected decision |
 | `rubber-duck` | Independent constructive critique of a concrete work product |
+
+User-invoked skills (call them by name, for example `/engineering:arena` in Claude Code or
+`$engineering:arena` in Codex):
+
+| Skill | Result |
+|---|---|
+| `arena` | Several independent candidates for one artifact, judged by rubric and synthesized |
+| `swarm` | Parallel workers over slices or racing attempts, reported with evidence and gaps |
+| `interrogate` | Adversarial attempts to break a change, kept only when a rerun reproduces them |
+| `optimize-metric` | A metric driven toward a target by measured, kept-or-reverted experiments |
+| `figure-it-out` | An auditable workflow for large, ambiguous or unattended work |
+| `resume-work` | A pause checkpoint, a resume point or a recall of recent work |
+| `reframe` | Expert vocabulary, neighboring fields and a rewritten problem description |
+| `sharpen` | A deeper rewrite of a task request within the same scope |
+| `teach` | An explanation of a subsystem or change, built up at your pace |
+| `reflect` | Proposed edits to skills and guidance from the current session's lessons |
+| `no-comments` | Narrating comments removed from a diff and the code they excused flagged |
+| `unslop` | English or Chinese text without AI writing patterns |
+| `technical-writing` | Documents, PR descriptions and commit messages in English or Chinese |
+| `create-formal-verification-skill` | A proved project-local formal verification skill for a costly property |
+| `maintain-formal-verification-skill` | Formal verification brought back in line with changed code |
 
 Install the complete package even when using one skill. Shared resources stay inside the plugin;
 skill use does not grant permission to modify files, publish or create automations. A review or
@@ -45,7 +67,7 @@ providers and credentials remain outside the portable methods.
 ## Repository layout
 
 ```text
-plugins/engineering/     # Lifecycle and challenge skills, bundled methods and native metadata
+plugins/engineering/     # Lifecycle, challenge and user-invoked skills, bundled methods and native metadata
 config/antigravity/      # Personal standing rules, plugin registration template and Git guard hook
 config/codex/            # Personal standing rules, runtime settings and worker profiles
 config/claude/           # Personal standing rules, method routing, reviewer subagent and Git guard hook

@@ -38,6 +38,12 @@ qualified names such as `$engineering:implement-task`; the host owns sessions an
 | Triage incoming issues, CI or alerts | Shared continuous-work reference; use the configured ordinary_worker for classification and escalate supported work to the configured main role when available |
 | Resume, delegate, or operate a persistent objective | Shared working agreement; independent-review and continuous-work references when applicable |
 
+The package also has user-invoked skills, such as `$engineering:arena`, `$engineering:interrogate`
+or `$engineering:resume-work`. They run when the user names them or when a lifecycle skill links
+to one; the README lists them. For `resume-work`, this host keeps session records in
+`~/.codex/sessions/<yyyy>/<mm>/<dd>/rollout-*.jsonl`; match the active workspace by each
+record's working directory.
+
 If the package or a required capability is missing, report its effect and keep required coverage
 incomplete. Continue unaffected authorized work under these standing rules and project guidance.
 Installation or changing production configuration requires the user's authorization. Do not

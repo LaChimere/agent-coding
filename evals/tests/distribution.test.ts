@@ -18,6 +18,37 @@ const sharedCatalog = (await Bun.file(
   plugins: { name: string; source: string }[];
 };
 const pluginNames = codexCatalog.plugins.map((plugin) => plugin.name);
+const modelInvokedSkills = [
+  'code-review',
+  'create-verification-skill',
+  'design-solution',
+  'implement-task',
+  'maintain-verification-skill',
+  'prevent-recurring-mistakes',
+  'release-and-rollout',
+  'rubber-duck',
+  'spar',
+  'understand-codebase',
+  'verify-behavior',
+];
+// D-014: pstack-derived methods are user-invoked on every host.
+const userInvokedSkills = [
+  'arena',
+  'create-formal-verification-skill',
+  'figure-it-out',
+  'interrogate',
+  'maintain-formal-verification-skill',
+  'no-comments',
+  'optimize-metric',
+  'reflect',
+  'reframe',
+  'resume-work',
+  'sharpen',
+  'swarm',
+  'teach',
+  'technical-writing',
+  'unslop',
+];
 
 test('Codex and Claude catalogs distribute the same local plugin roots', async () => {
   const directories = await readdir(resolve(repository, 'plugins'), { withFileTypes: true });
@@ -58,19 +89,7 @@ test('the engineering package exposes the complete approved skill set to Pi and 
     version: string;
     skills: string;
   };
-  const expected = [
-    'code-review',
-    'create-verification-skill',
-    'design-solution',
-    'implement-task',
-    'maintain-verification-skill',
-    'prevent-recurring-mistakes',
-    'release-and-rollout',
-    'rubber-duck',
-    'spar',
-    'understand-codebase',
-    'verify-behavior',
-  ];
+  const expected = [...modelInvokedSkills, ...userInvokedSkills].sort();
 
   expect(manifest.version).toBe(native.version);
   expect(manifest.pi.skills.map((path) => resolve(root, path))).toEqual([
@@ -86,6 +105,43 @@ test('the engineering package exposes the complete approved skill set to Pi and 
   expect(await Bun.file(resolve(root, 'LICENSE')).text()).toBe(
     await Bun.file(resolve(repository, 'LICENSE')).text(),
   );
+});
+
+test.each(userInvokedSkills)(
+  'user-invoked skill %s is hidden from model invocation on every host mechanism',
+  async (skill) => {
+    const root = resolve(repository, 'plugins/engineering/skills', skill);
+    const document = await Bun.file(resolve(root, 'SKILL.md')).text();
+    const frontmatter = document.match(/^---\n([\s\S]*?)\n---\n/u)?.[1] ?? '';
+    const policy = await Bun.file(resolve(root, 'agents/openai.yaml')).text();
+
+    expect(frontmatter).toMatch(/^disable-model-invocation: true$/mu);
+    expect(policy).toMatch(/^policy:\n {2}allow_implicit_invocation: false$/mu);
+  },
+);
+
+test.each(modelInvokedSkills)('lifecycle skill %s stays model-invocable', async (skill) => {
+  const root = resolve(repository, 'plugins/engineering/skills', skill);
+
+  expect(await Bun.file(resolve(root, 'SKILL.md')).text()).not.toContain(
+    'disable-model-invocation',
+  );
+  expect(await Bun.file(resolve(root, 'agents/openai.yaml')).exists()).toBeFalse();
+});
+
+test('the engineering package carries no Cursor-only names, paths or model slugs', async () => {
+  const root = resolve(repository, 'plugins/engineering');
+  const cursorOnly =
+    /\.cursor\/|\bcursor-team-kit\b|pstack-models|\bgeneralPurpose\b|\bAskQuestion\b|environment: "cloud"|\bBugbot\b|\b(?:claude|gemini|grok)-[a-z0-9]+-[0-9][a-z0-9-]*\b/u;
+  const offenders: string[] = [];
+
+  for await (const path of new Bun.Glob('**/*.{md,yaml,json}').scan({ cwd: root, dot: true })) {
+    if (cursorOnly.test(await Bun.file(resolve(root, path)).text())) {
+      offenders.push(path);
+    }
+  }
+
+  expect(offenders).toEqual([]);
 });
 
 test('personal Codex configuration retains selected capabilities outside portable method policy', async () => {

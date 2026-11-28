@@ -23,7 +23,9 @@ Use the complete engineering package through this host's actual supported skill/
 Read the matching skill and its bundled references; do not assume another host's plugin syntax.
 Use understand-codebase, design-solution, implement-task, verification methods, code-review and
 release-and-rollout for their respective tasks. SPAR remains an explicit assumptions challenge;
-Rubber Duck supplies a requested or risk-justified critic. Shared methods govern checking,
+Rubber Duck supplies a requested or risk-justified critic. The package's user-invoked skills,
+listed in its README, run when the user names them or when a lifecycle skill links to one.
+Shared methods govern checking,
 sequencing, Git publication, stateful work and knowledge maintenance within the authority above.
 
 Use the host's real tools and independent contexts when available, and report missing capabilities.

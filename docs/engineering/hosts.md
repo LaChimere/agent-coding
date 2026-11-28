@@ -159,6 +159,27 @@ The owner ran the cold-start bundle in their Bot and supplied the resulting proj
 corrections and limits. Native import, routine execution and the revised methods remain unverified;
 the maintainer's local corrections are not another Grok run.
 
+## User-invoked skills
+
+D-014 skills are hidden from model invocation and run when the user names them. Each host has
+its own mechanism; the package carries both forms for every such skill.
+
+| Host | Mechanism | Explicit invocation | Evidence level |
+|---|---|---|---|
+| Claude Code | Frontmatter `disable-model-invocation: true` | `/engineering:<skill>` | Discovery, explicit invocation and hidden-from-model behavior observed on 2.1.332 |
+| Codex | `agents/openai.yaml` with `policy.allow_implicit_invocation: false` | `$engineering:<skill>`; `$<skill>` for repository skills | On 0.172.0, an isolated `CODEX_HOME` install cached all 26 skills and showed only the 11 lifecycle skills to the model. With the candidate temporarily installed as the owner's plugin, `codex exec` ran `$engineering:sharpen` from the plugin cache and followed it; the install was then restored byte for byte. Repository skills in `.agents/skills` behaved the same |
+| Pi | Frontmatter `disable-model-invocation: true` | `/skill:<skill>` | On 1.3.0 with `--no-skills --skill`, all 26 skills loaded and the real system prompt listed only the 11 lifecycle skills. `/skill:sharpen` expanded the package skill, but the configured provider rejected every listed model, so no reply was observed |
+| Antigravity | Frontmatter `disable-model-invocation` | `/engineering:<skill>` for plugin skills; `/<skill>` for workspace skills | An install under a temporary `HOME` listed all 26 skills and `agy plugin validate --strict` passed. With the candidate temporarily installed as the owner's plugin, the model did not list `sharpen`, `teach` or `arena`; `/sharpen` was not found, and `/engineering:sharpen` expanded the plugin skill and was followed. The install was then restored byte for byte. Workspace skills in `.agents/skills` respond to `/sharpen` |
+| Grok Bot | Frontmatter `disable-model-invocation` | Slash command | Grok 1.0.70 bundled documentation only |
+| Copilot CLI | Frontmatter `disable-model-invocation` | `/<skill>` in interactive sessions | On 1.0.117 with an isolated `COPILOT_HOME`, `copilot skill list` found all 26 skills placed in a fixture's `.agents/skills`. In `-p` runs the model listed only the lifecycle skills, and its own attempt to call `sharpen` failed with "Skill model invocation disabled". `-p` mode did not expand `/sharpen`; interactive invocation not exercised |
+
+Pi's default discovery loads `~/.agents/skills` before a `--skill` package, and the first name
+wins. On the owner's machine the personal `teach` and `code-review` shadow the package's skills of
+the same name. Use the isolated `pi --no-skills --skill <package>/skills` invocation to load the
+package's versions. Claude Code keeps both names apart (`teach` and `engineering:teach`), and
+Antigravity lists the personal and package `code-review` side by side. Details and commands are in
+[implementation.md](implementation.md).
+
 ## Qualification levels
 
 | Level | Required observation |
