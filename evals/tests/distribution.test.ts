@@ -80,8 +80,12 @@ test('the engineering package exposes the complete approved skill set to Pi and 
   expect(manifest.files).toContain('skills');
   expect(manifest.files).toContain('references');
   expect(manifest.files).toContain('.antigravity-plugin');
+  expect(manifest.files).toContain('LICENSE');
   expect(manifest.files).not.toContain('evals');
   await expect(stat(resolve(root, 'references/working-agreement.md'))).resolves.toBeDefined();
+  expect(await Bun.file(resolve(root, 'LICENSE')).text()).toBe(
+    await Bun.file(resolve(repository, 'LICENSE')).text(),
+  );
 });
 
 test('personal Codex configuration retains selected capabilities outside portable method policy', async () => {

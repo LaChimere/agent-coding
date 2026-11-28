@@ -13,7 +13,8 @@
     "references",
     ".codex-plugin",
     ".claude-plugin",
-    ".antigravity-plugin"
+    ".antigravity-plugin",
+    "LICENSE"
   ],
   "pi": {
     "skills": [
